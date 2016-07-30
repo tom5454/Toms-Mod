@@ -1,0 +1,138 @@
+[
+{
+  "modid": "TomsMod|Core",
+  "name": "Tom's Mod Core",
+  "description": "",
+  "version": "${version}",
+  "credits": "tom",
+  "logoFile": "/newLogo.png",
+  "mcversion": "1.9",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "tom" ],
+  "parent": "",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+},
+{
+  "modid": "TomsMod|Energy",
+  "name": "Tom's Mod Energy",
+  "description": "",
+  "version": "${version}",
+  "credits": "tom",
+  "logoFile": "/newLogo.png",
+  "mcversion": "1.9",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "tom" ],
+  "parent": "TomsMod|Core",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+},
+{
+  "modid": "TomsMod|Factory",
+  "name": "Tom's Mod Factory",
+  "description": "All the Machines for Tom's Mod",
+  "version": "${version}",
+  "credits": "tom",
+  "logoFile": "/newLogo.png",
+  "mcversion": "1.9",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "tom" ],
+  "parent": "TomsMod|Core",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+},
+{
+  "modid": "TomsMod|Defense",
+  "name": "Tom's Mod Defense",
+  "description": "",
+  "version": "${version}",
+  "credits": "tom",
+  "logoFile": "/newLogo.png",
+  "mcversion": "1.9",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "tom" ],
+  "parent": "TomsMod|Core",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+},
+{
+  "modid": "TomsMod|Storage",
+  "name": "Tom's Mod Storage",
+  "description": "",
+  "version": "${version}",
+  "credits": "tom",
+  "logoFile": "/newLogo.png",
+  "mcversion": "1.9",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "tom" ],
+  "parent": "TomsMod|Core",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+},
+{
+  "modid": "TomsMod|Transport",
+  "name": "Tom's Mod Transport",
+  "description": "",
+  "version": "${version}",
+  "credits": "tom",
+  "logoFile": "/newLogo.png",
+  "mcversion": "1.9",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "tom" ],
+  "parent": "TomsMod|Core",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+},
+{
+  "modid": "TomsMod|WeaponsAndTools",
+  "name": "Tom's Mod Tools and Combat",
+  "description": "",
+  "version": "${version}",
+  "credits": "tom",
+  "logoFile": "/newLogo.png",
+  "mcversion": "1.9",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "tom" ],
+  "parent": "TomsMod|Core",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+},
+{
+  "modid": "MapWriterTm",
+  "name": "Map Writer in Tom's Mod",
+  "description": "The normal Mapwriter Mod with extended functions. Source from: http://www.curse.com/mc-mods/Minecraft/231387-mapwriter-2",
+  "version": "${version}",
+  "credits": "tom, chrixian, ProfMobius, taelnia, jk-5, Vectron",
+  "logoFile": "/mwLogo.png",
+  "mcversion": "1.9",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "tom" , "mapwriter"],
+  "parent": "",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+}
+]
