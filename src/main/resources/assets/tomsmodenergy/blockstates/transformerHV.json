@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "tomsmodenergy:transformerHV"},
+        "facing=south": { "model": "tomsmodenergy:transformerHV", "y": 180 },
+        "facing=west":  { "model": "tomsmodenergy:transformerHV", "y": 270 },
+        "facing=east":  { "model": "tomsmodenergy:transformerHV", "y": 90 },
+        "facing=up":    { "model": "tomsmodenergy:transformerHV", "x": 90 },
+        "facing=down":  { "model": "tomsmodenergy:transformerHV", "x": 270 }
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/FusionCore2","down": "blocks/FusionCore2","north": "blocks/FusionCore2","east": "blocks/FusionCore2","south": "blocks/FusionCore2","west": "blocks/FusionCore2","particle": "blocks/FusionCore2"
+    }
+}

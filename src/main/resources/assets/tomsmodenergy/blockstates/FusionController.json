@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodenergy:FusionController", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodenergy:FusionController"},
+         "facing=west,state=0": { "model": "tomsmodenergy:FusionController", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodenergy:FusionController", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodenergy:FusionController", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodenergy:FusionController", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodenergy:FusionControllerInactive", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodenergy:FusionControllerInactive"},
+         "facing=west,state=1": { "model": "tomsmodenergy:FusionControllerInactive", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodenergy:FusionControllerInactive", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodenergy:FusionControllerInactive", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodenergy:FusionControllerInactive", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodenergy:FusionControllerActive", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodenergy:FusionControllerActive"},
+         "facing=west,state=2": { "model": "tomsmodenergy:FusionControllerActive", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodenergy:FusionControllerActive", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodenergy:FusionControllerActive", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodenergy:FusionControllerActive", "x": 270 }
+    }
+}

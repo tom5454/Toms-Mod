@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "tomsmodenergy:laserTransmitter1", "y": 180 },
+        "facing=south": { "model": "tomsmodenergy:laserTransmitter1"},
+        "facing=west":  { "model": "tomsmodenergy:laserTransmitter1", "y": 90 },
+        "facing=east":  { "model": "tomsmodenergy:laserTransmitter1", "y": 270 },
+        "facing=up":    { "model": "tomsmodenergy:laserTransmitter1", "x": 90 },
+        "facing=down":  { "model": "tomsmodenergy:laserTransmitter1", "x": 270 }
+    }
+}

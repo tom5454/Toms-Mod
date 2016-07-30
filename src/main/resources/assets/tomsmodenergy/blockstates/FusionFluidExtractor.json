@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "tomsmodenergy:FusionFluidExtractor", "y": 180 },
+        "facing=south": { "model": "tomsmodenergy:FusionFluidExtractor"},
+        "facing=west":  { "model": "tomsmodenergy:FusionFluidExtractor", "y": 90 },
+        "facing=east":  { "model": "tomsmodenergy:FusionFluidExtractor", "y": 270 },
+        "facing=up":    { "model": "tomsmodenergy:FusionFluidExtractor", "x": 90 },
+        "facing=down":  { "model": "tomsmodenergy:FusionFluidExtractor", "x": 270 }
+    }
+}

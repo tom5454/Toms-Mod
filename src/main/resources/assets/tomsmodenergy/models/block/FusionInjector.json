@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/fusionGlassInActive","down": "blocks/fusionPower","north": "blocks/fusionCase","east": "blocks/fusionCase","south": "blocks/fusionCase","west": "blocks/fusionCase","particle": "blocks/fusionCase"
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "blocks/fusionGlassInActive",
+        "front": "blocks/fusionController",
+        "side": "blocks/fusionCase"
+    }
+}

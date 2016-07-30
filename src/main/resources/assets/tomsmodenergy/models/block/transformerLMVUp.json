@@ -1,0 +1,7 @@
+{
+    "parent": "tomsmodenergy:block/transformerUp",
+    "textures": {
+        "north": "tomsmodenergy:blocks/machineMVPort",
+        "south": "tomsmodenergy:blocks/machineLVPort"
+    }
+}

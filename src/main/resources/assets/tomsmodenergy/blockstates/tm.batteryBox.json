@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "tomsmodenergy:batteryBox", "y": 180 },
+        "facing=south": { "model": "tomsmodenergy:batteryBox"},
+        "facing=west":  { "model": "tomsmodenergy:batteryBox", "y": 90 },
+        "facing=east":  { "model": "tomsmodenergy:batteryBox", "y": 270 },
+        "facing=up":    { "model": "tomsmodenergy:batteryBox", "x": 90 },
+        "facing=down":  { "model": "tomsmodenergy:batteryBox", "x": 270 }
+    }
+}

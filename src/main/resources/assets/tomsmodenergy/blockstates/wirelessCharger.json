@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "active=false,type=false": { "model": "tomsmodenergy:wirelessCharger"},
+         "active=true,type=false": { "model": "tomsmodenergy:wirelessChargerOn"},
+        "active=false,type=true": { "model": "tomsmodenergy:wirelessCharger"},
+         "active=true,type=true": { "model": "tomsmodenergy:wirelessChargerOn"}
+    }
+}

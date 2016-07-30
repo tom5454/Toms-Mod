@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "ready=false": { "model": "tomsmodenergy:FusionInjector"},
+        "ready=true": { "model": "tomsmodenergy:FusionInjector_on"}
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "facing=north,mode=false": { "model": "tomsmodenergy:transformerMHV"},
+        "facing=south,mode=false": { "model": "tomsmodenergy:transformerMHV", "y": 180 },
+         "facing=west,mode=false":  { "model": "tomsmodenergy:transformerMHV", "y": 270 },
+         "facing=east,mode=false":  { "model": "tomsmodenergy:transformerMHV", "y": 90 },
+           "facing=up,mode=false":    { "model": "tomsmodenergy:transformerMHV", "x": 90 },
+         "facing=down,mode=false":  { "model": "tomsmodenergy:transformerMHV", "x": 270 },
+        "facing=north,mode=true": { "model": "tomsmodenergy:transformerMHVUp"},
+        "facing=south,mode=true": { "model": "tomsmodenergy:transformerMHVUp", "y": 180 },
+         "facing=west,mode=true": { "model": "tomsmodenergy:transformerMHVUp", "y": 270 },
+         "facing=east,mode=true": { "model": "tomsmodenergy:transformerMHVUp", "y": 90 },
+           "facing=up,mode=true": { "model": "tomsmodenergy:transformerMHVUp", "x": 90 },
+         "facing=down,mode=true": { "model": "tomsmodenergy:transformerMHVUp", "x": 270 }
+    }    
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/mbEnergyCellFrame","down": "blocks/mbEnergyCellFrame","north": "blocks/mbEnergyCellFrame","east": "blocks/mbEnergyCellFrame","south": "blocks/mbEnergyCellFrame","west": "blocks/mbEnergyCellFrame","particle": "blocks/mbEnergyCellFrame"
+    }
+}
