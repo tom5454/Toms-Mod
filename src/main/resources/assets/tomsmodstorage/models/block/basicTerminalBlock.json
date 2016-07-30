@@ -1,0 +1,9 @@
+{
+    "parent": "block/simple_facing2",
+    "textures": {
+        "top":"tomsmodstorage:blocks/device_top",
+        "side":"tomsmodstorage:blocks/device_side",
+        "bottom":"tomsmodstorage:blocks/device_bottom",
+        "front":"tomsmodstorage:blocks/basicTerminal"
+    }
+}

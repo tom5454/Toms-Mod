@@ -1,0 +1,48 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "textures": {
+        "particle": "tomsmodcore:blocks/Gray",
+        "0": "tomsmodcore:blocks/GrayL",
+        "1": "tomsmodcore:blocks/Gray"
+    },
+    "elements": [
+        {
+            "name": "mid",
+            "from": [ 5.499999992549419, 14.0, 5.499999992549419 ], 
+            "to": [ 10.50000000745058, 15.0, 10.49999999254942 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+                "down": { "texture": "#0", "uv": [ 0.0, 0.0, 5.000000014901161, 5.0 ] }
+            }
+        },
+        {
+            "name": "bottom",
+            "from": [ 5.0, 15.0, 5.0 ], 
+            "to": [ 11.0, 16.0, 11.0 ], 
+            "faces": {
+                "north": { "texture": "#1", "uv": [ 0.0, 0.0, 6.0, 1.0 ] },
+                "east": { "texture": "#1", "uv": [ 0.0, 0.0, 6.0, 1.0 ] },
+                "south": { "texture": "#1", "uv": [ 0.0, 0.0, 6.0, 1.0 ] },
+                "west": { "texture": "#1", "uv": [ 0.0, 0.0, 6.0, 1.0 ] },
+                "up": { "texture": "#1", "uv": [ 0.0, 0.0, 6.0, 6.0 ] },
+                "down": { "texture": "#1", "uv": [ 0.0, 0.0, 6.0, 6.0 ] }
+            }
+        },
+        {
+            "name": "connect",
+            "from": [ 5.899999998509884, 12.0, 5.899999998509884 ], 
+            "to": [ 10.100000001490116, 14.0, 10.100000001490116 ], 
+            "faces": {
+                "north": { "texture": "#connection", "uv": [ 6.0, 5.0, 10.200000002980232, 7.0 ] },
+                "east": { "texture": "#connection", "uv": [ 6.0, 5.0, 10.200000002980232, 7.0 ] },
+                "south": { "texture": "#connection", "uv": [ 6.0, 5.0, 10.200000002980232, 7.0 ] },
+                "west": { "texture": "#connection", "uv": [ 6.0, 5.0, 10.200000002980232, 7.0 ] },
+                "up": { "texture": "#1", "uv": [ 0.0, 0.0, 4.200000002980232, 4.200000002980232 ] },
+                "down": { "texture": "#1", "uv": [ 0.0, 0.0, 4.200000002980232, 4.200000002980232 ] }
+            }
+        }
+    ]
+}

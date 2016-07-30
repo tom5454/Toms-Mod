@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "tomsmodstorage:patternTerminalBlock", "y": 180 },
+        "facing=south": { "model": "tomsmodstorage:patternTerminalBlock"},
+         "facing=west": { "model": "tomsmodstorage:patternTerminalBlock", "y": 90 },
+         "facing=east": { "model": "tomsmodstorage:patternTerminalBlock", "y": 270 },
+           "facing=up": { "model": "tomsmodstorage:patternTerminalBlock", "x": 90 },
+         "facing=down": { "model": "tomsmodstorage:patternTerminalBlock", "x": 270 }
+    }
+}

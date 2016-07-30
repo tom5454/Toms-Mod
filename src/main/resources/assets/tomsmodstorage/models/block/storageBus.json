@@ -1,0 +1,63 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "textures": {
+        "particle": "tomsmodcore:blocks/Gray",
+        "0": "tomsmodstorage:blocks/device_side",
+        "1": "tomsmodstorage:blocks/storageBus",
+        "2": "tomsmodcore:blocks/Gray"
+    },
+    "parent": "block/block",
+        "display": {
+        "gui": {
+            "rotation": [ 30, 135, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.625, 0.625, 0.625 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "elements": [
+        {
+            "name": "bottom",
+            "from": [ 2.0, 15.0, 2.0 ], 
+            "to": [ 14.0, 16.0, 14.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 1.0, 1.0, 13.0, 2.0 ] },
+                "east": { "texture": "#0", "uv": [ 1.0, 2.0, 2.0, 14.0 ], "rotation": 90 },
+                "south": { "texture": "#0", "uv": [ 1.0, 12.0, 13.0, 13.0 ] },
+                "west": { "texture": "#0", "uv": [ 1.0, 2.0, 2.0, 14.0 ], "rotation": 270 },
+                "up": { "texture": "#1", "uv": [ 2.0, 2.0, 14.0, 14.0 ] },
+                "down": { "texture": "#2", "uv": [ 0.0, 0.0, 6.0, 6.0 ] }
+            }
+        },
+        {
+            "name": "connect",
+            "from": [ 5.899999998509884, 13.0, 5.899999998509884 ], 
+            "to": [ 10.100000001490116, 15.0, 10.100000001490116 ], 
+            "faces": {
+                "north": { "texture": "#connection", "uv": [ 6.0, 5.0, 10.200000002980232, 7.0 ] },
+                "east": { "texture": "#connection", "uv": [ 6.0, 5.0, 10.200000002980232, 7.0 ] },
+                "south": { "texture": "#connection", "uv": [ 6.0, 5.0, 10.200000002980232, 7.0 ] },
+                "west": { "texture": "#connection", "uv": [ 6.0, 5.0, 10.200000002980232, 7.0 ] },
+                "up": { "texture": "#2", "uv": [ 0.0, 0.0, 4.200000002980232, 4.200000002980232 ] },
+                "down": { "texture": "#2", "uv": [ 0.0, 0.0, 4.200000002980232, 4.200000002980232 ] }
+            }
+        },
+        {
+            "name": "back",
+            "from": [ 1.5000000074505806, 14.899999998509884, 1.5000000029802323 ], 
+            "to": [ 14.49999999254942, 15.199999988079071, 14.500000002980233 ], 
+            "faces": {
+                "north": { "texture": "#2", "uv": [ 0.0, 0.0, 12.999999985098839, 0.29999998956918716 ] },
+                "east": { "texture": "#2", "uv": [ 0.0, 0.0, 13.0, 0.29999998956918716 ] },
+                "south": { "texture": "#2", "uv": [ 0.0, 0.0, 12.999999985098839, 0.29999998956918716 ] },
+                "west": { "texture": "#2", "uv": [ 0.0, 0.0, 13.0, 0.29999998956918716 ] },
+                "up": { "texture": "#2", "uv": [ 0.0, 0.0, 12.999999985098839, 13.0 ] },
+                "down": { "texture": "#2", "uv": [ 0.0, 0.0, 12.999999985098839, 13.0 ] }
+            }
+        }
+    ]
+}

@@ -1,0 +1,60 @@
+{
+    "textures":{
+    	"cell":"tomsmodstorage:items/64kStorageCellTop",
+    	"0": "tomsmodcore:blocks/GrayD",
+        "1": "tomsmodstorage:blocks/cellModelBase"
+    },
+    "parent": "block/block",
+        "display": {
+        "gui": {
+            "rotation": [ 30, 135, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.625, 0.625, 0.625 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "elements": [
+        {
+            "name": "back",
+            "from": [ 4.0, 6.5, 4.0 ], 
+            "to": [ 12.0, 9.5, 14.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 8.0, 3.0 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 10.0, 3.0 ] },
+                "south": { "texture": "#1", "uv": [ 0.0, 0.0, 8.0, 3.0 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 10.0, 3.0 ] },
+                "up": { "texture": "#cell", "uv": [ 0.0, 0.0, 8.0, 10.0 ] },
+                "down": { "texture": "#1", "uv": [ 0.0, 3.0, 8.0, 13.0 ] }
+            }
+        },
+        {
+            "name": "front",
+            "from": [ 3.4999999925494194, 6.0, 3.899999998509884 ], 
+            "to": [ 12.49999999254942, 10.0, 4.199999998509884 ], 
+            "faces": {
+                "north": { "texture": "#1", "uv": [ 1.0, 10.0, 10.0, 14.0 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 0.3, 4.0 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 9.0, 4.0 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 0.3, 4.0 ] },
+                "up": { "texture": "#0", "uv": [ 0.0, 0.0, 9.0, 0.3 ] },
+                "down": { "texture": "#0", "uv": [ 0.0, 0.0, 9.0, 0.3 ] }
+            }
+        },
+        {
+            "name": "top",
+            "from": [ 6.0, 8.699999995529652, 7.0 ], 
+            "to": [ 10.0, 9.699999995529652, 11.0 ], 
+            "faces": {
+                "north": { "texture": "#cell", "uv": [ 2.0, 3.0, 6.0, 4.0 ] },
+                "east": { "texture": "#cell", "uv": [ 2.0, 6.0, 6.0, 7.0 ] },
+                "south": { "texture": "#cell", "uv": [ 2.0, 3.0, 6.0, 4.0 ] },
+                "west": { "texture": "#cell", "uv": [ 2.0, 3.0, 6.0, 4.0 ] },
+                "up": { "texture": "#cell", "uv": [ 2.0, 3.0, 6.0, 7.0 ] }
+            }
+        }
+    ]
+}

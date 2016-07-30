@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "tomsmodstorage:drive", "y": 180 },
+        "facing=south": { "model": "tomsmodstorage:drive"},
+         "facing=west": { "model": "tomsmodstorage:drive", "y": 90 },
+         "facing=east": { "model": "tomsmodstorage:drive", "y": 270 },
+           "facing=up": { "model": "tomsmodstorage:drive", "x": 90 },
+         "facing=down": { "model": "tomsmodstorage:drive", "x": 270 }
+    }
+}

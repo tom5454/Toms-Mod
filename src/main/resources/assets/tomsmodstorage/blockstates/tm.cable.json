@@ -1,0 +1,140 @@
+{
+
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "duct": "tomsmodstorage:blocks/cable/cable_blue",
+      "particle": "tomsmodstorage:blocks/cable/cable_blue"
+    },
+    "uvlock": false
+  },
+   "variants": {
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {
+        "model": "cable_item",
+		"transform": "forge:default-block"
+      }
+    ],
+    "down": {
+      "0": {
+        "submodel": {
+          "down": {
+            "model": "cable_closed",
+            "x": 180
+          }
+        }
+      },
+      "1": {
+        "submodel": {
+          "down": {
+            "model": "cable_open",
+            "x": 180
+          }
+        }
+      },
+      "2": {
+        "submodel": {
+          "down": {
+            "model": "cable_open_c",
+            "x": 180
+          }
+        }
+      }
+    },
+      
+    "up": {
+      "0": {
+        "submodel": {
+          "up": {
+            "model": "cable_closed"
+          }
+        }
+      },
+      "1": {
+        "submodel": {
+          "up": {
+            "model": "cable_open"
+          }
+        }
+      },
+      "2": {
+        "submodel": {
+          "up": {
+            "model": "cable_open_c"
+          }
+        }
+      }
+    },
+    "north": {
+      "0": {
+        "submodel": {
+          "north": { "model": "cable_closed", "x": 90 }
+        }
+      },
+      "1": {
+        "submodel": {
+          "north": { "model": "cable_open", "x": 90 }
+        }
+      },
+      "2": {
+        "submodel": {
+          "north": { "model": "cable_open_c", "x": 90 }
+        }
+      }
+    },
+    "south": {
+      "0": {
+        "submodel": {
+          "south": { "model": "cable_closed", "x": 90, "y": 180 }
+        }
+      },
+      "1": {
+        "submodel": {
+          "south": { "model": "cable_open", "x": 90, "y": 180 }
+        }
+      },
+      "2": {
+        "submodel": {
+          "south": { "model": "cable_open_c", "x": 90, "y": 180 }
+        }
+      }
+    },
+    "west": {
+      "0": {
+        "submodel": {
+          "west": { "model": "cable_closed", "x": 90, "y": 270 }
+        }
+      },
+      "1": {
+        "submodel": {
+          "west": { "model": "cable_open", "x": 90, "y": 270 }
+        }
+      },
+      "2": {
+        "submodel": {
+          "west": { "model": "cable_open_c", "x": 90, "y": 270 }
+        }
+      }
+    },
+    "east": {
+      "0": {
+        "submodel": {
+          "east": { "model": "cable_closed", "x": 90, "y": 90 }
+        }
+      },
+      "1": {
+        "submodel": {
+          "east": { "model": "cable_open", "x": 90, "y": 90 }
+        }
+      },
+      "2": {
+        "submodel": {
+          "east": { "model": "cable_open_c", "x": 90, "y": 90 }
+        }
+      }
+    }
+  }
+}

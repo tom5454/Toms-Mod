@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "minecraft:glass", "y": 180 },
+        "facing=south": { "model": "minecraft:glass"},
+         "facing=west": { "model": "minecraft:glass", "y": 90 },
+         "facing=east": { "model": "minecraft:glass", "y": 270 },
+           "facing=up": { "model": "minecraft:glass", "x": 90 },
+         "facing=down": { "model": "minecraft:glass", "x": 270 }
+    }
+}

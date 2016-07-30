@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodstorage:blocks/assemblerTop",
+        "down": "tomsmodstorage:blocks/device_bottom",
+        "north": "tomsmodstorage:blocks/device_side",
+        "east": "tomsmodstorage:blocks/device_side",
+        "south": "tomsmodstorage:blocks/device_side",
+        "west": "tomsmodstorage:blocks/device_side",
+        "particle": "tomsmodstorage:blocks/device_side"
+    }
+}

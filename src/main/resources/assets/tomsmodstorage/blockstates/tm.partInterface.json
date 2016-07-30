@@ -1,0 +1,84 @@
+{
+
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+    	"connection":"tomsmodstorage:blocks/offline"
+    },
+    "uvlock": false
+  },
+   "variants": {
+     "normal": [
+       {}
+     ],
+     "inventory": [
+       {
+         "model": "tomsmodstorage:interface",
+         "transform": "forge:default-block"
+       }
+     ],
+     "state":{
+     	"0": {}, "1": {
+     		"textures": {
+    			"connection":"tomsmodstorage:blocks/missingChannel"
+    		}
+     	}, "2":{
+     		"textures": {
+    			"connection":"tomsmodstorage:blocks/online"
+   		 }
+     	}
+     },
+     "facing":{
+    	"down":{
+    	  "submodel": {
+            "facing": {
+              "model": "tomsmodstorage:interface",
+              "x": 180
+            }
+          }
+        },
+        "up":{
+    	  "submodel": {
+            "facing": {
+              "model": "tomsmodstorage:interface"
+            }
+          }
+        },
+        "north":{
+    	  "submodel": {
+            "facing": {
+              "model": "tomsmodstorage:interface",
+              "x": 90
+            }
+          }
+        },
+        "south":{
+    	  "submodel": {
+            "facing": {
+              "model": "tomsmodstorage:interface",
+              "x": 90,
+              "y": 180
+            }
+          }
+        },
+        "east":{
+    	  "submodel": {
+            "facing": {
+              "model": "tomsmodstorage:interface",
+              "x": 90, 
+              "y": 90
+            }
+          }
+        },
+        "west":{
+    	  "submodel": {
+            "facing": {
+              "model": "tomsmodstorage:interface",
+              "x": 90,
+              "y": 270
+            }
+          }
+        }
+     } 
+   }
+}

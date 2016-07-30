@@ -1,0 +1,6 @@
+{
+	"variants":{
+		"active=false":{ "model": "tomsmodstorage:crafting_controller"},
+		"active=true": { "model": "tomsmodstorage:crafting_controller_active"}
+	}
+}
