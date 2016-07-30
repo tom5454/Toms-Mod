@@ -20,16 +20,17 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "2.0.7_ALPHA_MC-1.9.4"
+version = "2.0.11_ALPHA_MC-1.10.2"
 group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TomsMod"
+
 repositories {
     maven { url "http://dvs1.progwml6.com/files/maven" }
     maven { url "http://mobiusstrip.eu/maven" }
     maven { url "http://tehnut.info/maven" }
 }
 minecraft {
-    version = "1.9.4-12.17.0.1963"
+    version = "1.10.2-12.18.0.2005-1.10.0"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -62,11 +63,9 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-    deobfCompile "mezz.jei:jei_1.9.4:3.6.3.212"
+    deobfCompile "mezz.jei:jei_1.10.2:3.7.3.221"
     compile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4:dev"
-//    compile files("libs/MCMultiPart-1.1.1-deobf.jar") 
-//    compile files("libs/chiselsandbits-9.14-api.jar")}
+
 
 }
 
