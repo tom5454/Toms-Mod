@@ -1,0 +1,82 @@
+{
+
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "particle": "tomsmodtransport:blocks/servo",
+      "module":"tomsmodtransport:blocks/servo",
+      "itemTex":"tomsmodtransport:items/servoItem"
+    },
+    "uvlock": false
+  },
+   "variants": {
+     "normal": [
+       {}
+     ],
+     "inventory": [
+       {
+         "model": "bs_item",
+         "transform": "forge:default-block"
+       }
+     ],
+     "state":{
+     	"0": {}, "1": {
+     	  "textures": {
+     	      "module":"tomsmodtransport:blocks/servoOn"
+     	  }
+     	}
+     },
+     "facing":{
+    	"down":{
+    	  "submodel": {
+            "facing": {
+              "model": "duct_connect_part",
+              "x": 180
+            }
+          }
+        },
+        "up":{
+    	  "submodel": {
+            "facing": {
+              "model": "duct_connect_part"
+            }
+          }
+        },
+        "north":{
+    	  "submodel": {
+            "facing": {
+              "model": "duct_connect_part",
+              "x": 90
+            }
+          }
+        },
+        "south":{
+    	  "submodel": {
+            "facing": {
+              "model": "duct_connect_part",
+              "x": 90,
+              "y": 180
+            }
+          }
+        },
+        "east":{
+    	  "submodel": {
+            "facing": {
+              "model": "duct_connect_part",
+              "x": 90, 
+              "y": 90
+            }
+          }
+        },
+        "west":{
+    	  "submodel": {
+            "facing": {
+              "model": "duct_connect_part",
+              "x": 90,
+              "y": 270
+            }
+          }
+        }
+     } 
+   }
+}
