@@ -1,0 +1,28 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodcore:magCardDevice", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodcore:magCardDevice"},
+         "facing=west,state=0": { "model": "tomsmodcore:magCardDevice", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodcore:magCardDevice", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodcore:magCardDevice", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodcore:magCardDevice", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodcore:magCardDeviceInvalid", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodcore:magCardDeviceInvalid"},
+         "facing=west,state=1": { "model": "tomsmodcore:magCardDeviceInvalid", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodcore:magCardDeviceInvalid", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodcore:magCardDeviceInvalid", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodcore:magCardDeviceInvalid", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodcore:magCardDeviceValid", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodcore:magCardDeviceValid"},
+         "facing=west,state=2": { "model": "tomsmodcore:magCardDeviceValid", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodcore:magCardDeviceValid", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodcore:magCardDeviceValid", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodcore:magCardDeviceValid", "x": 270 },
+        "facing=north,state=3": { "model": "tomsmodcore:magCardDeviceWriting", "y": 180 },
+        "facing=south,state=3": { "model": "tomsmodcore:magCardDeviceWriting"},
+         "facing=west,state=3": { "model": "tomsmodcore:magCardDeviceWriting", "y": 90 },
+         "facing=east,state=3": { "model": "tomsmodcore:magCardDeviceWriting", "y": 270 },
+           "facing=up,state=3": { "model": "tomsmodcore:magCardDeviceWriting", "x": 90 },
+         "facing=down,state=3": { "model": "tomsmodcore:magCardDeviceWriting", "x": 270 }
+    }
+}

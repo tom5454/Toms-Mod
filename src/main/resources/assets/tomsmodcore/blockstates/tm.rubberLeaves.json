@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "check_decay=false,decayable=false": { "model": "tomsmodcore:rubber_leaves"},
+        "check_decay=true,decayable=false": { "model": "tomsmodcore:rubber_leaves"},
+        "check_decay=false,decayable=true": { "model": "tomsmodcore:rubber_leaves"},
+        "check_decay=true,decayable=true": { "model": "tomsmodcore:rubber_leaves"}
+    }
+}

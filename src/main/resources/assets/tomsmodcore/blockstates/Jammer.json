@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "active=false": { "model": "tomsmodcore:Jammer"},
+         "active=true": { "model": "tomsmodcore:JammerA"}
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "type=normal": { "model": "tomsmodcore:rubberWoodNormal" },
+        "type=hole_north": { "model": "tomsmodcore:rubberWoodDot" },
+        "type=hole_south": { "model": "tomsmodcore:rubberWoodDot", "y": 180 },
+        "type=hole_west":  { "model": "tomsmodcore:rubberWoodDot", "y": 270 },
+        "type=hole_east":  { "model": "tomsmodcore:rubberWoodDot", "y": 90 },
+        "type=cut_hole_north": { "model": "tomsmodcore:rubberWoodCut" },
+        "type=cut_hole_south": { "model": "tomsmodcore:rubberWoodCut", "y": 180 },
+        "type=cut_hole_west":  { "model": "tomsmodcore:rubberWoodCut", "y": 270 },
+        "type=cut_hole_east":  { "model": "tomsmodcore:rubberWoodCut", "y": 90 }
+    }
+}

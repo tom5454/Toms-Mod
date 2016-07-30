@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "tomsmodcore:monitor", "y": 180 },
+        "facing=south": { "model": "tomsmodcore:monitor"},
+         "facing=west": { "model": "tomsmodcore:monitor", "y": 90 },
+         "facing=east": { "model": "tomsmodcore:monitor", "y": 270 },
+           "facing=up": { "model": "tomsmodcore:monitor", "x": 90 },
+         "facing=down": { "model": "tomsmodcore:monitor", "x": 270 }
+    }
+}

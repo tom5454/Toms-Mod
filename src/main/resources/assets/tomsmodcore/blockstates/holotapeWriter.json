@@ -1,0 +1,28 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodcore:holotapeWriter", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodcore:holotapeWriter"},
+         "facing=west,state=0": { "model": "tomsmodcore:holotapeWriter", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodcore:holotapeWriter", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodcore:holotapeWriter", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodcore:holotapeWriter", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodcore:holotapeWriterInvalid", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodcore:holotapeWriterInvalid"},
+         "facing=west,state=1": { "model": "tomsmodcore:holotapeWriterInvalid", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodcore:holotapeWriterInvalid", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodcore:holotapeWriterInvalid", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodcore:holotapeWriterInvalid", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodcore:holotapeWriterValid", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodcore:holotapeWriterValid"},
+         "facing=west,state=2": { "model": "tomsmodcore:holotapeWriterValid", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodcore:holotapeWriterValid", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodcore:holotapeWriterValid", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodcore:holotapeWriterValid", "x": 270 },
+        "facing=north,state=3": { "model": "tomsmodcore:holotapeWriterWriting", "y": 180 },
+        "facing=south,state=3": { "model": "tomsmodcore:holotapeWriterWriting"},
+         "facing=west,state=3": { "model": "tomsmodcore:holotapeWriterWriting", "y": 90 },
+         "facing=east,state=3": { "model": "tomsmodcore:holotapeWriterWriting", "y": 270 },
+           "facing=up,state=3": { "model": "tomsmodcore:holotapeWriterWriting", "x": 90 },
+         "facing=down,state=3": { "model": "tomsmodcore:holotapeWriterWriting", "x": 270 }
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodcore:holotapeReader", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodcore:holotapeReader"},
+         "facing=west,state=0": { "model": "tomsmodcore:holotapeReader", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodcore:holotapeReader", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodcore:holotapeReader", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodcore:holotapeReader", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodcore:holotapeReaderInvalid", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodcore:holotapeReaderInvalid"},
+         "facing=west,state=1": { "model": "tomsmodcore:holotapeReaderInvalid", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodcore:holotapeReaderInvalid", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodcore:holotapeReaderInvalid", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodcore:holotapeReaderInvalid", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodcore:holotapeReaderValid", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodcore:holotapeReaderValid"},
+         "facing=west,state=2": { "model": "tomsmodcore:holotapeReaderValid", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodcore:holotapeReaderValid", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodcore:holotapeReaderValid", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodcore:holotapeReaderValid", "x": 270 }
+    }
+}

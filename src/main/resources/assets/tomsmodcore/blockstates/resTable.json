@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodcore:resTableBase", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodcore:resTableBase"},
+         "facing=west,state=0": { "model": "tomsmodcore:resTableBase", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodcore:resTableBase", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodcore:resTableBase", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodcore:resTableBase", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodcore:resTableL", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodcore:resTableL"},
+         "facing=west,state=1": { "model": "tomsmodcore:resTableL", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodcore:resTableL", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodcore:resTableL", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodcore:resTableL", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodcore:resTableR", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodcore:resTableR"},
+         "facing=west,state=2": { "model": "tomsmodcore:resTableR", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodcore:resTableR", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodcore:resTableR", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodcore:resTableR", "x": 270 }
+    }
+}
