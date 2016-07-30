@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodfactory:centrifuge", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodfactory:centrifuge"},
+         "facing=west,state=0": { "model": "tomsmodfactory:centrifuge", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodfactory:centrifuge", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodfactory:centrifuge", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodfactory:centrifuge", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodfactory:centrifugeInactive", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodfactory:centrifugeInactive"},
+         "facing=west,state=1": { "model": "tomsmodfactory:centrifugeInactive", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodfactory:centrifugeInactive", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodfactory:centrifugeInactive", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodfactory:centrifugeInactive", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodfactory:centrifugeActive", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodfactory:centrifugeActive"},
+         "facing=west,state=2": { "model": "tomsmodfactory:centrifugeActive", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodfactory:centrifugeActive", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodfactory:centrifugeActive", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodfactory:centrifugeActive", "x": 270 }
+    }
+}

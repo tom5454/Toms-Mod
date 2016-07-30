@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "out=false": { "model": "tomsmodfactory:mbHatch"},
+         "out=true": { "model": "tomsmodfactory:mbHatchOut"}
+    }
+}

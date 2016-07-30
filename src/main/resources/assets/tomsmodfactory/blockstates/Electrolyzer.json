@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodfactory:Electrolyzer", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodfactory:Electrolyzer"},
+         "facing=west,state=0": { "model": "tomsmodfactory:Electrolyzer", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodfactory:Electrolyzer", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodfactory:Electrolyzer", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodfactory:Electrolyzer", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodfactory:ElectrolyzerInactive", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodfactory:ElectrolyzerInactive"},
+         "facing=west,state=1": { "model": "tomsmodfactory:ElectrolyzerInactive", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodfactory:ElectrolyzerInactive", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodfactory:ElectrolyzerInactive", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodfactory:ElectrolyzerInactive", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodfactory:ElectrolyzerActive", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodfactory:ElectrolyzerActive"},
+         "facing=west,state=2": { "model": "tomsmodfactory:ElectrolyzerActive", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodfactory:ElectrolyzerActive", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodfactory:ElectrolyzerActive", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodfactory:ElectrolyzerActive", "x": 270 }
+    }
+}

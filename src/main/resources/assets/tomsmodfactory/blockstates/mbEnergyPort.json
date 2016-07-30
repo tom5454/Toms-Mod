@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "state=0": { "model": "tomsmodfactory:mbEnergyPort"},
+        "state=1": { "model": "tomsmodfactory:mbEnergyPortOff"},
+        "state=2": { "model": "tomsmodfactory:mbEnergyPortOn"}
+    }
+}

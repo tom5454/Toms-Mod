@@ -1,0 +1,8 @@
+{
+    "parent": "block/adv_facing",
+    "textures": {
+        "top": "tomsmodfactory:blocks/machineSide",
+        "front": "tomsmodfactory:blocks/plateBlenderFront",
+        "side": "tomsmodfactory:blocks/machineSide"
+    }
+}

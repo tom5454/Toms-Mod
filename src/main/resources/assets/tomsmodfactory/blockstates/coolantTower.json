@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodfactory:coolantTower", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodfactory:coolantTower"},
+         "facing=west,state=0": { "model": "tomsmodfactory:coolantTower", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodfactory:coolantTower", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodfactory:coolantTower", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodfactory:coolantTower", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodfactory:coolantTowerInactive", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodfactory:coolantTowerInactive"},
+         "facing=west,state=1": { "model": "tomsmodfactory:coolantTowerInactive", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodfactory:coolantTowerInactive", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodfactory:coolantTowerInactive", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodfactory:coolantTowerInactive", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodfactory:coolantTowerActive", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodfactory:coolantTowerActive"},
+         "facing=west,state=2": { "model": "tomsmodfactory:coolantTowerActive", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodfactory:coolantTowerActive", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodfactory:coolantTowerActive", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodfactory:coolantTowerActive", "x": 270 }
+    }
+}

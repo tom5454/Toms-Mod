@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up":"blocks/mbf",
+        "down":"blocks/mbf",
+        "north": "blocks/mbCompressor",
+        "south": "blocks/mbCompressor",
+        "east": "blocks/mbCompressor",
+        "west": "blocks/mbCompressor",
+        "particle": "blocks/mbCompressor"
+    }
+}

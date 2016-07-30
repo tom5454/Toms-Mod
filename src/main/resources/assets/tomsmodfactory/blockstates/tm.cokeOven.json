@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodfactory:cokeOven", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodfactory:cokeOven"},
+         "facing=west,state=0": { "model": "tomsmodfactory:cokeOven", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodfactory:cokeOven", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodfactory:cokeOven", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodfactory:cokeOven", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodfactory:cokeOvenInactive", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodfactory:cokeOvenInactive"},
+         "facing=west,state=1": { "model": "tomsmodfactory:cokeOvenInactive", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodfactory:cokeOvenInactive", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodfactory:cokeOvenInactive", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodfactory:cokeOvenInactive", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodfactory:cokeOvenActive", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodfactory:cokeOvenActive"},
+         "facing=west,state=2": { "model": "tomsmodfactory:cokeOvenActive", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodfactory:cokeOvenActive", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodfactory:cokeOvenActive", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodfactory:cokeOvenActive", "x": 270 }
+    }
+}

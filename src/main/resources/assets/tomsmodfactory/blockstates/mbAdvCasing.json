@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "type=noct": { "model": "tomsmodfactory:mbAdvCasing"},
+        "type=full": { "model": "tomsmodfactory:mbAdvCasingF"},
+        "type=udct": { "model": "tomsmodfactory:mbAdvCasingUD"},
+        "type=dotc": { "model": "tomsmodfactory:mbAdvCasingD"},
+        "type=rlct": { "model": "tomsmodfactory:mbAdvCasingRL"}
+    }
+}

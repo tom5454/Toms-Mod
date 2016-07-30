@@ -1,0 +1,6 @@
+{
+    "parent": "block/controller",
+    "textures": {
+    	"front":"blocks/coolantTowerOff"
+    }
+}

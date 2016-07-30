@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodfactory:fusionPreHeater", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodfactory:fusionPreHeater"},
+         "facing=west,state=0": { "model": "tomsmodfactory:fusionPreHeater", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodfactory:fusionPreHeater", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodfactory:fusionPreHeater", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodfactory:fusionPreHeater", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodfactory:fusionPreHeaterInactive", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodfactory:fusionPreHeaterInactive"},
+         "facing=west,state=1": { "model": "tomsmodfactory:fusionPreHeaterInactive", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodfactory:fusionPreHeaterInactive", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodfactory:fusionPreHeaterInactive", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodfactory:fusionPreHeaterInactive", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodfactory:fusionPreHeaterActive", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodfactory:fusionPreHeaterActive"},
+         "facing=west,state=2": { "model": "tomsmodfactory:fusionPreHeaterActive", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodfactory:fusionPreHeaterActive", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodfactory:fusionPreHeaterActive", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodfactory:fusionPreHeaterActive", "x": 270 }
+    }
+}

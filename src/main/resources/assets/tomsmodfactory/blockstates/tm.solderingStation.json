@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "tomsmodfactory:solderingStation" },
+        "active=false,facing=south": { "model": "tomsmodfactory:solderingStation", "y": 180 },
+        "active=false,facing=west":  { "model": "tomsmodfactory:solderingStation", "y": 270 },
+        "active=false,facing=east":  { "model": "tomsmodfactory:solderingStation", "y": 90 },
+         "active=true,facing=north": { "model": "tomsmodfactory:solderingStation_on" },
+         "active=true,facing=south": { "model": "tomsmodfactory:solderingStation_on", "y": 180 },
+         "active=true,facing=west":  { "model": "tomsmodfactory:solderingStation_on", "y": 270 },
+         "active=true,facing=east":  { "model": "tomsmodfactory:solderingStation_on", "y": 90 }
+    }
+}

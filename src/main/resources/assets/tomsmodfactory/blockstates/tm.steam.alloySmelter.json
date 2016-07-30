@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "tomsmodfactory:steamAlloySmelter" },
+        "active=false,facing=south": { "model": "tomsmodfactory:steamAlloySmelter", "y": 180 },
+        "active=false,facing=west":  { "model": "tomsmodfactory:steamAlloySmelter", "y": 270 },
+        "active=false,facing=east":  { "model": "tomsmodfactory:steamAlloySmelter", "y": 90 },
+         "active=true,facing=north": { "model": "tomsmodfactory:steamAlloySmelter_on" },
+         "active=true,facing=south": { "model": "tomsmodfactory:steamAlloySmelter_on", "y": 180 },
+         "active=true,facing=west":  { "model": "tomsmodfactory:steamAlloySmelter_on", "y": 270 },
+         "active=true,facing=east":  { "model": "tomsmodfactory:steamAlloySmelter_on", "y": 90 }
+    }
+}

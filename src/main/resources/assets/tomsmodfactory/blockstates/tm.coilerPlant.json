@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "tomsmodfactory:coilerPlant" },
+        "active=false,facing=south": { "model": "tomsmodfactory:coilerPlant", "y": 180 },
+        "active=false,facing=west":  { "model": "tomsmodfactory:coilerPlant", "y": 270 },
+        "active=false,facing=east":  { "model": "tomsmodfactory:coilerPlant", "y": 90 },
+         "active=true,facing=north": { "model": "tomsmodfactory:coilerPlant_on" },
+         "active=true,facing=south": { "model": "tomsmodfactory:coilerPlant_on", "y": 180 },
+         "active=true,facing=west":  { "model": "tomsmodfactory:coilerPlant_on", "y": 270 },
+         "active=true,facing=east":  { "model": "tomsmodfactory:coilerPlant_on", "y": 90 }
+    }
+}

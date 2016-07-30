@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodfactory:blocks/bronzeCrafter",
+        "down": "blocks/brick",
+        "north": "tomsmodfactory:blocks/steamSolderingStation",
+        "east": "tomsmodfactory:blocks/basicSteamSide",
+        "south": "tomsmodfactory:blocks/basicSteamHatch",
+        "west": "tomsmodfactory:blocks/basicSteamSide",
+        "particle": "tomsmodfactory:blocks/steamSolderingStation"
+    }
+}

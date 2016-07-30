@@ -1,0 +1,6 @@
+{
+    "parent": "block/controllerA",
+    "textures": {
+    	"front":"blocks/fusionPreHeaterOn"
+    }
+}

@@ -1,0 +1,81 @@
+{"parent": "block/block",
+        "display": {
+        "gui": {
+            "rotation": [ 30, 135, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.625, 0.625, 0.625 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "textures": {
+        "0": "tomsmodfactory:blocks/waterCollectorSide",
+        "1": "tomsmodfactory:blocks/machineSide",
+        "2": "blocks/water_still",
+        "particle":"tomsmodfactory:blocks/machineSide"
+    },
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [ 0.0, 0.0, 0.0 ], 
+            "to": [ 16.0, 16.0, 16.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "up": { "texture": "#1", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "down": { "texture": "#1", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "nWater",
+            "from": [ 6.0, 6.0, 0.10000000149011612 ], 
+            "to": [ 10.0, 10.0, 0.10000000149011612 ], 
+            "faces": {
+                "north": { "texture": "#2", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "sWater",
+            "from": [ 6.0, 6.0, 15.899999998509884 ], 
+            "to": [ 10.0, 10.0, 15.899999998509884 ], 
+            "faces": {
+                "south": { "texture": "#2", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "eWater",
+            "from": [ 15.899999998509884, 6.0, 6.0 ], 
+            "to": [ 15.899999998509884, 10.0, 10.0 ], 
+            "faces": {
+                "east": { "texture": "#2", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "wWater",
+            "from": [ 0.10000000149011612, 6.0, 6.0 ], 
+            "to": [ 0.10000000149011612, 10.0, 10.0 ], 
+            "faces": {
+                "west": { "texture": "#2", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "Cube2",
+            "from": [ 0.20000000298023224, 0.10000000149011612, 0.20000000298023224 ], 
+            "to": [ 15.799999997019768, 15.899999989569189, 15.800000002980232 ], 
+            "faces": {
+                "north": { "texture": "#1", "uv": [ 0.0, 0.0, 15.599999994039536, 15.799999988079072 ] },
+                "east": { "texture": "#1", "uv": [ 0.0, 0.0, 15.6, 15.799999988079072 ] },
+                "south": { "texture": "#1", "uv": [ 0.0, 0.0, 15.599999994039536, 15.799999988079072 ] },
+                "west": { "texture": "#1", "uv": [ 0.0, 0.0, 15.6, 15.799999988079072 ] },
+                "up": { "texture": "#1", "uv": [ 0.0, 0.0, 15.599999994039536, 15.6 ] },
+                "down": { "texture": "#1", "uv": [ 0.0, 0.0, 15.599999994039536, 15.6 ] }
+            }
+        }
+    ]
+}
