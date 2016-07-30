@@ -1,0 +1,6 @@
+{
+	"parent":"block/hammerHead",
+	"textures":{
+		"block":"blocks/iron_block"
+	}
+}
