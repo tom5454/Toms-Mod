@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+              "all":"tomsmoddefense:blocks/defenseStation_active",
+        "particle": "tomsmoddefense:blocks/defenseStation"
+    }
+}

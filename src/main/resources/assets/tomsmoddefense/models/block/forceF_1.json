@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all":"tomsmoddefense:blocks/fieldContainment","particle": "tomsmoddefense:blocks/fieldContainment"
+    }
+}

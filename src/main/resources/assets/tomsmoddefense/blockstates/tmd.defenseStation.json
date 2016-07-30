@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "active=false": { "model": "tomsmoddefense:defenseStation"},
+         "active=true": { "model": "tomsmoddefense:defenseStation_active"}
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "active=false": { "model": "tomsmoddefense:fieldProjector_off"},
+         "active=true": { "model": "tomsmoddefense:fieldProjector_on"}
+    }
+}

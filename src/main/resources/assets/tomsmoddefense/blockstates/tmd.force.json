@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "type=0": { "model": "tomsmoddefense:forceF_0" },
+        "type=1": { "model": "tomsmoddefense:forceF_1" },
+        "type=2": { "model": "tomsmoddefense:forceF_2" }
+    }
+}

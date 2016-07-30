@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+                 "up": "tomsmoddefense:blocks/converter",
+               "down": "tomsmoddefense:blocks/converter",
+        "north": "tomsmoddefense:blocks/converter_front",
+            "east": "tomsmoddefense:blocks/converter_in",
+              "south": "tomsmoddefense:blocks/converter",
+           "west": "tomsmoddefense:blocks/converter_out",
+        "particle": "tomsmoddefense:blocks/converter"
+    }
+}

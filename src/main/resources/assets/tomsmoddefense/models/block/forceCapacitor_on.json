@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+                 "up": "tomsmoddefense:blocks/capacitor_green",
+               "down": "tomsmoddefense:blocks/capacitor_green",
+                 "north": "tomsmoddefense:blocks/screen_green",
+           "east": "tomsmoddefense:blocks/converter_out_active",
+              "south": "tomsmoddefense:blocks/capacitor_green",
+               "west": "tomsmoddefense:blocks/capacitor_green",
+        "particle": "tomsmoddefense:blocks/capacitor_yellow"
+    }
+}
