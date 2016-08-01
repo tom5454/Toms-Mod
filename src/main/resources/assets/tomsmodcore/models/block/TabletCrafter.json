@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/tm/tabletCrafter_top",
+        "down": "blocks/iron_block",
+        "north": "blocks/tm/tabletCrafter_side",
+         "east": "blocks/tm/tabletCrafter_side",
+        "south": "blocks/tm/tabletCrafter_side",
+         "west": "blocks/tm/tabletCrafter_side",
+        "particle": "blocks/tm/tabletCrafter_top"
+    }
+}

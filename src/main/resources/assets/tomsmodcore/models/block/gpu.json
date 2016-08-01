@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/gpuTop","down": "blocks/gpuBottom","north": "blocks/gpuFront","east": "blocks/gpuFront","south": "blocks/gpuFront","west": "blocks/gpuFront","particle": "blocks/gpuBottom"
+    }
+}

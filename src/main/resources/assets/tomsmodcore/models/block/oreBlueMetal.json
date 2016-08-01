@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/oreBlueMetal","down": "blocks/oreBlueMetal","north": "blocks/oreBlueMetal","east": "blocks/oreBlueMetal","south": "blocks/oreBlueMetal","west": "blocks/oreBlueMetal","particle": "blocks/oreBlueMetal"
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/ccProxy","down": "blocks/ccProxy","north": "blocks/ccProxy","east": "blocks/ccProxy","south": "blocks/ccProxy","west": "blocks/ccProxy","particle": "blocks/ccProxy"
+    }
+}

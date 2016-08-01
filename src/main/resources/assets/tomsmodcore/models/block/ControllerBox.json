@@ -1,0 +1,34 @@
+{"parent": "block/block",
+        "display": {
+        "gui": {
+            "rotation": [ 30, 135, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.625, 0.625, 0.625 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "textures": {
+        "0": "blocks/tm/Gray",
+        "particle":"blocks/tm/Gray"
+    },
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [ 2.5, 2.0, 9.0 ], 
+            "to": [ 13.5, 16.0, 16.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 11.0, 14.0 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 7.0, 14.0 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 11.0, 14.0 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 7.0, 14.0 ] },
+                "up": { "texture": "#0", "uv": [ 0.0, 0.0, 11.0, 7.0 ] },
+                "down": { "texture": "#0", "uv": [ 0.0, 0.0, 11.0, 7.0 ] }
+            }
+        }
+    ]
+}

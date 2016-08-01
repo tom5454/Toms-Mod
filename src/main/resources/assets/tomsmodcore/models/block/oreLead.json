@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/oreLead","down": "blocks/oreLead","north": "blocks/oreLead","east": "blocks/oreLead","south": "blocks/oreLead","west": "blocks/oreLead","particle": "blocks/oreLead"
+    }
+}

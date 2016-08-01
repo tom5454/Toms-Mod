@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/energySensor","down": "blocks/energySensor","north": "blocks/energySensor","east": "blocks/energySensor","south": "blocks/energySensor","west": "blocks/energySensor","particle": "blocks/energySensor"
+    }
+}

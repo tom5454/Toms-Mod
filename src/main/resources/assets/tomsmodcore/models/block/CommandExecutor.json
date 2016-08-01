@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "blocks/advanced_command_block","particle": "blocks/advanced_command_block"
+    }
+}

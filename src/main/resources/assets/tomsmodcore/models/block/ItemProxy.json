@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/tm/ItemProxyTop","down": "blocks/tm/ItemProxyBottom","north": "blocks/tm/ItemProxySide","east": "blocks/tm/ItemProxySide","south": "blocks/tm/ItemProxySide","west": "blocks/tm/ItemProxySide","particle": "blocks/tm/ItemProxySide"
+    }
+}

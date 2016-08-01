@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/rsPort","down": "blocks/rsPort","north": "blocks/rsPort","east": "blocks/rsPort","south": "blocks/rsPort","west": "blocks/rsPort","particle": "blocks/rsPort"
+    }
+}

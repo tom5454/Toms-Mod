@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "tomsmodcore:blocks/log_rubber_top",
+        "down": "tomsmodcore:blocks/log_rubber_top",
+        "up": "tomsmodcore:blocks/log_rubber_top",
+        "north": "tomsmodcore:blocks/log_rubber_hole",
+        "east": "tomsmodcore:blocks/log_rubber",
+        "south": "tomsmodcore:blocks/log_rubber",
+        "west": "tomsmodcore:blocks/log_rubber"
+    }
+}

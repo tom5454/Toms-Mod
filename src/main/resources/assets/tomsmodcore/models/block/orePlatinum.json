@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "blocks/orePlatinum","down": "blocks/orePlatinum","north": "blocks/orePlatinum","east": "blocks/orePlatinum","south": "blocks/orePlatinum","west": "blocks/orePlatinum","particle": "blocks/orePlatinum"
+    }
+}
