@@ -1,0 +1,98 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "textures": {
+        "0": "blocks/log_oak"
+    },
+    "parent": "block/block",
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 4, 2 ],
+            "scale": [ 0.85, 0.85, 0.85 ]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 4, 2 ],
+            "scale": [ 0.85, 0.85, 0.85 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 1.13, 3.1, 1.13 ],
+            "scale": [ 0.68, 0.68, 0.68 ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 1.13, 3.1, 1.13 ],
+            "scale": [ 0.68, 0.68, 0.68 ]
+        },
+        "gui": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.8, 0.8, 0.8 ]
+        },
+        "ground": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 3, 0],
+            "scale":[ 0.25, 0.25, 0.25 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "elements": [
+        {
+            "name": "handle",
+            "from": [ 7.0, 1.0, 7.0 ], 
+            "to": [ 9.0, 16.19999998807907, 9.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 15.199999988079071 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 15.199999988079071 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 15.199999988079071 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 15.199999988079071 ] },
+                "up": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 2.0 ] },
+                "down": { "texture": "#0", "uv": [ 0.0, 0.0, 2.0, 2.0 ] }
+            }
+        },
+        {
+            "name": "headMid",
+            "from": [ 5.5, 12.0, 4.0 ], 
+            "to": [ 10.5, 15.0, 12.0 ], 
+            "faces": {
+                "north": { "texture": "#block", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "east": { "texture": "#block", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "south": { "texture": "#block", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "west": { "texture": "#block", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "up": { "texture": "#block", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "down": { "texture": "#block", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "headTop",
+            "from": [ 6.0, 11.50000000745058, 4.5 ], 
+            "to": [ 10.0, 15.50000000745058, 11.5 ], 
+            "faces": {
+                "north": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "east": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "south": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "west": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "up": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "down": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] }
+            }
+        },
+        {
+            "name": "headF",
+            "from": [ 6.0, 12.50000000745058, 3.5 ], 
+            "to": [ 10.0, 14.50000000745058, 12.5 ], 
+            "faces": {
+                "north": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "east": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "south": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "west": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "up": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] },
+                "down": { "texture": "#block", "uv": [ 1.0, 1.0, 15.0, 15.0 ] }
+            }
+        }
+    ]
+}

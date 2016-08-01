@@ -1,0 +1,23 @@
+{
+  "elements": [
+    { "from": [ 5.003, 10.997, 5.003 ],
+      "to": [ 10.997, 16, 10.997 ],
+      "faces": {
+        "north": { "texture": "#duct" },
+        "south": { "texture": "#duct" },
+        "west":  { "texture": "#duct" },
+        "east":  { "texture": "#duct" }
+      }
+    },
+    { "from": [ 10.997, 16, 10.997 ],
+      "to": [ 5.003, 10.997, 5.003 ],
+      "faces": {
+        "north": { "texture": "#duct" },
+        "south": { "texture": "#duct" },
+        "west":  { "texture": "#duct" },
+        "east":  { "texture": "#duct" }
+      }
+    }
+  ]
+}
+

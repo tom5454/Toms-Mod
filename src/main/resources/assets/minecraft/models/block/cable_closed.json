@@ -1,0 +1,12 @@
+{
+  "elements": [
+    { "from": [ 6.003, 9.997, 6.003 ],
+      "to": [ 9.997, 9.997, 9.997 ],
+      "faces": {
+        "down": { "texture": "#duct" },
+        "up": { "texture": "#duct" }
+      }
+    }
+  ]
+}
+

@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "#front",
+        "north": "#front",
+         "down": "tomsmodcore:blocks/Gray",
+           "up": "tomsmodcore:blocks/Gray",
+         "east": "tomsmodcore:blocks/Gray",
+        "south": "tomsmodcore:blocks/Gray",
+         "west": "tomsmodcore:blocks/Gray"
+    }
+}

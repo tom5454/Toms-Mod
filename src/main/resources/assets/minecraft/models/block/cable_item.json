@@ -1,0 +1,16 @@
+{
+    "elements": [
+        {
+            "from": [ 1.0, 6.0, 6.0 ], 
+            "to": [ 15.0, 10.0, 10.0 ], 
+            "faces": {
+                "north": { "texture": "#duct" },
+                 "east": { "texture": "#duct"},
+                "south": { "texture": "#duct" },
+                 "west": { "texture": "#duct"},
+                   "up": { "texture": "#duct" },
+                 "down": { "texture": "#duct" }
+            }
+        }
+    ]
+}
