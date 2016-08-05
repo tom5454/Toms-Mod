@@ -1,0 +1,234 @@
+Changelog:
+Version 2.0.11_ALPHA for Minecraft 1.10.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.
+
+    Added Fluid Servo
+    Added Electrical Soldering Station
+    Added Fluid Pump
+    Added Fluid Transposer
+    Added Recipe for Advanced Tank
+    Few bugfixes
+
+Version 2.0.10_ALPHA for Minecraft 1.10.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.
+
+    Added Basic Turbine
+    Added a few missing recipes.
+    Added Battery Box
+    Added Chargeable Batteries
+    Added Tungsten
+    Few new Achievements
+    Few bugfixes.
+
+Version 2.0.9_ALPHA for Minecraft 1.10.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.
+
+    Added Soldering Station
+    Added Soldering Alloy Ingot
+    Added Rubber
+    Added Silicon
+    Added Coke Oven
+    Added Blast Furnace
+    Few bug fixes
+    Refactored Energy system.
+    Added Ore spawning control to world_generation.cfg
+
+Version 2.0.8_ALPHA for Minecraft 1.10.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.
+
+    Updated to Minecraft 1.10.2
+    Fixed Crash on the Server when the Map is disabled
+    Fixed Research Table Gui Sync issues.
+    A Few Gui rendering layer bugs fixed.
+
+Version 2.0.7_ALPHA for Minecraft 1.9.4
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.
+
+    Updated to Minecraft 1.9.4
+    Minor bug & crash fixes on the dedicated server environment.
+    A Few Gui rendering layer bugs fixed.
+    Fixed energy duplication bugs.
+    Added: Bronze machines:
+        Furnace (Normal and Advanced)
+        Crusher
+        Plate Blending Machine
+        Alloy Smelter
+        Basic & Advanced Boiler
+    Added: Normal and Advanced Electric Furnace
+    Fixed a few auto-crafting bugs.
+    Added: Pattern Terminal: Pattern Properties button. Use Configure key binding (default: C) on a stack to change its configuration.
+    Fixed Terminal Crashes.
+    Added: Coal Coke & Coal Coke Block
+    Added: Rubber Tree
+    Added: Oil Lakes
+    Added: Broken Trees
+
+Version 2.0.6_ALPHA for Minecraft 1.9
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.
+
+    Updated to Minecraft 1.9
+    Research System
+    Item Duct
+    FluidDuct (WIP Only for this version: Use the wrench to toggle extraction mode.)
+    JEI Handler for a few machines (WIP)
+    New Machines:
+        Crusher
+        Wire Mill
+        Plate Blending Machine
+        Coiler Plant
+    Custom Energy System (no Recipes yet)
+        LV (multipartable LV cable)
+        LASER (Laser Energy Transmitter)
+        HV (multipartable HV cable)
+    Removed MCreator Elements (some of the blocks are missing)
+    Added MFFS like Force Field Base Defense System (no Recipes yet)
+    Added Configurable Chest (slots are lockable from any kind of item transfer system)
+    Added Item Storage System with auto-crafting(can be buggy) (no Recipes yet)
+    Updated Mapwriter, icon and beam options added on the waypoint creation menu.
+        Server Sided waypoint hander. Accessing Command: tm_server_waypoint. Seeable for every player on the Server, players can delete it.
+        Added Invalid Arguments Errors and Tab complete to tm_waypoint & tm_server_waypoint
+        Some parts updated from: http://minecraft.curseforge.com/projects/mapwriter-2?gameCategorySlug=mc-mods&page=2&projectID=231387
+        Custom Beam Textures. See: tm:minimap/testBeam
+        Resource pack editable marker textures
+    Added Rubber Tree (WIP)
+    Lots of crafting Materials
+        Ores, Ingots, Nuggets, Dusts, Crushed Ores, and More
+        Material Types are Chrome, Titanium, Copper, Tin, Nickel, Platinum, Advanced Alloy MK1 & MK2(WIP), Uranium, Blue Metal, Greenium(WIP), Red Diamond, Normal Quartz(WIP), Silver, Lead, Lithium, Sulfur, Zinc, Enderium(WIP), Steel(WIP), Bronze, Aluminum(WIP), Mercury(WIP), Certus Quartz(WIP), Fluix(WIP)
+        Blocks of the Material Types
+    Few updated textures
+    Added Multimeter. Can display information about Energy & Fluid Storage
+    Added an Achievement 'Time to Research' on the Tom's Mod page.
+    Added Portable Comparator
+
+Version 2.0.5 for Minecraft 1.7.10
+
+    Added Wireless Charger (RF) (Charges the linked machines.)
+    Added Item Proxy (uses RF to operate)
+    Added CCLights like Monitor and GPU (for ComputerCraft 1.7+) (the gpu has to be on the far left bottom corner, gpu uses RF to operate)
+    Added getPlayerNBT(Player):Object and setPlayerNBT(Player, exported NBT (nbt.export())) methods to Command Executor Block
+    Added Nuclear Waste (Fluid)
+    Added Redstone Port (for ComputerCraft 1.7+)
+
+Version 2.0.4 for Minecraft 1.7.10
+
+    Fixed Controller Box was not rendered properly on the South side of the block.
+    Added Minimap(It can be disabled in the config file)
+        Main code from Mapwriter: http://minecraft.curseforge.com/projects/mapwriter?gameCategorySlug=mc-mods&projectID=65797
+        Command /tm_waypoint <function>
+            Function 'add': <name> <group> <x> <y> <z> <dimension ID> <Player Name> <texture> <reloadable>
+            Function 'remove': <name> <group> <Player Name>
+        Item Entity Tracker
+        Writes distance from the selected waypoint
+        Non selected waypoints are hided when the distance is higher then 128 blocks (Configurable in the Config)
+    Added Item Holotape (for ComputerCraft 1.7+)
+    Added Holotape Writer (for ComputerCraft 1.7+)
+    Added Holotape Reader (for ComputerCraft 1.7+)
+    Added Magnetic Card (for ComputerCraft 1.7+)
+    Added Magnetic Card Device (for ComputerCraft 1.7+)
+    Added Portable Solar Panel (RF) (no Crafting Recipe yet)
+    Added Portable Energy Cell (RF) (no Crafting Recipe yet)
+    Added Redstone Controlled Camofugable Door
+    Added Jammer (interfere with the Entity Tracker and the Tablet) (Adventure Block)
+    Added Electrical Magnetic Card (Adventure Item)
+
+Version 2.0.3 for Minecraft 1.7.10
+
+    ComputerCraft based Blocks disabled when ComputerCraft not Installed.
+    Added Recipe for the Crafting Core
+
+Version 2.0.2 for Minecraft 1.7.10
+
+    Fixed Crash when ComputerCraft not Installed: java.lang.NoClassDefFoundError: dan200/computercraft/api/peripheral/IPeripheral
+
+Vrsion 2.0.1 for Minecraft 1.7.10
+
+    Fixed Crash when ComputerCraft not Installed: java.lang.NoClassDefFoundError: com/tom/core/block/GPU
+    Added: Ender Player Sensor
+
+Version 2.0.0 THE BIG UPDATE for Minecraft 1.7.10
+
+    New Machines:
+        Electrolyzer (Multiblock)
+        Centrifuge (Multiblock)
+        Fusion Pre Heater (Multiblock)
+        Fusion Reactor Controller (Multiblock)
+        Coolant Tower (Multiblock)
+        Wireless Peripheral (for ComputerCraft 1.7+)
+        Ender Memory (for ComputerCraft 1.7+)
+        Peripheral Proxy (for ComputerCraft 1.7+)
+    New Ores and Resources:
+        Uranium
+        Chrome
+    Few new textures
+    Adventure Items & Blocks (for ComputerCraft 1.7+)
+        Tablet
+        Controller Box
+        Tablet Access Point
+        Wrench
+        Connection Modem
+        Connection Modem for Controller Box
+        Antenna
+        Antenna Controller
+        Tablet Controller
+        Tablet Crafter
+        Tiered Chipset
+        Linked Chipset
+    Hard Start Mode: Tool Required for the Wood Block, disabled by default, It can be enabled in the Config
+    New Tools:
+        Linker
+        Flint Axe
+    Multiblock Parts:
+        Energy Port (RF based)
+        Hatch
+        Fluid Port
+        Pressure Port (if PneumaticCraft installed)
+        Compressor (if PneumaticCraft not installed)
+        Fuel Rod
+    Multiblock Casings:
+        Normal
+        Advanced
+    New Fluids:
+        Hydrogen
+        Deuterium
+        Tritium
+        Fusion Compound
+        Plasma
+
+Version 1.1.1 for Minecraft 1.7.10
+
+ * Manual Book
+
+ * Few new textures
+
+ 
+
+Version 1.1.0 for Minecraft 1.7.10
+
+ * New Machines:
+
+     * Lava Pump
+
+     * Cyanite Crafting Altar
+
+ * Titanium Ore and Ingot
+
+ * Copper Ore and Ingot
+
+ * Advanced Alloy Ingot Mk1,Mk2
+
+ * Advanced Alloy Armor
+
+ * Invisable Ink Bottle
+
+ * Invisable Version of Advanced Alloy Armor
+
+ 
+
+Version 1.0 Minecraft 1.7.10
+  First Release
