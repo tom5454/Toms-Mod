@@ -1,7 +1,8 @@
 {
   "homepage": "https://minecraft.curseforge.com/projects/toms-mod",
   "promos": {
-    "1.10.2-latest": "2.0.11"
+    "1.10.2-latest": "2.0.11",
+    "1.10.2-recommended": "2.0.11"
   },
   "1.10.2": {
     "2.0.11": "See changelog: https://minecraft.curseforge.com/projects/toms-mod/files/2319796",
