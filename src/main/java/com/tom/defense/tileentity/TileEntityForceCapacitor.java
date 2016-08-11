@@ -5,6 +5,24 @@ import static com.tom.api.energy.EnergyType.FORCE;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+
+import net.minecraftforge.fml.common.Optional;
+
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyHandler;
@@ -29,26 +47,10 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.Optional;
 
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
 public class TileEntityForceCapacitor extends TileEntityTomsMod implements
-IPeripheral, IInventory, IEnergyHandler, IForcePowerStation, IGuiTile {
+IPeripheral, ISidedInventory, IEnergyHandler, IForcePowerStation, IGuiTile {
 	private static final int DEFAULT_RANGE = 2;
 	private static final int RANGE_UPGRADE_INCREASE = 2;
 	private EnergyStorage energy = new EnergyStorage(10000000,100000);
@@ -446,5 +448,20 @@ IPeripheral, IInventory, IEnergyHandler, IForcePowerStation, IGuiTile {
 		if(id == 0){
 			rsMode = ForceDeviceControlType.get(extra);
 		}
+	}
+
+	@Override
+	public int[] getSlotsForFace(EnumFacing side) {
+		return new int[]{};
+	}
+
+	@Override
+	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+		return false;
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+		return false;
 	}
 }

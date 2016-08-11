@@ -5,21 +5,8 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.google.common.collect.Lists;
-import com.tom.api.inventory.IStorageInventory;
-import com.tom.api.inventory.StoredItemStack;
-import com.tom.api.tileentity.IGuiTile;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.gui.GuiTomsMod;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.handler.PlayerHandler;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageNBT;
-import com.tom.storage.multipart.StorageNetworkGrid.CalculatedCrafting;
-import com.tom.storage.multipart.StorageNetworkGrid.CompiledCalculatedCrafting;
-import com.tom.storage.multipart.StorageNetworkGrid.ITerminal;
-
 import mapwriterTm.util.Render;
+
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -35,8 +22,25 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.google.common.collect.Lists;
+
+import com.tom.api.inventory.IStorageInventory;
+import com.tom.api.inventory.StoredItemStack;
+import com.tom.api.tileentity.IGuiTile;
+import com.tom.apis.TomsModUtils;
+import com.tom.handler.PlayerHandler;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageNBT;
+import com.tom.storage.multipart.StorageNetworkGrid.CalculatedCrafting;
+import com.tom.storage.multipart.StorageNetworkGrid.CompiledCalculatedCrafting;
+import com.tom.storage.multipart.StorageNetworkGrid.ITerminal;
+import com.tom.storage.tileentity.gui.GuiTerminalBase;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 	public List<StoredItemStack> itemList = Lists.<StoredItemStack>newArrayList();
@@ -48,7 +52,7 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 	protected EntityPlayer player;
 	public boolean isCraftingReport = false;
 	public CalculatedCrafting currentReport;
-	private boolean dataSent = false;
+	private boolean dataSent = false, lastPower;
 	protected ITerminal te;
 	public int terminalType;
 	private int sortingData, searchType;
@@ -97,22 +101,26 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 			return slotIndex;
 		}
 		@SideOnly(Side.CLIENT)
-		public void drawSlot(GuiTomsMod gui){
-			if(stack != null){
-				GL11.glPushMatrix();
-				gui.renderItemInGui(stack.stack.copy().splitStack(1), gui.getGuiLeft()+xDisplayPosition, gui.getGuiTop()+yDisplayPosition, 0, 0, false, 0xFFFFFF, false);
-				this.drawStackSize(gui.getFontRenderer(stack.stack), stack.itemCount, gui.getGuiLeft()+xDisplayPosition, gui.getGuiTop()+yDisplayPosition);
-				GL11.glPopMatrix();
-			}
-		}
-		@SideOnly(Side.CLIENT)
-		public boolean drawTooltip(GuiTomsMod gui, int mouseX, int mouseY){
-			boolean ret = false;
+		public void drawSlot(GuiTerminalBase gui, int mouseX, int mouseY){
 			if(mouseX >= gui.getGuiLeft()+xDisplayPosition-1 && mouseY >= gui.getGuiTop()+yDisplayPosition-1 && mouseX < gui.getGuiLeft()+xDisplayPosition + 17 && mouseY < gui.getGuiTop()+yDisplayPosition + 17){
 				Render.setColourWithAlphaPercent(0xFFFFFF,60);
 				Render.drawRect(gui.getGuiLeft()+xDisplayPosition, gui.getGuiTop()+yDisplayPosition, 16, 16);
-				ret = true;
 			}
+			if(gui.powered){
+				if(stack != null){
+					GL11.glPushMatrix();
+					gui.renderItemInGui(stack.stack.copy().splitStack(1), gui.getGuiLeft()+xDisplayPosition, gui.getGuiTop()+yDisplayPosition, 0, 0, false, 0xFFFFFF, false);
+					this.drawStackSize(gui.getFontRenderer(stack.stack), stack.itemCount, gui.getGuiLeft()+xDisplayPosition, gui.getGuiTop()+yDisplayPosition);
+					GL11.glPopMatrix();
+				}
+			}else{
+				gui.bindList();
+				gui.drawTexturedModalRect(gui.getGuiLeft()+xDisplayPosition-1, gui.getGuiTop()+yDisplayPosition-1, 125, 120, 18, 18);
+			}
+		}
+		@SideOnly(Side.CLIENT)
+		public boolean drawTooltip(GuiTerminalBase gui, int mouseX, int mouseY){
+			boolean ret = false;
 			if(stack != null){
 				if(stack.itemCount > 9999){
 					gui.renderItemInGui(stack.stack, gui.getGuiLeft()+xDisplayPosition, gui.getGuiTop()+yDisplayPosition, mouseX, mouseY, false, 0, true, I18n.format("tomsmod.gui.amount", stack.itemCount));
@@ -225,14 +233,19 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 			mainTag.setInteger("t", search);
 			//mainTag.setInteger("c", te.getTerminalMode());
 			mainTag.setBoolean("r", false);
+			boolean isPowered = te.getGrid().isPowered();
 			for(IContainerListener crafter : listeners) {
 				if(sendUpdate)NetworkHandler.sendTo(new MessageNBT(mainTag), (EntityPlayerMP) crafter);
 				if(terminalType != te.getTerminalMode()){
 					crafter.sendProgressBarUpdate(this, 0, te.getTerminalMode());
 				}
+				if(lastPower != isPowered){
+					crafter.sendProgressBarUpdate(this, 1, isPowered ? 1 : 0);
+				}
 				sendToCrafter(crafter);
 			}
 			terminalType = te.getTerminalMode();
+			lastPower = isPowered;
 			afterSending();
 		}else{
 			if(!dataSent){
@@ -470,9 +483,9 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 			return super.slotClick(slotId, clickedButton, clickTypeIn, playerIn);
 	}
 	@SideOnly(Side.CLIENT)
-	public final int drawSlots(GuiTomsMod gui, int mouseX, int mouseY){
+	public final int drawSlots(GuiTerminalBase gui, int mouseX, int mouseY){
 		for(int i = 0;i<storageSlotList.size();i++){
-			storageSlotList.get(i).drawSlot(gui);
+			storageSlotList.get(i).drawSlot(gui, mouseX, mouseY);
 		}
 		for(int i = 0;i<storageSlotList.size();i++){
 			if(storageSlotList.get(i).drawTooltip(gui, mouseX, mouseY)){
@@ -520,6 +533,8 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 	public final void updateProgressBar(int id, int data) {
 		if(id == 0){
 			terminalType = data;
+		}else if(id == 1){
+
 		}else onProgressBarUpdate(id, data);
 	}
 	@Override

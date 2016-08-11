@@ -28,7 +28,6 @@ public class MapTexture extends Texture
 
 	private class Rect
 	{
-		@SuppressWarnings("hiding")
 		final int x, y, w, h;
 
 		Rect(int x, int y, int w, int h)

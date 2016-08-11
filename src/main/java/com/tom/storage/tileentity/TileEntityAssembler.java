@@ -84,7 +84,7 @@ public class TileEntityAssembler extends TileEntityTomsMod implements IEnergyRec
 				}
 				return true;
 			}else{
-				ReturnData data = AdvancedCraftingHandler.craft(recipe, null, null);
+				ReturnData data = AdvancedCraftingHandler.craft(recipe, null, null, worldObj);
 				if(data != null && data.hasAllResearches()){
 					if(doPush){
 						energy.extractEnergy(1 + (data.getTime() / 20), false);

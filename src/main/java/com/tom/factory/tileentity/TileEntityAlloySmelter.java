@@ -7,7 +7,6 @@ import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
 import com.tom.apis.TomsModUtils;
-import com.tom.factory.FactoryInit;
 import com.tom.factory.block.AlloySmelter;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
@@ -117,9 +116,6 @@ public class TileEntityAlloySmelter extends TileEntityMachineBase {
 		int p = upgradeC + 1 + (upgradeC / 2);
 		progress = Math.max(0, progress - p);
 		energy.extractEnergy(1D * p, false);
-	}
-	private int getSpeedUpgradeCount(){
-		return stack[3] != null && stack[3].getItem() == FactoryInit.speedUpgrade ? stack[3].stackSize : 0;
 	}
 
 	@Override

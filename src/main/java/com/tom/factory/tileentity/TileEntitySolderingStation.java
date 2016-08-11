@@ -109,9 +109,7 @@ public class TileEntitySolderingStation extends TileEntityMachineBase {
 			if(energy.getEnergyStored() > 20){
 				if(solderingAlloyLevel > 0){
 					if(progress > 0){
-						energy.extractEnergy(5, false);
-						progress -= MathHelper.floor_double(10 * getMaxProgress());
-						solderingAlloyLevel--;
+						updateProgress();
 					}else if(progress == 0){
 						this.craftingError = 0;
 						if(output != null){
@@ -137,7 +135,7 @@ public class TileEntitySolderingStation extends TileEntityMachineBase {
 							if(h != null){
 								ReturnData data = AdvancedCraftingHandler.craft(new ItemStack[]{stack[0],stack[1],
 										stack[2],stack[3],stack[4],stack[5],stack[6],stack[7],stack[8]},
-										h.getResearchesCompleted(), CraftingLevel.E_SOLDERING_STATION);
+										h.getResearchesCompleted(), CraftingLevel.E_SOLDERING_STATION, worldObj);
 								if(data != null){
 									if(data.hasAllResearches()){
 										if(data.isRightLevel()){
@@ -195,5 +193,12 @@ public class TileEntitySolderingStation extends TileEntityMachineBase {
 
 	public int getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
+	}
+	private void updateProgress(){
+		int upgradeC = getSpeedUpgradeCount();
+		int p = upgradeC + MathHelper.floor_double(10 * (getMaxProcessTimeNormal() / TYPE_MULTIPLIER_SPEED[getType()])) + (upgradeC / 2);
+		progress = Math.max(0, progress - p);
+		energy.extractEnergy(1.2D * p, false);
+		solderingAlloyLevel -= p;
 	}
 }

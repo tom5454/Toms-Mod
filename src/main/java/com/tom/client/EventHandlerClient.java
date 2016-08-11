@@ -27,10 +27,12 @@ import com.google.common.collect.Maps;
 
 import com.tom.apis.TMLogger;
 import com.tom.core.CoreInit;
+import com.tom.handler.EventHandler;
 import com.tom.lib.GlobalFields;
 
 import com.tom.core.tileentity.gui.GuiCamera;
 
+@SideOnly(Side.CLIENT)
 public class EventHandlerClient {
 	protected static EventHandlerClient instance;
 	private List<ResourceLocation> loadedLocations = new ArrayList<ResourceLocation>();
@@ -100,6 +102,7 @@ public class EventHandlerClient {
 	{
 		if (event.phase == TickEvent.Phase.START)
 		{
+			EventHandler.teList.update(true);
 			// run the cleanup code when Mw is loaded and the player becomes
 			// null.
 			// a bit hacky, but simpler than checking if the connection has

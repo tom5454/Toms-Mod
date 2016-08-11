@@ -1,5 +1,12 @@
 package com.tom.storage.tileentity.inventory;
 
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.tom.api.inventory.IJEIAutoFillTerminal;
 import com.tom.api.inventory.SlotPhantom;
 import com.tom.network.NetworkHandler;
@@ -7,13 +14,6 @@ import com.tom.network.messages.MessageNBT;
 import com.tom.storage.StorageInit;
 import com.tom.storage.tileentity.TileEntityPatternTerminal;
 import com.tom.storage.tileentity.inventory.ContainerBlockInterface.SlotPattern;
-
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class ContainerBlockPatternTerminal extends ContainerTerminalBase implements IJEIAutoFillTerminal{
 	private int crafting = -1, useContainerItems = -1;
@@ -54,18 +54,18 @@ public class ContainerBlockPatternTerminal extends ContainerTerminalBase impleme
 	public void sendToCrafter(IContainerListener crafter) {
 		int v = ((TileEntityPatternTerminal)te).getCraftingBehaviour();
 		if(crafting != v){
-			crafter.sendProgressBarUpdate(this, 1, v);
+			crafter.sendProgressBarUpdate(this, 10, v);
 		}
 		v = ((TileEntityPatternTerminal)te).properties.useContainerItems ? 1 : 0;
 		if(useContainerItems != v){
-			crafter.sendProgressBarUpdate(this, 2, v);
+			crafter.sendProgressBarUpdate(this, 11, v);
 		}
 	}
 	@Override
 	public void onProgressBarUpdate(int id, int data) {
-		if(id == 1){
+		if(id == 10){
 			((TileEntityPatternTerminal)te).setCraftingBehaviour(data);
-		}else if(id == 2){
+		}else if(id == 11){
 			((TileEntityPatternTerminal)te).properties.useContainerItems = data == 1;
 		}
 	}

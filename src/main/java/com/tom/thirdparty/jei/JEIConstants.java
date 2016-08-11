@@ -8,4 +8,6 @@ public final class JEIConstants {
 	public static final String WIREMILL_ID = Configs.Modid+":wiremill";
 	public static final String PLATE_BLENDER_ID = Configs.Modid+":plateBlender";
 	public static final String ALLOY_SMELTER_ID = Configs.Modid+":alloySmelter";
+	public static final String BLAST_FURNACE_ID = Configs.Modid+":blastFurnace";
+	public static final String COKE_OVEN_ID = Configs.Modid+":cokeOven";
 }

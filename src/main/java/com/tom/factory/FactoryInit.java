@@ -36,6 +36,7 @@ import com.tom.factory.block.ElectricFurnaceAdv;
 import com.tom.factory.block.Electrolyzer;
 import com.tom.factory.block.FluidTransposer;
 import com.tom.factory.block.FusionPreHeater;
+import com.tom.factory.block.IndustrialBlastFurnace;
 import com.tom.factory.block.MultiblockCase;
 import com.tom.factory.block.MultiblockCompressor;
 import com.tom.factory.block.MultiblockEnergyPort;
@@ -69,6 +70,7 @@ import com.tom.factory.tileentity.TileEntityElectricFurnaceAdv;
 import com.tom.factory.tileentity.TileEntityElectrolyzer;
 import com.tom.factory.tileentity.TileEntityFluidTransposer;
 import com.tom.factory.tileentity.TileEntityFusionPreHeater;
+import com.tom.factory.tileentity.TileEntityIndustrialBlastFurnace;
 import com.tom.factory.tileentity.TileEntityMBCompressor;
 import com.tom.factory.tileentity.TileEntityMBEnergyPort;
 import com.tom.factory.tileentity.TileEntityMBFluidPort;
@@ -98,7 +100,7 @@ public class FactoryInit {
 	public static Item speedUpgrade, extruderModule, coalCoke;
 
 	public static Block MultiblockCase, MultiblockEnergyPort, MultiblockHatch, MultiblockHeatPort, MultiblockPressurePort, MultiblockFluidHatch, MultiblockFuelRod, MultiblockCompressor;
-	public static Block Electrolyzer, Centrifuge, FusionPreHeater, CoolantTower, cokeOven, blastFurnace;
+	public static Block Electrolyzer, Centrifuge, FusionPreHeater, CoolantTower, cokeOven, blastFurnace, industrialBlastFurnace;
 	public static Block AdvancedMultiblockCasing, plateBlendingMachine, wireMill, crusher, basicBoiler, advBoiler, steamFurnace, advSteamFurnace, electricFurnace, steamCrusher, coilerPlant, waterCollector, steamPlateBlender, alloySmelter, steamAlloySmelter, advElectricFurnace, steamSolderingStation, solderingStation, pump, fluidTransposer;
 	public static Block blockCoalCoke, cokeOvenWall, blastFurnaceWall;
 	@EventHandler
@@ -145,6 +147,7 @@ public class FactoryInit {
 		solderingStation = new SolderingStation().setUnlocalizedName("tm.solderingStation").setCreativeTab(tabTomsModFactory);
 		pump = new BlockPump().setUnlocalizedName("tm.blockPump").setCreativeTab(tabTomsModFactory);
 		fluidTransposer = new FluidTransposer().setUnlocalizedName("tm.fluidTransposer").setCreativeTab(tabTomsModFactory);
+		industrialBlastFurnace = new IndustrialBlastFurnace().setUnlocalizedName("tm.industrialBlastFurnace").setCreativeTab(tabTomsModFactory);
 		registerItem(speedUpgrade, speedUpgrade.getUnlocalizedName().substring(5));
 		CoreInit.addItemToGameRegistry(extruderModule, extruderModule.getUnlocalizedName().substring(5));
 		registerBlock(MultiblockCase, MultiblockCase.getUnlocalizedName().substring(5));
@@ -184,6 +187,7 @@ public class FactoryInit {
 		CoreInit.addBlockToGameRegistry(solderingStation, solderingStation.getUnlocalizedName().substring(5));
 		CoreInit.addBlockToGameRegistry(pump, pump.getUnlocalizedName().substring(5));
 		CoreInit.addBlockToGameRegistry(fluidTransposer, fluidTransposer.getUnlocalizedName().substring(5));
+		CoreInit.addBlockToGameRegistry(industrialBlastFurnace, industrialBlastFurnace.getUnlocalizedName().substring(5));
 		GameRegistry.registerTileEntity(TileEntityMultiblockCase.class, Configs.Modid+"MultiblockCase");
 		GameRegistry.registerTileEntity(TileEntityMBEnergyPort.class, Configs.Modid+"mbEnergyPort");
 		GameRegistry.registerTileEntity(TileEntityMBHatch.class, Configs.Modid+"mbHatch");
@@ -216,6 +220,7 @@ public class FactoryInit {
 		GameRegistry.registerTileEntity(TileEntitySolderingStation.class, Configs.Modid+"solderingStation");
 		GameRegistry.registerTileEntity(TileEntityPump.class, Configs.Modid+"pump");
 		GameRegistry.registerTileEntity(TileEntityFluidTransposer.class, Configs.Modid+"fluidTransposer");
+		GameRegistry.registerTileEntity(TileEntityIndustrialBlastFurnace.class, Configs.Modid+"industrialBlastFurnace");
 		FuelHandler.registerExtraFuelHandler(new ItemStack(blockCoalCoke), 32000);
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");
@@ -253,6 +258,7 @@ public class FactoryInit {
 		registerMachineRenderer(solderingStation);
 		registerMachineRenderer(pump);
 		registerMachineRenderer(fluidTransposer);
+		registerMachineRenderer(industrialBlastFurnace);
 	}
 	@SideOnly(Side.CLIENT)
 	private static void registerMachineRenderer(Block block){

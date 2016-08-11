@@ -31,6 +31,9 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.ForgeVersion.CheckResult;
+import net.minecraftforge.common.ForgeVersion.Status;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
@@ -39,6 +42,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
@@ -67,6 +71,7 @@ import com.tom.api.item.ItemCraftingTool;
 import com.tom.api.item.MultipartItem;
 import com.tom.api.tileentity.MultiblockPartList;
 import com.tom.apis.EmptyEntry;
+import com.tom.apis.TMLogger;
 import com.tom.apis.TomsModUtils;
 import com.tom.client.CustomModelLoader;
 import com.tom.config.Config;
@@ -187,7 +192,7 @@ import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import mcmultipart.multipart.IMultipart;
 import mcmultipart.multipart.MultipartRegistry;
 
-@Mod(modid = CoreInit.modid,name = "Tom's Mod Core", version = Configs.version, dependencies = Configs.mainDependencies)
+@Mod(modid = CoreInit.modid,name = "Tom's Mod Core", version = Configs.version, dependencies = Configs.mainDependencies, updateJSON = Configs.updateJson)
 
 public final class CoreInit {
 	public static final String modid = Configs.Modid + "|Core";
@@ -209,12 +214,13 @@ public final class CoreInit {
 	/**Block Ore, y, dim, a*/
 	public static Map<IBlockState, Entry<Integer, Entry<Integer, Integer>>> oreList = new HashMap<IBlockState, Entry<Integer, Entry<Integer, Integer>>>();
 	public static boolean isCCLoaded = false, isPneumaticCraftLoaded = false, isMapEnabled = false, isAdventureItemsLoaded = false/*, isSingle*/;
+	private static CheckResult versionCheckResult;
 	//public static File mapFolder;
 	//public static BiMap<Fluid, IIcon[]> fluidIcons = HashBiMap.create();
 	//Fluids
 	public static Fluid plasma;
 	public static Fluid fusionFuel;
-	public static Fluid Deuterium, Hydrogen;
+	public static Fluid Deuterium, Hydrogen, Oxygen;
 	public static Fluid Tritium;
 	//public static Fluid ePlasma;
 	//public static Fluid hCoolant;
@@ -449,6 +455,7 @@ public final class CoreInit {
 		chlorine = new Fluid("chlorine", new ResourceLocation("tomsmodcore:blocks/chlorine_still"),new ResourceLocation("tomsmodcore:blocks/chlorine_flow")).setGaseous(true).setDensity(-600).setViscosity(400);
 		hydrogenChlorine = new Fluid("hydrogenChlorine".toLowerCase(), new ResourceLocation("tomsmodcore:blocks/Hchlorine_still"),new ResourceLocation("tomsmodcore:blocks/Hchlorine_flow")).setGaseous(true).setDensity(-500).setViscosity(500);
 		creosoteOil = new Fluid("creosote", new ResourceLocation("tomsmodcore:blocks/creosote_still"),new ResourceLocation("tomsmodcore:blocks/creosote_flow"));
+		Oxygen = new Fluid("oxygen", new ResourceLocation("tomsmodcore:blocks/oxygen_still"),new ResourceLocation("tomsmodcore:blocks/oxygen_flow")).setGaseous(true);
 		/**Fluid Registry*/
 		///*
 		fluids.add(plasma);
@@ -468,6 +475,7 @@ public final class CoreInit {
 		fluids.add(chlorine);
 		fluids.add(hydrogenChlorine);
 		fluids.add(creosoteOil);
+		fluids.add(Oxygen);
 		//*/
 		/*registerFluid(plasma);
 		registerFluid(ePlasma);
@@ -714,6 +722,7 @@ public final class CoreInit {
 		hydrogenChlorine = FluidRegistry.getFluid("hydrogenchlorine");
 		chlorine = FluidRegistry.getFluid("chlorine");
 		creosoteOil = FluidRegistry.getFluid("creosote");
+		Oxygen = FluidRegistry.getFluid("oxygen");
 		/*if(!(FluidRegistry.isFluidRegistered("steam"))){
 
 		}*/
@@ -920,6 +929,19 @@ public final class CoreInit {
 		Items.TNT_MINECART.setMaxStackSize(Config.minecartMaxStackSize);
 		Items.FURNACE_MINECART.setMaxStackSize(Config.minecartMaxStackSize);
 		Items.HOPPER_MINECART.setMaxStackSize(Config.minecartMaxStackSize);
+		ModContainer mc = Loader.instance().activeModContainer();
+		versionCheckResult = ForgeVersion.getResult(mc);
+		if(versionCheckResult.status == Status.OUTDATED){
+			TMLogger.warn("[VersionChecker]: ****************************************");
+			TMLogger.warn("[VersionChecker]: * Tom's Mod is OUTDATED!!");
+			TMLogger.warn("[VersionChecker]: ****************************************");
+		}else if(versionCheckResult.status == Status.AHEAD){
+			TMLogger.warn("[VersionChecker]: ??? status == AHEAD ???");
+		}else if(versionCheckResult.status == Status.PENDING){
+			TMLogger.warn("[VersionChecker]: Tom's Mod version checking failed.");
+		}else{
+			TMLogger.info("[VersionChecker]: Tom's Mod is up to date");
+		}
 		/*if(isMapEnabled){
 		}*/
 		//TMLogger.bigCatching(new RuntimeException(), "Test Exception");
@@ -1378,6 +1400,9 @@ public final class CoreInit {
 	};
 	public static boolean isWrench(ItemStack stack, EntityPlayer player){
 		return stack != null && stack.getItem() != null && stack.getItem() instanceof IWrench && ((IWrench)stack.getItem()).isWrench(stack, player);
+	}
+	public static CheckResult getVersionCheckResult() {
+		return versionCheckResult;
 	}
 	/*public static class ItemBase extends Item{
 		public Item setTextureName(String t){

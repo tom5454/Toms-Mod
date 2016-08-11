@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodfactory:blocks/ibfSide",
+        "down": "tomsmodfactory:blocks/machineSide",
+        "north": "tomsmodfactory:blocks/ibfFront",
+        "east": "tomsmodfactory:blocks/ibfSide",
+        "south": "tomsmodfactory:blocks/machineSide",
+        "west": "tomsmodfactory:blocks/ibfSide",
+        "particle": "tomsmodfactory:blocks/ibfFront"
+    }
+}

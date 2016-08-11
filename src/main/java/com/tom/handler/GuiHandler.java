@@ -39,6 +39,7 @@ import com.tom.factory.tileentity.TileEntityCrusher;
 import com.tom.factory.tileentity.TileEntityElectricFurnace;
 import com.tom.factory.tileentity.TileEntityElectricFurnaceAdv;
 import com.tom.factory.tileentity.TileEntityFluidTransposer;
+import com.tom.factory.tileentity.TileEntityIndustrialBlastFurnace;
 import com.tom.factory.tileentity.TileEntityMBFluidPort;
 import com.tom.factory.tileentity.TileEntityMBHatch;
 import com.tom.factory.tileentity.TileEntityPlateBlendingMachine;
@@ -61,6 +62,7 @@ import com.tom.factory.tileentity.gui.GuiCokeOven;
 import com.tom.factory.tileentity.gui.GuiCrusher;
 import com.tom.factory.tileentity.gui.GuiElectricFurnace;
 import com.tom.factory.tileentity.gui.GuiFluidTransposer;
+import com.tom.factory.tileentity.gui.GuiIndustrialBlastFurnace;
 import com.tom.factory.tileentity.gui.GuiPlateBlendingMachine;
 import com.tom.factory.tileentity.gui.GuiSolderingStation;
 import com.tom.factory.tileentity.gui.GuiSteamAlloySmelter;
@@ -80,6 +82,7 @@ import com.tom.factory.tileentity.inventory.ContainerCokeOven;
 import com.tom.factory.tileentity.inventory.ContainerCrusher;
 import com.tom.factory.tileentity.inventory.ContainerElectricFurnace;
 import com.tom.factory.tileentity.inventory.ContainerFluidTransposer;
+import com.tom.factory.tileentity.inventory.ContainerIndustrialBlastFurnace;
 import com.tom.factory.tileentity.inventory.ContainerPlateBlendingMachine;
 import com.tom.factory.tileentity.inventory.ContainerSolderingStation;
 import com.tom.factory.tileentity.inventory.ContainerSteamAlloySmelter;
@@ -141,7 +144,7 @@ public class GuiHandler implements IGuiHandler{
 		multipartEast, multipartWest, blockInterface, patternTerminal, crusher, plateBlendingMachine, wireMill, coilerPlant,
 		basicBoiler, advBoiler, steamCrusher, steamFurnace, steamPlateBlender, steamFurnaceAdv, electricFurnace, alloySmelter,
 		steamAlloySmelter, electricFurnaceAdv, blockCraftingTerminal, patternOptions, steamSolderingStation, cokeOven, blastFurnace,
-		solderingStation, fluidTransposer,
+		solderingStation, fluidTransposer, industrialBlastFurnace,
 
 		;
 		private static final GuiIDs[] VALUES = values();
@@ -261,6 +264,8 @@ public class GuiHandler implements IGuiHandler{
 			return new ContainerSolderingStation(player.inventory, (TileEntitySolderingStation) world.getTileEntity(new BlockPos(x,y,z)));
 		case fluidTransposer:
 			return new ContainerFluidTransposer(player.inventory, (TileEntityFluidTransposer) world.getTileEntity(new BlockPos(x,y,z)));
+		case industrialBlastFurnace:
+			return new ContainerIndustrialBlastFurnace(player.inventory, (TileEntityIndustrialBlastFurnace) world.getTileEntity(new BlockPos(x,y,z)));
 		default:
 			break;
 		}
@@ -376,6 +381,8 @@ public class GuiHandler implements IGuiHandler{
 			return new GuiSolderingStation(player.inventory, (TileEntitySolderingStation) world.getTileEntity(new BlockPos(x,y,z)));
 		case fluidTransposer:
 			return new GuiFluidTransposer(player.inventory, (TileEntityFluidTransposer) world.getTileEntity(new BlockPos(x,y,z)));
+		case industrialBlastFurnace:
+			return new GuiIndustrialBlastFurnace(player.inventory, (TileEntityIndustrialBlastFurnace) world.getTileEntity(new BlockPos(x,y,z)));
 		default:
 			break;
 		}

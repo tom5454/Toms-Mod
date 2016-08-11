@@ -1,8 +1,8 @@
 package com.tom.api.tileentity;
 
-import com.tom.api.block.BlockMultiblockCasing;
-
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.tom.api.block.BlockMultiblockCasing;
 
 public abstract class TileEntityMultiblockCasingBase extends TileEntityMultiblockPartBase implements IMultiblockCasing{
 	//public int texture = 0;
@@ -34,6 +34,7 @@ public abstract class TileEntityMultiblockCasingBase extends TileEntityMultibloc
 	@Override
 	public void deFormI(int mX, int mY, int mZ) {
 		//this.texture = 0;
+		BlockMultiblockCasing.setConnection(worldObj, pos, 0);
 		this.deForm();
 	}
 	public abstract void deForm();

@@ -29,13 +29,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntityMachineBase;
+import com.tom.recipes.AdvancedCraftingRecipes;
 
 public abstract class BlockMachineBase extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
 	public BlockMachineBase(Material material) {
 		super(material);
+		AdvancedCraftingRecipes.machines.put(this, CoreInit.MachineFrameSteel);
+	}
+	public BlockMachineBase(Material material, Block casing) {
+		super(material);
+		AdvancedCraftingRecipes.machines.put(this, casing);
 	}
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos,

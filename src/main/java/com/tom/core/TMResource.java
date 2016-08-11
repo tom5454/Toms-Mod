@@ -38,8 +38,8 @@ import com.tom.core.item.ResourceItem;
 
 public enum TMResource implements IStringSerializable{
 	//ENUM_NAME(   "registryName", isGem, isAlloy, canSmeltDust,  "oreOreDictName", crusherAmount, addSmetingFromOre, addSlurry, tool strength, tool durability, materialLevel, wiremill output),
-	CHROME(              "chrome", false,   false,         true,       "oreChrome",             2,              true,      true,             0,               0,             2,               0),
-	TITANIUM(          "titanium", false,   false,         true,     "oreTitanium",             2,              true,      true,             3,            1024,             2,               3),
+	CHROME(              "chrome", false,   false,        false,       "oreChrome",             2,              true,      true,             0,               0,             2,               0),
+	TITANIUM(          "titanium", false,   false,        false,     "oreTitanium",             2,              true,      true,             3,            1024,             2,               3),
 	COPPER(              "copper", false,   false,         true,       "oreCopper",             2,              true,      true,             1,             128,             1,               2),
 	TIN(                    "tin", false,   false,         true,          "oreTin",             2,              true,      true,             1,             128,             1,               2),
 	NICKEL(              "nickel", false,   false,         true,       "oreNickel",             2,              true,      true,             1,             256,             1,               3),
@@ -253,6 +253,7 @@ public enum TMResource implements IStringSerializable{
 				if(r.toolStrength >= 0 && r.durability > 0){
 					int s = r.toolStrength;
 					ItemStack stack = new ItemStack(CoreInit.hammer, 1, r.ordinal());
+					OreDict.registerOre("itemHammer", stack);
 					while(s >= 0){
 						OreDict.registerOre("itemHammer_lvl"+s, stack);
 						s--;
@@ -589,6 +590,7 @@ public enum TMResource implements IStringSerializable{
 		CUPRONICKEL_HEATING_COIL("heatingCoilCupronickel", false, null),
 		TIN_TURBINE("tinTurbine", false, null),
 		GENERATOR_COMPONENT("generator", false, null),
+		SOLAR_PANEL_MK1("solar1", false, null),
 		//DIAMOND_GRINDER("grinderDiamond", "componentCrusher", null),
 		;
 		public static final CraftingMaterial[] VALUES = values();

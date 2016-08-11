@@ -437,7 +437,7 @@ ISidedInventory, IGuiTile {
 					if(h != null){
 						ReturnData data = AdvancedCraftingHandler.craft(new ItemStack[]{stack[7],stack[8],
 								stack[9],stack[10],stack[11],stack[12],stack[13],stack[14],stack[15]},
-								h.getResearchesCompleted(), CraftingLevel.BASIC);
+								h.getResearchesCompleted(), CraftingLevel.BASIC, worldObj);
 						if(data != null){
 							if(data.hasAllResearches()){
 								if(data.isRightLevel()){

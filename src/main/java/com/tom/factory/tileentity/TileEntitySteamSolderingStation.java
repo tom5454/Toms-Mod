@@ -236,7 +236,7 @@ public class TileEntitySteamSolderingStation extends TileEntityTomsMod implement
 							if(h != null){
 								ReturnData data = AdvancedCraftingHandler.craft(new ItemStack[]{stack[0],stack[1],
 										stack[2],stack[3],stack[4],stack[5],stack[6],stack[7],stack[8]},
-										h.getResearchesCompleted(), CraftingLevel.SOLDERING_STATION);
+										h.getResearchesCompleted(), CraftingLevel.SOLDERING_STATION, worldObj);
 								if(data != null){
 									if(data.hasAllResearches()){
 										if(data.isRightLevel()){

@@ -207,6 +207,7 @@ item.material_heatingCoilCupronickel.name=Cupronickel Heating Coil
 item.material_tinTurbine.name=Tin Turbine
 item.material_generator.name=Generator
 item.tm.fluidServo.name=Fluid Servo
+item.material_solar1.name=Solar Panel Component MK1
 
 item.plate_chrome.name=Chrome Plate
 item.ingot_chrome.name=Chrome Ingot
@@ -894,6 +895,7 @@ tile.oreTungstate.name=Tungstate Ore
 tile.tm.solderingStation.name=Soldering Station
 tile.tm.blockPump.name=Pump
 tile.tm.fluidTransposer.name=Fluid Transposer
+tile.tm.industrialBlastFurnace.name=Industrial Blast Furnace
 
 tomsMod.waila.playerName=Owner:
 tomsMod.waila.mode=Mode:
@@ -904,6 +906,8 @@ tomsMod.waila.fluidTank=Fluid:
 tomsMod.waila.energyStored=Energy Stored:
 tomsMod.waila.capacity=Capacity: %,d mB
 tomsMod.waila.fluidStored=Stored: %,d / %,d mB
+tomsMod.waila.speedingWarn=!!! WARNING: TICK SPEEDING DETECTED !!!
+tomsMod.waila.speedingDisabledInfo=Tick speeding is disabled. Skipping all non normal ticks.
 
 option.tmenergyhandler=Use the Multimeter
 
@@ -914,6 +918,10 @@ tomsmod.jei.reguiredLevel=Required Level: %d
 tomsmod.jei.plateBlender=Plate Blending Machine
 tomsmod.jei.alloySmelter=Alloy Smelter
 tomsmod.jei.recipeLevel=Recipe Level: %s
+tomsmod.jei.heatRequired=Heat Required: %,d K
+tomsmod.jei.blastFurnace=Blast Furnace
+tomsmod.jei.time=Process Time: %d tick(s)
+tomsmod.jei.normalBlastFurnaceRequired=Basic Blast Furnace Required
 
 tomsmod.gui.mbHatch=Multiblock Hatch
 tomsmod.gui.mbFluidHatch=Multiblock Fluid Port
@@ -952,6 +960,7 @@ tomsmod.gui.ignoreNBT=Ignore NBT
 tomsmod.gui.hoveringSelected=> %s
 tomsmod.gui.hoveringNormal=  %s
 tomsmod.gui.amount=Amount: %s
+tomsmod.gui.heatCap=Thermal Capacity: %,d K
 
 tomsMod.research.basic=Basic
 tomsMod.research.adv=Advanced
@@ -990,6 +999,11 @@ tomsmod.research.industrialBlastFurnace=Industrial Blast Furnace
 tomsmod.research.fluidTransposer=Fluid Transposer
 tomsmod.research.waterCollector=Water Collector
 tomsmod.research.advTank=Advanced Tank
+tomsmod.research.solarPanel=LV Solar Panel
+tomsmod.research.mvTransformer=MV Transformer
+tomsmod.research.mvCable=MV Cable
+tomsmod.research.mvCircuit=MV Circuit
+tomsmod.research.mvMachines=MV Machines
 
 tomsmod.render.energy=Energy
 tomsmod.render.capacity=Capacity
@@ -1229,6 +1243,7 @@ fluid.tile.lava=Lava
 fluid.creosote=Creosote Oil
 fluid.tomsmodCleanOreSlurryWolfram=Clean Tungstate Ore Slurry
 fluid.tomsmodOreSlurryWolfram=Tungstate Ore Slurry
+fluid.oxygen=Oxygen
 
 keys.tomsmod.category=Tom's Mod
 

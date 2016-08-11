@@ -48,7 +48,7 @@ public class Config {
 	public static UUID tomsmodFakePlayerUUID;
 	//public static String minecameraCommand;
 	public static int commandFillMaxSize;
-	public static boolean commandFillLogging, wailaUsesMultimeterForce, advEntityTrackerTexture, enableBronkenTreeGen, genOilLakes, genRubberTrees, logConfigWarnings, addUnbreakableElytraRecipe;
+	public static boolean commandFillLogging, wailaUsesMultimeterForce, advEntityTrackerTexture, enableBronkenTreeGen, genOilLakes, genRubberTrees, logConfigWarnings, addUnbreakableElytraRecipe, enableTickSpeeding;
 	public static List<String> warnMessages = new ArrayList<String>();
 	public static void init(File configFile){
 		CoreInit.log.info("Init Configuration");
@@ -249,6 +249,10 @@ public class Config {
 		property = configCore.get(CATEGORY_RECIPES, "Unbreakable Elytra Recipe", true);
 		property.setComment("Add Unbreakable Elytra Crafting recipe");
 		addUnbreakableElytraRecipe = property.getBoolean(true);
+
+		property = configCore.get(Configuration.CATEGORY_GENERAL, "Enable Tick Speeding", true);
+		property.setComment("Allow external devices to speed up the machines ticks");
+		enableTickSpeeding = property.getBoolean(true);
 	}
 	public static void save(){
 		CoreInit.log.info("Saving configuration");

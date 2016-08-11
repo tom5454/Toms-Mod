@@ -14,7 +14,6 @@ import com.tom.api.ITileFluidHandler;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.tileentity.IGuiTile;
 import com.tom.apis.TomsModUtils;
-import com.tom.factory.FactoryInit;
 import com.tom.factory.block.FluidTransposer;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
@@ -145,9 +144,6 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 		int p = upgradeC + 1 + (upgradeC / 2);
 		progress = Math.max(0, progress - p);
 		energy.extractEnergy(1D * p, false);
-	}
-	private int getSpeedUpgradeCount(){
-		return stack[3] != null && stack[3].getItem() == FactoryInit.speedUpgrade ? stack[3].stackSize : 0;
 	}
 
 	public int getClientEnergyStored() {

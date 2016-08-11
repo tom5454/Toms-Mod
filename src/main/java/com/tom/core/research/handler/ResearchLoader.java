@@ -2,6 +2,7 @@ package com.tom.core.research.handler;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 
 import com.tom.api.research.IResearch;
@@ -22,7 +23,7 @@ public class ResearchLoader {
 	public static final IResearch researchAcids = new ResearchAcids();
 	public static final IResearch researchPower = new ResearchPower();
 	public static final IResearch researchPower2 = new ResearchPower2();
-	public static Research hammer, mortar, bronzeAge, basicBoiler, basicBronzeMachines, bronzeAlloySmelter, bronzePlateBlender, refinedBricks, cokeOven, blastFurnace, advancedTank, steelBoiler, steelFurnace, rubberProcessing, soldering, basicTurbine, multimeter, lvCable, batteryBox, basicLvMachines, wireProcessing, speedUpgrade, lvPlateBlender, lvAlloySmelter, waterCollector, pump, fluidTransposer, eSolderingStation, industrialBlastFurnace, mvTransformer, mvCable, mvMachines;
+	public static Research hammer, mortar, bronzeAge, basicBoiler, basicBronzeMachines, bronzeAlloySmelter, bronzePlateBlender, refinedBricks, cokeOven, blastFurnace, advancedTank, steelBoiler, steelFurnace, rubberProcessing, soldering, basicTurbine, multimeter, lvCable, batteryBox, basicLvMachines, wireProcessing, speedUpgrade, lvPlateBlender, lvAlloySmelter, waterCollector, pump, fluidTransposer, eSolderingStation, solarPanel, industrialBlastFurnace, mvTransformer, mvCable, mvCircuit, mvMachines;
 	public static void init(){
 		CoreInit.log.info("Loading Researches...");
 		hammer = new Research("hammer", TMResource.COAL.getHammerStack(1)).addRequiredScan(Blocks.IRON_BLOCK, 0).addRequiredItem(new ItemStack(Items.FLINT, 4)).setResearchTime(150);
@@ -54,6 +55,11 @@ public class ResearchLoader {
 		pump = new Research("pump", new ItemStack(FactoryInit.pump)).setResearchTime(1000).addParent(basicLvMachines).addRequiredItem(new ItemStack(CoreInit.itemPump, 2)).addRequiredItem(CraftingMaterial.BASIC_CIRCUIT.getStackNormal()).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic));
 		fluidTransposer = new Research("fluidTransposer", new ItemStack(FactoryInit.fluidTransposer)).addParent(basicLvMachines).addRequiredItem(new ItemStack(CoreInit.itemPump, 2)).addRequiredItem(CraftingMaterial.BASIC_CIRCUIT.getStackNormal()).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addRequiredItem(new ItemStack(StorageInit.tankBasic)).setResearchTime(1100);
 		advancedTank = new Research("advTank", new ItemStack(StorageInit.tankAdv)).setResearchTime(500).addParent(blastFurnace).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 4)).addRequiredItem(new ItemStack(Blocks.GLASS, 32));
+		solarPanel = new Research("solarPanel", new ItemStack(EnergyInit.solarPanel)).setResearchTime(1300).addParent(eSolderingStation).addRequiredItem(new ItemStack(Items.DYE, 4, EnumDyeColor.BLUE.getDyeDamage())).addRequiredItem(CraftingMaterial.SILICON_PLATE.getStackNormal(4)).addRequiredItem(new ItemStack(Items.REDSTONE, 4));
+		mvTransformer = new Research("mvTransformer", new ItemStack(EnergyInit.transformerLMV)).setResearchTime(1500).addParent(eSolderingStation).addRequiredItem(TMResource.COPPER.getStackNormal(Type.COIL, 4)).addRequiredItem(new ItemStack(Items.IRON_INGOT, 2)).addRequiredItem(TMResource.ELECTRUM.getStackNormal(Type.COIL, 2)).addRequiredItem(new ItemStack(Items.REDSTONE));
+		mvCable = new Research("mvCable", new ItemStack(EnergyInit.mvCable)).setResearchTime(1500).addParent(mvTransformer).addRequiredItem(CraftingMaterial.RUBBER.getStackNormal(4)).addRequiredItem(TMResource.ELECTRUM.getStackNormal(Type.CABLE));
+		mvCircuit = new Research("mvCircuit", CraftingMaterial.NORMAL_CIRCUIT.getStackNormal()).setResearchTime(1800).addParent(mvTransformer).addRequiredItem(new ItemStack(Items.REDSTONE, 20)).addRequiredItem(CraftingMaterial.BASIC_CIRCUIT.getStackNormal(5)).addRequiredItem(CraftingMaterial.SILICON_PLATE.getStackNormal(3)).addRequiredItem(TMResource.COPPER.getStackNormal(Type.COIL));
+		mvMachines = new Research("mvMachines", new ItemStack(FactoryInit.crusher)).setResearchTime(2000).addParent(mvCable).addParent(mvCircuit).addRequiredItem(CraftingMaterial.NORMAL_CIRCUIT.getStackNormal(4)).addRequiredItem(new ItemStack(EnergyInit.transformerLMV)).addRequiredItem(new ItemStack(CoreInit.MachineFrameSteel)).addRequiredItem(TMResource.ELECTRUM.getStackNormal(Type.CABLE, 5));
 		ResearchHandler.registerResearch(researchAcids);
 		ResearchHandler.registerResearch(researchPower);
 		ResearchHandler.registerResearch(researchPower2);
@@ -86,5 +92,10 @@ public class ResearchLoader {
 		ResearchHandler.registerResearch(pump);
 		ResearchHandler.registerResearch(fluidTransposer);
 		ResearchHandler.registerResearch(advancedTank);
+		ResearchHandler.registerResearch(solarPanel);
+		ResearchHandler.registerResearch(mvTransformer);
+		ResearchHandler.registerResearch(mvCable);
+		ResearchHandler.registerResearch(mvCircuit);
+		ResearchHandler.registerResearch(mvMachines);
 	}
 }

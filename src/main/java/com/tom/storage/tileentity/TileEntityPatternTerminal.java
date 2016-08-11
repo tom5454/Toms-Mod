@@ -346,7 +346,7 @@ public class TileEntityPatternTerminal extends TileEntityGridDeviceBase<StorageN
 	@Override
 	public void onInventoryChanged(InventoryBasic inv) {
 		if(inv == recipeInv){
-			ReturnData t = AdvancedCraftingHandler.craft(TomsModUtils.getStackArrayFromInventory(recipeInv), null, null);
+			ReturnData t = AdvancedCraftingHandler.craft(TomsModUtils.getStackArrayFromInventory(recipeInv), null, null, worldObj);
 			if(t != null){
 				resultInv.setInventorySlotContents(0, t.getReturnStack());
 				resultInv.setInventorySlotContents(1, t.getExtraStack());
@@ -443,5 +443,13 @@ public class TileEntityPatternTerminal extends TileEntityGridDeviceBase<StorageN
 	@Override
 	public int getPropertiesLength() {
 		return stackProperties.length;
+	}
+	@Override
+	public void setClientPowered(boolean powered) {
+		poweredClient = powered;
+	}
+	@Override
+	public boolean getClientPowered() {
+		return poweredClient;
 	}
 }

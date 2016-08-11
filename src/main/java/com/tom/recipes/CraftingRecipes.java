@@ -108,7 +108,8 @@ public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes
 		addShapelessRecipe(new ItemStack(ToolsInit.portableComparator), new ItemStack(Items.COMPARATOR), new ItemStack(Items.REDSTONE), new ItemStack(Items.COMPASS));
 		addShapelessRecipe(new ItemStack(DefenseInit.projectorFieldType,1,3), new ItemStack(DefenseInit.projectorFieldType,1,3));
 		addRecipe(new ItemStack(CoreInit.researchTable, 2), new Object[]{"BSI","WCW","RPR",'B', Items.GLASS_BOTTLE, 'S', "slabWood", 'I', "dyeBlack", 'W', "plankWood", 'C', Blocks.CRAFTING_TABLE, 'R', Items.STICK, 'P', Items.PAPER});
-		addRecipe(CraftingMaterial.IRON_ROD.getStackNormal(2), new Object[]{"I","I","I", 'I', "ingotIron"});
+		addRecipe(CraftingMaterial.IRON_ROD.getStackNormal(), new Object[]{"I","I","I", 'I', "ingotIron"});
+		addRecipe(CraftingMaterial.IRON_ROD.getStackNormal(4), new Object[]{" I","HI"," I", 'I', "plateIron", 'H', "itemHammer_lvl1"});
 		addRecipe(new ItemStack(CoreInit.magnifyingGlass, 1), new Object[]{" G","I ", 'I', "rodIron", 'G', "paneGlassColorless"});
 		addShapelessRecipe(new ItemStack(CoreInit.noteBook, 1), new Object[]{Items.WRITABLE_BOOK, Items.PAPER, "dyeBlack", Items.FEATHER, Items.PAPER, Items.STICK});
 		addRecipe(CraftingMaterial.HOT_COPPER_HAMMER_HEAD.getStackNormal(), new Object[]{" H ","III","III",'I', CraftingMaterial.HOT_COPPER.getStackNormal(), 'H', "itemHammer_lvl0"});
@@ -126,12 +127,12 @@ public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes
 		addRecipe(new ItemStack(CoreInit.treeTap, 2), new Object[]{" _S", "WWW", "  W", 'W', "plankWood", '_', "slabWood", 'S', Items.STICK});
 		addRecipe(TMResource.COAL.getHammerStack(1), new Object[]{" H", "FS", " S", 'S', Items.STICK, 'F', Items.FLINT, 'H', CraftingMaterial.FLINT_HAMMER_HEAD.getStackNormal()});
 		addRecipe(CraftingMaterial.BRONZE_PIPE.getStackNormal(6), new Object[]{"P P","PHP","P P",'P',TMResource.BRONZE.getStackName(Type.PLATE), 'H', "itemHammer_lvl2"});
-		addRecipe(new ItemStack(StorageInit.basicTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.IRON.getStackName(Type.PLATE), 'T', StorageInit.partTerminal, 'G', "blockGlass", 'C', "storageNetworkCable"});
-		addRecipe(new ItemStack(StorageInit.craftingTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.IRON.getStackName(Type.PLATE), 'T', StorageInit.partCraftingTerminal, 'G', "blockGlass", 'C', "storageNetworkCable"});
-		addRecipe(new ItemStack(StorageInit.patternTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.IRON.getStackName(Type.PLATE), 'T', StorageInit.partPatternTerminal, 'G', "blockGlass", 'C', "storageNetworkCable"});
-		addRecipe(new ItemStack(StorageInit.basicTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.ALUMINUM.getStackName(Type.PLATE), 'T', StorageInit.partTerminal, 'G', "blockGlass", 'C', "storageNetworkCable"});
-		addRecipe(new ItemStack(StorageInit.craftingTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.ALUMINUM.getStackName(Type.PLATE), 'T', StorageInit.partCraftingTerminal, 'G', "blockGlass", 'C', "storageNetworkCable"});
-		addRecipe(new ItemStack(StorageInit.patternTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.ALUMINUM.getStackName(Type.PLATE), 'T', StorageInit.partPatternTerminal, 'G', "blockGlass", 'C', "storageNetworkCable"});
+		addRecipe(new ItemStack(StorageInit.basicTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.IRON.getStackName(Type.PLATE), 'T', StorageInit.partTerminal, 'G', "blockGlassColorless", 'C', "storageNetworkCable"});
+		addRecipe(new ItemStack(StorageInit.craftingTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.IRON.getStackName(Type.PLATE), 'T', StorageInit.partCraftingTerminal, 'G', "blockGlassColorless", 'C', "storageNetworkCable"});
+		addRecipe(new ItemStack(StorageInit.patternTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.IRON.getStackName(Type.PLATE), 'T', StorageInit.partPatternTerminal, 'G', "blockGlassColorless", 'C', "storageNetworkCable"});
+		addRecipe(new ItemStack(StorageInit.basicTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.ALUMINUM.getStackName(Type.PLATE), 'T', StorageInit.partTerminal, 'G', "blockGlassColorless", 'C', "storageNetworkCable"});
+		addRecipe(new ItemStack(StorageInit.craftingTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.ALUMINUM.getStackName(Type.PLATE), 'T', StorageInit.partCraftingTerminal, 'G', "blockGlassColorless", 'C', "storageNetworkCable"});
+		addRecipe(new ItemStack(StorageInit.patternTerminal), new Object[]{"IGI","TCG","IGI",'I',TMResource.ALUMINUM.getStackName(Type.PLATE), 'T', StorageInit.partPatternTerminal, 'G', "blockGlassColorless", 'C', "storageNetworkCable"});
 		addRecipe(new ItemStack(FactoryInit.blockCoalCoke), new Object[]{"CCC", "CCC", "CCC", 'C', FactoryInit.coalCoke});
 		addShapelessRecipe(new ItemStack(FactoryInit.coalCoke, 9), new Object[]{FactoryInit.blockCoalCoke});
 		addRecipe(CraftingMaterial.GLASS_FIBER.getStackNormal(2), new Object[]{"GG", "GG", 'G', CraftingMaterial.GLASS_DUST.getStack()});

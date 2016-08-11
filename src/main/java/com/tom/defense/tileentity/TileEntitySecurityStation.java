@@ -4,6 +4,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.item.IIdentityCard;
 import com.tom.api.item.IPowerLinkCard;
@@ -23,23 +39,8 @@ import com.tom.defense.block.ForceCapacitor;
 import com.tom.defense.item.IdentityCard;
 import com.tom.handler.GuiHandler.GuiIDs;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-
 public class TileEntitySecurityStation extends TileEntityTomsMod implements
-IForceDevice, ISecurityStation, IInventory, IGuiTile {
+IForceDevice, ISecurityStation, ISidedInventory, IGuiTile {
 	private ItemStack[] stack = new ItemStack[this.getSizeInventory()];
 	public ForceDeviceControlType rsMode = ForceDeviceControlType.LOW_REDSTONE;
 	private EnergyStorage energy = new EnergyStorage(10000,1000);
@@ -366,5 +367,20 @@ IForceDevice, ISecurityStation, IInventory, IGuiTile {
 	@Override
 	public BlockPos getPos2() {
 		return pos;
+	}
+
+	@Override
+	public int[] getSlotsForFace(EnumFacing side) {
+		return new int[]{};
+	}
+
+	@Override
+	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+		return false;
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+		return false;
 	}
 }

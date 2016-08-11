@@ -54,4 +54,5 @@ public final class Configs {
 	public static final int fluidDuctMaxExtract = 500;
 	public static final String mainDependencies = "";
 	public static final String OPEN_COMPUTERS = "OpenComputers|Core";
+	public static final String updateJson = "https://raw.githubusercontent.com/tom5454/Toms-Mod/master/version-check.json";
 }

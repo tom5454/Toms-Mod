@@ -1,6 +1,7 @@
 package com.tom.factory.tileentity;
 
 import static com.tom.api.energy.EnergyType.HV;
+import static com.tom.api.energy.EnergyType.LV;
 
 import java.util.List;
 
@@ -19,11 +20,13 @@ import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.apis.TomsModUtils;
+import com.tom.factory.FactoryInit;
 
 public abstract class TileEntityMachineBase extends TileEntityTomsMod implements ISidedInventory, IEnergyReceiver {
 	protected ItemStack[] stack = new ItemStack[this.getSizeInventory()];
 	protected EnergyType TYPE = HV;
-	private static final float[] TYPE_MULTIPLIER = new float[]{1.0F, 0.85F, 0.7F};
+	protected static final float[] TYPE_MULTIPLIER_SPEED = new float[]{1.0F, 0.85F, 0.7F};
+	protected static final int[] MAX_SPEED_UPGRADE_COUNT = new int[]{4, 10, 24};
 	protected int maxProgress = 1;
 	protected int progress = -1;
 	@Override
@@ -148,7 +151,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 
 	@Override
 	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive, boolean simulate) {
-		return canConnectEnergy(from, type) ? getEnergy().receiveEnergy(maxReceive, simulate) : 0;
+		return canConnectEnergy(from, type) ? TYPE.convertFrom(LV, getEnergy().receiveEnergy(LV.convertFrom(TYPE, maxReceive), simulate)) : 0;
 	}
 
 	@Override
@@ -191,7 +194,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	public abstract int getUpgradeSlot();
 
 	public int getMaxProgress(){
-		return MathHelper.floor_double(getMaxProcessTimeNormal() / TYPE_MULTIPLIER[getType()]);
+		return MathHelper.floor_double(getMaxProcessTimeNormal() / TYPE_MULTIPLIER_SPEED[getType()]);
 	}
 	@Override
 	public int getField(int id) {
@@ -211,5 +214,12 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 
 	public static int getMetaFromEnergyType(EnergyType type){
 		return type == HV ? 0 : type == EnergyType.MV ? 1 : 2;
+	}
+	public int getSpeedUpgradeCount(){
+		int slot = getUpgradeSlot();
+		return Math.min(slot < 0 ? 0 : stack[slot] != null && stack[slot].getItem() == FactoryInit.speedUpgrade ? stack[slot].stackSize : 0, MAX_SPEED_UPGRADE_COUNT[getType()]);
+	}
+	public int getMaxSpeedUpgradeCount(){
+		return MAX_SPEED_UPGRADE_COUNT[getType()];
 	}
 }

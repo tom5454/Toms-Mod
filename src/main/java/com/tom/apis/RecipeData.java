@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 
 import net.minecraftforge.fluids.FluidStack;
 
@@ -86,6 +87,19 @@ public class RecipeData {
 		this.itemstack1 = itemstack1;
 		this.itemstack2 = itemstack2;
 	}
+	public RecipeData(ItemStack itemstack0, ItemStack itemstack1, ItemStack itemstack2, boolean mode) {
+		this.itemstack0 = itemstack0;
+		this.itemstack1 = itemstack1;
+		this.itemstack2 = itemstack2;
+		this.hasInv = mode;
+	}
+	public RecipeData(IRecipe recipe, int time, List<IResearch> researchList, ItemStack extra, CraftingLevel level) {
+		this.processTime = time;
+		this.requiredResearches = researchList;
+		this.recipe = recipe;
+		this.itemstack10 = extra;
+		this.level = level;
+	}
 
 	public FluidStack f1;
 	public FluidStack f2;
@@ -117,4 +131,5 @@ public class RecipeData {
 	public List<IResearch> requiredResearches;
 	public boolean shaped;
 	public CraftingLevel level;
+	public IRecipe recipe;
 }

@@ -1423,6 +1423,8 @@ public class StorageNetworkGrid extends GridBase<StorageData, StorageNetworkGrid
 	}
 	public static interface ITerminal extends IGridDevice<StorageNetworkGrid>, IGuiTile{
 		int getTerminalMode();
+		void setClientPowered(boolean powered);
+		boolean getClientPowered();
 	}
 	public static interface IGridInputListener{
 		ItemStack onStackInput(ItemStack stack);
@@ -1655,7 +1657,23 @@ public class StorageNetworkGrid extends GridBase<StorageData, StorageNetworkGrid
 		private List<NBTTagCompound> recipes = new ArrayList<NBTTagCompound>();
 		private List<NBTTagCompound> toPull = new ArrayList<NBTTagCompound>();
 		public void sendTo(EntityPlayerMP player){
-			sendCompiledCraftingTo(this, player);
+			new CraftingReportSyncThread(this, player).start();
+		}
+	}
+	public static class CraftingReportSyncThread extends Thread{
+		private final CompiledCalculatedCrafting c;
+		private final EntityPlayerMP player;
+		public CraftingReportSyncThread(CompiledCalculatedCrafting c, EntityPlayerMP player) {
+			super("Tom's Mod Auto-Crafting Client Sync Thread");
+			setDaemon(true);
+			this.c = c;
+			this.player = player;
+		}
+		@Override
+		public void run() {
+			TMLogger.info("Syncing Crafting Data...");
+			sendCompiledCraftingTo(c, player);
+			TMLogger.info("Crafting Data Sent.");
 		}
 	}
 	/*public static class StackToCraft{

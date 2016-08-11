@@ -4,6 +4,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
 import com.tom.api.energy.IEnergyStorageTile;
+import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.apis.TMLogger;
 import com.tom.config.Config;
 import com.tom.energy.EnergyInit;
@@ -40,6 +41,7 @@ public class Waila {
 		registrar.registerHeadProvider(new WailaTank(), TMTank.class);
 		registrar.registerBodyProvider(new WailaTank(), TMTank.class);
 		registrar.registerNBTProvider(new WailaTank(), TMTank.class);
+		registrar.registerBodyProvider(new WailaOverloadInfo(), TileEntityTomsMod.class);
 	}
 	public static boolean hasMultimeter(IWailaDataAccessor accessor, IWailaConfigHandler config){
 		InventoryPlayer inv = accessor.getPlayer().inventory;

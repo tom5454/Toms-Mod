@@ -1,6 +1,7 @@
 package com.tom.thirdparty.jei;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -9,7 +10,13 @@ import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
+
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.tom.apis.RecipeData;
 import com.tom.apis.TomsModUtils;
@@ -32,8 +39,8 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 		List<RecipeData> recipeList = AdvancedCraftingHandler.getRecipes();
 		for(int i = 0;i<recipeList.size();i++){
 			RecipeData data = recipeList.get(i);
-			ItemStack[] array = {data.itemstack1, data.itemstack2, data.itemstack3, data.itemstack4, data.itemstack5, data.itemstack6, data.itemstack7, data.itemstack8, data.itemstack9};
-			CustomCrafingRecipeJEI cr = new CustomCrafingRecipeJEI(array, data.itemstack0, data.itemstack10, ResearchHandler.getResearchNames(data.requiredResearches), data.level);
+			//ItemStack[] array = {data.itemstack1, data.itemstack2, data.itemstack3, data.itemstack4, data.itemstack5, data.itemstack6, data.itemstack7, data.itemstack8, data.itemstack9};
+			CustomCrafingRecipeJEI cr = new CustomCrafingRecipeJEI(data.recipe, data.itemstack10, ResearchHandler.getResearchNames(data.requiredResearches), data.level);
 			recipes.add(cr);
 		}
 		return recipes;
@@ -65,11 +72,13 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout,
 			CustomCrafingRecipeJEI recipe) {
 		int x = 5;
 		int y = 4;
+		List inputs = recipe.getInputs();
 		recipeLayout.getItemStacks().init(0, true, x, y);
 		recipeLayout.getItemStacks().init(1, true, x+18, y);
 		recipeLayout.getItemStacks().init(2, true, x+36, y);
@@ -81,15 +90,16 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 		recipeLayout.getItemStacks().init(8, true, x+36, y+36);
 		recipeLayout.getItemStacks().init(9, false, x+94, y+18);
 		recipeLayout.getItemStacks().init(10, false, x+94, y+45);
-		for(int i = 0;i<10;i++)setSlot(recipeLayout, recipe, i);
-		recipeLayout.getItemStacks().set(9, recipe.output);
+		for(int i = 0;i<10;i++)setSlot(recipeLayout, inputs, i);
+		recipeLayout.getItemStacks().set(9, recipe.input.getRecipeOutput());
 		if(recipe.extra != null)recipeLayout.getItemStacks().set(10, recipe.extra);
 	}
-	private static void setSlot(IRecipeLayout recipeLayout, CustomCrafingRecipeJEI recipe, int index){
+	@SuppressWarnings("rawtypes")
+	private static void setSlot(IRecipeLayout recipeLayout, List recipe, int index){
 		try{
-			if(index < recipe.input.length && recipe.input[index] != null){
+			if(index < recipe.size()){
 				IGuiItemStackGroup g = recipeLayout.getItemStacks();
-				g.set(index, recipe.input[index]);
+				g.setFromRecipe(index, recipe.get(index));
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -115,7 +125,7 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 
 		@Override
 		public boolean isRecipeValid(CustomCrafingRecipeJEI recipe) {
-			return recipe.output != null;
+			return recipe.input != null && recipe.input.getRecipeOutput() != null;
 		}
 
 		@Override
@@ -126,40 +136,39 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 	}
 	public static class CustomCrafingRecipeJEI extends BlankRecipeWrapper{
 		@Nonnull
-		private final ItemStack[] input;
-
-		@Nonnull
-		private final ItemStack output;
+		private final IRecipe input;
 		@Nullable
 		private final ItemStack extra;
 		private final CraftingLevel level;
 		@Nonnull
 		private final List<String> requiredResearches;
 
-		public CustomCrafingRecipeJEI(@Nonnull ItemStack[] input, @Nonnull ItemStack output, @Nullable ItemStack extra, @Nonnull List<String> requiredResearches, CraftingLevel level){
+		public CustomCrafingRecipeJEI(@Nonnull IRecipe input, @Nullable ItemStack extra, @Nonnull List<String> requiredResearches, CraftingLevel level){
 			this.input = input;
-			this.output = output;
 			this.extra = extra;
 			this.requiredResearches = requiredResearches;
 			this.level = level;
 		}
+		@SuppressWarnings("rawtypes")
 		@Override
-		public List<ItemStack> getInputs()
+		public List getInputs()
 		{
-			return TomsModUtils.getItemStackList(input);
+			if(input instanceof ShapelessOreRecipe)return ((ShapelessOreRecipe)input).getInput();
+			if(input instanceof ShapelessRecipes)return ((ShapelessRecipes)input).recipeItems;
+			return Arrays.asList(input instanceof ShapedOreRecipe ? ((ShapedOreRecipe)input).getInput() : (input instanceof ShapedRecipes ? ((ShapedRecipes)input).recipeItems : (null) ));
 		}
 
 		@Override
 		public List<ItemStack> getOutputs()
 		{
-			return TomsModUtils.getItemStackList(output,extra);
+			return TomsModUtils.getItemStackList(input.getRecipeOutput(),extra);
 		}
 
 		@Override
 		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 			if(level.isAdvanced()){
 				String lvl = I18n.format(level.getName());
-				minecraft.fontRendererObj.drawString(I18n.format("tomsmod.jei.recipeLevel", lvl), 0, -5, 4210752);
+				minecraft.fontRendererObj.drawString(I18n.format("tomsmod.jei.recipeLevel", lvl), -19, -5, 4210752);
 			}
 		}
 	}

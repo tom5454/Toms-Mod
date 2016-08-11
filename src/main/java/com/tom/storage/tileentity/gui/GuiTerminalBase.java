@@ -9,22 +9,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import com.tom.api.inventory.StoredItemStack;
-import com.tom.api.multipart.IGuiMultipart;
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.gui.GuiTomsMod;
-import com.tom.handler.PlayerHandler;
-import com.tom.storage.StorageInit;
-import com.tom.storage.multipart.StorageNetworkGrid.IStorageTerminalGui;
-import com.tom.storage.multipart.StorageNetworkGrid.ITerminal;
-import com.tom.storage.multipart.StorageNetworkGrid.StorageItemStackComparatorAmount;
-import com.tom.storage.multipart.StorageNetworkGrid.StorageItemStackSorting;
-import com.tom.storage.tileentity.gui.GuiCraftingAmountSelection.GuiButtonHidden;
-import com.tom.storage.tileentity.inventory.ContainerTerminalBase;
-import com.tom.storage.tileentity.inventory.ContainerTerminalBase.SlotAction;
-import com.tom.thirdparty.jei.JEIHandler;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -39,6 +23,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+
+import com.tom.api.inventory.StoredItemStack;
+import com.tom.api.multipart.IGuiMultipart;
+import com.tom.api.network.INBTPacketReceiver;
+import com.tom.apis.TomsModUtils;
+import com.tom.handler.PlayerHandler;
+import com.tom.storage.StorageInit;
+import com.tom.storage.multipart.StorageNetworkGrid.IStorageTerminalGui;
+import com.tom.storage.multipart.StorageNetworkGrid.ITerminal;
+import com.tom.storage.multipart.StorageNetworkGrid.StorageItemStackComparatorAmount;
+import com.tom.storage.multipart.StorageNetworkGrid.StorageItemStackSorting;
+import com.tom.storage.tileentity.gui.GuiCraftingAmountSelection.GuiButtonHidden;
+import com.tom.storage.tileentity.inventory.ContainerTerminalBase;
+import com.tom.storage.tileentity.inventory.ContainerTerminalBase.SlotAction;
+import com.tom.thirdparty.jei.JEIHandler;
+
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiTerminalBase extends GuiTomsMod implements
 INBTPacketReceiver, IStorageTerminalGui{
@@ -62,6 +63,7 @@ INBTPacketReceiver, IStorageTerminalGui{
 	protected GuiButtonViewType buttonViewType;
 	protected GuiButtonHidden buttonCraftings;
 	public final int slotHeight;
+	public boolean powered;
 	public GuiTerminalBase(ContainerTerminalBase inv, String guiTexture, ITerminal terminal, int slotHeight) {
 		super(inv, guiTexture);
 		te = terminal;
@@ -277,6 +279,7 @@ INBTPacketReceiver, IStorageTerminalGui{
 		buttonSortingType.type = PlayerHandler.getSortingType(sortData).ordinal();
 		buttonSearchType.type = searchType;
 		buttonViewType.type = getContainer().terminalType;
+		powered = te.getClientPowered();
 		updateSearch();
 	}
 	@Override
@@ -592,5 +595,8 @@ INBTPacketReceiver, IStorageTerminalGui{
 	public void sendButtonUpdate(int id, ITerminal term, int extraData){
 		if(term instanceof IGuiMultipart)sendButtonUpdate(id, (IGuiMultipart) term, extraData);
 		else sendButtonUpdate(id, term.getPos2(), extraData);
+	}
+	public void bindList() {
+		mc.renderEngine.bindTexture(LIST_TEXTURE);
 	}
 }

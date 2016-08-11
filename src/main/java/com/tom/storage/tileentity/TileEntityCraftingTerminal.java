@@ -1,13 +1,5 @@
 package com.tom.storage.tileentity;
 
-import com.tom.api.network.INBTPacketReceiver.IANBTPacketReceiver;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.multipart.StorageNetworkGrid.ITerminal;
-import com.tom.storage.tileentity.inventory.ContainerBlockCraftingTerminal;
-import com.tom.storage.tileentity.inventory.ContainerBlockCraftingTerminal.SlotTerminalCrafting;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -19,6 +11,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import com.tom.api.network.INBTPacketReceiver.IANBTPacketReceiver;
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
+import com.tom.apis.TomsModUtils;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.multipart.StorageNetworkGrid.ITerminal;
+import com.tom.storage.tileentity.inventory.ContainerBlockCraftingTerminal;
+import com.tom.storage.tileentity.inventory.ContainerBlockCraftingTerminal.SlotTerminalCrafting;
 
 public class TileEntityCraftingTerminal extends TileEntityGridDeviceBase<StorageNetworkGrid> implements ITerminal, IANBTPacketReceiver {
 	public boolean poweredClient = false;
@@ -223,5 +223,13 @@ public class TileEntityCraftingTerminal extends TileEntityGridDeviceBase<Storage
 			}
 		}
 		container.detectAndSendChanges();
+	}
+	@Override
+	public void setClientPowered(boolean powered) {
+		poweredClient = powered;
+	}
+	@Override
+	public boolean getClientPowered() {
+		return poweredClient;
 	}
 }

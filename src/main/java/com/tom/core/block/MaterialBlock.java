@@ -82,7 +82,6 @@ public class MaterialBlock extends Block {
 		}
 	}
 	public static class MaterialBlockItemBlock extends ItemBlock{
-		@SuppressWarnings("hiding")
 		public final MaterialBlock block;
 		public MaterialBlockItemBlock(MaterialBlock block) {
 			super(block);

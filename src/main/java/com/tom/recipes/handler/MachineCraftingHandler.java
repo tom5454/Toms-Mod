@@ -110,7 +110,7 @@ public class MachineCraftingHandler {
 	}
 	public static class ItemStackChecker{
 		private final ItemStack stack, extraStack;
-		private int extra, extra2, extra3;
+		private int extra, extra2, extra3, heat;
 		private FluidStack fluid = null;
 		private boolean mode = false;
 		public ItemStackChecker(ItemStack stack) {
@@ -136,6 +136,10 @@ public class MachineCraftingHandler {
 			this.extra3 = extra;
 			return this;
 		}
+		public ItemStackChecker setHeat(int extra) {
+			this.heat = extra;
+			return this;
+		}
 		public ItemStack getExtraStack() {
 			return extraStack;
 		}
@@ -144,7 +148,7 @@ public class MachineCraftingHandler {
 			if(this == obj)return true;
 			if(!(obj instanceof ItemStackChecker))return false;
 			ItemStackChecker other = (ItemStackChecker) obj;
-			return TomsModUtils.areItemStacksEqualOreDict(stack, other.stack, true, true, false, true) && mode == other.mode && TomsModUtils.areFluidStacksEqual2(fluid, other.fluid) && other.stack.stackSize >= stack.stackSize && ((extraStack == null && other.extraStack == null) || TomsModUtils.areItemStacksEqualOreDict(extraStack, other.extraStack, true, true, false, true) && other.extraStack.stackSize >= extraStack.stackSize);
+			return TomsModUtils.areItemStacksEqualOreDict(stack, other.stack, true, true, false, true) && mode == other.mode && heat <= other.heat && TomsModUtils.areFluidStacksEqual2(fluid, other.fluid) && other.stack.stackSize >= stack.stackSize && ((extraStack == null && other.extraStack == null) || TomsModUtils.areItemStacksEqualOreDict(extraStack, other.extraStack, true, true, false, true) && other.extraStack.stackSize >= extraStack.stackSize);
 		}
 		public int getExtra() {
 			return extra;
@@ -168,6 +172,15 @@ public class MachineCraftingHandler {
 		public ItemStackChecker setMode(boolean mode) {
 			this.mode = mode;
 			return this;
+		}
+		public ItemStackChecker createSwappedExtra() {
+			ItemStackChecker n = new ItemStackChecker(stack, extraStack);
+			n.setExtra2(extra);
+			n.setExtra(extra2);
+			return n.setExtra3(extra3).setExtraF(fluid).setMode(mode).setHeat(heat);
+		}
+		public int getHeat() {
+			return heat;
 		}
 	}
 	public static List<RecipeData> getCrusherRecipes() {
@@ -200,9 +213,9 @@ public class MachineCraftingHandler {
 	}
 	public static void loadRecipes(){
 		addCrusherRecipe(new ItemStack(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 5));
-		addCrusherRecipe(new ItemStack(Blocks.COBBLESTONE), new ItemStack(Blocks.GRAVEL, 1));
-		addCrusherRecipe(new ItemStack(Blocks.GRAVEL), new ItemStack(Blocks.SAND, 1));
-		addCrusherRecipe(new ItemStack(Blocks.STONE), new ItemStack(Blocks.COBBLESTONE, 1));
+		addCrusherRecipe(new ItemStack(Blocks.COBBLESTONE), new ItemStack(Blocks.SAND, 1));
+		addCrusherRecipe(new ItemStack(Blocks.GRAVEL), new ItemStack(Items.FLINT, 1));
+		addCrusherRecipe(new ItemStack(Blocks.STONE), new ItemStack(Blocks.GRAVEL, 1));
 		addCrusherRecipe(new ItemStack(Items.REEDS), new ItemStack(Items.SUGAR, 2));
 		addAlloySmelterRecipe(TMResource.COPPER.getStackNormal(Type.INGOT, 3), TMResource.TIN.getStackNormal(Type.INGOT), TMResource.BRONZE.getStackNormal(Type.INGOT, 4));
 		addAlloySmelterRecipe(TMResource.GOLD.getStackNormal(Type.INGOT), TMResource.SILVER.getStackNormal(Type.INGOT), TMResource.ELECTRUM.getStackNormal(Type.INGOT, 2));
@@ -213,13 +226,24 @@ public class MachineCraftingHandler {
 		addCokeOvenRecipe(new ItemStack(Items.COAL), new ItemStack(FactoryInit.coalCoke), 500, 1800);
 		addCokeOvenRecipe(new ItemStack(Blocks.COAL_BLOCK), new ItemStack(FactoryInit.blockCoalCoke), 5000, 16500);
 		addCokeOvenRecipe(new ItemStack(Blocks.LOG), new ItemStack(Items.COAL, 1, 1), 250, 1600);
-		addBlastFurnaceRecipe(new ItemStack(Items.IRON_INGOT), TMResource.STEEL.getStackNormal(Type.INGOT), 3200);
-		addBlastFurnaceRecipe(TMResource.IRON.getBlockStackNormal(1), TMResource.STEEL.getBlockStackNormal(1), 28800);
+		addBlastFurnaceRecipe(new ItemStack(Items.IRON_INGOT), null, TMResource.STEEL.getStackNormal(Type.INGOT), 3200, 0);
+		addBlastFurnaceRecipe(TMResource.IRON.getBlockStackNormal(1), null, TMResource.STEEL.getBlockStackNormal(1), 28800, 0);
 		addCrusherRecipe(TMResource.WOLFRAM.getStackNormal(Type.CRUSHED_ORE), CraftingMaterial.TUNGSTATE_DUST.getStackNormal());
-		addBlastFurnaceRecipe(CraftingMaterial.TUNGSTATE_DUST.getStackNormal(), CraftingMaterial.HOT_WOLFRAM_INGOT.getStackNormal(), 6400);
+		addBlastFurnaceRecipe(CraftingMaterial.TUNGSTATE_DUST.getStackNormal(), null, CraftingMaterial.HOT_WOLFRAM_INGOT.getStackNormal(), 6400, 0);
 		addAlloySmelterRecipe(new ItemStack(Blocks.REDSTONE_BLOCK), TMResource.ELECTRUM.getStackNormal(Type.INGOT, 4), TMResource.REDSTONE.getStackNormal(Type.INGOT, 4));
 		addAlloySmelterRecipe(TMResource.COPPER.getStackNormal(Type.INGOT), TMResource.NICKEL.getStackNormal(Type.INGOT), CraftingMaterial.CUPRONICKEL_INGOT.getStackNormal(2));
 		addWireMillRecipe(CraftingMaterial.CUPRONICKEL_INGOT.getStackNormal(4), CraftingMaterial.CUPRONICKEL_HEATING_COIL.getStackNormal(), 2);
+		addBlastFurnaceRecipe(CraftingMaterial.TUNGSTATE_DUST.getStackNormal(), TMResource.COAL.getStackNormal(Type.DUST_TINY, 3), CraftingMaterial.HOT_WOLFRAM_INGOT.getStackNormal(), 6000, 2200);
+		addBlastFurnaceRecipe(new ItemStack(Items.IRON_INGOT), TMResource.COAL.getStackNormal(Type.DUST, 2), TMResource.STEEL.getStackNormal(Type.INGOT), 2800, 1020);
+		addBlastFurnaceRecipe(TMResource.IRON.getBlockStackNormal(1), TMResource.COAL.getStackNormal(Type.DUST, 18), TMResource.STEEL.getBlockStackNormal(1), 25000, 1020);
+		addBlastFurnaceRecipe(CraftingMaterial.ENDERIUM_BASE.getStackNormal(), new ItemStack(Items.ENDER_PEARL, 4), TMResource.ENDERIUM.getStackNormal(Type.INGOT), 5000, 2000);
+		addBlastFurnaceRecipe(TMResource.WOLFRAM.getStackNormal(Type.DUST), TMResource.STEEL.getStackNormal(Type.INGOT), TMResource.TUNGSTENSTEEL.getStackNormal(Type.INGOT, 2), 15000, 3000);
+		addBlastFurnaceRecipe(TMResource.TITANIUM.getStackNormal(Type.DUST), null, TMResource.TITANIUM.getStackNormal(Type.INGOT), 4000, 1500);
+		addBlastFurnaceRecipe(TMResource.CHROME.getStackNormal(Type.DUST), null, TMResource.CHROME.getStackNormal(Type.INGOT), 4000, 1700);
+		addBlastFurnaceRecipe(TMResource.WOLFRAM.getStackNormal(Type.DUST), null, CraftingMaterial.HOT_WOLFRAM_INGOT.getStackNormal(), 4000, 2000);
+		addBlastFurnaceRecipe(TMResource.TUNGSTENSTEEL.getStackNormal(Type.DUST), null, CraftingMaterial.HOT_TUNGSTENSTEEL_INGOT.getStackNormal(), 4000, 3000);
+		addBlastFurnaceRecipe(CraftingMaterial.BAUXITE_DUST.getStackNormal(), TMResource.MERCURY.getStackNormal(Type.GEM), TMResource.ALUMINUM.getStackNormal(Type.INGOT), 5000, 1700);
+		addBlastFurnaceRecipe(TMResource.MERCURY.getStackNormal(Type.CRUSHED_ORE), TMResource.COAL.getStackNormal(Type.DUST, 4), TMResource.MERCURY.getStackNormal(Type.GEM), 5000, 1700);
 	}
 	public static ItemStack getFurnaceRecipe(ItemStack in){
 		if(in == null)return null;
@@ -241,8 +265,10 @@ public class MachineCraftingHandler {
 		ItemStackChecker c = new ItemStackChecker(stack1, stack2);
 		ItemStackChecker cs = new ItemStackChecker(stack2, stack1);
 		for(Entry<ItemStackChecker, ItemStackChecker> recipe : alloySmelterRecipes.entrySet()){
-			if(recipe.getKey().equals(c) || recipe.getKey().equals(cs)){
+			if(recipe.getKey().equals(c)){
 				return recipe.getValue();
+			}else if(recipe.getKey().equals(cs)){
+				return recipe.getValue().createSwappedExtra();
 			}
 		}
 		return null;
@@ -273,20 +299,24 @@ public class MachineCraftingHandler {
 		}
 		return null;
 	}
-	public static void addBlastFurnaceRecipe(ItemStack input1, ItemStack output, int time){
-		ItemStackChecker c = new ItemStackChecker(input1);
+	public static void addBlastFurnaceRecipe(ItemStack input1, ItemStack input2, ItemStack output, int time, int heat){
+		ItemStackChecker c = new ItemStackChecker(input1, input2).setHeat(heat);
 		boolean found = false;
 		for(Entry<ItemStackChecker, ItemStackChecker> recipe : blastFurnaceRecipes.entrySet()){
 			if(recipe.getKey().equals(c))found = true;
 		}
-		if(!found)blastFurnaceRecipes.put(new ItemStackChecker(input1), new ItemStackChecker(output).setExtra(input1.stackSize).setExtra3(time));
+		if(!found)blastFurnaceRecipes.put(new ItemStackChecker(input1, input2).setHeat(heat), new ItemStackChecker(output).setExtra(input1 != null ? input1.stackSize : 0).setExtra2(input2 != null ? input2.stackSize : 0).setExtra3(time));
 	}
-	public static ItemStackChecker getBlastFurnaceOutput(ItemStack stack){
-		if(stack == null)return null;
-		ItemStackChecker c = new ItemStackChecker(stack);
+	public static ItemStackChecker getBlastFurnaceOutput(ItemStack stack1, ItemStack stack2, int heat){
+		if(heat == 0 && stack1 == null)return null;
+		if(heat > 0 && (stack1 == null && stack2 == null))return null;
+		ItemStackChecker c = new ItemStackChecker(stack1, stack2).setHeat(heat);
+		ItemStackChecker cs = new ItemStackChecker(stack2, stack1).setHeat(heat);
 		for(Entry<ItemStackChecker, ItemStackChecker> recipe : blastFurnaceRecipes.entrySet()){
 			if(recipe.getKey().equals(c)){
 				return recipe.getValue();
+			}else if(recipe.getKey().equals(cs)){
+				return recipe.getValue().createSwappedExtra();
 			}
 		}
 		return null;
@@ -338,5 +368,15 @@ public class MachineCraftingHandler {
 			}
 		}
 		return null;
+	}
+	public static List<RecipeData> getBlastFurnaceRecipes() {
+		List<RecipeData> ret = new ArrayList<RecipeData>();
+		for(Entry<ItemStackChecker, ItemStackChecker> recipe : blastFurnaceRecipes.entrySet()){
+			RecipeData d = new RecipeData(recipe.getKey().stack, recipe.getKey().extraStack, recipe.getValue().stack, recipe.getKey().getMode());
+			d.processTime = recipe.getValue().getExtra3();
+			d.energy = recipe.getKey().getHeat();
+			ret.add(d);
+		}
+		return ret;
 	}
 }

@@ -5,16 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
 import com.tom.api.block.BlockControllerBase;
 import com.tom.apis.TomsModUtils;
 import com.tom.lib.Configs;
 import com.tom.lib.GlobalFields;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class MultiblockHandler{
 	public int height;
@@ -213,18 +214,26 @@ public class MultiblockHandler{
 					return 2;
 				}
 			}else{
-				if(i2 == 0 || i2 == this.height){
+				if(i2 == 0 || i2 == this.height - 1){
 					//return new int[]{4,4,4,4,4,4};
-					return 4;
+					return getSideRot(d, false);
 				}else{
 					//return new int[]{3,3,3,3,3,3};
 					return 3;
 				}
 			}
 		}else{
+			if(i3 == 0 || i3 == this.width - 1){
+				if(i2 == 0 || i2 == this.height - 1){
+					return getSideRot(d, true);
+				}
+			}
 			//return new int[]{3,3,3,3,3,3};
 			return 3;
 		}
+	}
+	private static int getSideRot(EnumFacing d, boolean invert){
+		return d.getAxis() == (invert ? Axis.Z : Axis.X) ? 5 : 4;
 	}
 	/**@return Object[]{<br> boolean blocks in place,<br> boolean buses found, <br>if buses not found ?<br> List missing buses <br>else<br> boolean buses at the right place*/
 	public Object[] testParts(World world){
@@ -300,12 +309,13 @@ public class MultiblockHandler{
 						if(w == 0 || w == this.width-1){
 							if(w2 == 0 || w2 == this.width-1){
 								isSide = true;
-							}else if(h == 0 || h == this.height){
+							}else if(h == 0 || h == this.height - 1){
 								isSide = true;
 							}
-						}else if((h == 0 || h == this.height-1) && !((w > 0 && w < this.width-1) && (w2 > 0 && w2 < this.width-1))){
+						}else if((h == 0 || h == this.height-1) && (w == 0 || w == this.width-1 || w2 == 0 || w2 == this.width-1)){
 							isSide = true;
 						}
+
 						if(h == this.height-1 && ((w > 0 && w < this.width-1) && (w2 > 0 && w2 < this.width-1))){
 							isTop = true;
 						}
@@ -433,8 +443,8 @@ public class MultiblockHandler{
 		}
 	}
 	public void onNeighborChange(World world){
-		this.world = world;
 		if(!world.isRemote){
+			this.world = world;
 			TileEntityControllerBase te = (TileEntityControllerBase) world.getTileEntity(this.te.getPos());
 			this.te = te;
 			List<MultiblockPartList> l = te.parts();
@@ -447,7 +457,7 @@ public class MultiblockHandler{
 			//System.out.println(state);
 			if(state != 2 && this.formed){
 				this.deForm(world);
-			}else if(state == 2 && !this.formed){
+			}else if(state == 2){
 				this.form(world);
 			}
 		}
@@ -494,16 +504,31 @@ public class MultiblockHandler{
 			mX = 0;
 			mY = this.height-1;
 		}
-		int[] coords = TomsModUtils.getRelativeCoordTable(TomsModUtils.getRelativeCoordTable(coords2, cX, cY, cZ, this.d.getOpposite().ordinal()),mX,mY,mZ,this.d.getOpposite().ordinal());
+		int dV = 0;
+		switch(d){
+		case NORTH:
+			dV = 3;
+			break;
+		case SOUTH:
+			dV = 2;
+			break;
+		case WEST:
+			dV = 1;
+			break;
+		default:
+			break;
+
+		}
+		int[] coords = TomsModUtils.getRelativeCoordTable(TomsModUtils.getRelativeCoordTable(coords2, cX, cY, cZ, dV),mX,mY,mZ,dV);
 		//BlockPos offset = new BlockPos(0,0,0).offset(d.rotateY(),cX).offset(d,cZ).add(0, cY, 0).add(0, mY, 0).offset(d.rotateY(),mX).offset(d,mZ);
 		//BlockPos pos = offset.add(te.getPos());
 		//int[] coords = new int[]{pos.getX(),pos.getY(),pos.getZ()};
-		//System.out.println("b"+coords[0]+" "+coords[1]+" "+coords[2]+" "+d/*+" "+offset.getX()+" "+offset.getY()+" "+offset.getZ()*/);
-		//world.setBlockState(new BlockPos(coords[0],coords[1]+10,+coords[2]), Blocks.stone.getDefaultState());
+		//System.out.println("b"+coords[0]+" "+coords[1]+" "+coords[2]+" "+dV/*+" "+offset.getX()+" "+offset.getY()+" "+offset.getZ()*/);
+		//world.setBlockState(new BlockPos(coords[0],coords[1]+10,+coords[2]), Blocks.STONE.getDefaultState());
 		return coords;
 	}
 	private void update(World world){
-		if(!this.formed && !world.isRemote){
+		if(!world.isRemote){
 			this.onNeighborChange(world);
 		}
 	}

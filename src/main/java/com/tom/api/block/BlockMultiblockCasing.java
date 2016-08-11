@@ -1,7 +1,5 @@
 package com.tom.api.block;
 
-import com.tom.apis.TomsModUtils;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -9,6 +7,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.apis.TomsModUtils;
 
 public abstract class BlockMultiblockCasing extends BlockMultiblockPart {
 
@@ -35,6 +35,7 @@ public abstract class BlockMultiblockCasing extends BlockMultiblockPart {
 		DOTC("dotc"),
 		Full("full"),
 		RLCT("rlct"),
+		RLAT("rlat"),
 		;
 		public static final CasingConnectionType[] VALUES = values();
 		private final String name;

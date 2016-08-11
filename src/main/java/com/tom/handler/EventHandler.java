@@ -1,5 +1,8 @@
 package com.tom.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -20,11 +23,15 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEve
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 import com.tom.api.event.ItemAdvCraftedEvent;
 import com.tom.api.item.ICustomCraftingHandler;
 import com.tom.api.item.ICustomCraftingHandlerAdv;
+import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.handler.WorldHandler.Action;
@@ -33,7 +40,35 @@ import com.tom.network.messages.MessageMarkerSync;
 import com.tom.network.messages.MessageMinimap;
 
 public class EventHandler {
+	public static class TileList {
+		List<TileEntityTomsMod> tileList = new ArrayList<TileEntityTomsMod>();
+		List<TileEntityTomsMod> tileListClient = new ArrayList<TileEntityTomsMod>();
+		public void update(boolean client){
+			List<TileEntityTomsMod> tileList;
+			if(client){
+				tileList = tileListClient;
+			}else{
+				tileList = this.tileList;
+			}
+			List<TileEntityTomsMod> invalid = new ArrayList<TileEntityTomsMod>();
+			for(int i = 0;i<tileList.size();i++){
+				if(tileList.get(i).isInvalid()){
+					invalid.add(tileList.get(i));
+				}else{
+					tileList.get(i).ticked = false;
+				}
+			}
+			tileList.removeAll(invalid);
+		}
+		public boolean add(TileEntityTomsMod te) {
+			return tileList.add(te);
+		}
+		public void addClient(TileEntityTomsMod te) {
+			tileListClient.add(te);
+		}
+	}
 	public static final EventHandler instance = new EventHandler();
+	public static TileList teList = new TileList();
 	/*@SubscribeEvent
     public void onPlayerLoadFromFileEvent(LoadFromFile event)
     {
@@ -158,6 +193,12 @@ public class EventHandler {
 	@SubscribeEvent
 	public void tick(WorldTickEvent event){
 		WorldHandler.onTick(event.world, event.phase);
+	}
+	@SubscribeEvent
+	public void tickServer(ServerTickEvent event){
+		if(event.phase == Phase.START && event.type == Type.SERVER){
+			teList.update(false);
+		}
 	}
 	@SubscribeEvent
 	public void breakSpeed(BreakSpeed event){

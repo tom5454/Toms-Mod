@@ -13,6 +13,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,11 +37,17 @@ import com.tom.api.energy.IEnergyProvider;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.energy.IEnergyStorageHandler;
 import com.tom.api.energy.IEnergyStorageTile;
+import com.tom.config.Config;
+import com.tom.handler.EventHandler;
 
 public class TileEntityTomsMod extends TileEntity implements ITickable {
 	protected Map<EnumFacing, IItemHandler> itemHandlerSidedMap;
 	protected Map<EnumFacing, IEnergyStorageHandler> energyHandlerMap;
 	protected Map<EnumFacing, IFluidHandler> fluidHandlerMap;
+	public boolean ticked = false;
+	private boolean added = false;
+	private int tickSpeedingTimer = 0;
+	private boolean clientSpeeding;
 
 	public TileEntityTomsMod() {
 		//Initialize capabilities.
@@ -104,6 +111,7 @@ public class TileEntityTomsMod extends TileEntity implements ITickable {
 
 			@Override
 			public void run() {
+				clientSpeeding = tag.getBoolean("_ts");
 				readFromPacket(tag);
 			}
 		});
@@ -112,6 +120,7 @@ public class TileEntityTomsMod extends TileEntity implements ITickable {
 	public final NBTTagCompound getUpdateTag() {
 		NBTTagCompound tag = super.getUpdateTag();
 		writeToPacket(tag);
+		tag.setBoolean("_ts", tickSpeedingTimer > 0);
 		return tag;
 	}
 
@@ -122,15 +131,52 @@ public class TileEntityTomsMod extends TileEntity implements ITickable {
 	public void preUpdate(){}
 	public void postUpdate(){}
 	public boolean canHaveInventory(){return true;}
+	public TickSpeedupBehaviour getTickSpeedupBehaviour(){return TickSpeedupBehaviour.REQUIRES_CONFIG;}
 
 	@Override
 	public final void update() {
-		IBlockState state = worldObj.getBlockState(pos);
-		if(state.getBlock() != Blocks.AIR){
-			preUpdate();
-			this.updateEntity();
-			this.updateEntity(state);
-			postUpdate();
+		if(!added){
+			if(worldObj.isRemote)EventHandler.teList.addClient(this);
+			else EventHandler.teList.add(this);
+			added = true;
+		}
+		if(!ticked || getTickSpeedupBehaviour() == TickSpeedupBehaviour.NORMAL || (getTickSpeedupBehaviour() == TickSpeedupBehaviour.REQUIRES_CONFIG && Config.enableTickSpeeding)){
+			ticked = true;
+			IBlockState state = worldObj.getBlockState(pos);
+			if(state.getBlock() != Blocks.AIR){
+				preUpdate();
+				this.updateEntity();
+				this.updateEntity(state);
+				postUpdate();
+			}
+			if(tickSpeedingTimer > 0){
+				tickSpeedingTimer--;
+				if(tickSpeedingTimer == 0)markBlockForUpdate();
+			}
+		}else{
+			int old = tickSpeedingTimer;
+			tickSpeedingTimer = 20;
+			if(old == 0){
+				markBlockForUpdate();
+			}
+		}
+		if(worldObj.isRemote && (tickSpeedingTimer > 0 || clientSpeeding)){
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.25, pos.getY() + 1, pos.getZ() + 0.25, 0, 0.02F, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.25, pos.getY() + 1, pos.getZ() + 0.75, 0, 0.02F, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.75, pos.getY() + 1, pos.getZ() + 0.25, 0, 0.02F, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.75, pos.getY() + 1, pos.getZ() + 0.75, 0, 0.02F, 0);
+
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 0, 0.05F, 0);
+			double sideY = pos.getY() + 0.3;
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX(),     sideY, pos.getZ(),     0, 0.02F, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX(),     sideY, pos.getZ() + 1, 0, 0.02F, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 1, sideY, pos.getZ(),     0, 0.02F, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 1, sideY, pos.getZ() + 1, 0, 0.02F, 0);
+
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX(),       sideY, pos.getZ() + 0.5, 0, 0.02F, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.5, sideY, pos.getZ(), 0, 0.02F, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.5, sideY, pos.getZ() + 1, 0, 0.02F, 0);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 1,   sideY, pos.getZ() + 0.5, 0, 0.02F, 0);
 		}
 	}
 	public final void markBlockForUpdate(BlockPos pos){
@@ -175,5 +221,11 @@ public class TileEntityTomsMod extends TileEntity implements ITickable {
 	@Override
 	public final void updateContainingBlockInfo() {
 		super.updateContainingBlockInfo();
+	}
+	public static enum TickSpeedupBehaviour{
+		NORMAL, REQUIRES_CONFIG, DENY
+	}
+	public final boolean isTickSpeeded(){
+		return tickSpeedingTimer > 0 || clientSpeeding;
 	}
 }

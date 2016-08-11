@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -39,7 +39,7 @@ import com.tom.defense.block.FieldProjector;
 import com.tom.handler.GuiHandler.GuiIDs;
 
 public class TileEntityForceFieldProjector extends TileEntityTomsMod implements
-IForceDevice, IInventory, IGuiTile {
+IForceDevice, ISidedInventory, IGuiTile {
 	public ForceDeviceControlType rsMode = ForceDeviceControlType.LOW_REDSTONE;
 	private ItemStack[] stack = new ItemStack[this.getSizeInventory()];
 	private EnergyStorage energy = new EnergyStorage(1000000,100000);
@@ -365,5 +365,17 @@ IForceDevice, IInventory, IGuiTile {
 	@Override
 	public BlockPos getPos2() {
 		return pos;
+	}
+	@Override
+	public int[] getSlotsForFace(EnumFacing side) {
+		return new int[]{};
+	}
+	@Override
+	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+		return false;
+	}
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+		return false;
 	}
 }

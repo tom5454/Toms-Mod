@@ -1,25 +1,33 @@
 package com.tom.recipes.handler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.world.World;
 
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.tom.api.research.IResearch;
-import com.tom.apis.ItemStackComparator;
 import com.tom.apis.RecipeData;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
 
 public class AdvancedCraftingHandler {
 	private static List<RecipeData> recipeList = new ArrayList<RecipeData>();
-	public static void addRecipe(ItemStack out, int craftingTime, ItemStack[] input, List<IResearch> requiredResearches, boolean shaped, ItemStack extra, CraftingLevel level){
+	private static final InventoryCrafting craftingInv = new InventoryCrafting(new Container() {
+
+		@Override
+		public boolean canInteractWith(EntityPlayer playerIn) {
+			return false;
+		}
+		@Override
+		public void onCraftMatrixChanged(net.minecraft.inventory.IInventory inventoryIn) {};
+	}, 3, 3);
+	/*public static void addRecipe(ItemStack out, int craftingTime, ItemStack[] input, List<IResearch> requiredResearches, boolean shaped, ItemStack extra, CraftingLevel level){
 		if(out != null){
 			if(input.length != 9){
 				ItemStack[] newArray = new ItemStack[9];
@@ -30,8 +38,8 @@ public class AdvancedCraftingHandler {
 			}
 			recipeList.add(new RecipeData(out, craftingTime, input, requiredResearches, shaped, extra, level));
 		}
-	}
-	public static void addRecipe(ItemStack out, int craftingTime, ItemStack[] input, List<IResearch> requiredResearches, boolean shaped, CraftingLevel level){
+	}*/
+	/*public static void addRecipe(ItemStack out, int craftingTime, ItemStack[] input, List<IResearch> requiredResearches, boolean shaped, CraftingLevel level){
 		addRecipe(out, craftingTime, input, requiredResearches, shaped, null, level);
 	}
 	public static void addRecipe(ItemStack out, int craftingTime, ItemStack[] input, List<IResearch> requiredResearches, ItemStack extra, CraftingLevel level){
@@ -39,11 +47,16 @@ public class AdvancedCraftingHandler {
 	}
 	public static void addRecipe(ItemStack out, int craftingTime, ItemStack[] input, List<IResearch> requiredResearches, CraftingLevel level){
 		addRecipe(out, craftingTime, input, requiredResearches, true, null, level);
+	}*/
+	public static void addRecipe(IRecipe recipe, int craftingTime, List<IResearch> requiredResearches, ItemStack extra, CraftingLevel level) {
+		if(recipe != null){
+			recipeList.add(new RecipeData(recipe, craftingTime, requiredResearches, extra, level));
+		}
 	}
-	public static ReturnData craft(ItemStack[] inA, List<IResearch> researchList, CraftingLevel level){
+	public static ReturnData craft(ItemStack[] input, List<IResearch> researchList, CraftingLevel level, World world){
 		for(int i = 0;i<recipeList.size();i++){
 			RecipeData data = recipeList.get(i);
-			ItemStack[] array = {data.itemstack1, data.itemstack2, data.itemstack3, data.itemstack4, data.itemstack5, data.itemstack6, data.itemstack7, data.itemstack8, data.itemstack9};
+			/*ItemStack[] array = {data.itemstack1, data.itemstack2, data.itemstack3, data.itemstack4, data.itemstack5, data.itemstack6, data.itemstack7, data.itemstack8, data.itemstack9};
 			boolean equals = true;
 			List<ItemStackComparator> inL = new ArrayList<ItemStackComparator>();
 			for(int k = 0;k<9;k++){
@@ -63,11 +76,14 @@ public class AdvancedCraftingHandler {
 					}
 				}
 			}
-			if(!data.shaped)equals = inL.isEmpty();
-			if(equals){
+			if(!data.shaped)equals = inL.isEmpty();*/
+			for(int j = 0;j<input.length && j<9;j++){
+				craftingInv.setInventorySlotContents(j, input[j]);
+			}
+			if(data.recipe.matches(craftingInv, world)){
 				if(data.requiredResearches == null || researchList == null || researchList.containsAll(data.requiredResearches))
-					return new ReturnData(ItemStack.copyItemStack(data.itemstack0), data.processTime, ItemStack.copyItemStack(data.itemstack10), true, level == null || data.level.isEqual(level));
-				else return new ReturnData(ItemStack.copyItemStack(data.itemstack0), data.processTime, ItemStack.copyItemStack(data.itemstack10), false, level == null || data.level.isEqual(level));
+					return new ReturnData(ItemStack.copyItemStack(data.recipe.getCraftingResult(craftingInv)), data.processTime, ItemStack.copyItemStack(data.itemstack10), true, level == null || data.level.isEqual(level));
+				else return new ReturnData(ItemStack.copyItemStack(data.recipe.getCraftingResult(craftingInv)), data.processTime, ItemStack.copyItemStack(data.itemstack10), false, level == null || data.level.isEqual(level));
 
 			}
 		}
@@ -111,7 +127,7 @@ public class AdvancedCraftingHandler {
 		addRecipe(out, craftingTime, requiredResearches, extra, false, level, recipe);
 	}
 	public static void addRecipe(ItemStack result, int craftingTime, List<IResearch> requiredResearches, ItemStack extra, boolean shaped, CraftingLevel level, Object... recipe){
-		ItemStack output = result.copy();
+		/*ItemStack output = result.copy();
 		int width = 3;
 		int height = 3;
 		String shape = "";
@@ -201,7 +217,8 @@ public class AdvancedCraftingHandler {
 			addRecipe(output, craftingTime, input, requiredResearches, shaped, extra, level);
 		}catch(Throwable e){
 			TMLogger.bigCatching(e, "Error occurred while adding a recipe.");
-		}
+		}*/
+		addRecipe(shaped ? new ShapedOreRecipe(result, recipe) : new ShapelessOreRecipe(result, recipe), craftingTime, requiredResearches, extra, level);
 	}
 	public static enum CraftingLevel{
 		BASIC("tomsMod.craftingLevel.basic"),

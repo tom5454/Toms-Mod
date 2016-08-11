@@ -1,12 +1,12 @@
 package com.tom.storage.tileentity;
 
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.multipart.StorageNetworkGrid.ITerminal;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.multipart.StorageNetworkGrid.ITerminal;
 
 public class TileEntityBasicTerminal extends
 TileEntityGridDeviceBase<StorageNetworkGrid> implements ITerminal{
@@ -55,5 +55,13 @@ TileEntityGridDeviceBase<StorageNetworkGrid> implements ITerminal{
 	@Override
 	public int getTerminalMode() {
 		return terminalMode;
+	}
+	@Override
+	public void setClientPowered(boolean powered) {
+		poweredClient = powered;
+	}
+	@Override
+	public boolean getClientPowered() {
+		return poweredClient;
 	}
 }

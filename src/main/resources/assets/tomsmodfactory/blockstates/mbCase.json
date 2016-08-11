@@ -4,6 +4,7 @@
         "type=full": { "model": "tomsmodfactory:mbCaseF"},
         "type=udct": { "model": "tomsmodfactory:mbCaseUD"},
         "type=dotc": { "model": "tomsmodfactory:mbCaseD"},
-        "type=rlct": { "model": "tomsmodfactory:mbCaseRL"}
+        "type=rlct": { "model": "tomsmodfactory:mbCaseRL"},
+        "type=rlat": { "model": "tomsmodfactory:mbCaseRL", "y":90}
     }
 }

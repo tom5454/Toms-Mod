@@ -1,10 +1,16 @@
 package com.tom.thirdparty.jei;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import com.tom.apis.RecipeData;
 import com.tom.apis.TomsModUtils;
@@ -17,10 +23,6 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 public class AlloySmelterRecipeCategory implements IRecipeCategory<AlloySmelterRecipeJEI>{
 	public static List<AlloySmelterRecipeJEI> get() {
@@ -68,8 +70,8 @@ public class AlloySmelterRecipeCategory implements IRecipeCategory<AlloySmelterR
 		recipeLayout.getItemStacks().init(0, true, x, y);
 		recipeLayout.getItemStacks().init(1, true, x+18, y);
 		recipeLayout.getItemStacks().init(2, false, x+73, y);
-		recipeLayout.getItemStacks().set(0, recipe.input1);
-		recipeLayout.getItemStacks().set(1, recipe.input2);
+		recipeLayout.getItemStacks().setFromRecipe(0, recipe.input1);
+		recipeLayout.getItemStacks().setFromRecipe(1, recipe.input2);
 		recipeLayout.getItemStacks().set(2, recipe.output);
 	}
 	public static class AlloySmelterHandler implements IRecipeHandler<AlloySmelterRecipeJEI>{
@@ -112,10 +114,11 @@ public class AlloySmelterRecipeCategory implements IRecipeCategory<AlloySmelterR
 			this.output = output;
 			this.input2 = input2;
 		}
+		@SuppressWarnings("rawtypes")
 		@Override
-		public List<ItemStack> getInputs()
+		public List getInputs()
 		{
-			return TomsModUtils.getItemStackList(input1, input2);
+			return Arrays.asList(new Object[]{input1, input2});
 		}
 
 		@Override

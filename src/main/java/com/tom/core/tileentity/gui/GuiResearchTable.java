@@ -122,13 +122,11 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 			renderItemInGui(icon, guiLeft+60, guiTop+15, -50, -50);
 			GL11.glPopMatrix();
 			String text = I18n.format(te.currentResearch.getName());
-			int textWidth = mc.fontRendererObj.getStringWidth(text);
-			int tab = textWidth/2;
+			drawResearchName(guiLeft+68, guiTop+38, text);
 			//float textScale = 0.9F;
 			//GL11.glPushMatrix();
 			//GL11.glScalef(textScale, textScale, textScale);
 			//mc.fontRendererObj.drawString(text, guiLeft+78/textScale-textWidth/2/textScale, guiTop+38/textScale, 16777215,true);
-			mc.fontRendererObj.drawString(text, guiLeft+68-tab, guiTop+38, 16777215,true);
 			//GL11.glPopMatrix();
 			//ItemStack is = te.currentResearch.getResearchRequirements().get(0);
 			//GL11.glPushMatrix();
@@ -142,6 +140,16 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 			//GL11.glPopMatrix();
 			//this.itemRender.zLevel = 0.0F;
 			//this.zLevel = 0.0F;
+		}
+	}
+	private static final int LINE_SPACING = 2;
+	private void drawResearchName(int x, int y, String textN){
+		List<String> textList = mc.fontRendererObj.listFormattedStringToWidth(textN, 75);
+		for(int i = 0;i<textList.size();i++){
+			String text = textList.get(i);
+			int textWidth = mc.fontRendererObj.getStringWidth(text);
+			int tab = textWidth/2;
+			mc.fontRendererObj.drawString(text, x-tab, y + (i * (mc.fontRendererObj.FONT_HEIGHT + LINE_SPACING)), 16777215,true);
 		}
 	}
 	@Override

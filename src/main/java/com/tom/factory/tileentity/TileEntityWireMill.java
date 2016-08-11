@@ -9,7 +9,6 @@ import net.minecraft.util.math.MathHelper;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.item.IExtruderModule;
 import com.tom.apis.TomsModUtils;
-import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockWireMill;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
@@ -118,9 +117,6 @@ public class TileEntityWireMill extends TileEntityMachineBase {
 		int p = upgradeC + (upgradeC / 2) + speed;
 		progress = Math.max(0, progress - p);
 		energy.extractEnergy(1 * p, false);
-	}
-	private int getSpeedUpgradeCount(){
-		return stack[2] != null && stack[2].getItem() == FactoryInit.speedUpgrade ? stack[2].stackSize : 0;
 	}
 	private int getBlendingLevel(){
 		int lvl = getBlendingModuleLevel();

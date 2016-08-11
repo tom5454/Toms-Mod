@@ -1,4 +1,20 @@
 Changelog:
+Version 2.0.12_ALPHA for Minecraft 1.10.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.
+
+    Added Industrial Blast Furnace
+    Added Oxygen
+    Changed crusher recipes for sand and gravel
+    Added JEI handler for blast furnace recipes
+    Added Version Checker
+    Added Recipe for the Solar Panel
+    Added Recipe for MV Cable, MV Transformer & all MV Machines
+    Added a few missing recipes.
+    Fixed Ore Dictionary bugs with advanced crafting
+    Fixed Research name rendering issue in the Research Table Gui
+    Fixed Bugs with Multiblock merging and wall rendering
+
 Version 2.0.11_ALPHA for Minecraft 1.10.2
 
 WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.

@@ -1,10 +1,16 @@
 package com.tom.recipes;
 
 import static com.tom.api.energy.EnergyType.LV;
+import static com.tom.api.energy.EnergyType.MV;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -21,37 +27,20 @@ import com.tom.core.TMResource.Type;
 import com.tom.core.research.handler.ResearchLoader;
 import com.tom.energy.EnergyInit;
 import com.tom.factory.FactoryInit;
+import com.tom.factory.block.BlockMachineBase;
 import com.tom.factory.tileentity.TileEntityMachineBase;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler.CraftingLevel;
 import com.tom.storage.StorageInit;
 
 public class AdvancedCraftingRecipes {//CraftingRecipes
+	public static Map<BlockMachineBase, Block> machines = new HashMap<BlockMachineBase, Block>();
 	public static void init(){
 		int brickAmount = Config.enableHardMode ? 2 : 4;
-		AdvancedCraftingHandler.addRecipe(CraftingMaterial.ACID_PAPER.getStackNormal(2), 100,
-				new ItemStack[]{new ItemStack(Items.WATER_BUCKET),null,new ItemStack(Items.DYE,1,15),
-						new ItemStack(Items.SPIDER_EYE),new ItemStack(Items.PAPER),new ItemStack(Items.PAPER),
-						new ItemStack(Items.ROTTEN_FLESH),new ItemStack(Items.PAPER),new ItemStack(Items.PAPER)},
-				getResearchList(ResearchLoader.researchAcids), new ItemStack(Items.BUCKET), CraftingLevel.BASIC);
-		AdvancedCraftingHandler.addRecipe(CraftingMaterial.FLINT_HAMMER_HEAD.getStackNormal(), 100,
-				new ItemStack[]{new ItemStack(Items.FLINT), new ItemStack(Items.FLINT),
-						new ItemStack(Items.FLINT), new ItemStack(Items.FLINT),
-						TMResource.IRON.getStackNormal(Type.INGOT), new ItemStack(Items.FLINT),
-						null, new ItemStack(Items.FLINT), null},
-				getResearchList(ResearchLoader.hammer), CraftingLevel.BASIC);
-		AdvancedCraftingHandler.addRecipe(CraftingMaterial.FLINT_HAMMER_HEAD.getStackNormal(), 100,
-				new ItemStack[]{new ItemStack(Items.FLINT), new ItemStack(Items.FLINT),
-						new ItemStack(Items.FLINT), new ItemStack(Items.FLINT),
-						TMResource.COPPER.getStackNormal(Type.INGOT), new ItemStack(Items.FLINT),
-						null, new ItemStack(Items.FLINT), null},
-				getResearchList(ResearchLoader.hammer), CraftingLevel.BASIC);
-		AdvancedCraftingHandler.addRecipe(CraftingMaterial.FLINT_HAMMER_HEAD.getStackNormal(), 100,
-				new ItemStack[]{new ItemStack(Items.FLINT), new ItemStack(Items.FLINT),
-						new ItemStack(Items.FLINT), new ItemStack(Items.FLINT),
-						TMResource.TIN.getStackNormal(Type.INGOT), new ItemStack(Items.FLINT),
-						null, new ItemStack(Items.FLINT), null},
-				getResearchList(ResearchLoader.hammer), CraftingLevel.BASIC);
+		AdvancedCraftingHandler.addRecipe(CraftingMaterial.ACID_PAPER.getStackNormal(2), 100, getResearchList(ResearchLoader.researchAcids), new ItemStack(Items.BUCKET), CraftingLevel.BASIC, new Object[]{"W D", "SPP", "RPP", 'W', Items.WATER_BUCKET, 'D', new ItemStack(Items.DYE,1,15), 'S', Items.SPIDER_EYE, 'P', Items.PAPER, 'R', Items.ROTTEN_FLESH});
+		AdvancedCraftingHandler.addRecipe(CraftingMaterial.FLINT_HAMMER_HEAD.getStackNormal(), 100, getResearchList(ResearchLoader.hammer), null, CraftingLevel.BASIC, new Object[]{"FFF", "FIF", " F ", 'F', Items.FLINT, 'I', "ingotIron"});
+		AdvancedCraftingHandler.addRecipe(CraftingMaterial.FLINT_HAMMER_HEAD.getStackNormal(), 100, getResearchList(ResearchLoader.hammer), null, CraftingLevel.BASIC, new Object[]{"FFF", "FIF", " F ", 'F', Items.FLINT, 'I', "ingotCopper"});
+		AdvancedCraftingHandler.addRecipe(CraftingMaterial.FLINT_HAMMER_HEAD.getStackNormal(), 100, getResearchList(ResearchLoader.hammer), null, CraftingLevel.BASIC, new Object[]{"FFF", "FIF", " F ", 'F', Items.FLINT, 'I', "ingotTin"});
 		AdvancedCraftingHandler.addShapelessRecipe(new ItemStack(CoreInit.mortarAndPestle), 200, getResearchList(ResearchLoader.mortar), null, CraftingLevel.BASIC, new Object[]{CraftingMaterial.STONE_BOWL.getStack(), Items.FLINT});
 		AdvancedCraftingHandler.addRecipe(new ItemStack(FactoryInit.basicBoiler), 300, getResearchList(ResearchLoader.basicBoiler), null, CraftingLevel.BASIC, new Object[]{"PPP", "PGP", "BFB", 'F', Blocks.FURNACE, 'P', TMResource.BRONZE.getStackName(Type.PLATE), 'B', Blocks.BRICK_BLOCK, 'G', "blockGlass"});
 		AdvancedCraftingHandler.addRecipe(new ItemStack(FactoryInit.advBoiler), 500, getResearchList(ResearchLoader.steelBoiler), null, CraftingLevel.BASIC, new Object[]{"PPP", "PGP", "BFB", 'F', Blocks.FURNACE, 'P', TMResource.STEEL.getStackName(Type.PLATE), 'B', Blocks.BRICK_BLOCK, 'G', FactoryInit.basicBoiler});
@@ -96,13 +85,25 @@ public class AdvancedCraftingRecipes {//CraftingRecipes
 			NBTTagCompound elytraTag = new NBTTagCompound();
 			elytraTag.setBoolean("Unbreakable", true);
 			elytraStack.setTagCompound(elytraTag);
-			AdvancedCraftingHandler.addRecipe(elytraStack, 20000, getResearchList(ResearchLoader.basicLvMachines), null, CraftingLevel.BASIC, new Object[]{"DND", "WEW", "F F", 'D', Blocks.DIAMOND_BLOCK, 'N', Items.NETHER_STAR, 'W', TMResource.WOLFRAM.getStackName(Type.PLATE), 'E', Items.ELYTRA, 'F', Items.FEATHER});
+			AdvancedCraftingHandler.addRecipe(elytraStack, 20000, getResearchList(ResearchLoader.basicLvMachines), null, CraftingLevel.BASIC, new Object[]{"DND", "WEW", "F F", 'D', Blocks.DIAMOND_BLOCK, 'N', Items.NETHER_STAR, 'W', TMResource.TUNGSTENSTEEL.getStackName(Type.PLATE), 'E', Items.ELYTRA, 'F', Items.FEATHER});
 		}
 		AdvancedCraftingHandler.addRecipe(new ItemStack(FactoryInit.solderingStation), 1100, getResearchList(ResearchLoader.eSolderingStation), null, CraftingLevel.BASIC, new Object[]{"IHI", "RCR", "IEI", 'I', TMResource.IRON.getStackName(Type.PLATE), 'H', CraftingMaterial.CUPRONICKEL_HEATING_COIL.getStack(), 'R', Items.REDSTONE, 'C', CoreInit.MachineFrameBasic, 'E', CraftingMaterial.BASIC_CIRCUIT.getStack()});
 		AdvancedCraftingHandler.addRecipe(new ItemStack(FactoryInit.pump, 1, getMeta(LV)), 1000, getResearchList(ResearchLoader.pump), null, CraftingLevel.BASIC, new Object[]{"ITI", "BCB", "IPI", 'I', TMResource.IRON.getStackName(Type.PLATE), 'C', CoreInit.MachineFrameBasic, 'B', Items.BUCKET, 'T', StorageInit.tankBasic, 'P', CoreInit.itemPump});
 		AdvancedCraftingHandler.addRecipe(new ItemStack(FactoryInit.fluidTransposer, 1, getMeta(LV)), 1100, getResearchList(ResearchLoader.fluidTransposer), null, CraftingLevel.BASIC, new Object[]{"IEI", "TCB", "IPI", 'I', TMResource.IRON.getStackName(Type.PLATE), 'C', CoreInit.MachineFrameBasic, 'B', Items.BUCKET, 'T', StorageInit.tankBasic, 'P', CoreInit.itemPump, 'E', CraftingMaterial.BASIC_CIRCUIT.getStack()});
 		AdvancedCraftingHandler.addRecipe(new ItemStack(FactoryInit.fluidTransposer, 1, getMeta(LV)), 1100, getResearchList(ResearchLoader.fluidTransposer), null, CraftingLevel.BASIC, new Object[]{"IEI", "BCT", "IPI", 'I', TMResource.IRON.getStackName(Type.PLATE), 'C', CoreInit.MachineFrameBasic, 'B', Items.BUCKET, 'T', StorageInit.tankBasic, 'P', CoreInit.itemPump, 'E', CraftingMaterial.BASIC_CIRCUIT.getStack()});
 		AdvancedCraftingHandler.addRecipe(new ItemStack(StorageInit.tankAdv), 300, getResearchList(ResearchLoader.advancedTank), null, CraftingLevel.BASIC, new Object[]{"SGS", "GTG", "SGS", 'T', StorageInit.tankBasic, 'G', "blockGlassColorless", 'S', TMResource.STEEL.getStackName(Type.PLATE)});
+		AdvancedCraftingHandler.addRecipe(new ItemStack(FactoryInit.industrialBlastFurnace, 1, getMeta(LV)), 1200, getResearchList(ResearchLoader.industrialBlastFurnace), null, CraftingLevel.BASIC, new Object[]{"EHE", "HCH", "FHF", 'E', CraftingMaterial.BASIC_CIRCUIT.getStack(), 'H', CraftingMaterial.CUPRONICKEL_HEATING_COIL.getStack(), 'C', CoreInit.MachineFrameSteel, 'F', new ItemStack(FactoryInit.electricFurnace, 1, getMeta(LV))});
+		AdvancedCraftingHandler.addRecipe(CraftingMaterial.SOLAR_PANEL_MK1.getStackNormal(2), 600, getResearchList(ResearchLoader.solarPanel), null, CraftingLevel.E_SOLDERING_STATION, new Object[]{"PPP", "BSB", "RLR", 'P', "paneGlassColorless", 'B', "dyeBlue", 'S', CraftingMaterial.SILICON_PLATE.getStack(), 'R', Items.REDSTONE, 'L', TMResource.LEAD.getStackName(Type.NUGGET)});
+		AdvancedCraftingHandler.addRecipe(new ItemStack(EnergyInit.solarPanel, 2), 1200, getResearchList(ResearchLoader.solarPanel), null, CraftingLevel.BASIC, new Object[]{"SSS", "RER", "P-P", 'S', CraftingMaterial.SOLAR_PANEL_MK1.getStackNormal(), 'R', Items.REDSTONE, 'E', CraftingMaterial.BASIC_CIRCUIT.getStack(), 'P', TMResource.STEEL.getStackName(Type.PLATE), '-', TMResource.COPPER.getStackName(Type.CABLE)});
+		AdvancedCraftingHandler.addRecipe(new ItemStack(EnergyInit.transformerLMV), 1500, getResearchList(ResearchLoader.mvTransformer), null, CraftingLevel.E_SOLDERING_STATION, new Object[]{"CIC", "-F_", "EIE", '-', TMResource.COPPER.getStackName(Type.CABLE), '_', TMResource.ELECTRUM.getStackName(Type.CABLE), 'I', Items.IRON_INGOT, 'F', CoreInit.MachineFrameSteel, 'C', TMResource.COPPER.getStackName(Type.COIL), 'E', TMResource.ELECTRUM.getStackName(Type.COIL)});
+		AdvancedCraftingHandler.addRecipe(new ItemStack(EnergyInit.mvCable, 2), 1200, getResearchList(ResearchLoader.mvCable), null, CraftingLevel.BASIC, new Object[]{"RRR", "---", "RRR", 'R', CraftingMaterial.RUBBER.getStack(), '-', TMResource.ELECTRUM.getStackName(Type.CABLE)});
+		Set<Entry<BlockMachineBase, Block>> mSet = machines.entrySet();
+		for(Entry<BlockMachineBase, Block> m : mSet){
+			AdvancedCraftingHandler.addRecipe(new ItemStack(m.getKey(), 1, getMeta(MV)), 1500, getResearchList(ResearchLoader.mvMachines), null, CraftingLevel.E_SOLDERING_STATION, new Object[]{"STS", "FM-", "SES", 'S', TMResource.STEEL.getStackName(Type.PLATE), 'T', EnergyInit.transformerLMV, 'F', m.getValue(), 'M', new ItemStack(m.getKey(), 1, getMeta(LV)), '-', TMResource.ELECTRUM.getStackName(Type.CABLE), 'E', CraftingMaterial.NORMAL_CIRCUIT.getStack()});
+			AdvancedCraftingHandler.addRecipe(new ItemStack(m.getKey(), 1, getMeta(MV)), 1500, getResearchList(ResearchLoader.mvMachines), null, CraftingLevel.E_SOLDERING_STATION, new Object[]{"STS", "-MF", "SES", 'S', TMResource.STEEL.getStackName(Type.PLATE), 'T', EnergyInit.transformerLMV, 'F', m.getValue(), 'M', new ItemStack(m.getKey(), 1, getMeta(LV)), '-', TMResource.ELECTRUM.getStackName(Type.CABLE), 'E', CraftingMaterial.NORMAL_CIRCUIT.getStack()});
+		}
+		AdvancedCraftingHandler.addRecipe(CraftingMaterial.NORMAL_CIRCUIT_COMPONENT.getStackNormal(), 1200, getResearchList(ResearchLoader.mvCircuit), null, CraftingLevel.BASIC, new Object[]{"-E-", "SSS", "R-R", 'R', Items.REDSTONE, '-', TMResource.ELECTRUM.getStackName(Type.CABLE), 'E', CraftingMaterial.BASIC_CIRCUIT.getStack(), 'S', CraftingMaterial.SILICON_PLATE.getStack()});
+		AdvancedCraftingHandler.addRecipe(CraftingMaterial.NORMAL_CIRCUIT.getStackNormal(), 1200, getResearchList(ResearchLoader.mvCircuit), null, CraftingLevel.SOLDERING_STATION, new Object[]{"RCR", "RPR", "-R-", 'R', Items.REDSTONE, '-', TMResource.ELECTRUM.getStackName(Type.CABLE), 'P', CraftingMaterial.BASIC_CIRCUIT_PLATE.getStack(), 'C', CraftingMaterial.NORMAL_CIRCUIT_COMPONENT.getStack()});
 	}
 	public static List<IResearch> getResearchList(IResearch... in){
 		List<IResearch> list = new ArrayList<IResearch>();

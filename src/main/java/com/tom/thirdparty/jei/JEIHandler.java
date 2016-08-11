@@ -19,8 +19,10 @@ import com.tom.factory.tileentity.gui.GuiAdvElectricFurnace;
 import com.tom.factory.tileentity.gui.GuiAdvSteamFurnace;
 import com.tom.factory.tileentity.gui.GuiAlloySmelter;
 import com.tom.factory.tileentity.gui.GuiBasicBoiler;
+import com.tom.factory.tileentity.gui.GuiBlastFurnace;
 import com.tom.factory.tileentity.gui.GuiCrusher;
 import com.tom.factory.tileentity.gui.GuiElectricFurnace;
+import com.tom.factory.tileentity.gui.GuiIndustrialBlastFurnace;
 import com.tom.factory.tileentity.gui.GuiPlateBlendingMachine;
 import com.tom.factory.tileentity.gui.GuiSolderingStation;
 import com.tom.factory.tileentity.gui.GuiSteamAlloySmelter;
@@ -46,6 +48,7 @@ import com.tom.factory.tileentity.inventory.ContainerSteamSolderingStation;
 import com.tom.factory.tileentity.inventory.ContainerWireMill;
 import com.tom.storage.StorageInit;
 import com.tom.thirdparty.jei.AlloySmelterRecipeCategory.AlloySmelterHandler;
+import com.tom.thirdparty.jei.BlastFurnaceRecipeCategory.BlastFurnaceHandler;
 import com.tom.thirdparty.jei.CrusherRecipeCategory.CrusherHandler;
 import com.tom.thirdparty.jei.CustomCraftingRecipeCategory.CustomCraftingHandler;
 import com.tom.thirdparty.jei.PlateBlenderRecipeCategory.PlateBlenderHandler;
@@ -127,6 +130,9 @@ public class JEIHandler extends BlankModPlugin{
 		registry.addRecipeCategories(new AlloySmelterRecipeCategory());
 		registry.addRecipeHandlers(new AlloySmelterHandler());
 		registry.addRecipes(AlloySmelterRecipeCategory.get());
+		registry.addRecipeCategories(new BlastFurnaceRecipeCategory());
+		registry.addRecipeHandlers(new BlastFurnaceHandler());
+		registry.addRecipes(BlastFurnaceRecipeCategory.get());
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, VanillaRecipeCategoryUid.CRAFTING, directTransfer, true);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.CUSTOM_CRAFTING_ID, directTransfer);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, VanillaRecipeCategoryUid.SMELTING, directTransfer);
@@ -134,6 +140,7 @@ public class JEIHandler extends BlankModPlugin{
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.PLATE_BLENDER_ID, directTransfer);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.WIREMILL_ID, directTransfer);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.ALLOY_SMELTER_ID, directTransfer);
+		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.BLAST_FURNACE_ID, directTransfer);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, VanillaRecipeCategoryUid.BREWING, directTransfer);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerWireMill.class, JEIConstants.WIREMILL_ID, 0, 1, 4, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerPlateBlendingMachine.class, JEIConstants.PLATE_BLENDER_ID, 0, 1, 4, 36);
@@ -185,6 +192,10 @@ public class JEIHandler extends BlankModPlugin{
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerSolderingStation.class, JEIConstants.CUSTOM_CRAFTING_ID, 0, 9, 13, 36);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.solderingStation), JEIConstants.CUSTOM_CRAFTING_ID);
 		registry.addRecipeClickArea(GuiSolderingStation.class, 79, 46, 52, 17, JEIConstants.CUSTOM_CRAFTING_ID);
+		registry.addRecipeClickArea(GuiBlastFurnace.class, 65, 34, 52, 17, JEIConstants.BLAST_FURNACE_ID);
+		registry.addRecipeClickArea(GuiIndustrialBlastFurnace.class, 60, 45, 52, 17, JEIConstants.BLAST_FURNACE_ID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.blastFurnace), JEIConstants.BLAST_FURNACE_ID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.industrialBlastFurnace), JEIConstants.BLAST_FURNACE_ID);
 		TMLogger.info("JEI Handler: Load Complete.");
 	}
 	@Override

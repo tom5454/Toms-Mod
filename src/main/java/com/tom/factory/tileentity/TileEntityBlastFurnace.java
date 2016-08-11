@@ -200,7 +200,7 @@ public class TileEntityBlastFurnace extends TileEntityTomsMod implements ISidedI
 						}
 					}
 				}else if(progress == 0){
-					ItemStackChecker s = MachineCraftingHandler.getBlastFurnaceOutput(stack[0]);
+					ItemStackChecker s = MachineCraftingHandler.getBlastFurnaceOutput(stack[0], null, 0);
 					if(s != null){
 						if(stack[1] != null){
 							if(TomsModUtils.areItemStacksEqual(stack[1], s.getStack(), true, true, false) && stack[1].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
@@ -220,7 +220,7 @@ public class TileEntityBlastFurnace extends TileEntityTomsMod implements ISidedI
 						maxProgress = 0;
 					}
 				}else{
-					ItemStackChecker s = MachineCraftingHandler.getBlastFurnaceOutput(stack[0]);
+					ItemStackChecker s = MachineCraftingHandler.getBlastFurnaceOutput(stack[0], null, 0);
 					if(s != null){
 						if(stack[1] != null){
 							if(TomsModUtils.areItemStacksEqual(stack[1], s.getStack(), true, true, false) && stack[1].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
