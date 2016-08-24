@@ -896,6 +896,8 @@ tile.tm.solderingStation.name=Soldering Station
 tile.tm.blockPump.name=Pump
 tile.tm.fluidTransposer.name=Fluid Transposer
 tile.tm.industrialBlastFurnace.name=Industrial Blast Furnace
+tile.oreMonazit.name=Monazit Ore
+tile.oreMonazit.end.name=End Monazit Ore
 
 tomsMod.waila.playerName=Owner:
 tomsMod.waila.mode=Mode:

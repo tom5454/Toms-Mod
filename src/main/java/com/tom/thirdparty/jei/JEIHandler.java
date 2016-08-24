@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import com.tom.apis.Function.BiFunction;
 import com.tom.apis.TMLogger;
 import com.tom.core.CoreInit;
-import com.tom.defense.DefenseInit;
 import com.tom.energy.EnergyInit;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.tileentity.gui.GuiAdvBoiler;
@@ -109,8 +108,6 @@ public class JEIHandler extends BlankModPlugin{
 		registry.addRecipeHandlers(new CustomCraftingHandler());
 		registry.addRecipes(CustomCraftingRecipeCategory.get());
 		registry.addRecipeClickArea(GuiResearchTable.class, 167, 71, 23, 15, JEIConstants.CUSTOM_CRAFTING_ID);
-		jeiHelper.getItemBlacklist().addItemToBlacklist(new ItemStack(CoreInit.blockRsDoor));
-		jeiHelper.getItemBlacklist().addItemToBlacklist(new ItemStack(DefenseInit.blockForce));
 		registry.addRecipeCategories(new CrusherRecipeCategory());
 		registry.addRecipeHandlers(new CrusherHandler());
 		registry.addRecipes(CrusherRecipeCategory.get());
@@ -170,7 +167,6 @@ public class JEIHandler extends BlankModPlugin{
 		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.plateBlendingMachine), JEIConstants.PLATE_BLENDER_ID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.steamPlateBlender), JEIConstants.PLATE_BLENDER_ID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.wireMill), JEIConstants.WIREMILL_ID);
-		jeiHelper.getItemBlacklist().addItemToBlacklist(new ItemStack(CoreInit.blockTreetap));
 		registry.addRecipeCategoryCraftingItem(new ItemStack(StorageInit.assembler), VanillaRecipeCategoryUid.CRAFTING, JEIConstants.CUSTOM_CRAFTING_ID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(CoreInit.researchTable), JEIConstants.CUSTOM_CRAFTING_ID);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerAlloySmelter.class, JEIConstants.ALLOY_SMELTER_ID, 0, 2, 4, 36);

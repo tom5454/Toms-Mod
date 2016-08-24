@@ -2,14 +2,6 @@ package com.tom.core.item;
 
 import java.util.List;
 
-import com.tom.api.energy.IEnergyContainerItem;
-import com.tom.api.item.ILinkContainer;
-import com.tom.api.tileentity.TileEntityAntennaBase;
-import com.tom.api.tileentity.TileEntityJammerBase;
-import com.tom.api.tileentity.TileEntityTabletAccessPointBase;
-import com.tom.core.CoreInit;
-import com.tom.core.tileentity.TileEntityTabletController;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -27,10 +19,21 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer {
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.energy.IEnergyContainerItem;
+import com.tom.api.item.ILinkContainer;
+import com.tom.api.tileentity.TileEntityAntennaBase;
+import com.tom.api.tileentity.TileEntityJammerBase;
+import com.tom.api.tileentity.TileEntityTabletAccessPointBase;
+import com.tom.core.CoreInit;
+
+import com.tom.core.tileentity.TileEntityTabletController;
+
+public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer, IIconRegisterRequired {
 	private static int[] access;
 	private static int[] Ant;
 	private static int[] antaccess;
@@ -175,6 +178,8 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 			te.queueEvent("tablet_receive", new Object[]{player.getName(), o});
 		}
 	}
+	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerIcons(){
 		itemIcon = regIcon("tomsmodcore:tablet/TabletOff", "inventory");
 		NoC = this.registerIconArray("TabNoC");

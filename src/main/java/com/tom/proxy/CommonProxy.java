@@ -1,11 +1,11 @@
 package com.tom.proxy;
 
-import com.tom.core.CoreInit;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 
-public abstract class CommonProxy{
+import com.tom.core.CoreInit;
+
+public abstract class CommonProxy{//ClientProxy
 	//public int SPECIAL_RENDER_TYPE_VALUE;
 	public abstract void preInit();
 

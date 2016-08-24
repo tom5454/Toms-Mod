@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "type=0": { "model": "tomsmoddefense:oreMonazit" },
+        "type=1": { "model": "tomsmoddefense:oreMonazitEnd" }
+    }
+}

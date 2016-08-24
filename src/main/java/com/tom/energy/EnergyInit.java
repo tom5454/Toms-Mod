@@ -1,5 +1,8 @@
 package com.tom.energy;
 
+import static com.tom.core.CoreInit.registerBlock;
+import static com.tom.core.CoreInit.registerItem;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -197,17 +200,6 @@ public class EnergyInit {
 		GameRegistry.registerTileEntity(TileEntityBatteryBox.class, Configs.Modid + "batteryBox");
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");
-	}
-
-	public static void registerBlock(Block block, String name) {
-		CoreInit.addBlockToGameRegistry(block, name);
-		Item item = Item.getItemFromBlock(block);
-		CoreInit.itemList.add(item);
-		CoreInit.blockList.add(block);
-	}
-	public static void registerItem(Item item, String registerName){
-		CoreInit.itemList.add(item);
-		CoreInit.addItemToGameRegistry(item, registerName);
 	}
 	public static CreativeTabs tabTomsModEnergy = new CreativeTabs("tabTomsModEnergy"){
 

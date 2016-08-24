@@ -1,7 +1,23 @@
 package com.tom.storage;
 
+import static com.tom.core.CoreInit.registerBlock;
+import static com.tom.core.CoreInit.registerItem;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLConstructionEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockGridDevice;
 import com.tom.api.item.MultipartItem;
@@ -48,18 +64,6 @@ import com.tom.storage.tileentity.TileEntityInterface;
 import com.tom.storage.tileentity.TileEntityLimitableChest;
 import com.tom.storage.tileentity.TileEntityPatternTerminal;
 import com.tom.storage.tileentity.TileEntityUltimateTank;
-
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLConstructionEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = StorageInit.modid,name = "Tom's Mod Storage",version = Configs.version, dependencies = Configs.coreDependencies)
 public class StorageInit {
@@ -144,12 +148,6 @@ public class StorageInit {
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");
 	}
-	public static void registerBlock(Block block, String name) {
-		CoreInit.addBlockToGameRegistry(block, name);
-		Item item = Item.getItemFromBlock(block);
-		CoreInit.itemList.add(item);
-		CoreInit.blockList.add(block);
-	}
 	public static CreativeTabs tabTomsModStorage = new CreativeTabs("tabTomsModStorage"){
 
 		@Override
@@ -158,10 +156,6 @@ public class StorageInit {
 		}
 
 	};
-	public static void registerItem(Item item, String registerName){
-		CoreInit.itemList.add(item);
-		CoreInit.addItemToGameRegistry(item, registerName);
-	}
 	@SideOnly(Side.CLIENT)
 	public static void registerRenders(){
 		log.info("Loading Renderers");

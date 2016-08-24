@@ -1,67 +1,172 @@
 package com.tom.core.block;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.concurrent.Callable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.pattern.BlockMatcher;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-import com.tom.apis.EmptyEntry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.google.common.base.Predicate;
+
+import com.tom.api.block.ICustomItemBlock;
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.block.IRegisterRequired;
 import com.tom.apis.TMLogger;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
+import com.tom.worldgen.WorldGen.OreGenEntry;
 
-public class BlockOre extends Block {
-	private final int dim;
-	private final int a;
-	private final int y;
+public class BlockOre extends Block implements ICustomItemBlock, IRegisterRequired, IIconRegisterRequired{
 	public final boolean dropsItself;
 	public final ItemStack drop;
-	public BlockOre(int y, int dim, int a, TMResource r) {
-		super(Material.ROCK, MapColor.GRAY);
+	protected Map<Predicate<World>, OreGenEntry> genEntryMap;
+	protected List<String> postFixes;
+	public PropertyInteger TYPE;
+	private static ThreadLocal<Integer> threadLocal = new ThreadLocal<Integer>();
+	private int maxStates;
+	public BlockOre(int y, Predicate<World> dim, int a, TMResource r, int maxStates) {
+		super(setValue(maxStates), MapColor.GRAY);
 		this.setCreativeTab(CoreInit.tabTomsModMaterials);
 		dropsItself = true;
 		drop = null;
 		this.setHardness(8.0F);
 		this.setResistance(30.0F);
 		//r.setOre(this);
-		this.a = a;
-		this.y = y;
-		this.dim = dim;
+		genEntryMap = new HashMap<Predicate<World>, OreGenEntry>();
+		genEntryMap.put(dim, new OreGenEntry(BlockMatcher.forBlock(Blocks.STONE), new Callable<IBlockState>(){
+
+			@Override
+			public IBlockState call() throws Exception {
+				return getDefaultState();
+			}
+
+		}, y, a));
+		postFixes = new ArrayList<String>();
+		postFixes.add("");
 	}
-	public BlockOre(int y, int dim, int a, ItemStack drop, TMResource r) {
-		super(Material.ROCK, MapColor.GRAY);
+	public BlockOre(int y, Predicate<World> dim, int a, ItemStack drop, TMResource r, int maxStates) {
+		super(setValue(maxStates), MapColor.GRAY);
 		this.setCreativeTab(CoreInit.tabTomsModMaterials);
 		dropsItself = false;
 		this.drop = drop;
 		this.setHardness(8.0F);
 		this.setResistance(30.0F);
-		this.a = a;
-		this.y = y;
-		this.dim = dim;
 		//r.setOre(this);
+		genEntryMap = new HashMap<Predicate<World>, OreGenEntry>();
+		genEntryMap.put(dim, new OreGenEntry(BlockMatcher.forBlock(Blocks.STONE), new Callable<IBlockState>(){
+
+			@Override
+			public IBlockState call() throws Exception {
+				return getDefaultState();
+			}
+
+		}, y, a));
+		postFixes = new ArrayList<String>();
+		postFixes.add("");
 	}
-	public BlockOre register(){
-		if(Config.enableOreGen(getUnlocalizedName().substring(5))){
-			Entry<Integer, Integer> dimE = new EmptyEntry<Integer, Integer>(dim);
+	public BlockOre(int y, Predicate<World> dim, int a, int maxStates) {
+		super(setValue(maxStates), MapColor.GRAY);
+		this.setCreativeTab(CoreInit.tabTomsModMaterials);
+		dropsItself = true;
+		drop = null;
+		this.setHardness(8.0F);
+		this.setResistance(30.0F);
+		//r.setOre(this);
+		genEntryMap = new HashMap<Predicate<World>, OreGenEntry>();
+		genEntryMap.put(dim, new OreGenEntry(BlockMatcher.forBlock(Blocks.STONE), new Callable<IBlockState>(){
+
+			@Override
+			public IBlockState call() throws Exception {
+				return getDefaultState();
+			}
+
+		}, y, a));
+		postFixes = new ArrayList<String>();
+		postFixes.add("");
+	}
+	public BlockOre(int y, Predicate<World> dim, int a, Predicate<IBlockState> base, int maxStates) {
+		super(setValue(maxStates), MapColor.GRAY);
+		this.setCreativeTab(CoreInit.tabTomsModMaterials);
+		dropsItself = true;
+		drop = null;
+		this.setHardness(8.0F);
+		this.setResistance(30.0F);
+		//r.setOre(this);
+		genEntryMap = new HashMap<Predicate<World>, OreGenEntry>();
+		genEntryMap.put(dim, new OreGenEntry(base, new Callable<IBlockState>(){
+
+			@Override
+			public IBlockState call() throws Exception {
+				return getDefaultState();
+			}
+
+		}, y, a));
+		postFixes = new ArrayList<String>();
+		postFixes.add("");
+	}
+	public BlockOre(int y, Predicate<World> dim, int a, TMResource r){
+		this(y, dim, a, r, 1);
+	}
+	public BlockOre(int y, Predicate<World> dim, int a, ItemStack drop, TMResource r){
+		this(y, dim, a, drop, r, 1);
+	}
+	public BlockOre(int y, Predicate<World> dim, int a){
+		this(y, dim, a, 1);
+	}
+	public BlockOre(int y, Predicate<World> dim, int a, Predicate<IBlockState> base){
+		this(y, dim, a, base, 1);
+	}
+	@Override
+	public void register(){
+		/*Entry<Predicate<World>, Integer> dimE = new EmptyEntry<Predicate<World>, Integer>(dim);
 			dimE.setValue(a);
-			Entry<Integer, Entry<Integer, Integer>> genV = new EmptyEntry<Integer, Entry<Integer, Integer>>(y,dimE);
-			CoreInit.oreList.put(this.getDefaultState(), genV);
-		}else{
-			String msg = "[Ore Gen] Ore '" + getUnlocalizedName().substring(5) + "' is disabled.";
-			Config.warnMessages.add(msg);
-			TMLogger.warn(msg);
+			Entry<Integer, Entry<Predicate<World>, Integer>> genV = new EmptyEntry<Integer, Entry<Predicate<World>, Integer>>(y, dimE);*/
+		//CoreInit.oreList.putAll(genEntryMap);
+		for(Entry<Predicate<World>, OreGenEntry> e : genEntryMap.entrySet()){
+			try {
+				e.getValue().ore = e.getValue().oreInit.call();
+			} catch (Exception e1) {
+				throw new RuntimeException("IMPOSSIBLE ERROR OCCURRED");
+			}
+			ItemStack s = new ItemStack(this, 1, e.getValue().ore.getBlock().getMetaFromState(e.getValue().ore));
+			String name = (new OreItemBlock(this)).getUnlocalizedName(s).substring(5);
+			if(Config.enableOreGen(name)){
+				List<OreGenEntry> list = CoreInit.oreList.get(e.getKey());
+				if(list == null){
+					list = new ArrayList<OreGenEntry>();
+					CoreInit.oreList.put(e.getKey(), list);
+				}
+				list.add(e.getValue());
+			}else{
+				String msg = "[Ore Gen] Ore \'" + name + "\' is disabled.";
+				Config.warnMessages.add(msg);
+				TMLogger.warn(msg);
+			}
 		}
-		return this;
 	}
 	@Override
 	public int quantityDropped(Random par1Random){
@@ -157,17 +262,100 @@ public class BlockOre extends Block {
 	@Override
 	public int damageDropped(IBlockState state)
 	{
-		return this.dropsItself ? 0 : this.drop.getMetadata();
+		return this.dropsItself ? getMetaFromState(state) : this.drop.getMetadata();
 	}
 	@Override
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos,
 			EntityPlayer player) {
-		return new ItemStack(this);
+		return new ItemStack(this, 1, getMetaFromState(state));
 	}
 	@Override
-	public Block setUnlocalizedName(String name) {
+	public BlockOre setUnlocalizedName(String name) {
 		super.setUnlocalizedName(name);
-		register();
 		return this;
+	}
+	public BlockOre addExtraState(Predicate<World> dim, int y, int a, String postFix){
+		addExtraState(dim, a, y, BlockMatcher.forBlock(Blocks.STONE), postFix);
+		return this;
+	}
+	public BlockOre addExtraState(Predicate<World> dim, int y, int a, Predicate<IBlockState> base, String postFix){
+		final int id = postFixes.size();
+		genEntryMap.put(dim, new OreGenEntry(base, new Callable<IBlockState>(){
+
+			@Override
+			public IBlockState call() throws Exception {
+				return getStateFromMeta(id);
+			}
+
+		}, y, a));
+		postFixes.add("."+postFix);
+		return this;
+	}
+	public static class OreItemBlock extends ItemBlock{
+		public final BlockOre block;
+		public OreItemBlock(BlockOre block) {
+			super(block);
+			this.block = block;
+			setHasSubtypes(true);
+		}
+		@Override
+		public String getUnlocalizedName(ItemStack stack) {
+			int meta = stack.getMetadata();
+			return super.getUnlocalizedName(stack) + (block.postFixes.size() > meta ? block.postFixes.get(meta) : "");
+		}
+		@Override
+		public int getMetadata(int damage) {
+			return damage % block.maxStates;
+		}
+	}
+	@Override
+	public ItemBlock createItemBlock() {
+		return new OreItemBlock(this);
+	}
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	{
+		for(int i = 0;i<postFixes.size();i++){
+			list.add(new ItemStack(itemIn, 1, i));
+		}
+	}
+	@Override
+	public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+		return true;
+	}
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return maxStates == 1 ? 0 : state.getValue(TYPE);
+	}
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return maxStates == 1 ? getDefaultState() : getDefaultState().withProperty(TYPE, meta % maxStates);
+	}
+	@Override
+	protected BlockStateContainer createBlockState() {
+		if(TYPE == null){
+			Integer i = threadLocal.get();
+			if(i == null)i = 1;
+			TYPE = PropertyInteger.create("type", 0, i == 1 ? i : i - 1);
+			maxStates = i;
+		}
+		return maxStates > 1 ? new BlockStateContainer(this, TYPE) : new BlockStateContainer(this, new IProperty[0]);
+	}
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons() {
+		Item item = Item.getItemFromBlock(this);
+		CoreInit.registerRender(item, 0);
+		if(postFixes.size() > 1){
+			String type = CoreInit.getNameForItem(item).replace("|", "");
+			for(int i = 1;i<postFixes.size();i++){
+				CoreInit.registerRender(item, i, type + postFixes.get(i));
+			}
+		}
+	}
+	public static Material setValue(int max){
+		threadLocal.set(Math.min(Math.max(max, 1), 15));
+		return Material.ROCK;
 	}
 }

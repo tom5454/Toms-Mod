@@ -4,7 +4,8 @@
   "defaults": {
     "textures": {
       "duct": "tomsmodstorage:blocks/cable/cable_blue",
-      "particle": "tomsmodstorage:blocks/cable/cable_blue"
+      "particle": "tomsmodstorage:blocks/cable/cable_blue",
+      "gray": "tomsmodcore:blocks/GrayD"
     },
     "uvlock": false
   },

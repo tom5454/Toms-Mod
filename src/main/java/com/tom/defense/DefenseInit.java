@@ -1,7 +1,27 @@
 package com.tom.defense;
 
+import static com.tom.core.CoreInit.registerBlock;
+import static com.tom.core.CoreInit.registerItem;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.pattern.BlockMatcher;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLConstructionEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.item.MultipartItem;
 import com.tom.core.CoreInit;
@@ -27,21 +47,9 @@ import com.tom.defense.tileentity.TileEntityForceFieldProjector;
 import com.tom.defense.tileentity.TileEntitySecurityStation;
 import com.tom.handler.WorldHandler;
 import com.tom.lib.Configs;
+import com.tom.worldgen.WorldGen;
 
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLConstructionEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.tom.core.block.BlockOre;
 
 @Mod(modid = DefenseInit.modid,name = "Tom's Mod Defense",version = Configs.version, dependencies = Configs.coreDependencies)
 public class DefenseInit {
@@ -53,7 +61,8 @@ public class DefenseInit {
 	public static MultipartItem forceDuct;
 	public static Item forceDuctEmpty, rangeUpgrade, rangeWidthUpgrade, rangeHeightUpgrade, projectorLens, projectorFieldType, fieldUpgrade, efficiencyUpgrade;
 
-	public static Block forceConverter, forceCapacitor, securityStation, fieldProjector, blockForce, defenseStation;
+	public static Block forceConverter, forceCapacitor, securityStation, fieldProjector, blockForce, defenseStation, oreMonazit;
+
 	@EventHandler
 	public static void PreLoad(FMLPreInitializationEvent PreEvent){
 		log.info("Start Pre Initialization");
@@ -75,6 +84,7 @@ public class DefenseInit {
 		blockForce = new BlockForceField().setBlockUnbreakable().setResistance(18000000F).setHardness(-1F).setUnlocalizedName("tmd.force");
 		efficiencyUpgrade = new Item().setCreativeTab(tabTomsModDefense).setUnlocalizedName("tm.efficiencyUpgrade");
 		defenseStation = new DefenseStation().setCreativeTab(tabTomsModDefense).setUnlocalizedName("tmd.defenseStation");
+		oreMonazit = new BlockOre(5, WorldGen.OVERWORLD, 2, 2).addExtraState(WorldGen.END, 55, 12, BlockMatcher.forBlock(Blocks.END_STONE), "end").setUnlocalizedName("oreMonazit");
 		CoreInit.addItemToGameRegistry(multiTool, multiTool.getUnlocalizedName().substring(5));
 		CoreInit.addItemToGameRegistry(identityCard, identityCard.getUnlocalizedName().substring(5));
 		registerItem(forceDuctEmpty, forceDuctEmpty.getUnlocalizedName().substring(5));
@@ -90,8 +100,9 @@ public class DefenseInit {
 		registerBlock(forceCapacitor, forceCapacitor.getUnlocalizedName().substring(5));
 		registerBlock(securityStation, securityStation.getUnlocalizedName().substring(5));
 		registerBlock(fieldProjector, fieldProjector.getUnlocalizedName().substring(5));
-		registerBlock(blockForce, blockForce.getUnlocalizedName().substring(5));
+		CoreInit.addOnlyBlockToGameRegisty(blockForce, blockForce.getUnlocalizedName().substring(5));
 		registerBlock(defenseStation, defenseStation.getUnlocalizedName().substring(5));
+		CoreInit.registerBlock(oreMonazit, oreMonazit.getUnlocalizedName().substring(5));
 		GameRegistry.registerTileEntity(TileEntityForceConverter.class, Configs.Modid + ":forceTransformer");
 		GameRegistry.registerTileEntity(TileEntityForceCapacitor.class, Configs.Modid + ":forceCapacitor");
 		GameRegistry.registerTileEntity(TileEntitySecurityStation.class, Configs.Modid + ":securityStation");
@@ -116,10 +127,6 @@ public class DefenseInit {
 		}
 
 	};
-	public static void registerItem(Item item, String registerName){
-		CoreInit.itemList.add(item);
-		CoreInit.addItemToGameRegistry(item, registerName);
-	}
 	@SideOnly(Side.CLIENT)
 	public static void registerRenders(){
 		log.info("Loading Renderers");
@@ -147,12 +154,6 @@ public class DefenseInit {
 		WorldHandler.addPlaceable(Blocks.WOODEN_BUTTON);
 		WorldHandler.addPlaceable(Blocks.COBBLESTONE);
 		WorldHandler.addPlaceable(Blocks.REDSTONE_BLOCK);
-	}
-	public static void registerBlock(Block block, String name) {
-		CoreInit.addBlockToGameRegistry(block, name);
-		Item item = Item.getItemFromBlock(block);
-		CoreInit.itemList.add(item);
-		CoreInit.blockList.add(block);
 	}
 	@EventHandler
 	public static void construction(FMLConstructionEvent event){

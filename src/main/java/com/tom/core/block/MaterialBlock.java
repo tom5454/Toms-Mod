@@ -20,10 +20,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.block.IIconRegisterRequired;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 
-public class MaterialBlock extends Block {
+public class MaterialBlock extends Block implements IIconRegisterRequired{
 	public final List<TMResource> resourceList;
 	public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 15);
 	public final MaterialBlockItemBlock itemBlock;
@@ -75,8 +76,9 @@ public class MaterialBlock extends Block {
 		super.setUnlocalizedName(name);
 		return this;
 	}
+	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerRender(){
+	public void registerIcons(){
 		for(int i = 0;i<resourceList.size();i++){
 			CoreInit.registerRender(itemBlock, i, "tomsmodcore:resources/block_"+resourceList.get(i).getName());
 		}

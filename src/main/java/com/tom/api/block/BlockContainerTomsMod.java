@@ -14,7 +14,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class BlockContainerTomsMod extends BlockContainer {
+public abstract class BlockContainerTomsMod extends BlockContainer implements ICustomItemBlock{
 	public BlockContainerTomsMod(Material material, MapColor mapColor) {
 		super(material, mapColor);
 		this.setHardness(5);
@@ -78,6 +78,7 @@ public abstract class BlockContainerTomsMod extends BlockContainer {
 	protected void dropInventory(World worldIn, BlockPos pos, IInventory te){
 		InventoryHelper.dropInventoryItems(worldIn, pos, te);
 	}
+	@Override
 	public ItemBlock createItemBlock(){
 		return new ItemBlock(this);
 	}

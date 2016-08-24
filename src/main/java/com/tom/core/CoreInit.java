@@ -1,6 +1,7 @@
 package com.tom.core;
 
 import static com.tom.api.recipes.RecipeHelper.addRecipe;
+import static com.tom.worldgen.WorldGen.OVERWORLD;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import mapwriterTm.util.Reference;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -28,6 +28,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
@@ -60,11 +61,14 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import com.tom.api.TomsModAPIMain;
-import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.api.block.ICustomItemBlock;
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.block.IRegisterRequired;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.item.IWrench;
 import com.tom.api.item.ItemCraftingTool;
@@ -102,6 +106,7 @@ import com.tom.storage.StorageInit;
 import com.tom.thirdparty.computercraft.MultipartProvider;
 import com.tom.transport.TransportInit;
 import com.tom.worldgen.WorldGen;
+import com.tom.worldgen.WorldGen.OreGenEntry;
 
 import com.tom.core.block.Antenna;
 import com.tom.core.block.AntennaController;
@@ -111,7 +116,6 @@ import com.tom.core.block.BlockOre;
 import com.tom.core.block.BlockRsDoor;
 import com.tom.core.block.BlockRubberWood;
 import com.tom.core.block.BlockTreeTap;
-import com.tom.core.block.CCProxy;
 import com.tom.core.block.Camera;
 import com.tom.core.block.CommandExecutor;
 import com.tom.core.block.ControllerBox;
@@ -197,24 +201,25 @@ import mcmultipart.multipart.MultipartRegistry;
 public final class CoreInit {
 	public static final String modid = Configs.Modid + "|Core";
 	public static final List<String> modids = new ArrayList<String>();
-	public static Logger log = LogManager.getLogger(modid);
+	public static final Logger log = LogManager.getLogger(modid);
 	//Fluid stuffs
-	public static List<Fluid> fluids = new ArrayList<Fluid>();
+	public static final List<Fluid> fluids = new ArrayList<Fluid>();
 	//public static List<Boolean> nativeFluids = new ArrayList<Boolean>();
 	//public static Map<Block, Item> fluidBlockToBucketMap = new HashMap<Block, Item>();
 	//public static Map<Fluid, Block> fluidToBlockMap = new HashMap<Fluid, Block>();
-	public static BiMap<String, Fluid> fluidList = HashBiMap.create();
-	public static List<Item> itemList = new ArrayList<Item>();
-	public static List<Block> blockList = new ArrayList<Block>();
-	private static List<Entry<Entry<String, String>, Class<? extends IMultipart>>> multipartList = new ArrayList<Entry<Entry<String, String>, Class<? extends IMultipart>>>();
+	public static final BiMap<String, Fluid> fluidList = HashBiMap.create();
+	public static final List<Item> itemList = new ArrayList<Item>();
+	public static final List<Block> blockList = new ArrayList<Block>();
+	private static final List<Entry<Entry<String, String>, Class<? extends IMultipart>>> multipartList = new ArrayList<Entry<Entry<String, String>, Class<? extends IMultipart>>>();
 	private static boolean isPreInit = false, isInit = false;
 	public static String configFolder = "";
-	private static List<Entry<Item, Entry<ModelResourceLocation, Integer>>> modelList = new ArrayList<Map.Entry<Item,Entry<ModelResourceLocation,Integer>>>();
-	public static List<String> ignoredLocations = new ArrayList<String>();
+	private static final List<Entry<Item, Entry<ModelResourceLocation, Integer>>> modelList = new ArrayList<Map.Entry<Item,Entry<ModelResourceLocation,Integer>>>();
+	public static final List<String> ignoredLocations = new ArrayList<String>();
 	/**Block Ore, y, dim, a*/
-	public static Map<IBlockState, Entry<Integer, Entry<Integer, Integer>>> oreList = new HashMap<IBlockState, Entry<Integer, Entry<Integer, Integer>>>();
+	public static final Map<Predicate<World>, List<OreGenEntry>> oreList = new HashMap<Predicate<World>, List<OreGenEntry>>();
 	public static boolean isCCLoaded = false, isPneumaticCraftLoaded = false, isMapEnabled = false, isAdventureItemsLoaded = false/*, isSingle*/;
 	private static CheckResult versionCheckResult;
+	private static final List<IIconRegisterRequired> customIconRegisterRequired = new ArrayList<IIconRegisterRequired>();
 	//public static File mapFolder;
 	//public static BiMap<Fluid, IIcon[]> fluidIcons = HashBiMap.create();
 	//Fluids
@@ -328,12 +333,8 @@ public final class CoreInit {
 		//plateChrome = new Item().setUnlocalizedName("chromePlate").setCreativeTab(tabTomsModMaterials)/*.setTextureName("minecraft:plateChrome")*/;
 		memoryCard = new Item().setUnlocalizedName("memoryCard").setCreativeTab(tabTomsModItems)/*.setTextureName("minecraft:memoryCard")*/;
 		linker = new Linker().setUnlocalizedName("linker").setCreativeTab(tabTomsModItems)/*.setTextureName("minecraft:linker")*/;
-		TabletHouse = new Item().setUnlocalizedName("TabletHouse").setCreativeTab(tabTomsModItems)/*.setTextureName("minecraft:tablet/TabletOff")*/;
 		Battery = new ItemBattery().setUnlocalizedName("Battery").setCreativeTab(tabTomsModItems)/*.setTextureName("minecraft:battery")*/;
 		Display = new Item().setUnlocalizedName("Display").setCreativeTab(tabTomsModItems)/*.setTextureName("minecraft:tm/display")*/;
-		trProcessor = new TrProcessor().setUnlocalizedName("trProcessor").setCreativeTab(tabTomsModItems).setMaxStackSize(1)/*.setTextureName("minecraft:chip")*/;
-		linkedChipset = new LinkedChipset().setUnlocalizedName("linkedChipset").setCreativeTab(tabTomsModItems).setMaxStackSize(1)/*.setTextureName("minecraft:chip")*/;
-		connectionModem = new ConnectionModem().setUnlocalizedName("connectionModem").setCreativeTab(tabTomsModItems).setMaxStackSize(1)/*.setTextureName("minecraft:tm/modem")*/;
 		//plateTitanium = new Item().setUnlocalizedName("plateTitanium").setCreativeTab(tabTomsModItems)/*.setTextureName("minecraft:titaniumPlate")*/;
 		//dustUranium = new Item().setUnlocalizedName("dustUranium").setCreativeTab(tabTomsModItems)/*.setTextureName("minecraft:dustUranium")*/;
 		flintAxeHead = new Item().setUnlocalizedName("flintAxeHead").setCreativeTab(tabTomsModItems)/*.setTextureName("minecraft:flintAxeHead")*/;
@@ -377,47 +378,11 @@ public final class CoreInit {
 		MachineFrameTitanium = new Block(Material.IRON).setHardness(5F).setResistance(20F).setUnlocalizedName("MachineFrameTitanium").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:TitaniumMachineFrame")*/;
 		MachineFrameBronze = new Block(Material.IRON).setHardness(2F).setResistance(10F).setUnlocalizedName("MachineFrameBronze").setCreativeTab(tabTomsModBlocks);
 		/**TileEntities*/
-		GPU = new GPU().setUnlocalizedName("gpu").setCreativeTab(tabTomsModBlocks);
-		Monitor = new Monitor().setUnlocalizedName("monitor").setCreativeTab(tabTomsModBlocks);
-		enderMemory = new EnderMemory().setUnlocalizedName("enderMemory").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:EnderMemory3")*/;
-		CCProxy = new CCProxy().setUnlocalizedName("ccProxy").setCreativeTab(tabTomsModBlocks);
 		//EnergySensor = new EnergySensor().setUnlocalizedName("energySensor").setCreativeTab(tabTomsModBlocks);
-		TabletAccessPoint = new TabletAccessPoint().setUnlocalizedName("tabletAccessPoint").setCreativeTab(tabTomsModBlocks);
-		TabletController = new TabletController().setUnlocalizedName("tabletController").setCreativeTab(tabTomsModBlocks);
 		Antenna = new Antenna().setUnlocalizedName("antenna").setCreativeTab(tabTomsModBlocks);
-		WirelessPeripheral = new WirelessPeripheral().setUnlocalizedName("wirelessPeripheral").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:tm/TabContSideAct")*/;
-		AntennaController = new AntennaController().setUnlocalizedName("AntennaController").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:tm/TabContSideAct")*/;
-		TabletCrafter = new TabletCrafter().setUnlocalizedName("TabletCrafter").setCreativeTab(tabTomsModBlocks);
 		ItemProxy = new ItemProxy().setUnlocalizedName("ItemProxy").setCreativeTab(tabTomsModBlocks);
-		ControllerBox = new ControllerBox().setUnlocalizedName("ControllerBox").setCreativeTab(tabTomsModBlocks);
-		EnderPlayerSensor = new EnderPlayerSensor().setUnlocalizedName("EnderPlayerSensor").setCreativeTab(tabTomsModBlocks);
-		CommandExecutor = new CommandExecutor().setUnlocalizedName("CommandExecutor").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:command_block")*/.setBlockUnbreakable().setResistance(18000000F).setHardness(-1F);
-		Camera = new Camera().setUnlocalizedName("Camera").setCreativeTab(tabTomsModBlocks);
-		Jammer = new Jammer().setUnlocalizedName("Jammer").setCreativeTab(tabTomsModBlocks);
-		holotapeWriter = new HolotapeWriter().setUnlocalizedName("holotapeWriter").setCreativeTab(tabTomsModBlocks);
-		holotapeReader = new HolotapeReader().setUnlocalizedName("holotapeReader").setCreativeTab(tabTomsModBlocks);
-		MagCardDevice = new MagCardDevice().setUnlocalizedName("magCardDevice").setCreativeTab(tabTomsModBlocks);
-		MagCardReader = new MagCardReader().setUnlocalizedName("magCardReader").setCreativeTab(tabTomsModBlocks);
 		blockRsDoor = new BlockRsDoor().setUnlocalizedName("brsDoor");
-		RedstonePort = new RedstonePort().setUnlocalizedName("rsPort").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:rsPort")*/;
-		oreBlueMetal = new BlockOre(60, 0, 5, TMResource.BLUE_METAL).setUnlocalizedName("oreBlueMetal");
-		oreCopper = new BlockOre(70, 0, 9, TMResource.COPPER).setUnlocalizedName("oreCopper");
-		oreTin = new BlockOre(60, 0, 8, TMResource.TIN).setUnlocalizedName("oreTin");
-		oreNickel = new BlockOre(50, 0, 6, TMResource.NICKEL).setUnlocalizedName("oreNickel");
-		oreTitanium = new BlockOre(30, 0, 2, TMResource.TITANIUM).setUnlocalizedName("oreTitanium");
-		oreUranium = new BlockOre(35, 0, 3, TMResource.URANIUM).setUnlocalizedName("oreUranium");
-		oreLithium = new BlockOre(50, 0, 4, TMResource.LITHIUM).setUnlocalizedName("oreLithium");
-		oreRedDiamond = new BlockOre(40, 0, 1, TMResource.RED_DIAMOND.getStackNormal(Type.GEM), TMResource.RED_DIAMOND).setUnlocalizedName("oreRedDiamond");
-		oreQuartz = new BlockOre(40, 0, 1, TMResource.QUARTZ.getStackNormal(Type.GEM), TMResource.QUARTZ).setUnlocalizedName("oreQuartz");
-		orePlatinum = new BlockOre(10, 0, 1, TMResource.PLATINUM).setUnlocalizedName("orePlatinum");
-		oreSilver = new BlockOre(40, 0, 3, TMResource.SILVER).setUnlocalizedName("oreSilver");
-		oreLead = new BlockOre(35, 0, 2, TMResource.LEAD).setUnlocalizedName("oreLead");
-		oreZinc = new BlockOre(65, 0, 5, TMResource.ZINC).setUnlocalizedName("oreZinc");
 		researchTable = new ResearchTable().setCreativeTab(tabTomsModBlocks).setUnlocalizedName("resTable");
-		oreChrome = new BlockOre(40, 0, 3, TMResource.CHROME).setUnlocalizedName("oreChrome");
-		oreSulfur = new BlockOre(65, 0, 6, TMResource.SULFUR.getStackNormal(Type.DUST, 2), TMResource.SULFUR).setUnlocalizedName("oreSulfur");
-		oreMercury = new BlockOre(30, 0, 1, TMResource.MERCURY).setUnlocalizedName("oreMercury");
-		oreBauxite = new BlockOre(55, 0, 6, TMResource.ALUMINUM).setUnlocalizedName("oreBauxite");
 		rubberWood = new BlockRubberWood().setUnlocalizedName("tm.rubberWood").setCreativeTab(tabTomsModBlocks);
 		oreCertusQuartz = new BlockCertusOre().setCreativeTab(tabTomsModMaterials).setUnlocalizedName("tm.oreCertusQuartz");
 		oreCyanite = new Block(Material.ROCK).setCreativeTab(tabTomsModMaterials).setUnlocalizedName("tm.oreCyanite").setHardness(50.0F).setResistance(2000.0F);
@@ -431,7 +396,25 @@ public final class CoreInit {
 		skyStone = new Block(Material.ROCK).setUnlocalizedName("tm.skyStone").setCreativeTab(tabTomsModMaterials).setHardness(5.3F).setResistance(20.55F);
 		rubberSapling = new RubberSapling().setCreativeTab(tabTomsModBlocks).setUnlocalizedName("tm.rubberSapling");
 		blockTreetap = new BlockTreeTap().setUnlocalizedName("tm.blockTreeTap");
-		oreWolfram = new BlockOre(40, 0, 3, TMResource.WOLFRAM).setUnlocalizedName("oreTungstate");
+		//Ores
+		oreBlueMetal =  new BlockOre(60, OVERWORLD, 5, TMResource.BLUE_METAL).setUnlocalizedName("oreBlueMetal");
+		oreCopper =     new BlockOre(70, OVERWORLD, 9, TMResource.COPPER).setUnlocalizedName("oreCopper");
+		oreTin =        new BlockOre(60, OVERWORLD, 8, TMResource.TIN).setUnlocalizedName("oreTin");
+		oreNickel =     new BlockOre(50, OVERWORLD, 6, TMResource.NICKEL).setUnlocalizedName("oreNickel");
+		oreTitanium =   new BlockOre(30, OVERWORLD, 2, TMResource.TITANIUM).setUnlocalizedName("oreTitanium");
+		oreUranium =    new BlockOre(35, OVERWORLD, 3, TMResource.URANIUM).setUnlocalizedName("oreUranium");
+		oreLithium =    new BlockOre(50, OVERWORLD, 4, TMResource.LITHIUM).setUnlocalizedName("oreLithium");
+		oreRedDiamond = new BlockOre(40, OVERWORLD, 1, TMResource.RED_DIAMOND.getStackNormal(Type.GEM), TMResource.RED_DIAMOND).setUnlocalizedName("oreRedDiamond");
+		oreQuartz =     new BlockOre(40, OVERWORLD, 1, TMResource.QUARTZ.getStackNormal(Type.GEM), TMResource.QUARTZ).setUnlocalizedName("oreQuartz");
+		orePlatinum =   new BlockOre(10, OVERWORLD, 1, TMResource.PLATINUM).setUnlocalizedName("orePlatinum");
+		oreSilver =     new BlockOre(40, OVERWORLD, 3, TMResource.SILVER).setUnlocalizedName("oreSilver");
+		oreLead =       new BlockOre(35, OVERWORLD, 2, TMResource.LEAD).setUnlocalizedName("oreLead");
+		oreZinc =       new BlockOre(65, OVERWORLD, 5, TMResource.ZINC).setUnlocalizedName("oreZinc");
+		oreChrome =     new BlockOre(40, OVERWORLD, 3, TMResource.CHROME).setUnlocalizedName("oreChrome");
+		oreSulfur =     new BlockOre(65, OVERWORLD, 6, TMResource.SULFUR.getStackNormal(Type.DUST, 2), TMResource.SULFUR).setUnlocalizedName("oreSulfur");
+		oreMercury =    new BlockOre(30, OVERWORLD, 1, TMResource.MERCURY).setUnlocalizedName("oreMercury");
+		oreBauxite =    new BlockOre(55, OVERWORLD, 6, TMResource.ALUMINUM).setUnlocalizedName("oreBauxite");
+		oreWolfram =    new BlockOre(40, OVERWORLD, 3, TMResource.WOLFRAM).setUnlocalizedName("oreTungstate");
 		//ComputerRegulator = new ComputerRegulator().setUnlocalizedName("computerRegulator").setCreativeTab(tabTomsModBlocks);
 		//ExtendedEnderMinningWell = new ExtendedEnderMinningWell().setBlockName("ExtendedEnderMinningWell").setCreativeTab(tabTomsModBlocks);
 		/*AntBase = new AntBase().setBlockName("AntBase").setCreativeTab(tabTomsModBlocks);
@@ -570,7 +553,7 @@ public final class CoreInit {
 		registerBlock(MachineFrameTitanium, MachineFrameTitanium.getUnlocalizedName().substring(5));
 		registerBlock(MachineFrameBronze, MachineFrameBronze.getUnlocalizedName().substring(5));
 		registerBlock(ItemProxy, ItemProxy.getUnlocalizedName().substring(5));
-		registerBlock(blockRsDoor, blockRsDoor.getUnlocalizedName().substring(5));
+		addOnlyBlockToGameRegisty(blockRsDoor, blockRsDoor.getUnlocalizedName().substring(5));
 		registerBlock(oreBlueMetal, oreBlueMetal.getUnlocalizedName().substring(5));
 		registerBlock(oreCopper, oreCopper.getUnlocalizedName().substring(5));
 		registerBlock(oreTin, oreTin.getUnlocalizedName().substring(5));
@@ -592,12 +575,12 @@ public final class CoreInit {
 		registerBlock(rubberWood, rubberWood.getUnlocalizedName().substring(5));
 		registerBlock(oreCertusQuartz, oreCertusQuartz.getUnlocalizedName().substring(5));
 		registerBlock(oreCyanite, oreCyanite.getUnlocalizedName().substring(5));
-		addBlockToGameRegistry(materialBlock1, materialBlock1.getUnlocalizedName().substring(5), materialBlock1.itemBlock);
-		addBlockToGameRegistry(materialBlock2, materialBlock2.getUnlocalizedName().substring(5), materialBlock2.itemBlock);
+		registerBlock(materialBlock1, materialBlock1.itemBlock);
+		registerBlock(materialBlock2, materialBlock2.itemBlock);
 		registerBlock(rubberLeaves, rubberLeaves.getUnlocalizedName().substring(5));
 		registerBlock(skyStone, skyStone.getUnlocalizedName().substring(5));
 		registerBlock(rubberSapling, rubberSapling.getUnlocalizedName().substring(5));
-		addBlockToGameRegistry(blockTreetap, blockTreetap.getUnlocalizedName().substring(5));
+		addOnlyBlockToGameRegisty(blockTreetap, blockTreetap.getUnlocalizedName().substring(5));
 		registerBlock(oreWolfram, oreWolfram.getUnlocalizedName().substring(5));
 		/*registerBlock(AntBase, AntBase.getUnlocalizedName().substring(5));
 		registerBlock(AntTop, AntTop.getUnlocalizedName().substring(5));
@@ -607,12 +590,125 @@ public final class CoreInit {
 		GameRegistry.registerTileEntity(TileEntityRSDoor.class, Configs.Modid + "rsDoor");
 		GameRegistry.registerTileEntity(TileEntityResearchTable.class, Configs.Modid + "researchTable");
 		GameRegistry.registerTileEntity(TileEntityTreeTap.class, Configs.Modid + "treetap");
+		/**Integration*/
+		log.info("Loading integration items...");
+		if(isCCLoaded){
+			GPU = new GPU().setUnlocalizedName("gpu").setCreativeTab(tabTomsModBlocks);
+			Monitor = new Monitor().setUnlocalizedName("monitor").setCreativeTab(tabTomsModBlocks);
+			enderMemory = new EnderMemory().setUnlocalizedName("enderMemory").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:EnderMemory3")*/;
+			//CCProxy = new CCProxy().setUnlocalizedName("ccProxy").setCreativeTab(tabTomsModBlocks);
+			WirelessPeripheral = new WirelessPeripheral().setUnlocalizedName("wirelessPeripheral").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:tm/TabContSideAct")*/;
+			EnderPlayerSensor = new EnderPlayerSensor().setUnlocalizedName("EnderPlayerSensor").setCreativeTab(tabTomsModBlocks);
+			holotapeWriter = new HolotapeWriter().setUnlocalizedName("holotapeWriter").setCreativeTab(tabTomsModBlocks);
+			holotapeReader = new HolotapeReader().setUnlocalizedName("holotapeReader").setCreativeTab(tabTomsModBlocks);
+			MagCardDevice = new MagCardDevice().setUnlocalizedName("magCardDevice").setCreativeTab(tabTomsModBlocks);
+			MagCardReader = new MagCardReader().setUnlocalizedName("magCardReader").setCreativeTab(tabTomsModBlocks);
+			RedstonePort = new RedstonePort().setUnlocalizedName("rsPort").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:rsPort")*/;
+			registerItem(holotape, holotape.getUnlocalizedName().substring(5));
+			registerItem(magCard, magCard.getUnlocalizedName().substring(5));
+			registerBlock(GPU, GPU.getUnlocalizedName().substring(5));
+			registerBlock(Monitor, Monitor.getUnlocalizedName().substring(5));
+			registerBlock(WirelessPeripheral, WirelessPeripheral.getUnlocalizedName().substring(5));
+			registerBlock(EnderPlayerSensor, EnderPlayerSensor.getUnlocalizedName().substring(5));
+			//registerBlock(CCProxy, CCProxy.getUnlocalizedName().substring(5));
+			registerBlock(enderMemory, enderMemory.getUnlocalizedName().substring(5));
+			registerBlock(holotapeWriter, holotapeWriter.getUnlocalizedName().substring(5));
+			registerBlock(holotapeReader, holotapeReader.getUnlocalizedName().substring(5));
+			registerBlock(MagCardDevice, MagCardDevice.getUnlocalizedName().substring(5));
+			registerBlock(MagCardReader, MagCardReader.getUnlocalizedName().substring(5));
+			registerBlock(RedstonePort, RedstonePort.getUnlocalizedName().substring(5));
+			//registerBlock(ComputerRegulator, ComputerRegulator.getUnlocalizedName().substring(5));
+			GameRegistry.registerTileEntity(TileEntityEnderSensor.class, Configs.Modid + "EnderSensor");
+			GameRegistry.registerTileEntity(TileEntityMonitor.class, Configs.Modid + ":mBlack");
+			GameRegistry.registerTileEntity(TileEntityGPU.class, Configs.Modid + "GPU");
+			GameRegistry.registerTileEntity(TileEntityWirelessPeripheral.class, Configs.Modid + "WirelessPeripheral");
+			//GameRegistry.registerTileEntity(TileEntityCCProxy.class, Configs.Modid+"ccProxy");
+			GameRegistry.registerTileEntity(TileEntityEnderMemory.class, Configs.Modid+"enderMemory");
+			GameRegistry.registerTileEntity(TileEntityHolotapeWriter.class, Configs.Modid+"holotapeWriter");
+			GameRegistry.registerTileEntity(TileEntityHolotapeReader.class, Configs.Modid+"holotapeReader");
+			GameRegistry.registerTileEntity(TileEntityMagCardDevice.class, Configs.Modid+"MagCardDevice");
+			GameRegistry.registerTileEntity(TileEntityMagCardReader.class, Configs.Modid+"MagCardReader");
+			GameRegistry.registerTileEntity(TileEntityRedstonePort.class, Configs.Modid+"RsPort");
+			//GameRegistry.registerTileEntity(TileEntityComputerRegulator.class, Configs.Modid+"ComputerRegulator");
+			addRecipe(new ItemStack(enderMemory, 1), new Object[]{"BRB","RCR","BRB",'B',
+					TMResource.BLUE_METAL.getOreDictName(Type.INGOT), 'R',Items.REDSTONE, 'C', CraftingMaterial.CHARGED_ENDER.getStack()});
+			/*GameRegistry.addRecipe(new ItemStack(CCProxy, 1), new Object[]{"IBI","IRI","IBI",'I',Items.iron_ingot,
+				'B',TMResource.BLUE_METAL.getStack(Type.INGOT),'R',Items.redstone});*/
+			addRecipe(new ItemStack(WirelessPeripheral, 1), new Object[]{"IEI","ERE","IEI",'E',
+					CraftingMaterial.CHARGED_ENDER.getStack(),'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'I', "ingotIron"});
+			addRecipe(new ItemStack(holotape, 1), new Object[]{"IPI","IBI","RRR",'I',"ingotIron",'B',
+					TMResource.BLUE_METAL.getOreDictName(Type.INGOT),'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'P',Items.PAPER});
+			addRecipe(new ItemStack(holotapeWriter, 1), new Object[]{"III","BRB","IBI",'I',"ingotIron",'B',
+					TMResource.BLUE_METAL.getOreDictName(Type.INGOT),'R',CraftingMaterial.CHARGED_REDSTONE.getStack()});
+			addRecipe(new ItemStack(holotapeReader, 1), new Object[]{"III","IRI","IBI",'I',"ingotIron",'B',
+					TMResource.BLUE_METAL.getOreDictName(Type.INGOT),'R',CraftingMaterial.CHARGED_REDSTONE.getStack()});
+			addRecipe(new ItemStack(magCard, 1), new Object[]{"IR","PP",'I',"ingotIron",'P',
+					Items.PAPER,'R',CraftingMaterial.CHARGED_REDSTONE.getStack()});
+			addRecipe(new ItemStack(MagCardDevice, 1), new Object[]{"III","RIR","IBI",'I',"ingotIron",
+					'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'B',TMResource.BLUE_METAL.getOreDictName(Type.INGOT)});
+			addRecipe(new ItemStack(MagCardReader, 1), new Object[]{"RI","RI","BI",'I',"ingotIron",
+					'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'B',new ItemStack(plate)});
+			if(Config.enableAdventureItems){
+				ControllerBox = new ControllerBox().setUnlocalizedName("ControllerBox").setCreativeTab(tabTomsModBlocks);
+				TabletHouse = new Item().setUnlocalizedName("TabletHouse").setCreativeTab(tabTomsModItems)/*.setTextureName("minecraft:tablet/TabletOff")*/;
+				trProcessor = new TrProcessor().setUnlocalizedName("trProcessor").setCreativeTab(tabTomsModItems).setMaxStackSize(1)/*.setTextureName("minecraft:chip")*/;
+				linkedChipset = new LinkedChipset().setUnlocalizedName("linkedChipset").setCreativeTab(tabTomsModItems).setMaxStackSize(1)/*.setTextureName("minecraft:chip")*/;
+				connectionModem = new ConnectionModem().setUnlocalizedName("connectionModem").setCreativeTab(tabTomsModItems).setMaxStackSize(1)/*.setTextureName("minecraft:tm/modem")*/;
+				Camera = new Camera().setUnlocalizedName("Camera").setCreativeTab(tabTomsModBlocks);
+				Jammer = new Jammer().setUnlocalizedName("Jammer").setCreativeTab(tabTomsModBlocks);
+				AntennaController = new AntennaController().setUnlocalizedName("AntennaController").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:tm/TabContSideAct")*/;
+				TabletCrafter = new TabletCrafter().setUnlocalizedName("TabletCrafter").setCreativeTab(tabTomsModBlocks);
+				TabletAccessPoint = new TabletAccessPoint().setUnlocalizedName("tabletAccessPoint").setCreativeTab(tabTomsModBlocks);
+				TabletController = new TabletController().setUnlocalizedName("tabletController").setCreativeTab(tabTomsModBlocks);
+				registerItem(Tablet, Tablet.getUnlocalizedName().substring(5));
+				registerItem(TabletHouse, TabletHouse.getUnlocalizedName().substring(5));
+				registerItem(connectionBoxModem, connectionBoxModem.getUnlocalizedName().substring(5));
+				registerItem(trProcessor, trProcessor.getUnlocalizedName().substring(5));
+				registerItem(linkedChipset, linkedChipset.getUnlocalizedName().substring(5));
+				registerItem(connectionModem, connectionModem.getUnlocalizedName().substring(5));
+				registerItem(wrenchA, wrenchA.getUnlocalizedName().substring(5));
+				registerItem(electricalMagCard, electricalMagCard.getUnlocalizedName().substring(5));
+				registerBlock(TabletAccessPoint, TabletAccessPoint.getUnlocalizedName().substring(5));
+				registerBlock(Antenna, Antenna.getUnlocalizedName().substring(5));
+				registerBlock(TabletController, TabletController.getUnlocalizedName().substring(5));
+				registerBlock(AntennaController, AntennaController.getUnlocalizedName().substring(5));
+				registerBlock(ControllerBox, ControllerBox.getUnlocalizedName().substring(5));
+				registerBlock(TabletCrafter, TabletCrafter.getUnlocalizedName().substring(5));
+				registerBlock(Camera, Camera.getUnlocalizedName().substring(5));
+				registerBlock(Jammer, Jammer.getUnlocalizedName().substring(5));
+				GameRegistry.registerTileEntity(TileEntityTabletController.class, Configs.Modid + "TabletController");
+				GameRegistry.registerTileEntity(TileEntityAntennaController.class, Configs.Modid + "AntennaCont");
+				GameRegistry.registerTileEntity(TileEntityTabletAccessPoint.class, Configs.Modid + "TabletAccessPoint");
+				GameRegistry.registerTileEntity(TileEntityAntenna.class, Configs.Modid + "Antenna");
+				GameRegistry.registerTileEntity(TileEntityControllerBox.class, Configs.Modid + "ControllerBox");
+				GameRegistry.registerTileEntity(TileEntityTabletCrafter.class, Configs.Modid + "TabletCrafter");
+				GameRegistry.registerTileEntity(TileEntityCamera.class, Configs.Modid + "Camera");
+				GameRegistry.registerTileEntity(TileEntityJammer.class, Configs.Modid + "Jammer");
+				addRecipe(new ItemStack(TabletHouse, 1), new Object[]{"IDI","IGI","IBI",'I',
+						"ingotIron",'D',new ItemStack(Items.DYE,1,0),'G',"paneGlassColorless",'B',Blocks.STONE_BUTTON});
+				isAdventureItemsLoaded = true;
+			}else{
+				log.warn("Adventure items disabled");
+			}
+			if(Config.enableCommandExecutor){
+				CommandExecutor = new CommandExecutor().setUnlocalizedName("CommandExecutor").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:command_block")*/.setBlockUnbreakable().setResistance(18000000F).setHardness(-1F);
+				registerBlock(CommandExecutor, CommandExecutor.getUnlocalizedName().substring(5));
+				GameRegistry.registerTileEntity(TileEntityCommandExecutor.class, Configs.Modid + "CommandExecutor");
+			}
+		}
+		isMapEnabled = Config.enableMiniMap;
+		if(isMapEnabled){
+			log.info("Mini Map Enabled. Init minimap");
+			addItemToGameRegistry(entityTracker, entityTracker.getUnlocalizedName().substring(5));
+			addRecipe(new ItemStack(entityTracker, 1), new Object[]{"BGB","RPR","BSB",'G',TMResource.GREENIUM.getOreDictName(Type.INGOT),'B',
+					new ItemStack(plate),'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'S',"blockPlatinum",'P', "paneGlassColorless"});
+			log.info("Minimap loaded");
+		}
 		/*GameRegistry.registerTileEntity(TileEntityAntTop.class, Configs.Modid + "AntTop");
 		GameRegistry.registerTileEntity(TileEntityAntMid.class, Configs.Modid + "AntMid");
 		GameRegistry.registerTileEntity(TileEntityAntBase.class, Configs.Modid + "AntBase");*/
 		/**Other*/
 		//StartupCommon.preInitCommon();
-		isMapEnabled = Config.enableMiniMap;
 		proxy.preInit();
 		NetworkInit.init();
 		GlobalFields.MBFrames.add(MultiblockPartList.AdvCasing);
@@ -641,6 +737,9 @@ public final class CoreInit {
 		for(Item item : itemList){
 			registerRender(item);
 		}
+		for(IIconRegisterRequired reg : customIconRegisterRequired){
+			reg.registerIcons();
+		}
 		log.info("Loading Material Renderers");
 		for(Type t : Type.VALUES){
 			for(TMResource r : TMResource.VALUES){
@@ -650,8 +749,6 @@ public final class CoreInit {
 		for(CraftingMaterial t : CraftingMaterial.VALUES){
 			registerRender(craftingMaterial, t.ordinal(),"tomsmodcore:resources/crafting/"+t.getName());
 		}
-		materialBlock1.registerRender();
-		materialBlock2.registerRender();
 		EnergyInit.registerRenders();
 		if(isMapEnabled){
 			if(Config.advEntityTrackerTexture){
@@ -664,7 +761,6 @@ public final class CoreInit {
 				registerRender(entityTracker, 2, "tomsmodcore:radarLowJammed");
 			}
 		}
-		if(isAdventureItemsLoaded)Tablet.registerIcons();
 		TransportInit.registerRenders();
 		DefenseInit.registerRenders();
 		StorageInit.registerRenders();
@@ -673,7 +769,7 @@ public final class CoreInit {
 		TMResource.addCuttersToList(stackList, wireCutters);
 		for(ItemStack s : stackList)registerRender(s, "tomsmodcore:resources/"+s.getUnlocalizedName().substring(5));
 		FactoryInit.registerRenders();
-		registerRender(Item.getItemFromBlock(blockTreetap), 0, "tomsmodcore:" + treeTap.getUnlocalizedName().substring(5));
+		//registerRender(Item.getItemFromBlock(blockTreetap), 0, "tomsmodcore:" + treeTap.getUnlocalizedName().substring(5));
 		processRenderers();
 		long time = System.currentTimeMillis() - tM;
 		log.info("Loaded Renderers in "+time+" milliseconds");
@@ -733,89 +829,7 @@ public final class CoreInit {
 			MinecraftForge.addGrassSeed(new ItemStack(Items.STICK), 15);
 		}
 		EnergyType.init();
-		log.info("Loading integration items...");
-		if(isCCLoaded){
-			registerItem(holotape, holotape.getUnlocalizedName().substring(5));
-			registerItem(magCard, magCard.getUnlocalizedName().substring(5));
-			registerBlock(GPU, GPU.getUnlocalizedName().substring(5));
-			registerBlock(Monitor, Monitor.getUnlocalizedName().substring(5));
-			registerBlock(WirelessPeripheral, WirelessPeripheral.getUnlocalizedName().substring(5));
-			registerBlock(EnderPlayerSensor, EnderPlayerSensor.getUnlocalizedName().substring(5));
-			//registerBlock(CCProxy, CCProxy.getUnlocalizedName().substring(5));
-			registerBlock(enderMemory, enderMemory.getUnlocalizedName().substring(5));
-			registerBlock(holotapeWriter, holotapeWriter.getUnlocalizedName().substring(5));
-			registerBlock(holotapeReader, holotapeReader.getUnlocalizedName().substring(5));
-			registerBlock(MagCardDevice, MagCardDevice.getUnlocalizedName().substring(5));
-			registerBlock(MagCardReader, MagCardReader.getUnlocalizedName().substring(5));
-			registerBlock(RedstonePort, RedstonePort.getUnlocalizedName().substring(5));
-			//registerBlock(ComputerRegulator, ComputerRegulator.getUnlocalizedName().substring(5));
-			GameRegistry.registerTileEntity(TileEntityEnderSensor.class, Configs.Modid + "EnderSensor");
-			GameRegistry.registerTileEntity(TileEntityMonitor.class, Configs.Modid + ":mBlack");
-			GameRegistry.registerTileEntity(TileEntityGPU.class, Configs.Modid + "GPU");
-			GameRegistry.registerTileEntity(TileEntityWirelessPeripheral.class, Configs.Modid + "WirelessPeripheral");
-			//GameRegistry.registerTileEntity(TileEntityCCProxy.class, Configs.Modid+"ccProxy");
-			GameRegistry.registerTileEntity(TileEntityEnderMemory.class, Configs.Modid+"enderMemory");
-			GameRegistry.registerTileEntity(TileEntityHolotapeWriter.class, Configs.Modid+"holotapeWriter");
-			GameRegistry.registerTileEntity(TileEntityHolotapeReader.class, Configs.Modid+"holotapeReader");
-			GameRegistry.registerTileEntity(TileEntityMagCardDevice.class, Configs.Modid+"MagCardDevice");
-			GameRegistry.registerTileEntity(TileEntityMagCardReader.class, Configs.Modid+"MagCardReader");
-			GameRegistry.registerTileEntity(TileEntityRedstonePort.class, Configs.Modid+"RsPort");
-			//GameRegistry.registerTileEntity(TileEntityComputerRegulator.class, Configs.Modid+"ComputerRegulator");
-			addRecipe(new ItemStack(enderMemory, 1), new Object[]{"BRB","RCR","BRB",'B',
-					TMResource.BLUE_METAL.getOreDictName(Type.INGOT), 'R',Items.REDSTONE, 'C', CraftingMaterial.CHARGED_ENDER.getStack()});
-			/*GameRegistry.addRecipe(new ItemStack(CCProxy, 1), new Object[]{"IBI","IRI","IBI",'I',Items.iron_ingot,
-				'B',TMResource.BLUE_METAL.getStack(Type.INGOT),'R',Items.redstone});*/
-			addRecipe(new ItemStack(WirelessPeripheral, 1), new Object[]{"IEI","ERE","IEI",'E',
-					CraftingMaterial.CHARGED_ENDER.getStack(),'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'I', "ingotIron"});
-			addRecipe(new ItemStack(holotape, 1), new Object[]{"IPI","IBI","RRR",'I',"ingotIron",'B',
-					TMResource.BLUE_METAL.getOreDictName(Type.INGOT),'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'P',Items.PAPER});
-			addRecipe(new ItemStack(holotapeWriter, 1), new Object[]{"III","BRB","IBI",'I',"ingotIron",'B',
-					TMResource.BLUE_METAL.getOreDictName(Type.INGOT),'R',CraftingMaterial.CHARGED_REDSTONE.getStack()});
-			addRecipe(new ItemStack(holotapeReader, 1), new Object[]{"III","IRI","IBI",'I',"ingotIron",'B',
-					TMResource.BLUE_METAL.getOreDictName(Type.INGOT),'R',CraftingMaterial.CHARGED_REDSTONE.getStack()});
-			addRecipe(new ItemStack(magCard, 1), new Object[]{"IR","PP",'I',"ingotIron",'P',
-					Items.PAPER,'R',CraftingMaterial.CHARGED_REDSTONE.getStack()});
-			addRecipe(new ItemStack(MagCardDevice, 1), new Object[]{"III","RIR","IBI",'I',"ingotIron",
-					'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'B',TMResource.BLUE_METAL.getOreDictName(Type.INGOT)});
-			addRecipe(new ItemStack(MagCardReader, 1), new Object[]{"RI","RI","BI",'I',"ingotIron",
-					'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'B',new ItemStack(plate)});
-			if(Config.enableAdventureItems){
-				addItemToGameRegistry(Tablet, Tablet.getUnlocalizedName().substring(5));
-				registerItem(TabletHouse, TabletHouse.getUnlocalizedName().substring(5));
-				registerItem(connectionBoxModem, connectionBoxModem.getUnlocalizedName().substring(5));
-				registerItem(trProcessor, trProcessor.getUnlocalizedName().substring(5));
-				registerItem(linkedChipset, linkedChipset.getUnlocalizedName().substring(5));
-				registerItem(connectionModem, connectionModem.getUnlocalizedName().substring(5));
-				registerItem(wrenchA, wrenchA.getUnlocalizedName().substring(5));
-				registerItem(electricalMagCard, electricalMagCard.getUnlocalizedName().substring(5));
-				registerBlock(TabletAccessPoint, TabletAccessPoint.getUnlocalizedName().substring(5));
-				registerBlock(Antenna, Antenna.getUnlocalizedName().substring(5));
-				registerBlock(TabletController, TabletController.getUnlocalizedName().substring(5));
-				registerBlock(AntennaController, AntennaController.getUnlocalizedName().substring(5));
-				registerBlock(ControllerBox, ControllerBox.getUnlocalizedName().substring(5));
-				registerBlock(TabletCrafter, TabletCrafter.getUnlocalizedName().substring(5));
-				registerBlock(Camera, Camera.getUnlocalizedName().substring(5));
-				registerBlock(Jammer, Jammer.getUnlocalizedName().substring(5));
-				GameRegistry.registerTileEntity(TileEntityTabletController.class, Configs.Modid + "TabletController");
-				GameRegistry.registerTileEntity(TileEntityAntennaController.class, Configs.Modid + "AntennaCont");
-				GameRegistry.registerTileEntity(TileEntityTabletAccessPoint.class, Configs.Modid + "TabletAccessPoint");
-				GameRegistry.registerTileEntity(TileEntityAntenna.class, Configs.Modid + "Antenna");
-				GameRegistry.registerTileEntity(TileEntityControllerBox.class, Configs.Modid + "ControllerBox");
-				GameRegistry.registerTileEntity(TileEntityTabletCrafter.class, Configs.Modid + "TabletCrafter");
-				GameRegistry.registerTileEntity(TileEntityCamera.class, Configs.Modid + "Camera");
-				GameRegistry.registerTileEntity(TileEntityJammer.class, Configs.Modid + "Jammer");
-				addRecipe(new ItemStack(TabletHouse, 1), new Object[]{"IDI","IGI","IBI",'I',
-						"ingotIron",'D',new ItemStack(Items.DYE,1,0),'G',"paneGlassColorless",'B',Blocks.STONE_BUTTON});
-				isAdventureItemsLoaded = true;
-			}else{
-				log.warn("Adventure items disabled");
-			}
-			if(Config.enableCommandExecutor){
-				registerBlock(CommandExecutor, CommandExecutor.getUnlocalizedName().substring(5));
-				GameRegistry.registerTileEntity(TileEntityCommandExecutor.class, Configs.Modid + "CommandExecutor");
-			}
-			initComputerCraft();
-		}
+		if(isCCLoaded)initComputerCraft();
 		/*if(isPneumaticCraftLoaded){
 			registerBlock(MultiblockPressurePort, MultiblockPressurePort.getUnlocalizedName().substring(5));
 			registerBlock(MultiblockHeatPort, MultiblockHeatPort.getUnlocalizedName().substring(5));
@@ -823,13 +837,6 @@ public final class CoreInit {
 			GameRegistry.registerTileEntity(TileEntityMBHeatPort.class, Configs.Modid+"mbHeatPort");
 			GameRegistry.addRecipe(new ItemStack(MultiblockCompressor, 1), new Object[]{"MCM","IBI","MRM",'R',chargedRedstone,'M',MultiblockCase,'B',Blocks.iron_block,'I',Items.iron_ingot,'C',plateChrome});
 		}*/
-		if(isMapEnabled){
-			log.info("Mini Map Enabled. Init minimap");
-			addItemToGameRegistry(entityTracker, entityTracker.getUnlocalizedName().substring(5));
-			addRecipe(new ItemStack(entityTracker, 1), new Object[]{"BGB","RPR","BSB",'G',TMResource.GREENIUM.getOreDictName(Type.INGOT),'B',
-					new ItemStack(plate),'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'S',"blockPlatinum",'P', "paneGlassColorless"});
-			log.info("Minimap loaded");
-		}
 		log.info("Loading Multiparts");
 		ProgressBar bar = ProgressManager.push("Loading Multiparts", multipartList.size());
 		for(Entry<Entry<String, String>,Class<? extends IMultipart>> e : multipartList){
@@ -923,7 +930,7 @@ public final class CoreInit {
 		long tM = System.currentTimeMillis();
 		proxy.postInit();
 		TomsModAPIMain.init();
-		log.info("Setting Max Stack Size of Minecarts to " + Config.minecartMaxStackSize);
+		log.info("Setting Max Stack Size of Minecarts to " + Config.minecartMaxStackSize + ".");
 		Items.MINECART.setMaxStackSize(Config.minecartMaxStackSize);
 		Items.CHEST_MINECART.setMaxStackSize(Config.minecartMaxStackSize);
 		Items.TNT_MINECART.setMaxStackSize(Config.minecartMaxStackSize);
@@ -934,10 +941,13 @@ public final class CoreInit {
 		if(versionCheckResult.status == Status.OUTDATED){
 			TMLogger.warn("[VersionChecker]: ****************************************");
 			TMLogger.warn("[VersionChecker]: * Tom's Mod is OUTDATED!!");
+			TMLogger.warn("[VersionChecker]: * Current version: " + Configs.version);
+			TMLogger.warn("[VersionChecker]: * Online version: " + versionCheckResult.target.toString());
 			TMLogger.warn("[VersionChecker]: ****************************************");
 		}else if(versionCheckResult.status == Status.AHEAD){
 			TMLogger.warn("[VersionChecker]: ??? status == AHEAD ???");
-		}else if(versionCheckResult.status == Status.PENDING){
+			TMLogger.warn("[VersionChecker]: ?? Current version: " + Configs.version);
+		}else if(versionCheckResult.status == Status.PENDING || versionCheckResult.status == Status.FAILED){
 			TMLogger.warn("[VersionChecker]: Tom's Mod version checking failed.");
 		}else{
 			TMLogger.info("[VersionChecker]: Tom's Mod is up to date");
@@ -1187,11 +1197,25 @@ public final class CoreInit {
 		//log.info("Registering block: "+name);
 		addBlockToGameRegistry(block, name);
 		Item item = Item.getItemFromBlock(block);
-		itemList.add(item);
-		blockList.add(block);
+		if(block instanceof IIconRegisterRequired){
+			customIconRegisterRequired.add((IIconRegisterRequired) block);
+		}else{
+			blockList.add(block);
+			if(item instanceof IIconRegisterRequired){
+				customIconRegisterRequired.add((IIconRegisterRequired) item);
+			}else itemList.add(item);
+		}
 	}
 	public static void registerBlock(Block block, ItemBlock itemBlock){
 		addBlockToGameRegistry(block, block.getUnlocalizedName().substring(5), itemBlock);
+		if(block instanceof IIconRegisterRequired){
+			customIconRegisterRequired.add((IIconRegisterRequired) block);
+		}else{
+			blockList.add(block);
+			if(itemBlock instanceof IIconRegisterRequired){
+				customIconRegisterRequired.add((IIconRegisterRequired) itemBlock);
+			}else itemList.add(itemBlock);
+		}
 	}
 
 	public static void registerItem(Item item){
@@ -1200,21 +1224,40 @@ public final class CoreInit {
 
 	public static void registerItem(Item item, String registerName){
 		//log.info("Registering item: "+registerName);
-		itemList.add(item);
+		if(item instanceof IIconRegisterRequired){
+			customIconRegisterRequired.add((IIconRegisterRequired) item);
+		}else itemList.add(item);
 		addItemToGameRegistry(item, registerName);
 	}//*/
 	public static void addItemToGameRegistry(Item item, String name){
-		GameRegistry.register(item.getRegistryName() == null ? item.setRegistryName(name) : item);
+		addItemToGameRegistry(item, name, true);
 	}
 	public static void addBlockToGameRegistry(Block block, String name){
-		if(block instanceof BlockContainerTomsMod)
-			addBlockToGameRegistry(block, name, ((BlockContainerTomsMod) block).createItemBlock());
+		if(block instanceof ICustomItemBlock)
+			addBlockToGameRegistry(block, name, ((ICustomItemBlock) block).createItemBlock());
 		else
 			addBlockToGameRegistry(block, name, new ItemBlock(block));
 	}
 	public static void addBlockToGameRegistry(Block block, String name, ItemBlock itemBlock){
+		addOnlyBlockToGameRegisty(block, name, false);
+		addItemToGameRegistry(itemBlock, name, false);
+		if(block instanceof IRegisterRequired)
+			((IRegisterRequired)block).register();
+		if(itemBlock instanceof IRegisterRequired)
+			((IRegisterRequired)itemBlock).register();
+	}
+	public static void addOnlyBlockToGameRegisty(Block block, String name){
+		addOnlyBlockToGameRegisty(block, name, true);
+	}
+	private static void addOnlyBlockToGameRegisty(Block block, String name, boolean callRegister){
 		GameRegistry.register(block.getRegistryName() == null ? block.setRegistryName(name) : block);
-		GameRegistry.register(itemBlock.setRegistryName(block.getRegistryName()));
+		if(callRegister && block instanceof IRegisterRequired)
+			((IRegisterRequired)block).register();
+	}
+	private static void addItemToGameRegistry(Item item, String name, boolean callRegister){
+		GameRegistry.register(item.getRegistryName() == null ? item.setRegistryName(name) : item);
+		if(callRegister && item instanceof IRegisterRequired)
+			((IRegisterRequired)item).register();
 	}
 	/*public static CreativeTabs tabTomsModBuckets = new CreativeTabs("tabTomsModBuckets"){
 
@@ -1339,7 +1382,7 @@ public final class CoreInit {
 		registerRender(stack.getItem(), stack.getMetadata(), name);
 	}
 	@SideOnly(Side.CLIENT)
-	public static void addRenderToRegistry(Item item, int meta, ModelResourceLocation loc, ProgressBar bar){
+	private static void addRenderToRegistry(Item item, int meta, ModelResourceLocation loc, ProgressBar bar){
 		String toString = loc.toString()+":"+meta;
 		log.info("Loading: "+toString);
 		bar.step(toString);
@@ -1425,67 +1468,6 @@ public final class CoreInit {
 	}//*/
 
 	/**
-[17:13:53] [Client thread/ERROR]: +=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
-[17:13:53] [Client thread/ERROR]: The following texture errors were found.
-[17:13:53] [Client thread/ERROR]: ==================================================
-[17:13:53] [Client thread/ERROR]:   DOMAIN minecraft
-[17:13:53] [Client thread/ERROR]: --------------------------------------------------
-[17:13:53] [Client thread/ERROR]:   domain minecraft is missing 14 textures
-[17:13:53] [Client thread/ERROR]:     domain minecraft has 5 locations:
-[17:13:53] [Client thread/ERROR]:       unknown resourcepack type net.minecraft.client.resources.DefaultResourcePack : Default
-[17:13:53] [Client thread/ERROR]:       mod FML resources at C:\Users\tomika\.gradle\caches\minecraft\net\minecraftforge\forge\1.7.10-10.13.4.1448-1.7.10\forgeBin-1.7.10-10.13.4.1448-1.7.10.jar
-[17:13:53] [Client thread/ERROR]:       mod Forge resources at C:\Users\tomika\.gradle\caches\minecraft\net\minecraftforge\forge\1.7.10-10.13.4.1448-1.7.10\forgeBin-1.7.10-10.13.4.1448-1.7.10.jar
-[17:13:53] [Client thread/ERROR]:       mod TomsMod|Core resources at G:\Új mappa (8)\Új mappa\minecraft\modok\saját\MCreator 1.5.4 [1.7.10]\forge\bin
-[17:13:53] [Client thread/ERROR]:       mod TestEnvironmentMod resources at G:\Új mappa (8)\Új mappa\minecraft\modok\saját\MCreator 1.5.4 [1.7.10]\forge\bin
-[17:13:53] [Client thread/ERROR]: -------------------------
-[17:13:53] [Client thread/ERROR]:     The missing resources for domain minecraft are:
-[17:13:53] [Client thread/ERROR]:       textures/blocks/MISSING_ICON_BLOCK_545_mbCompressor.png
-[17:13:53] [Client thread/ERROR]:       textures/items/MISSING_ICON_ITEM_4172_fusionModule.png
-[17:13:53] [Client thread/ERROR]:       textures/items/MISSING_ICON_ITEM_4182_chargedEnder.png
-[17:13:53] [Client thread/ERROR]:       textures/items/MISSING_ICON_ITEM_4173_itemPowerModule.png
-[17:13:53] [Client thread/ERROR]:       textures/items/MISSING_ICON_ITEM_4181_chargedGlowstone.png
-[17:13:53] [Client thread/ERROR]:       textures/items/MISSING_ICON_ITEM_4180_chargedRedstone.png
-[17:13:53] [Client thread/ERROR]:       textures/items/steamBucket.png
-[17:13:53] [Client thread/ERROR]:       textures/blocks/energyCellCore.png
-[17:13:53] [Client thread/ERROR]: -------------------------
-[17:13:53] [Client thread/ERROR]:     No other errors exist for domain minecraft
-[17:13:53] [Client thread/ERROR]: ==================================================
-[11:35:49] [Client thread/INFO]: [com.tom.core.CoreInit:initializeFluidBlocksAndBuckets:272]: fluid.TomsModPlasma
-[11:35:49] [Client thread/INFO]: [com.tom.core.CoreInit:initializeFluidBlocksAndBuckets:272]: fluid.TomsModDeuterium
-[11:35:49] [Client thread/INFO]: [com.tom.core.CoreInit:initializeFluidBlocksAndBuckets:272]: fluid.TomsModTritium
-[11:35:49] [Client thread/INFO]: [com.tom.core.CoreInit:initializeFluidBlocksAndBuckets:272]: fluid.TomsModfusionFuel
-[11:35:49] [Client thread/INFO]: [com.tom.core.CoreInit:initializeFluidBlocksAndBuckets:272]: fluid.hydrogen
-MinecraftServer minecraftserver = MinecraftServer.getServer();if(minecraftserver!=null)minecraftserver.getCommandManager().executeCommand((EntityPlayer)entity, "say Hi");
-ICommandManager
-[12:17:47] [Client thread/INFO]: "chrome      ",
-[12:17:47] [Client thread/INFO]: "titanium    ",
-[12:17:47] [Client thread/INFO]: "copper      ",
-[12:17:47] [Client thread/INFO]: "tin         ",
-[12:17:47] [Client thread/INFO]: "nickel      ",
-[12:17:47] [Client thread/INFO]: "platinum    ",
-[12:17:47] [Client thread/INFO]: "advAlloyMK1 ",
-[12:17:47] [Client thread/INFO]: "advAlloyMK2 ",
-[12:17:47] [Client thread/INFO]: "uranium     ",
-[12:17:47] [Client thread/INFO]: "blueMetal   ",
-[12:17:47] [Client thread/INFO]: "greenium    ",
-[12:17:47] [Client thread/INFO]: "iron        ",
-[12:17:47] [Client thread/INFO]: "gold        ",
-[12:17:47] [Client thread/INFO]: "redDiamond  ",
-[12:17:47] [Client thread/INFO]: "quartz      ",
-[12:17:47] [Client thread/INFO]: "silver      ",
-[12:17:47] [Client thread/INFO]: "lapis       ",
-[12:17:47] [Client thread/INFO]: "lead        ",
-[12:17:47] [Client thread/INFO]: "obsidian    ",
- 	compile(){
- 		this.displayList = GLAllocation.generateDisplayLists(1);
-        GL11.glNewList(this.displayList, GL11.GL_COMPILE);
-        WorldRenderer worldrenderer = Tessellator.getInstance().getWorldRenderer();
-
-        render();
-
-        GL11.glEndList();
-        this.compiled = true;
-     }
-     display() GlStateManager.callList(this.displayList);
+     Minecraft.getMinecraft().getBlockRenderDispatcher().renderBlockBrightness(IBlockState, brightness)
 	 */
 }

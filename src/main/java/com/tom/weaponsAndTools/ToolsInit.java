@@ -1,5 +1,7 @@
 package com.tom.weaponsAndTools;
 
+import static com.tom.core.CoreInit.registerItem;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,10 +43,6 @@ public class ToolsInit {
 		registerItem(portableComparator, portableComparator.getUnlocalizedName().substring(5));
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");
-	}
-	public static void registerItem(Item item, String registerName){
-		CoreInit.itemList.add(item);
-		CoreInit.addItemToGameRegistry(item, registerName);
 	}
 	@EventHandler
 	public static void construction(FMLConstructionEvent event){

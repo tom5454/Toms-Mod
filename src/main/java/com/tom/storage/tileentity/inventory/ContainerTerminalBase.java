@@ -534,7 +534,7 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 		if(id == 0){
 			terminalType = data;
 		}else if(id == 1){
-
+			te.setClientPowered(data == 1);
 		}else onProgressBarUpdate(id, data);
 	}
 	@Override

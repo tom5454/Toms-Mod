@@ -1,5 +1,7 @@
 package com.tom.transport;
 
+import static com.tom.core.CoreInit.registerBlock;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,12 +65,6 @@ public class TransportInit {
 		GameRegistry.registerTileEntity(TileEntityConveyorSlope.class, Configs.Modid + "conveyorSlope");
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");
-	}
-	public static void registerBlock(Block block, String name) {
-		CoreInit.addBlockToGameRegistry(block, name);
-		Item item = Item.getItemFromBlock(block);
-		CoreInit.itemList.add(item);
-		CoreInit.blockList.add(block);
 	}
 	public static CreativeTabs tabTomsModTransport = new CreativeTabs("tabTomsModTransport"){
 
