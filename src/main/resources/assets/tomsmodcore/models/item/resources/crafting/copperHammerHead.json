@@ -1,6 +1,6 @@
 {
 	"parent":"block/hammerHead",
 	"textures":{
-		"block":"blocks/blockcopper"
+		"block":"tomsmodcore:blocks/resources/blockcopper"
 	}
 }

@@ -15,8 +15,6 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.item.MultipartItem;
 import com.tom.core.CoreInit;
@@ -59,7 +57,7 @@ public class TransportInit {
 		CoreInit.registerMultipart(servo, PartServo.class, "tomsmodtransport");
 		CoreInit.registerMultipart(fluidDuct, PartFluidDuct.class, "tomsmodtransport");
 		registerBlock(conveyorBelt, conveyorBelt.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(conveyorSlope, conveyorSlope.getUnlocalizedName().substring(5), conveyorSlope.itemBlock);
+		registerBlock(conveyorSlope, conveyorSlope.getUnlocalizedName().substring(5));
 		CoreInit.registerMultipart(fluidServo, PartFluidServo.class, "tomsmodtransport");
 		GameRegistry.registerTileEntity(TileEntityConveyor.class, Configs.Modid + "conveyor");
 		GameRegistry.registerTileEntity(TileEntityConveyorSlope.class, Configs.Modid + "conveyorSlope");
@@ -74,12 +72,6 @@ public class TransportInit {
 		}
 
 	};
-	@SideOnly(Side.CLIENT)
-	public static void registerRenders(){
-		log.info("Loading Renderers");
-		CoreInit.registerRender(Item.getItemFromBlock(conveyorSlope), 0, "tomsmodtransport:conveyorSlopeUp");
-		CoreInit.registerRender(Item.getItemFromBlock(conveyorSlope), 1, "tomsmodtransport:conveyorSlopeDown");
-	}
 	@EventHandler
 	public static void construction(FMLConstructionEvent event){
 		CoreInit.modids.add(modid);

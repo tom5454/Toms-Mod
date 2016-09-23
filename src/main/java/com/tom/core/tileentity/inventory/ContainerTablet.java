@@ -3,7 +3,7 @@ package com.tom.core.tileentity.inventory;
 import com.tom.core.item.TabletHandler;
 import com.tom.core.tileentity.TileEntityTabletController;
 import com.tom.network.NetworkHandler;
-import com.tom.network.messages.PacketTabletGui;
+import com.tom.network.messages.MessageTabletGui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -41,7 +41,7 @@ public class ContainerTablet extends ContainerTomsMod {
 		super.detectAndSendChanges();
 		for(IContainerListener crafter : listeners) {
 			if(crafter instanceof EntityPlayerMP) {
-				NetworkHandler.sendTo(new PacketTabletGui(tabStack), (EntityPlayerMP)crafter);
+				NetworkHandler.sendTo(new MessageTabletGui(tabStack), (EntityPlayerMP)crafter);
 			}
 		}
 	}

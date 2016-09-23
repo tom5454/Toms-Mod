@@ -1,6 +1,7 @@
 package com.tom.api;
 
 import net.minecraft.util.EnumFacing;
+
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -23,6 +24,13 @@ public interface ITileFluidHandler {
 				tanks[i].setCanFill(canFill[i]);
 				m.addHandler(fluid[i], tanks[i]);
 			}
+			return m;
+		}
+		public static IFluidHandler getFluidHandlerFromTank(FluidTank tank, boolean canFill, boolean canDrain, Fluid... fluids){
+			tank.setCanFill(canFill);
+			tank.setCanDrain(canDrain);
+			FluidHandlerFluidMap m = new FluidHandlerFluidMap();
+			for(Fluid fluid : fluids)m.addHandler(fluid, tank);
 			return m;
 		}
 	}

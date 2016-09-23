@@ -32,7 +32,7 @@ public class Config {
 	@Deprecated
 	private static final String CATEGORY_WORLDGEN = "WorldGen";
 	public static boolean enableAdventureItems;
-	public static boolean enableHardMode;
+	public static boolean enableHardMode, enableHardRecipes;
 	//public static boolean enable18AdvMode;
 	//public static boolean enableFlintAxe;
 	public static boolean enableGrassDrops;
@@ -253,6 +253,10 @@ public class Config {
 		property = configCore.get(Configuration.CATEGORY_GENERAL, "Enable Tick Speeding", true);
 		property.setComment("Allow external devices to speed up the machines ticks");
 		enableTickSpeeding = property.getBoolean(true);
+
+		property = configCore.get(CATEGORY_RECIPES, "Decreased item outputs", false);
+		property.setComment("Decrease crafting outputs.");
+		enableHardRecipes = property.getBoolean(false);
 	}
 	public static void save(){
 		CoreInit.log.info("Saving configuration");

@@ -20,8 +20,6 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.item.MultipartItem;
 import com.tom.core.CoreInit;
@@ -34,10 +32,8 @@ import com.tom.defense.block.SecurityStation;
 import com.tom.defense.item.ForceDuct;
 import com.tom.defense.item.IdentityCard;
 import com.tom.defense.item.ItemFieldUpgrade;
-import com.tom.defense.item.ItemFieldUpgrade.UpgradeType;
 import com.tom.defense.item.ItemMultiTool;
 import com.tom.defense.item.ItemProjectorFieldType;
-import com.tom.defense.item.ItemProjectorFieldType.FieldType;
 import com.tom.defense.multipart.PartForceDuct;
 import com.tom.defense.tileentity.TileEntityDefenseStation;
 import com.tom.defense.tileentity.TileEntityForceCapacitor;
@@ -85,16 +81,16 @@ public class DefenseInit {
 		efficiencyUpgrade = new Item().setCreativeTab(tabTomsModDefense).setUnlocalizedName("tm.efficiencyUpgrade");
 		defenseStation = new DefenseStation().setCreativeTab(tabTomsModDefense).setUnlocalizedName("tmd.defenseStation");
 		oreMonazit = new BlockOre(5, WorldGen.OVERWORLD, 2, 2).addExtraState(WorldGen.END, 55, 12, BlockMatcher.forBlock(Blocks.END_STONE), "end").setUnlocalizedName("oreMonazit");
-		CoreInit.addItemToGameRegistry(multiTool, multiTool.getUnlocalizedName().substring(5));
-		CoreInit.addItemToGameRegistry(identityCard, identityCard.getUnlocalizedName().substring(5));
+		registerItem(multiTool, multiTool.getUnlocalizedName().substring(5));
+		registerItem(identityCard, identityCard.getUnlocalizedName().substring(5));
 		registerItem(forceDuctEmpty, forceDuctEmpty.getUnlocalizedName().substring(5));
 		registerItem(rangeUpgrade, rangeUpgrade.getUnlocalizedName().substring(5));
 		registerItem(rangeWidthUpgrade, rangeWidthUpgrade.getUnlocalizedName().substring(5));
 		registerItem(rangeHeightUpgrade, rangeHeightUpgrade.getUnlocalizedName().substring(5));
 		registerItem(projectorLens, projectorLens.getUnlocalizedName().substring(5));
 		registerItem(efficiencyUpgrade, efficiencyUpgrade.getUnlocalizedName().substring(5));
-		CoreInit.addItemToGameRegistry(projectorFieldType, projectorFieldType.getUnlocalizedName().substring(5));
-		CoreInit.addItemToGameRegistry(fieldUpgrade, fieldUpgrade.getUnlocalizedName().substring(5));
+		registerItem(projectorFieldType, projectorFieldType.getUnlocalizedName().substring(5));
+		registerItem(fieldUpgrade, fieldUpgrade.getUnlocalizedName().substring(5));
 		CoreInit.registerMultipart(forceDuct, PartForceDuct.class, "forceDuct", "tomsmoddefense");
 		registerBlock(forceConverter, forceConverter.getUnlocalizedName().substring(5));
 		registerBlock(forceCapacitor, forceCapacitor.getUnlocalizedName().substring(5));
@@ -102,7 +98,7 @@ public class DefenseInit {
 		registerBlock(fieldProjector, fieldProjector.getUnlocalizedName().substring(5));
 		CoreInit.addOnlyBlockToGameRegisty(blockForce, blockForce.getUnlocalizedName().substring(5));
 		registerBlock(defenseStation, defenseStation.getUnlocalizedName().substring(5));
-		CoreInit.registerBlock(oreMonazit, oreMonazit.getUnlocalizedName().substring(5));
+		registerBlock(oreMonazit, oreMonazit.getUnlocalizedName().substring(5));
 		GameRegistry.registerTileEntity(TileEntityForceConverter.class, Configs.Modid + ":forceTransformer");
 		GameRegistry.registerTileEntity(TileEntityForceCapacitor.class, Configs.Modid + ":forceCapacitor");
 		GameRegistry.registerTileEntity(TileEntitySecurityStation.class, Configs.Modid + ":securityStation");
@@ -127,27 +123,6 @@ public class DefenseInit {
 		}
 
 	};
-	@SideOnly(Side.CLIENT)
-	public static void registerRenders(){
-		log.info("Loading Renderers");
-		CoreInit.registerRender(multiTool, 0, "tomsmoddefense:"+multiTool.getUnlocalizedName(new ItemStack(multiTool,1,0)).substring(5));
-		CoreInit.registerRender(multiTool, 1, "tomsmoddefense:"+multiTool.getUnlocalizedName(new ItemStack(multiTool,1,1)).substring(5));
-		CoreInit.registerRender(multiTool, 2, "tomsmoddefense:"+multiTool.getUnlocalizedName(new ItemStack(multiTool,1,2)).substring(5));
-		CoreInit.registerRender(multiTool, 3, "tomsmoddefense:"+multiTool.getUnlocalizedName(new ItemStack(multiTool,1,3)).substring(5));
-		CoreInit.registerRender(multiTool, 4, "tomsmoddefense:"+multiTool.getUnlocalizedName(new ItemStack(multiTool,1,4)).substring(5));
-		CoreInit.registerRender(identityCard, 0, "tomsmoddefense:tmd.idCard_b");
-		CoreInit.registerRender(identityCard, 1, "tomsmoddefense:tmd.idCard");
-		CoreInit.registerRender(identityCard, 2, "tomsmoddefense:tmd.idCard_p");
-		CoreInit.registerRender(identityCard, 3, "tomsmoddefense:tmd.idCard_s");
-		CoreInit.registerRender(projectorFieldType, 0, "tomsmoddefense:projectorModule_"+FieldType.get(0).getName());
-		CoreInit.registerRender(projectorFieldType, 1, "tomsmoddefense:projectorModule_"+FieldType.get(1).getName());
-		CoreInit.registerRender(projectorFieldType, 2, "tomsmoddefense:projectorModule_"+FieldType.get(2).getName());
-		CoreInit.registerRender(projectorFieldType, 3, "tomsmoddefense:projectorModule_"+FieldType.get(3).getName());
-		CoreInit.registerRender(fieldUpgrade, 0, "tomsmoddefense:projectorUpgrade_"+UpgradeType.get(0).getName());
-		CoreInit.registerRender(fieldUpgrade, 1, "tomsmoddefense:projectorUpgrade_"+UpgradeType.get(1).getName());
-		CoreInit.registerRender(fieldUpgrade, 2, "tomsmoddefense:projectorUpgrade_"+UpgradeType.get(2).getName());
-		CoreInit.registerRender(fieldUpgrade, 3, "tomsmoddefense:projectorUpgrade_"+UpgradeType.get(3).getName());
-	}
 	public static void registerPlaceables(){
 		WorldHandler.addPlaceable(Blocks.LEVER);
 		WorldHandler.addPlaceable(Blocks.STONE_BUTTON);

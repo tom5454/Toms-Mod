@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.core.research.handler.ResearchHandler;
+import com.tom.core.research.ResearchHandler;
 import com.tom.network.messages.MessageProgress;
 
 import com.tom.core.tileentity.TileEntityResearchTable;

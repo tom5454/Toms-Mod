@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "type=0": { "model": "tomsmodcore:resources/block_steel"},
+        "type=1": { "model": "tomsmodcore:resources/block_steel"}
+    }
+}

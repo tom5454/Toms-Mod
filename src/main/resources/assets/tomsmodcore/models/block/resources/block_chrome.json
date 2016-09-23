@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "blocks/blockchrome"
+        "all": "tomsmodcore:blocks/resources/blockchrome"
     }
 }

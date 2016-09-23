@@ -1,0 +1,24 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"textures":{
+			"all": "tomsmodfactory:blocks/blocksteelDark"
+		}
+	},
+	"variants": {
+		"variant":{
+			"refinery_heater":{
+				"model": "tomsmodfactory:refineryHeater"
+			},
+			"output_hatch":{
+				"model": "tomsmodfactory:outputHatch"
+			},
+			"engineering_block":{
+				"textures":{
+					"all": "tomsmodfactory:blocks/engineeringBlock"
+				}
+			}
+		}
+	}
+}

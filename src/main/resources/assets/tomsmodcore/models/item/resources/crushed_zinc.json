@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "items/crushedzinc"
+        "layer0": "tomsmodcore:items/resources/crushedzinc"
     }
 }

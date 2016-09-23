@@ -2,9 +2,6 @@ package com.tom.defense.item;
 
 import java.util.List;
 
-import com.tom.api.item.ICustomCraftingHandler;
-import com.tom.apis.TomsModUtils;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,10 +10,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemProjectorFieldType extends Item implements ICustomCraftingHandler{
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.item.ICustomCraftingHandler;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+
+public class ItemProjectorFieldType extends Item implements ICustomCraftingHandler, IIconRegisterRequired{
 	@Override
 	public void getSubItems(Item itemIn, CreativeTabs tab,
 			List<ItemStack> subItems) {
@@ -105,5 +108,12 @@ public class ItemProjectorFieldType extends Item implements ICustomCraftingHandl
 	public void onUsing(EntityPlayer crafter, ItemStack returnStack, IInventory crafingTableInventory,
 			ItemStack stack) {
 
+	}
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(this, 0, "tomsmoddefense:projectorModule_"+FieldType.get(0).getName());
+		CoreInit.registerRender(this, 1, "tomsmoddefense:projectorModule_"+FieldType.get(1).getName());
+		CoreInit.registerRender(this, 2, "tomsmoddefense:projectorModule_"+FieldType.get(2).getName());
+		CoreInit.registerRender(this, 3, "tomsmoddefense:projectorModule_"+FieldType.get(3).getName());
 	}
 }

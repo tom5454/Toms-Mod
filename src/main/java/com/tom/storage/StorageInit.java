@@ -16,8 +16,6 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockGridDevice;
 import com.tom.api.item.MultipartItem;
@@ -105,18 +103,18 @@ public class StorageInit {
 		partTerminal = new ItemPartTerminal().setCreativeTab(tabTomsModStorage).setUnlocalizedName("tm.basicTerminal.part");
 		partCraftingTerminal = new ItemPartCraftingTerminal().setCreativeTab(tabTomsModStorage).setUnlocalizedName("tm.craftingTerminal.part");
 		partPatternTerminal = new ItemPartPatternTerminal().setCreativeTab(tabTomsModStorage).setUnlocalizedName("tm.patternTerminal.part");
-		CoreInit.addBlockToGameRegistry(limitableChest, limitableChest.getUnlocalizedName().substring(5));
+		registerBlock(limitableChest, limitableChest.getUnlocalizedName().substring(5));
 		registerBlock(basicTerminal, basicTerminal.getUnlocalizedName().substring(5));
 		registerBlock(drive, drive.getUnlocalizedName().substring(5));
 		registerBlock(energyAcceptor, energyAcceptor.getUnlocalizedName().substring(5));
 		registerBlock(craftingController, craftingController.getUnlocalizedName().substring(5));
 		registerBlock(blockInterface, blockInterface.getUnlocalizedName().substring(5));
-		CoreInit.addItemToGameRegistry(itemStorageCell, itemStorageCell.getUnlocalizedName().substring(5));
+		registerItem(itemStorageCell, itemStorageCell.getUnlocalizedName().substring(5));
 		registerItem(speedCard, speedCard.getUnlocalizedName().substring(5));
 		registerItem(craftingCard, craftingCard.getUnlocalizedName().substring(5));
 		registerBlock(patternTerminal, patternTerminal.getUnlocalizedName().substring(5));
 		registerBlock(assembler, assembler.getUnlocalizedName().substring(5));
-		CoreInit.addItemToGameRegistry(craftingPattern, craftingPattern.getUnlocalizedName().substring(5));
+		registerItem(craftingPattern, craftingPattern.getUnlocalizedName().substring(5));
 		registerBlock(tankBasic, tankBasic.getUnlocalizedName().substring(5));
 		registerBlock(tankAdv, tankAdv.getUnlocalizedName().substring(5));
 		registerBlock(tankElite, tankElite.getUnlocalizedName().substring(5));
@@ -156,17 +154,6 @@ public class StorageInit {
 		}
 
 	};
-	@SideOnly(Side.CLIENT)
-	public static void registerRenders(){
-		log.info("Loading Renderers");
-		CoreInit.registerRender(itemStorageCell, 0, "tomsmodstorage:1kStorageCell");
-		CoreInit.registerRender(itemStorageCell, 1, "tomsmodstorage:4kStorageCell");
-		CoreInit.registerRender(itemStorageCell, 2, "tomsmodstorage:16kStorageCell");
-		CoreInit.registerRender(itemStorageCell, 3, "tomsmodstorage:64kStorageCell");
-		CoreInit.registerRender(craftingPattern, 0, "tomsmodstorage:craftingPattern");
-		CoreInit.registerRender(craftingPattern, 1, "tomsmodstorage:craftingPatternEncoded");
-		CoreInit.registerRender(Item.getItemFromBlock(limitableChest), 0, "minecraft:chest");
-	}
 	@EventHandler
 	public static void construction(FMLConstructionEvent event){
 		CoreInit.modids.add(modid);

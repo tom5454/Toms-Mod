@@ -9,7 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-import com.tom.core.research.handler.ResearchHandler;
+import com.tom.core.research.ResearchHandler;
 
 @Cancelable
 public class ItemAdvCraftedEvent extends Event {

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "items/shardlead"
+        "layer0": "tomsmodcore:items/resources/shardlead"
     }
 }

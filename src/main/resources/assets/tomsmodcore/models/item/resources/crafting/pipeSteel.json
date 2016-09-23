@@ -1,0 +1,6 @@
+{
+        "parent": "block/pipe_item",
+    "textures":{
+        "pipe": "tomsmodcore:items/steelPipe"
+    }
+}

@@ -2,21 +2,6 @@ package com.tom.defense.item;
 
 import java.util.List;
 
-import com.tom.api.energy.ItemEnergyContainer;
-import com.tom.api.item.IConfigurator;
-import com.tom.api.item.ISwitch;
-import com.tom.api.item.IWrench;
-import com.tom.api.tileentity.AccessType;
-import com.tom.api.tileentity.ISecurityStation;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.defense.DefenseInit;
-import com.tom.defense.tileentity.TileEntityForceField;
-import com.tom.defense.tileentity.TileEntityForceFieldProjector;
-import com.tom.handler.ConfiguratorHandler;
-import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.handler.WrenchHandler;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -37,10 +22,27 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwitch, IConfigurator {
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.energy.ItemEnergyContainer;
+import com.tom.api.item.IConfigurator;
+import com.tom.api.item.ISwitch;
+import com.tom.api.item.IWrench;
+import com.tom.api.tileentity.AccessType;
+import com.tom.api.tileentity.ISecurityStation;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.defense.DefenseInit;
+import com.tom.defense.tileentity.TileEntityForceField;
+import com.tom.defense.tileentity.TileEntityForceFieldProjector;
+import com.tom.handler.ConfiguratorHandler;
+import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.handler.WrenchHandler;
+
+public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwitch, IConfigurator, IIconRegisterRequired {
 	private static final double CONFIGURATOR_USAGE = 0.1;
 	private static final double TRANSPORTER_USAGE = 500;
 	public ItemMultiTool() {
@@ -279,5 +281,14 @@ public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwit
 		}
 		if(!is.hasTagCompound())is.setTagCompound(new NBTTagCompound());
 		is.getTagCompound().setTag("inventory", list);
+	}
+
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(this, 0, "tomsmoddefense:"+getUnlocalizedName(new ItemStack(this,1,0)).substring(5));
+		CoreInit.registerRender(this, 1, "tomsmoddefense:"+getUnlocalizedName(new ItemStack(this,1,1)).substring(5));
+		CoreInit.registerRender(this, 2, "tomsmoddefense:"+getUnlocalizedName(new ItemStack(this,1,2)).substring(5));
+		CoreInit.registerRender(this, 3, "tomsmoddefense:"+getUnlocalizedName(new ItemStack(this,1,3)).substring(5));
+		CoreInit.registerRender(this, 4, "tomsmoddefense:"+getUnlocalizedName(new ItemStack(this,1,4)).substring(5));
 	}
 }

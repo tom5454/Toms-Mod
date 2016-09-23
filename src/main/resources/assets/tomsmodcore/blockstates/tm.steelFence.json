@@ -1,0 +1,33 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "tomsmodcore:steel_fence_post",
+		"uvlock": true
+	},
+    "variants": {
+        "north": {
+      		"false":{},
+        	"true":{
+           		"submodel": { "north": {"model": "tomsmodcore:steel_fence_side"} }
+          	}
+        },
+        "east":{
+       		"false":{},
+       		"true":{
+       		    "submodel": { "east": {"model": "tomsmodcore:steel_fence_side", "y": 90} }
+           	}
+        },
+        "south":{
+        	"false":{},
+        	"true":{
+            	"submodel": { "south": {"model": "tomsmodcore:steel_fence_side", "y": 180} }
+            }
+        },
+        "west":{
+       		"false":{},
+       		"true":{
+            	"submodel": { "west": {"model": "tomsmodcore:steel_fence_side", "y": 270} }
+            }
+        }
+    }
+}

@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,10 +25,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.api.item.ICustomCraftingHandlerAdv;
 import com.tom.core.CoreInit;
+import com.tom.storage.StorageInit;
 import com.tom.storage.tileentity.TileEntityEliteTank;
 
-public class BlockTankElite extends BlockContainerTomsMod {
+public class BlockTankElite extends BlockContainerTomsMod implements ICustomCraftingHandlerAdv{
 
 	public BlockTankElite() {
 		super(Material.GLASS);
@@ -113,5 +116,16 @@ public class BlockTankElite extends BlockContainerTomsMod {
 			return ((TileEntityEliteTank)tile).getComparatorValue();
 		}
 		return 0;
+	}
+	@Override
+	public void onCrafingAdv(String player, ItemStack crafting, ItemStack second, IInventory craftMatrix) {
+		ItemStack old = craftMatrix.getStackInSlot(4);
+		if(old != null && old.getItem() == Item.getItemFromBlock(StorageInit.tankAdv))
+			crafting.setTagCompound(old.getTagCompound());
+	}
+
+	@Override
+	public void onUsingAdv(String player, ItemStack crafting, ItemStack second, IInventory craftMatrix, ItemStack s) {
+
 	}
 }

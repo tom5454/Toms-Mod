@@ -127,6 +127,9 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 				}else{
 					gui.renderItemInGui(stack.stack, gui.getGuiLeft()+xDisplayPosition, gui.getGuiTop()+yDisplayPosition, mouseX, mouseY, false, 0, true);
 				}
+				if(mouseX >= (gui.getGuiLeft()+xDisplayPosition)-1 && mouseY >= (gui.getGuiTop()+yDisplayPosition)-1 && mouseX < (gui.getGuiLeft()+xDisplayPosition) + 17 && mouseY < (gui.getGuiTop()+yDisplayPosition) + 17){
+					ret = true;
+				}
 			}
 			return ret;
 		}

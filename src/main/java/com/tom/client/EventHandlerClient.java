@@ -103,10 +103,6 @@ public class EventHandlerClient {
 		if (event.phase == TickEvent.Phase.START)
 		{
 			EventHandler.teList.update(true);
-			// run the cleanup code when Mw is loaded and the player becomes
-			// null.
-			// a bit hacky, but simpler than checking if the connection has
-			// closed.
 			if (Minecraft.getMinecraft().thePlayer == null)
 			{
 				GlobalFields.mobs.clear();

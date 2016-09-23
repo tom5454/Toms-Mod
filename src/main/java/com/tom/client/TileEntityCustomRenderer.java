@@ -2,15 +2,15 @@ package com.tom.client;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.model.IBaseModel;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+
+import com.tom.apis.TomsModUtils;
+import com.tom.model.IBaseModel;
 
 public class TileEntityCustomRenderer<T extends TileEntity> extends TileEntitySpecialRendererTomsMod<T>{
 	public TileEntityCustomRenderer(IBaseModel model){

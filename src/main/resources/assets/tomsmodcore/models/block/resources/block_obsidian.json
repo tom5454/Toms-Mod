@@ -1,6 +1,6 @@
 {
-    "parent": "cube_all",
+    "parent": "block/cube_all",
     "textures": {
-        "all": "blocks/blockobsidian"
+        "all": "tomsmodcore:blocks/resources/blockobsidian"
     }
 }

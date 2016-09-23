@@ -2,6 +2,8 @@ package com.tom.core.tileentity.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
@@ -32,14 +34,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.network.INBTPacketReceiver;
-import com.tom.api.research.IResearch;
 import com.tom.api.research.IScanningInformation;
+import com.tom.api.research.Research;
 import com.tom.api.research.ResearchComplexity;
 import com.tom.apis.TomsModUtils;
 import com.tom.apis.TomsModUtils.GuiRenderRunnable;
 import com.tom.core.CoreInit;
-import com.tom.core.research.handler.ResearchHandler;
-import com.tom.core.research.handler.ResearchHandler.ResearchInformation;
+import com.tom.core.research.ResearchHandler;
+import com.tom.core.research.ResearchHandler.ResearchInformation;
 
 import com.tom.core.tileentity.TileEntityResearchTable;
 import com.tom.core.tileentity.gui.GuiResearchTable.GuiResearchSelection.GuiResearchSelectionList.ResearchEntry;
@@ -51,6 +53,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 	private GuiButtonMenu menuButton;
 	private GuiButtonCraft craftButton;
 	private final TileEntityResearchTable te;
+	private static final Comparator<ResearchEntry> sorter = new ResearchEntrySorter();
 	//private static final ResourceLocation LIST_TEXTURE = new ResourceLocation("tomsmod:textures/gui/resSelect.png");
 	private NBTTagCompound tag = new NBTTagCompound();
 	public GuiResearchTable(InventoryPlayer playerInv, TileEntityResearchTable te) {
@@ -121,7 +124,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 			RenderHelper.enableGUIStandardItemLighting();
 			renderItemInGui(icon, guiLeft+60, guiTop+15, -50, -50);
 			GL11.glPopMatrix();
-			String text = I18n.format(te.currentResearch.getName());
+			String text = I18n.format(te.currentResearch.getUnlocalizedName());
 			drawResearchName(guiLeft+68, guiTop+38, text);
 			//float textScale = 0.9F;
 			//GL11.glPushMatrix();
@@ -415,7 +418,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 			if(button.id == 200){
 				if(list.selected != -1){
 					IGuiListEntry e = list.getListEntry(list.selected);
-					IResearch res = null;
+					Research res = null;
 					if(e instanceof ResearchEntry){
 						res = ((ResearchEntry)e).button.research;
 					}
@@ -440,6 +443,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 				List<ResearchInformation> list = this.handler.getAvailableResearches();
 				this.researchList.clear();
 				this.researchList.add(new ResearchHeader(ResearchComplexity.BASIC));
+				List<ResearchEntry> basRes = new ArrayList<ResearchEntry>();
 				List<ResearchEntry> advRes = new ArrayList<ResearchEntry>();
 				List<ResearchEntry> labRes = new ArrayList<ResearchEntry>();
 				for(ResearchInformation r : list){
@@ -448,7 +452,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 						advRes.add(new ResearchEntry(r));
 						break;
 					case BASIC:
-						this.researchList.add(new ResearchEntry(r));
+						basRes.add(new ResearchEntry(r));
 						break;
 					case LABORATORY:
 						labRes.add(new ResearchEntry(r));
@@ -456,6 +460,12 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 					default:
 						break;
 					}
+				}
+				Collections.sort(basRes, sorter);
+				Collections.sort(advRes, sorter);
+				Collections.sort(labRes, sorter);
+				for(ResearchEntry e : basRes){
+					this.researchList.add(e);
 				}
 				this.researchList.add(new ResearchHeader(ResearchComplexity.ADVANCED));
 				for(ResearchEntry e : advRes){
@@ -617,7 +627,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 					this.button.mouseReleased(x, y);
 				}
 				public class GuiResearchSelectButton extends GuiButton{
-					private final IResearch research;
+					private final Research research;
 					private final List<IScanningInformation> missing;
 					public GuiResearchSelectButton(int buttonId, int x, int y, ResearchInformation r) {
 						super(buttonId, x, y, 175,24,"");
@@ -671,7 +681,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 								j = 16777120;
 							}
 
-							this.drawCenteredString(fontrenderer, I18n.format(research.getName()), this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
+							this.drawCenteredString(fontrenderer, I18n.format(research.getUnlocalizedName()), this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
 							final Minecraft mcf = mc;
 							if(this.hovered && (!this.enabled)){
 								hoverRender.add(new Runnable(){
@@ -760,7 +770,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 				}
 
 			}
-
 		}
 		/**
 		 * Called when a mouse button is released.  Args : mouseX, mouseY, releaseButton
@@ -850,5 +859,13 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 	public void receiveNBTPacket(NBTTagCompound message) {
 		tag = message;
 		this.mc.displayGuiScreen(new GuiResearchSelection(this));
+	}
+	public static class ResearchEntrySorter implements Comparator<ResearchEntry> {
+
+		@Override
+		public int compare(ResearchEntry o1, ResearchEntry o2) {
+			return I18n.format(o1.button.research.getUnlocalizedName()).compareTo(I18n.format(o2.button.research.getUnlocalizedName()));
+		}
+
 	}
 }

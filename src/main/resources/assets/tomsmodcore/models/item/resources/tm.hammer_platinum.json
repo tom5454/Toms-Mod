@@ -1,6 +1,6 @@
 {
 	"parent":"block/hammer",
 	"textures":{
-		"block":"blocks/blockplatinum"
+		"block":"tomsmodcore:blocks/resources/blockplatinum"
 	}
 }

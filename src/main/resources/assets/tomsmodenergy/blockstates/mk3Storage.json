@@ -1,5 +1,10 @@
 {
+	"forge_marker": 1,
     "variants": {
-        "normal": { "model": "tomsmodenergy:cell2"}
+        "normal": { "model": "tomsmodenergy:cell",
+        	"textures":{
+        		"base": "tomsmodenergy:blocks/cellBase"
+        	}
+        }
     }
 }

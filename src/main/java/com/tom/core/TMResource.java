@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
+import net.minecraft.block.BlockSlab.EnumBlockHalf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -33,6 +36,8 @@ import com.tom.apis.TomsModUtils;
 import com.tom.config.Config;
 import com.tom.recipes.OreDict;
 import com.tom.recipes.handler.MachineCraftingHandler;
+
+import com.tom.core.block.MaterialSlab;
 
 import com.tom.core.item.ResourceItem;
 
@@ -71,7 +76,7 @@ public enum TMResource implements IStringSerializable{
 	ALUMINUM(          "aluminum", false,   false,         true,      "oreBauxite",             4,             false,      true,             2,             256,             1,               2),
 	MERCURY(           "mercury",   true,   false,        false,      "oreMercury",             3,              true,      true,             0,               0,             0,               0),
 	COAL(                 "coal",   true,   false,        false,         "oreCoal",             2,             false,     false,             0,              56,             0,               0),
-	CERTUS_QUARTZ("certusQuartz",   true,   false,        false,       "oreCertus",             3,              true,     false,             0,               0,             0,               0),
+	SKY_QUARTZ(      "skyQuartz",   true,   false,        false,    "oreSkyQuartz",             3,              true,     false,             0,               0,             0,               0),
 	FLUIX(               "fluix",   true,    true,        false,              null,             0,             false,     false,             0,               0,             0,               2),
 	WOLFRAM(           "wolfram",  false,   false,        false,    "oreTungstate",             3,             false,      true,             4,            1248,             3,               3),
 	TUNGSTENSTEEL("tungstensteel", false,    true,        false,              null,             0,             false,     false,             5,            1520,             4,               0)
@@ -82,6 +87,7 @@ public enum TMResource implements IStringSerializable{
 	private Fluid fluid, fluidC;
 	private final String ore;
 	protected Entry<Block, Integer> storageBlock;
+	protected MaterialSlab slabBlock;
 	private final int crusherAmount, toolStrength, durability, materialLevel, wireMillOutput;
 	//private BlockOre ore;
 	public static final TMResource[] VALUES = values();
@@ -172,7 +178,7 @@ public enum TMResource implements IStringSerializable{
 	public String getName(){
 		return name;
 	}
-	public int getLenth(){
+	public int getLength(){
 		return VALUES.length;
 	}
 	public boolean isVanila(){
@@ -187,7 +193,7 @@ public enum TMResource implements IStringSerializable{
 	}
 	public boolean isValid(Type type){
 		return type == Type.INGOT ? (!isVanila() && (!isGem())) || this == REDSTONE : (type == Type.PLATE ? this != URANIUM && this != GLOWSTONE && this != COAL &&
-				this != CERTUS_QUARTZ && this != FLUIX && this != SULFUR && this != MERCURY : (type == Type.CABLE || type == Type.COIL ?
+				this != SKY_QUARTZ && this != FLUIX && this != SULFUR && this != MERCURY : (type == Type.CABLE || type == Type.COIL ?
 						(this != TUNGSTENSTEEL && this != URANIUM && this != BRONZE && this != advAlloyMK1 && this != advAlloyMK2 && this != CHROME && this != STEEL &&
 						this != BLUE_METAL && this != GREENIUM && (!isGem()) && this != OBSIDIAN && this != LEAD) || this == FLUIX :
 							(type == Type.NUGGET ? this != advAlloyMK1 && this != advAlloyMK2 && this != GOLD && (!isGem()) && this != OBSIDIAN &&
@@ -196,7 +202,7 @@ public enum TMResource implements IStringSerializable{
 								(type == Type.DUST_TINY ? this != advAlloyMK1 && this != advAlloyMK2 && this != MERCURY && this != STEEL && this != BRONZE :
 									(type == Type.CRUSHED_ORE ? !isAlloy && this != OBSIDIAN && this != GLOWSTONE : (type == Type.CRUSHED_ORE_NETHER ? !isAlloy &&
 											this != OBSIDIAN && this != GLOWSTONE && this != QUARTZ && this != LEAD && this != NETHER_QUARTZ && this != LITHIUM &&
-											this != MERCURY && this != CERTUS_QUARTZ && this != WOLFRAM : (type == Type.CRUSHED_ORE_END ? this == WOLFRAM || this == PLATINUM || this == GOLD || this == TITANIUM || this == DIAMOND ||
+											this != MERCURY && this != SKY_QUARTZ && this != WOLFRAM : (type == Type.CRUSHED_ORE_END ? this == WOLFRAM || this == PLATINUM || this == GOLD || this == TITANIUM || this == DIAMOND ||
 											this == NICKEL || this == ENDERIUM : (type == Type.RESEARCH_ITEM ? this.isResearchItem() : (type == Type.CLUMP || type == Type.SHARD ?
 													(!isAlloy && !isGem && this != REDSTONE && this != OBSIDIAN) || this == MERCURY || this == ENDERIUM : (true))))))))))));
 	}
@@ -248,7 +254,10 @@ public enum TMResource implements IStringSerializable{
 					}
 				}
 				if(r.storageBlock != null){
-					OreDict.registerOre("block"+r.getOreDictName(), r.getBlockStackNormal(1));
+					OreDict.registerOre("block"+r.getOreDictName(), r.getBlockStackNormal());
+				}
+				if(r.slabBlock != null){
+					OreDict.registerOre("slab"+r.getOreDictName(), r.getSlabStackNormal());
 				}
 				if(r.toolStrength >= 0 && r.durability > 0){
 					int s = r.toolStrength;
@@ -388,6 +397,10 @@ public enum TMResource implements IStringSerializable{
 						for(ItemStack stack : stackL)MachineCraftingHandler.addCrusherRecipe(stack, r.getStackNormal(Type.CRUSHED_ORE, r.crusherAmount));
 					}
 				}
+				if(r.storageBlock != null && r.slabBlock != null){
+					addRecipe(r.getSlabStackNormal(6), new Object[]{"GGG", 'G', r.getBlockOreDictName()});
+					addShapelessRecipe(r.getBlockStackNormal(), new Object[]{r.getSlabOreDictName(), r.getSlabOreDictName()});
+				}
 			}
 			addHammerRecipe(CraftingMaterial.IRON_HAMMER_HEAD.getStackNormal(), IRON);
 			addHammerRecipe(CraftingMaterial.COPPER_HAMMER_HEAD.getStackNormal(), COPPER);
@@ -457,8 +470,19 @@ public enum TMResource implements IStringSerializable{
 			throw new RuntimeException("Somebody tries to corrupt the material registry!");
 		}
 	}
+	public void setSlab(MaterialSlab block){
+		if(CoreInit.isInit()){
+			slabBlock = block;
+		}else{
+			CoreInit.log.fatal("Somebody tries to corrupt the material registry!");
+			throw new RuntimeException("Somebody tries to corrupt the material registry!");
+		}
+	}
 	public ItemStack getBlockStackNormal(int amount){
 		return storageBlock != null ? new ItemStack(storageBlock.getKey(), amount, storageBlock.getValue()) : null;
+	}
+	public ItemStack getBlockStackNormal(){
+		return getBlockStackNormal(1);
 	}
 	public List<ItemStack> getBlockStackOreDict(int a) {
 		List<ItemStack> sList = OreDictionary.getOres(getBlockOreDictName());
@@ -591,6 +615,9 @@ public enum TMResource implements IStringSerializable{
 		TIN_TURBINE("tinTurbine", false, null),
 		GENERATOR_COMPONENT("generator", false, null),
 		SOLAR_PANEL_MK1("solar1", false, null),
+		STEEL_PIPE("pipeSteel", true, null),
+		ELECTRIC_MOTOR("electricMotor", false, null),
+		PLASTIC_SHEET("sheetPlastic", true, null),
 		//DIAMOND_GRINDER("grinderDiamond", "componentCrusher", null),
 		;
 		public static final CraftingMaterial[] VALUES = values();
@@ -712,5 +739,56 @@ public enum TMResource implements IStringSerializable{
 	}
 	public int getMaterialLevel() {
 		return materialLevel;
+	}
+	public IBlockState getSlab(SlabState state){
+		switch(state){
+		case BOTTOM:
+			return slabBlock.half.getStateForType(this).withProperty(BlockSlab.HALF, EnumBlockHalf.BOTTOM);
+		case FULL:
+			return slabBlock.full.getStateForType(this);
+		case TOP:
+			return slabBlock.half.getStateForType(this).withProperty(BlockSlab.HALF, EnumBlockHalf.TOP);
+		default:
+			break;
+		}
+		return null;
+	}
+	public static enum SlabState{
+		BOTTOM, TOP, FULL
+	}
+	public ItemStack getSlabStackNormal(int a){
+		return slabBlock.getStackForType(this, a);
+	}
+	public ItemStack getSlabStackNormal(){
+		return getSlabStackNormal(1);
+	}
+	public String getSlabOreDictName() {
+		return "slab" + getOreDictName();
+	}
+	public List<ItemStack> getSlabStackOreDict(int a) {
+		List<ItemStack> sList = OreDictionary.getOres(getSlabOreDictName());
+		List<ItemStack> ret = new ArrayList<ItemStack>();
+		if(this == ALUMINUM){
+			List<ItemStack> sList2 = OreDictionary.getOres("slabAluminium");
+			for(ItemStack s : sList2){
+				if(s != null){
+					ItemStack c = s.copy();
+					c.stackSize = c.stackSize * a;
+					ret.add(c);
+				}
+			}
+		}
+		for(ItemStack s : sList){
+			if(s != null){
+				ItemStack c = s.copy();
+				c.stackSize = c.stackSize * a;
+				ret.add(c);
+			}
+		}
+		return ret;
+	}
+	@SuppressWarnings("deprecation")
+	public IBlockState getBlockState() {
+		return storageBlock != null ? storageBlock.getKey().getStateFromMeta(storageBlock.getValue()) : Blocks.IRON_BLOCK.getDefaultState();
 	}
 }

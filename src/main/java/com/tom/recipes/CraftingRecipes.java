@@ -15,13 +15,14 @@ import com.tom.core.TMResource.Type;
 import com.tom.defense.DefenseInit;
 import com.tom.energy.EnergyInit;
 import com.tom.factory.FactoryInit;
+import com.tom.factory.block.BlockComponents.ComponentVariants;
 import com.tom.storage.StorageInit;
 import com.tom.transport.TransportInit;
 import com.tom.weaponsAndTools.ToolsInit;
 
-public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes
+public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes OreDict
 	public static void init(){
-		int machineFrameAmount = Config.enableHardMode ? 2 : 4;
+		int machineFrameAmount = Config.enableHardRecipes ? 2 : 4;
 		addRecipe(CraftingMaterial.BIG_REDSTONE.getStackNormal(), new Object[]{"RR",'R',Items.REDSTONE});
 		addRecipe(CraftingMaterial.BIG_GLOWSTONE.getStackNormal(), new Object[]{"GG",'G',Items.GLOWSTONE_DUST});
 		addRecipe(CraftingMaterial.BIG_ENDER_PEARL.getStackNormal(), new Object[]{"EE",'E',Items.ENDER_PEARL});
@@ -34,6 +35,7 @@ public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes
 		addRecipe(new ItemStack(CoreInit.MachineFrameSteel, machineFrameAmount), new Object[]{"CCC","CHC","CCC",'C',TMResource.STEEL.getStackName(Type.PLATE), 'H', "itemHammer_lvl2"});
 		addRecipe(new ItemStack(CoreInit.MachineFrameBasic, machineFrameAmount), new Object[]{"CCC","CHC","CCC",'C',TMResource.IRON.getStackName(Type.PLATE), 'H', "itemHammer_lvl2"});
 		addRecipe(new ItemStack(CoreInit.MachineFrameTitanium, machineFrameAmount), new Object[]{"CCC","CHC","CCC",'C',TMResource.TITANIUM.getStackName(Type.PLATE), 'H', "itemHammer_lvl4"});
+		addRecipe(new ItemStack(CoreInit.MachineFrameAluminum, machineFrameAmount), new Object[]{"CCC","CHC","CCC",'C',TMResource.ALUMINUM.getStackName(Type.PLATE), 'H', "itemHammer_lvl3"});
 		//addRecipe(new ItemStack(CoreInit.Battery, 1), new Object[]{" C ","IBI","IRI",'I',"ingotIron",'C',TMResource.COPPER.getStackName(Type.CABLE),'R',Items.REDSTONE,'B',TMResource.BLUE_METAL.getStackName(Type.INGOT)});
 		addRecipe(new ItemStack(CoreInit.memoryCard, 1), new Object[]{"CCC","IBI","RRR",'I',"ingotIron",'C',TMResource.COPPER.getStackName(Type.CABLE),'R',Items.REDSTONE,'B',TMResource.BLUE_METAL.getStackName(Type.INGOT)});
 		addRecipe(new ItemStack(CoreInit.linker, 1), new Object[]{"IRI","IMI",'I',"ingotIron",'M',CoreInit.memoryCard,'R',Items.REDSTONE});
@@ -44,16 +46,16 @@ public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes
 		//addRecipe(TMResource.TIN.getStackNormal(Type.PLATE,2), new Object[]{"TT","TT",'T',TMResource.TIN.getStackName(Type.INGOT)});
 		addRecipe(new ItemStack(EnergyInit.FusionCore, 2), new Object[]{"CBC","BTB","CBC",'C',TMResource.CHROME.getStackName(Type.PLATE),'B',TMResource.BLUE_METAL.getStackName(Type.INGOT),'T',TMResource.TITANIUM.getStackName(Type.PLATE)});
 		//GameRegistry.addRecipnew ShapedOreRecipe(e(new ItemStack(CoreInit.EnergySensor, 1), new Object[]{"IRI","IBI","IRI",'I',"ingotIron",'B',TMResource.BLUE_METAL.getStack(Type.INGOT),'R',Items.REDSTONE});
-		addRecipe(new ItemStack(FactoryInit.MultiblockCase, 2), new Object[]{"IBI","BCB","IBI",'I',"ingotIron",'B',TMResource.BLUE_METAL.getStackName(Type.INGOT),'C',TMResource.CHROME.getStackName(Type.PLATE)});
-		addRecipe(new ItemStack(FactoryInit.AdvancedMultiblockCasing, 2), new Object[]{"TMT","MCM","TMT",'T',TMResource.TITANIUM.getStackName(Type.PLATE),'M',FactoryInit.MultiblockCase,'C',TMResource.CHROME.getStackName(Type.PLATE)});
-		addRecipe(new ItemStack(FactoryInit.Electrolyzer, 1), new Object[]{"MBM","CPC","MRM",'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'M',FactoryInit.MultiblockCase,'C',Blocks.COAL_BLOCK,'P',CoreInit.itemPump});
-		addRecipe(new ItemStack(FactoryInit.Centrifuge, 1), new Object[]{"MBM","IPI","MRM",'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'M',FactoryInit.MultiblockCase,'I',Blocks.IRON_BLOCK,'P',CoreInit.itemPump});
+		/*addRecipe(new ItemStack(FactoryInit.MultiblockCase, 2), new Object[]{"IBI","BCB","IBI",'I',"ingotIron",'B',TMResource.BLUE_METAL.getStackName(Type.INGOT),'C',TMResource.CHROME.getStackName(Type.PLATE)});
+		//addRecipe(new ItemStack(FactoryInit.AdvancedMultiblockCasing, 2), new Object[]{"TMT","MCM","TMT",'T',TMResource.TITANIUM.getStackName(Type.PLATE),'M',FactoryInit.MultiblockCase,'C',TMResource.CHROME.getStackName(Type.PLATE)});
+		//addRecipe(new ItemStack(FactoryInit.Electrolyzer, 1), new Object[]{"MBM","CPC","MRM",'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'M',FactoryInit.MultiblockCase,'C',Blocks.COAL_BLOCK,'P',CoreInit.itemPump});
+		//addRecipe(new ItemStack(FactoryInit.Centrifuge, 1), new Object[]{"MBM","IPI","MRM",'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'M',FactoryInit.MultiblockCase,'I',Blocks.IRON_BLOCK,'P',CoreInit.itemPump});
 		addRecipe(new ItemStack(FactoryInit.FusionPreHeater, 1), new Object[]{"MBM","TIT","MRM",'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'M',FactoryInit.AdvancedMultiblockCasing,'I',Blocks.IRON_BLOCK,'T',TMResource.TITANIUM.getStackName(Type.PLATE)});
 		addRecipe(new ItemStack(FactoryInit.CoolantTower, 1), new Object[]{"MBM","CPC","MRM",'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'M',FactoryInit.MultiblockCase,'C',TMResource.CHROME.getStackName(Type.PLATE),'P',CoreInit.itemPump});
-		addRecipe(new ItemStack(FactoryInit.MultiblockEnergyPort, 1), new Object[]{"MRM","RRR","MRM",'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'M',FactoryInit.MultiblockCase});
-		addRecipe(new ItemStack(FactoryInit.MultiblockHatch, 1), new Object[]{"MPM","ICI",'P',Blocks.PISTON,'M',FactoryInit.MultiblockCase,'C',Blocks.CHEST,'I',"ingotIron"});
-		addRecipe(new ItemStack(FactoryInit.MultiblockFluidHatch, 1), new Object[]{"MPM","IBI",'P',Blocks.PISTON,'M',FactoryInit.MultiblockCase,'B',Items.BUCKET,'I',"ingotIron"});
-		addRecipe(new ItemStack(FactoryInit.MultiblockFuelRod, 1), new Object[]{"MPM","CIC","MPM",'M',FactoryInit.AdvancedMultiblockCasing,'C',Blocks.COAL_BLOCK,'I',"ingotIron",'P',TMResource.CHROME.getStackName(Type.PLATE)});
+		//addRecipe(new ItemStack(FactoryInit.MultiblockEnergyPort, 1), new Object[]{"MRM","RRR","MRM",'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'M',FactoryInit.MultiblockCase});
+		//addRecipe(new ItemStack(FactoryInit.MultiblockHatch, 1), new Object[]{"MPM","ICI",'P',Blocks.PISTON,'M',FactoryInit.MultiblockCase,'C',Blocks.CHEST,'I',"ingotIron"});
+		//addRecipe(new ItemStack(FactoryInit.MultiblockFluidHatch, 1), new Object[]{"MPM","IBI",'P',Blocks.PISTON,'M',FactoryInit.MultiblockCase,'B',Items.BUCKET,'I',"ingotIron"});
+		//addRecipe(new ItemStack(FactoryInit.MultiblockFuelRod, 1), new Object[]{"MPM","CIC","MPM",'M',FactoryInit.AdvancedMultiblockCasing,'C',Blocks.COAL_BLOCK,'I',"ingotIron",'P',TMResource.CHROME.getStackName(Type.PLATE)});*/
 		addRecipe(new ItemStack(CoreInit.Display, 1), new Object[]{"IGI","IPI","IRI",'G',CraftingMaterial.CHARGED_GLOWSTONE.getStack(),'P',"paneGlassColorless",'I',"ingotIron",'R',CraftingMaterial.CHARGED_REDSTONE.getStack()});
 		addRecipe(new ItemStack(CoreInit.itemPump, 1), new Object[]{" II","IRI","II ",'I',"ingotIron",'R',CraftingMaterial.CHARGED_REDSTONE.getStack()});
 		addRecipe(new ItemStack(EnergyInit.FusionCharger, 1), new Object[]{"CRC","CBC","CRC",'C',TMResource.CHROME.getStackName(Type.PLATE),'R',CraftingMaterial.CHARGED_REDSTONE.getStack(),'B',TMResource.BLUE_METAL.getStackName(Type.INGOT)});
@@ -143,5 +145,9 @@ public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes
 		addRecipe(new ItemStack(Blocks.STICKY_PISTON), new Object[]{"R", "P", 'R', CraftingMaterial.BOTTLE_OF_RUBBER.getStack(), 'P', Blocks.PISTON});
 		addRecipe(CraftingMaterial.TIN_TURBINE.getStackNormal(), new Object[]{"PHP", "NIN", "PNP", 'P', TMResource.TIN.getStackNormal(Type.PLATE), 'H', "itemHammer_lvl2", 'I', TMResource.TIN.getStackName(Type.INGOT), 'N', TMResource.TIN.getStackName(Type.NUGGET)});
 		addRecipe(new ItemStack(TransportInit.fluidServo, 2), new Object[]{"PGP", "NRN", 'P', TMResource.IRON.getStackNormal(Type.PLATE), 'G', "blockGlassColorless", 'R', Items.REDSTONE, 'N', TMResource.IRON.getStackName(Type.NUGGET)});
+		addRecipe(CraftingMaterial.STEEL_PIPE.getStackNormal(6), new Object[]{"P P","PHP","P P",'P',TMResource.STEEL.getStackName(Type.PLATE), 'H', "itemHammer_lvl2"});
+		addRecipe(new ItemStack(FactoryInit.components, 2, ComponentVariants.ENGINEERING_BLOCK.ordinal()), new Object[]{"SAS","-B-","SAS",'S',TMResource.STEEL.getStackName(Type.PLATE), 'A', TMResource.ALUMINUM.getStackName(Type.PLATE), 'B', TMResource.BRONZE.getStackName(Type.PLATE), '-', CraftingMaterial.STEEL_PIPE.getStack()});
+		addRecipe(new ItemStack(FactoryInit.components, 1, ComponentVariants.OUTPUT_HATCH.ordinal()), new Object[]{"S-S","BPC", 'S',TMResource.STEEL.getStackName(Type.PLATE), '-', CraftingMaterial.STEEL_PIPE.getStack(), 'B', Items.BUCKET, 'C', "chest", 'P', "blockPiston"});
+		addRecipe(new ItemStack(FactoryInit.components, 1, ComponentVariants.REFINERY_HEATER.ordinal()), new Object[]{"S-S", "A A", "SLS", 'S',TMResource.STEEL.getStackName(Type.PLATE), '-', CraftingMaterial.STEEL_PIPE.getStack(), 'A', TMResource.ALUMINUM.getStackName(Type.PLATE), 'L', Items.LAVA_BUCKET});
 	}
 }

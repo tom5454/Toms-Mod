@@ -44,6 +44,8 @@ public class OreDict {
 		registerOre("blockPiston", Blocks.PISTON);
 		registerOre("blockPiston", Blocks.STICKY_PISTON);
 		registerOre("storageNetworkCable", StorageInit.cable);
+		registerOre("glassHardened", new ItemStack(CoreInit.hardenedGlass, 1, 0));
+		registerOre("glassEnder", new ItemStack(CoreInit.hardenedGlass, 1, 1));
 		//registerOre("dustIron", Items.gunpowder);
 		/*OreDictionary.registerOre("ingotCopper", TMResource.COPPER.getStack(Type.INGOT));
 		OreDictionary.registerOre("ingotUranium", TMResource.URANIUM.getStack(Type.INGOT));

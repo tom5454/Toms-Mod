@@ -3,7 +3,7 @@ package com.tom.core.item;
 import java.util.List;
 
 import com.tom.api.item.ICustomCraftingHandler;
-import com.tom.core.research.handler.ResearchHandler;
+import com.tom.core.research.ResearchHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

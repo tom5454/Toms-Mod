@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import net.minecraftforge.common.config.Configuration;
 
-import com.tom.core.research.handler.ResearchHandler;
+import com.tom.core.research.ResearchHandler;
 import com.tom.storage.multipart.StorageNetworkGrid.StorageItemStackSorting;
 
 public class PlayerHandler {

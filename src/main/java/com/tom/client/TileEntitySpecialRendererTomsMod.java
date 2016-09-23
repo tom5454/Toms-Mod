@@ -13,11 +13,17 @@ extends TileEntitySpecialRenderer<T> {
 	public void renderTileEntityAt(T te, double x, double y, double z,
 			float partialTicks, int destroyStage) {
 		mc = Minecraft.getMinecraft();
-		IBlockState state = te.getWorld().getBlockState(te.getPos());
-		if(state.getBlock() != Blocks.AIR){
-			this.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage, state);
+		if(te != null && te.hasWorldObj()){
+			IBlockState state = te.getWorld().getBlockState(te.getPos());
+			if(state.getBlock() != Blocks.AIR){
+				this.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage, state);
+			}
+		}else{
+			this.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage, getDefaultState());
 		}
 	}
 	public abstract void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage, IBlockState state);
-
+	protected IBlockState getDefaultState(){
+		return null;
+	}
 }

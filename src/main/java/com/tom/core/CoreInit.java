@@ -16,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 import mapwriterTm.util.Reference;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFence;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -68,6 +70,7 @@ import com.google.common.collect.HashBiMap;
 import com.tom.api.TomsModAPIMain;
 import com.tom.api.block.ICustomItemBlock;
 import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.block.IMultiBlockInstance;
 import com.tom.api.block.IRegisterRequired;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.item.IWrench;
@@ -81,7 +84,8 @@ import com.tom.client.CustomModelLoader;
 import com.tom.config.Config;
 import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.core.TMResource.Type;
-import com.tom.core.research.handler.ResearchLoader;
+import com.tom.core.research.ResearchHandler;
+import com.tom.core.research.ResearchLoader;
 import com.tom.defense.DefenseInit;
 import com.tom.energy.EnergyInit;
 import com.tom.factory.FactoryInit;
@@ -102,19 +106,19 @@ import com.tom.recipes.FurnaceRecipes;
 import com.tom.recipes.MultiblockCrafterRecipes;
 import com.tom.recipes.OreDict;
 import com.tom.recipes.handler.MachineCraftingHandler;
-import com.tom.storage.StorageInit;
 import com.tom.thirdparty.computercraft.MultipartProvider;
-import com.tom.transport.TransportInit;
 import com.tom.worldgen.WorldGen;
 import com.tom.worldgen.WorldGen.OreGenEntry;
 
 import com.tom.core.block.Antenna;
 import com.tom.core.block.AntennaController;
-import com.tom.core.block.BlockCertusOre;
+import com.tom.core.block.BlockHardenedGlass;
+import com.tom.core.block.BlockHidden;
 import com.tom.core.block.BlockOil;
 import com.tom.core.block.BlockOre;
 import com.tom.core.block.BlockRsDoor;
 import com.tom.core.block.BlockRubberWood;
+import com.tom.core.block.BlockSkyQuartzOre;
 import com.tom.core.block.BlockTreeTap;
 import com.tom.core.block.Camera;
 import com.tom.core.block.CommandExecutor;
@@ -129,6 +133,7 @@ import com.tom.core.block.Jammer;
 import com.tom.core.block.MagCardDevice;
 import com.tom.core.block.MagCardReader;
 import com.tom.core.block.MaterialBlock;
+import com.tom.core.block.MaterialSlab;
 import com.tom.core.block.Monitor;
 import com.tom.core.block.RedstonePort;
 import com.tom.core.block.ResearchTable;
@@ -174,6 +179,7 @@ import com.tom.core.tileentity.TileEntityControllerBox;
 import com.tom.core.tileentity.TileEntityEnderMemory;
 import com.tom.core.tileentity.TileEntityEnderSensor;
 import com.tom.core.tileentity.TileEntityGPU;
+import com.tom.core.tileentity.TileEntityHidden;
 import com.tom.core.tileentity.TileEntityHolotapeReader;
 import com.tom.core.tileentity.TileEntityHolotapeWriter;
 import com.tom.core.tileentity.TileEntityItemProxy;
@@ -220,6 +226,7 @@ public final class CoreInit {
 	public static boolean isCCLoaded = false, isPneumaticCraftLoaded = false, isMapEnabled = false, isAdventureItemsLoaded = false/*, isSingle*/;
 	private static CheckResult versionCheckResult;
 	private static final List<IIconRegisterRequired> customIconRegisterRequired = new ArrayList<IIconRegisterRequired>();
+	private static ModContainer mc;
 	//public static File mapFolder;
 	//public static BiMap<Fluid, IIcon[]> fluidIcons = HashBiMap.create();
 	//Fluids
@@ -232,7 +239,7 @@ public final class CoreInit {
 	//public static Fluid coolant;
 	public static Fluid steam;
 	public static Fluid nuclearWaste;
-	public static Fluid oil;
+	public static Fluid oil, fuel, lpg, kerosene;
 	public static Fluid sulfuricAcid, sulfurDioxide, sulfurTrioxide, chlorine, hydrogenChlorine, creosoteOil;
 	//Items
 	public static Item ItemRawCircuit, ItemElectronicParts, ItemCircuitBasic, ItemCircuitAdvanced, ItemAdvancedElectronicParts;
@@ -254,6 +261,7 @@ public final class CoreInit {
 	protected static CraftingItem craftingMaterial;
 	public static ItemCraftingTool hammer, mortarAndPestle, wireCutters;
 	private static MaterialBlock materialBlock1, materialBlock2;
+	private static MaterialSlab materialSlab1;
 	public static Item emptyWireCoil;
 	public static Item itemPump, uraniumRod, dUraniumRod, uraniumRodEmpty;
 	public static Item rsDoor, wrench, bigNoteBook, noteBook, magnifyingGlass, configurator, treeTap;
@@ -262,14 +270,14 @@ public final class CoreInit {
 	public static Block GPU, Monitor;
 	public static Block TabletController, TabletAccessPoint, Antenna, AntennaController, WirelessPeripheral, TabletCrafter, ControllerBox, Jammer/*, AntBase, AntMid, AntTop*/;
 	//public static Block GpuCable;
-	public static Block MachineFrameBronze, MachineFrameBasic, MachineFrameSteel, MachineFrameChrome, MachineFrameTitanium;
+	public static Block MachineFrameBronze, MachineFrameBasic, MachineFrameSteel, MachineFrameChrome, MachineFrameTitanium, MachineFrameAluminum, hardenedGlass;
 	public static Block enderMemory, CCProxy, holotapeWriter, holotapeReader, MagCardDevice, MagCardReader, RedstonePort/*, ComputerRegulator*/;
 	//public static Block RedstoneDuct, ItemDuct, FluidDuct;
 	public static Block EnergySensor, blockRsDoor;
-	public static Block oreBlueMetal, oreTin, oreNickel, oreTitanium, oreCopper, oreUranium, oreRedDiamond, oreLithium, oreCyanite, orePlatinum, oreQuartz, oreSilver, oreLead, oreZinc, oreChrome, oreSulfur, oreMercury, oreBauxite, oreCertusQuartz, oreWolfram;
+	public static Block oreBlueMetal, oreTin, oreNickel, oreTitanium, oreCopper, oreUranium, oreRedDiamond, oreLithium, oreCyanite, orePlatinum, oreQuartz, oreSilver, oreLead, oreZinc, oreChrome, oreSulfur, oreMercury, oreBauxite, oreSkyQuartz, oreWolfram;
 	//public static Block EnderMinningWell, ExtendedEnderMinningWell;
 	public static Block ItemProxy, EnderPlayerSensor, CommandExecutor, Camera, researchTable, rubberWood, rubberLeaves, rubberSapling;
-	public static Block skyStone, blockTreetap;
+	public static Block skyStone, blockTreetap, blockHidden, steelFence;
 
 	@SidedProxy(clientSide = Configs.CLIENT_PROXY_CLASS, serverSide = Configs.SERVER_PROXY_CLASS)
 	public static CommonProxy proxy;
@@ -291,12 +299,14 @@ public final class CoreInit {
 		long tM = System.currentTimeMillis();
 		isPreInit = true;
 		isCCLoaded = Loader.isModLoaded(Configs.COMPUTERCRAFT);
+		mc = Loader.instance().activeModContainer();
 		//isCCLoaded = true;
 		isPneumaticCraftLoaded = Loader.isModLoaded(Configs.PNEUMATICCRAFT);
 		String configPathRaw = PreEvent.getSuggestedConfigurationFile().getAbsolutePath().replace("|", "_");
 		String configPath = configPathRaw.substring(0, configPathRaw.length()-9)+File.separator;
 		Config.init(new File(configPath));
 		configFolder = configPath;
+		ResearchHandler.init();
 		//log.info(configPath);
 		/**Items*/
 		ItemRawCircuit = new Item()/*.setTextureName("minecraft:RawCirc")*/.setUnlocalizedName("ItemRawCircuit").setCreativeTab(tabTomsModItems);
@@ -377,6 +387,7 @@ public final class CoreInit {
 		MachineFrameChrome = new Block(Material.IRON).setHardness(4F).setResistance(10F).setUnlocalizedName("MachineFrameChrome").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:ChromeMachineFrame")*/;
 		MachineFrameTitanium = new Block(Material.IRON).setHardness(5F).setResistance(20F).setUnlocalizedName("MachineFrameTitanium").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:TitaniumMachineFrame")*/;
 		MachineFrameBronze = new Block(Material.IRON).setHardness(2F).setResistance(10F).setUnlocalizedName("MachineFrameBronze").setCreativeTab(tabTomsModBlocks);
+		MachineFrameAluminum = new Block(Material.IRON).setHardness(2F).setResistance(10F).setUnlocalizedName("MachineFrameAluminum").setCreativeTab(tabTomsModBlocks);
 		/**TileEntities*/
 		//EnergySensor = new EnergySensor().setUnlocalizedName("energySensor").setCreativeTab(tabTomsModBlocks);
 		Antenna = new Antenna().setUnlocalizedName("antenna").setCreativeTab(tabTomsModBlocks);
@@ -384,10 +395,10 @@ public final class CoreInit {
 		blockRsDoor = new BlockRsDoor().setUnlocalizedName("brsDoor");
 		researchTable = new ResearchTable().setCreativeTab(tabTomsModBlocks).setUnlocalizedName("resTable");
 		rubberWood = new BlockRubberWood().setUnlocalizedName("tm.rubberWood").setCreativeTab(tabTomsModBlocks);
-		oreCertusQuartz = new BlockCertusOre().setCreativeTab(tabTomsModMaterials).setUnlocalizedName("tm.oreCertusQuartz");
+		oreSkyQuartz = new BlockSkyQuartzOre().setCreativeTab(tabTomsModMaterials).setUnlocalizedName("tm.oreSkyQuartz");
 		oreCyanite = new Block(Material.ROCK).setCreativeTab(tabTomsModMaterials).setUnlocalizedName("tm.oreCyanite").setHardness(50.0F).setResistance(2000.0F);
 		materialBlock1 = new MaterialBlock(TMResource.ALUMINUM, TMResource.advAlloyMK1,    TMResource.advAlloyMK2, TMResource.BLUE_METAL,
-				TMResource.BRONZE,   TMResource.CERTUS_QUARTZ,  TMResource.CHROME,      TMResource.COPPER,
+				TMResource.BRONZE,   TMResource.SKY_QUARTZ,  TMResource.CHROME,      TMResource.COPPER,
 				TMResource.ELECTRUM, TMResource.ENDERIUM,       TMResource.FLUIX,       TMResource.GREENIUM,
 				TMResource.LEAD,     TMResource.LITHIUM,        TMResource.NICKEL,      TMResource.PLATINUM).setUnlocalizedName("materialStorage");
 		materialBlock2 = new MaterialBlock(TMResource.QUARTZ, TMResource.RED_DIAMOND, TMResource.SILVER, TMResource.STEEL, TMResource.TIN,
@@ -396,6 +407,10 @@ public final class CoreInit {
 		skyStone = new Block(Material.ROCK).setUnlocalizedName("tm.skyStone").setCreativeTab(tabTomsModMaterials).setHardness(5.3F).setResistance(20.55F);
 		rubberSapling = new RubberSapling().setCreativeTab(tabTomsModBlocks).setUnlocalizedName("tm.rubberSapling");
 		blockTreetap = new BlockTreeTap().setUnlocalizedName("tm.blockTreeTap");
+		materialSlab1 = new MaterialSlab(TMResource.STEEL).setUnlocalizedName("materialSlab");
+		blockHidden = new BlockHidden().setUnlocalizedName("tm.hidden");
+		hardenedGlass = new BlockHardenedGlass().setUnlocalizedName("tm.hardenedGlass").setCreativeTab(tabTomsModBlocks).setHardness(2.5F).setResistance(15.5F);
+		steelFence = new BlockFence(Material.IRON, MapColor.GRAY).setUnlocalizedName("tm.steelFence").setCreativeTab(tabTomsModBlocks).setHardness(1.5F).setResistance(20);
 		//Ores
 		oreBlueMetal =  new BlockOre(60, OVERWORLD, 5, TMResource.BLUE_METAL).setUnlocalizedName("oreBlueMetal");
 		oreCopper =     new BlockOre(70, OVERWORLD, 9, TMResource.COPPER).setUnlocalizedName("oreCopper");
@@ -439,6 +454,9 @@ public final class CoreInit {
 		hydrogenChlorine = new Fluid("hydrogenChlorine".toLowerCase(), new ResourceLocation("tomsmodcore:blocks/Hchlorine_still"),new ResourceLocation("tomsmodcore:blocks/Hchlorine_flow")).setGaseous(true).setDensity(-500).setViscosity(500);
 		creosoteOil = new Fluid("creosote", new ResourceLocation("tomsmodcore:blocks/creosote_still"),new ResourceLocation("tomsmodcore:blocks/creosote_flow"));
 		Oxygen = new Fluid("oxygen", new ResourceLocation("tomsmodcore:blocks/oxygen_still"),new ResourceLocation("tomsmodcore:blocks/oxygen_flow")).setGaseous(true);
+		fuel = new Fluid("fuel", new ResourceLocation("tomsmodcore:blocks/fuel_still"),new ResourceLocation("tomsmodcore:blocks/fuel_flow"));
+		lpg = new Fluid("lpg", new ResourceLocation("tomsmodcore:blocks/lpg_still"),new ResourceLocation("tomsmodcore:blocks/lpg_flow"));
+		kerosene = new Fluid("kerosene", new ResourceLocation("tomsmodcore:blocks/kerosene_still"),new ResourceLocation("tomsmodcore:blocks/kerosene_flow"));
 		/**Fluid Registry*/
 		///*
 		fluids.add(plasma);
@@ -459,6 +477,9 @@ public final class CoreInit {
 		fluids.add(hydrogenChlorine);
 		fluids.add(creosoteOil);
 		fluids.add(Oxygen);
+		fluids.add(fuel);
+		fluids.add(lpg);
+		fluids.add(kerosene);
 		//*/
 		/*registerFluid(plasma);
 		registerFluid(ePlasma);
@@ -552,6 +573,7 @@ public final class CoreInit {
 		registerBlock(MachineFrameChrome, MachineFrameChrome.getUnlocalizedName().substring(5));
 		registerBlock(MachineFrameTitanium, MachineFrameTitanium.getUnlocalizedName().substring(5));
 		registerBlock(MachineFrameBronze, MachineFrameBronze.getUnlocalizedName().substring(5));
+		registerBlock(MachineFrameAluminum, MachineFrameAluminum.getUnlocalizedName().substring(5));
 		registerBlock(ItemProxy, ItemProxy.getUnlocalizedName().substring(5));
 		addOnlyBlockToGameRegisty(blockRsDoor, blockRsDoor.getUnlocalizedName().substring(5));
 		registerBlock(oreBlueMetal, oreBlueMetal.getUnlocalizedName().substring(5));
@@ -573,7 +595,7 @@ public final class CoreInit {
 		registerBlock(oreMercury, oreMercury.getUnlocalizedName().substring(5));
 		registerBlock(oreBauxite, oreBauxite.getUnlocalizedName().substring(5));
 		registerBlock(rubberWood, rubberWood.getUnlocalizedName().substring(5));
-		registerBlock(oreCertusQuartz, oreCertusQuartz.getUnlocalizedName().substring(5));
+		registerBlock(oreSkyQuartz, oreSkyQuartz.getUnlocalizedName().substring(5));
 		registerBlock(oreCyanite, oreCyanite.getUnlocalizedName().substring(5));
 		registerBlock(materialBlock1, materialBlock1.itemBlock);
 		registerBlock(materialBlock2, materialBlock2.itemBlock);
@@ -582,6 +604,10 @@ public final class CoreInit {
 		registerBlock(rubberSapling, rubberSapling.getUnlocalizedName().substring(5));
 		addOnlyBlockToGameRegisty(blockTreetap, blockTreetap.getUnlocalizedName().substring(5));
 		registerBlock(oreWolfram, oreWolfram.getUnlocalizedName().substring(5));
+		registerMultiBlock(materialSlab1);
+		addOnlyBlockToGameRegisty(blockHidden, blockHidden.getUnlocalizedName().substring(5));
+		registerBlock(hardenedGlass, hardenedGlass.getUnlocalizedName().substring(5));
+		registerBlock(steelFence, steelFence.getUnlocalizedName().substring(5));
 		/*registerBlock(AntBase, AntBase.getUnlocalizedName().substring(5));
 		registerBlock(AntTop, AntTop.getUnlocalizedName().substring(5));
 		registerBlock(AntMid, AntMid.getUnlocalizedName().substring(5));*/
@@ -590,6 +616,7 @@ public final class CoreInit {
 		GameRegistry.registerTileEntity(TileEntityRSDoor.class, Configs.Modid + "rsDoor");
 		GameRegistry.registerTileEntity(TileEntityResearchTable.class, Configs.Modid + "researchTable");
 		GameRegistry.registerTileEntity(TileEntityTreeTap.class, Configs.Modid + "treetap");
+		GameRegistry.registerTileEntity(TileEntityHidden.class, Configs.Modid + "hidden");
 		/**Integration*/
 		log.info("Loading integration items...");
 		if(isCCLoaded){
@@ -761,9 +788,6 @@ public final class CoreInit {
 				registerRender(entityTracker, 2, "tomsmodcore:radarLowJammed");
 			}
 		}
-		TransportInit.registerRenders();
-		DefenseInit.registerRenders();
-		StorageInit.registerRenders();
 		List<ItemStack> stackList = new ArrayList<ItemStack>();
 		TMResource.addHammersToList(stackList, hammer);
 		TMResource.addCuttersToList(stackList, wireCutters);
@@ -819,6 +843,9 @@ public final class CoreInit {
 		chlorine = FluidRegistry.getFluid("chlorine");
 		creosoteOil = FluidRegistry.getFluid("creosote");
 		Oxygen = FluidRegistry.getFluid("oxygen");
+		fuel = FluidRegistry.getFluid("fuel");
+		lpg = FluidRegistry.getFluid("lpg");
+		kerosene = FluidRegistry.getFluid("kerosene");
 		/*if(!(FluidRegistry.isFluidRegistered("steam"))){
 
 		}*/
@@ -936,7 +963,6 @@ public final class CoreInit {
 		Items.TNT_MINECART.setMaxStackSize(Config.minecartMaxStackSize);
 		Items.FURNACE_MINECART.setMaxStackSize(Config.minecartMaxStackSize);
 		Items.HOPPER_MINECART.setMaxStackSize(Config.minecartMaxStackSize);
-		ModContainer mc = Loader.instance().activeModContainer();
 		versionCheckResult = ForgeVersion.getResult(mc);
 		if(versionCheckResult.status == Status.OUTDATED){
 			TMLogger.warn("[VersionChecker]: ****************************************");
@@ -1201,6 +1227,22 @@ public final class CoreInit {
 			customIconRegisterRequired.add((IIconRegisterRequired) block);
 		}else{
 			blockList.add(block);
+			if(item instanceof IIconRegisterRequired){
+				customIconRegisterRequired.add((IIconRegisterRequired) item);
+			}else itemList.add(item);
+		}
+	}
+	public static void registerMultiBlock(IMultiBlockInstance block){
+		//log.info("Registering block: "+name);
+		for(Block b : block.getBlocks()){
+			addOnlyBlockToGameRegisty(b, b.getUnlocalizedName().substring(5));
+			//blockList.add(b);
+		}
+		Item item = block.createItemBlock();
+		addItemToGameRegistry(item, item.getUnlocalizedName().substring(5));
+		if(block instanceof IIconRegisterRequired){
+			customIconRegisterRequired.add((IIconRegisterRequired) block);
+		}else{
 			if(item instanceof IIconRegisterRequired){
 				customIconRegisterRequired.add((IIconRegisterRequired) item);
 			}else itemList.add(item);

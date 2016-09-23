@@ -1,7 +1,20 @@
 Changelog:
+
+2.0.14_ALPHA for Minecraft 1.10.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.
+
+    Fixed bug with Storage Terminals
+    Added Refinery
+    Few Other Bugfixes
+    Added a bunch of recipes
+    Added Steel Slab & Fence
+    Few other small changes
+
+
 2.0.13_ALPHA for Minecraft 1.10.2
 
-WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it’s not already reported.
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.
 
     Added Monazit Ore
     Fixed Ore Generation Bugs

@@ -17,7 +17,7 @@ import com.tom.handler.GuiHandler.GuiIDs;
 public class IndustrialBlastFurnace extends BlockMachineBase {
 
 	public IndustrialBlastFurnace() {
-		super(Material.IRON, CoreInit.MachineFrameTitanium);
+		super(Material.IRON, CoreInit.MachineFrameTitanium, CoreInit.MachineFrameChrome);
 	}
 
 	@Override

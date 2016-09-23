@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodfactory:blocks/blocksteelDark",
+        "down": "tomsmodfactory:blocks/blocksteelDark",
+        "north": "tomsmodfactory:blocks/output",
+         "east": "tomsmodfactory:blocks/output",
+        "south": "tomsmodfactory:blocks/output",
+         "west": "tomsmodfactory:blocks/output",
+        "particle": "tomsmodfactory:blocks/blocksteelDark"
+    }
+}

@@ -14,14 +14,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.block.IIconRegisterRequired;
 import com.tom.api.inventory.IStorageInventory.IStorageInv;
 import com.tom.api.inventory.IStorageInventory.StorageCellInventory;
 import com.tom.api.item.IStorageCell;
+import com.tom.core.CoreInit;
 import com.tom.storage.multipart.StorageNetworkGrid.CellLight;
 import com.tom.storage.multipart.StorageNetworkGrid.ICraftingHandler;
 import com.tom.storage.multipart.StorageNetworkGrid.IStorageData;
 
-public class ItemStorageCell extends Item implements IStorageCell {
+public class ItemStorageCell extends Item implements IStorageCell, IIconRegisterRequired {
 	public ItemStorageCell() {
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
@@ -92,5 +94,12 @@ public class ItemStorageCell extends Item implements IStorageCell {
 	@Override
 	public boolean isValid(ItemStack stack) {
 		return true;
+	}
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(this, 0, "tomsmodstorage:1kStorageCell");
+		CoreInit.registerRender(this, 1, "tomsmodstorage:4kStorageCell");
+		CoreInit.registerRender(this, 2, "tomsmodstorage:16kStorageCell");
+		CoreInit.registerRender(this, 3, "tomsmodstorage:64kStorageCell");
 	}
 }

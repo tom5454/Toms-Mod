@@ -28,6 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.apis.EmptyEntry;
 import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntityMachineBase;
@@ -37,12 +38,11 @@ public abstract class BlockMachineBase extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
 	public BlockMachineBase(Material material) {
-		super(material);
-		AdvancedCraftingRecipes.machines.put(this, CoreInit.MachineFrameSteel);
+		this(material, CoreInit.MachineFrameSteel, CoreInit.MachineFrameTitanium);
 	}
-	public BlockMachineBase(Material material, Block casing) {
+	public BlockMachineBase(Material material, Block casingMv, Block casingHv) {
 		super(material);
-		AdvancedCraftingRecipes.machines.put(this, casing);
+		AdvancedCraftingRecipes.machines.put(this, new EmptyEntry<Block, Block>(casingMv, casingHv));
 	}
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos,

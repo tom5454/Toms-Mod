@@ -1,0 +1,26 @@
+{
+	"forge_marker": 1,
+	"defaults":
+	{
+		"transform": "forge:default-block",
+		"custom": { "flip-v": true },
+		"textures": {
+			"particle": "blocks/blocksteel"
+		}
+	},
+    "variants": {
+    	"facing=north,state=0": { "model": "tomsmodfactory:refinery", "y"=180 },
+        "facing=south,state=0": { "model": "tomsmodfactory:refinery" },
+         "facing=east,state=0": { "model": "tomsmodfactory:refinery", "y"=270 },
+         "facing=west,state=0": { "model": "tomsmodfactory:refinery", "y"=90 },
+        "facing=north,state=1": { "model": "tmobj:refineryOff.obj" },
+        "facing=south,state=1": { "model": "tmobj:refineryOff.obj", "y"=180 },
+         "facing=east,state=1": { "model": "tmobj:refineryOff.obj", "y"=90 },
+         "facing=west,state=1": { "model": "tmobj:refineryOff.obj", "y"=270 },
+        "facing=north,state=2": { "model": "tmobj:refineryOn.obj" },
+        "facing=south,state=2": { "model": "tmobj:refineryOn.obj", "y"=180 },
+         "facing=east,state=2": { "model": "tmobj:refineryOn.obj", "y"=90 },
+         "facing=west,state=2": { "model": "tmobj:refineryOn.obj", "y"=270 },
+        "inventory": { "model": "tomsmodfactory:refinery" }
+    }
+}

@@ -1,10 +1,5 @@
 package com.tom.storage.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.core.CoreInit;
-import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.storage.tileentity.TileEntityLimitableChest;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -18,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -29,7 +25,15 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 
-public class LimitableChest extends BlockContainerTomsMod {
+import net.minecraftforge.client.ForgeHooksClient;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.core.CoreInit;
+import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.storage.tileentity.TileEntityLimitableChest;
+
+public class LimitableChest extends BlockContainerTomsMod implements IIconRegisterRequired{
 	protected static final AxisAlignedBB field_185557_b = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
@@ -339,5 +343,12 @@ public class LimitableChest extends BlockContainerTomsMod {
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, new IProperty[] {FACING});
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(Item.getItemFromBlock(this), 0, "tomsmodstorage:limitableChest");
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(this), 0, TileEntityLimitableChest.class);
 	}
 }

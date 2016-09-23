@@ -111,7 +111,7 @@ IPeripheralProvider {
         }
         //System.out.println("getState");
         return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(STATE, meta / 4);*/
-		return TomsModUtils.getBlockStateFromMeta(meta, STATE, FACING, getDefaultState());
+		return TomsModUtils.getBlockStateFromMeta(meta, STATE, FACING, getDefaultState(), 3);
 	}
 
 	/**

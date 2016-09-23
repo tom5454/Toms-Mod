@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodfactory:blocks/blocksteelDark",
+        "down": "tomsmodfactory:blocks/blocksteelDark",
+        "north": "tomsmodfactory:blocks/refineryHeater",
+         "east": "tomsmodfactory:blocks/refineryHeater",
+        "south": "tomsmodfactory:blocks/refineryHeater",
+         "west": "tomsmodfactory:blocks/refineryHeater",
+        "particle": "tomsmodfactory:blocks/blocksteelDark"
+    }
+}

@@ -3,12 +3,6 @@ package com.tom.storage.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftable;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingRecipeContainer;
-import com.tom.storage.multipart.StorageNetworkGrid.ISavedCraftingRecipe;
-import com.tom.storage.multipart.StorageNetworkGrid.SavedCraftingRecipe;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -19,10 +13,19 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EncodedPattern extends Item implements ICraftingRecipeContainer{
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.core.CoreInit;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftable;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftingRecipeContainer;
+import com.tom.storage.multipart.StorageNetworkGrid.ISavedCraftingRecipe;
+import com.tom.storage.multipart.StorageNetworkGrid.SavedCraftingRecipe;
+
+public class EncodedPattern extends Item implements ICraftingRecipeContainer, IIconRegisterRequired{
 	public EncodedPattern() {
 		setHasSubtypes(true);
 	}
@@ -104,5 +107,10 @@ public class EncodedPattern extends Item implements ICraftingRecipeContainer{
 	@Override
 	public SavedCraftingRecipe getRecipe(ItemStack from) {
 		return readRecipe(from);
+	}
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(this, 0, "tomsmodstorage:craftingPattern");
+		CoreInit.registerRender(this, 1, "tomsmodstorage:craftingPatternEncoded");
 	}
 }

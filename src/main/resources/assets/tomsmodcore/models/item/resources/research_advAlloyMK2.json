@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "items/researchadvAlloyMK2"
+        "layer0": "tomsmodcore:items/resources/researchadvAlloyMK2"
     }
 }

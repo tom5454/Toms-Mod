@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "items/platelead"
+        "layer0": "tomsmodcore:items/resources/platelead"
     }
 }

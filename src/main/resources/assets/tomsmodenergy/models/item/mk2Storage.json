@@ -1,0 +1,6 @@
+{
+        "parent": "tomsmodenergy:block/cell",
+        "textures":{
+        	"base": "tomsmodenergy:blocks/cellBase2"
+        }
+}

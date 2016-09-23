@@ -6,14 +6,15 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tom.core.CoreInit;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+
+import com.tom.core.CoreInit;
 
 public class CustomModelLoader implements ICustomModelLoader{
 	//private IResourceManager manager;
@@ -22,7 +23,7 @@ public class CustomModelLoader implements ICustomModelLoader{
 	//private final Set<String> enabledDomains = new HashSet<String>();
 	//private final Map<ResourceLocation, IModel> cache = new HashMap<ResourceLocation, IModel>();
 	private final List<String> exceptions = new ArrayList<String>();
-	private CustomModelLoader(){}
+	private CustomModelLoader(){}//OBJLoader
 	//private boolean loading = false;
 	/*public void addDomain(String domain)
 	{

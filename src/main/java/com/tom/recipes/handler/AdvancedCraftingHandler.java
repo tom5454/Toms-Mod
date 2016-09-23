@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-import com.tom.api.research.IResearch;
+import com.tom.api.research.Research;
 import com.tom.apis.RecipeData;
 
 public class AdvancedCraftingHandler {
@@ -48,12 +48,12 @@ public class AdvancedCraftingHandler {
 	public static void addRecipe(ItemStack out, int craftingTime, ItemStack[] input, List<IResearch> requiredResearches, CraftingLevel level){
 		addRecipe(out, craftingTime, input, requiredResearches, true, null, level);
 	}*/
-	public static void addRecipe(IRecipe recipe, int craftingTime, List<IResearch> requiredResearches, ItemStack extra, CraftingLevel level) {
+	public static void addRecipe(IRecipe recipe, int craftingTime, List<Research> requiredResearches, ItemStack extra, CraftingLevel level) {
 		if(recipe != null){
 			recipeList.add(new RecipeData(recipe, craftingTime, requiredResearches, extra, level));
 		}
 	}
-	public static ReturnData craft(ItemStack[] input, List<IResearch> researchList, CraftingLevel level, World world){
+	public static ReturnData craft(ItemStack[] input, List<Research> researchList, CraftingLevel level, World world){
 		for(int i = 0;i<recipeList.size();i++){
 			RecipeData data = recipeList.get(i);
 			/*ItemStack[] array = {data.itemstack1, data.itemstack2, data.itemstack3, data.itemstack4, data.itemstack5, data.itemstack6, data.itemstack7, data.itemstack8, data.itemstack9};
@@ -120,13 +120,13 @@ public class AdvancedCraftingHandler {
 	public static List<RecipeData> getRecipes(){
 		return recipeList;
 	}
-	public static void addRecipe(ItemStack out, int craftingTime, List<IResearch> requiredResearches, ItemStack extra, CraftingLevel level, Object... recipe){
+	public static void addRecipe(ItemStack out, int craftingTime, List<Research> requiredResearches, ItemStack extra, CraftingLevel level, Object... recipe){
 		addRecipe(out, craftingTime, requiredResearches, extra, true, level, recipe);
 	}
-	public static void addShapelessRecipe(ItemStack out, int craftingTime, List<IResearch> requiredResearches, ItemStack extra, CraftingLevel level, Object... recipe){
+	public static void addShapelessRecipe(ItemStack out, int craftingTime, List<Research> requiredResearches, ItemStack extra, CraftingLevel level, Object... recipe){
 		addRecipe(out, craftingTime, requiredResearches, extra, false, level, recipe);
 	}
-	public static void addRecipe(ItemStack result, int craftingTime, List<IResearch> requiredResearches, ItemStack extra, boolean shaped, CraftingLevel level, Object... recipe){
+	public static void addRecipe(ItemStack result, int craftingTime, List<Research> requiredResearches, ItemStack extra, boolean shaped, CraftingLevel level, Object... recipe){
 		/*ItemStack output = result.copy();
 		int width = 3;
 		int height = 3;

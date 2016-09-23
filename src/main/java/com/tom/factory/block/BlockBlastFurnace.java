@@ -52,7 +52,7 @@ public class BlockBlastFurnace extends BlockContainerTomsMod {
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return TomsModUtils.getBlockStateFromMeta(meta, STATE, FACING, getDefaultState());
+		return TomsModUtils.getBlockStateFromMeta(meta, STATE, FACING, getDefaultState(), 2);
 	}
 
 	/**

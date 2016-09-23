@@ -2,12 +2,14 @@ package com.tom.thirdparty.jei;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -15,12 +17,13 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
 
+import net.minecraftforge.fml.client.config.HoverChecker;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.tom.apis.RecipeData;
 import com.tom.apis.TomsModUtils;
-import com.tom.core.research.handler.ResearchHandler;
+import com.tom.core.research.ResearchHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler.CraftingLevel;
 import com.tom.thirdparty.jei.CustomCraftingRecipeCategory.CustomCrafingRecipeJEI;
@@ -32,8 +35,13 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.config.Constants;
+import mezz.jei.plugins.vanilla.crafting.CraftingRecipeCategory;
+import mezz.jei.util.Translator;
 
 public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafingRecipeJEI>{
+	private static final double shapelessIconScale = 0.5;
+
 	public static List<CustomCrafingRecipeJEI> get() {
 		List<CustomCrafingRecipeJEI> recipes = new ArrayList<CustomCrafingRecipeJEI>();
 		List<RecipeData> recipeList = AdvancedCraftingHandler.getRecipes();
@@ -140,14 +148,25 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 		@Nullable
 		private final ItemStack extra;
 		private final CraftingLevel level;
+		private final boolean shaped;
 		@Nonnull
 		private final List<String> requiredResearches;
+		@Nonnull
+		private final IDrawable shapelessIcon;
+		@Nonnull
+		private final HoverChecker shapelessIconHoverChecker;
 
 		public CustomCrafingRecipeJEI(@Nonnull IRecipe input, @Nullable ItemStack extra, @Nonnull List<String> requiredResearches, CraftingLevel level){
 			this.input = input;
 			this.extra = extra;
 			this.requiredResearches = requiredResearches;
 			this.level = level;
+			this.shaped = !(input instanceof ShapelessOreRecipe || input instanceof ShapelessRecipes);
+			shapelessIcon = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation(Constants.RESOURCE_DOMAIN, Constants.TEXTURE_GUI_PATH + "recipeBackground.png"), 196, 0, 19, 15);
+			int iconBottom = (int) (shapelessIcon.getHeight() * shapelessIconScale);
+			int iconLeft = CraftingRecipeCategory.width - (int) (shapelessIcon.getWidth() * shapelessIconScale);
+			int iconRight = iconLeft + (int) (shapelessIcon.getWidth() * shapelessIconScale);
+			shapelessIconHoverChecker = new HoverChecker(0, iconBottom, iconLeft, iconRight, 0);
 		}
 		@SuppressWarnings("rawtypes")
 		@Override
@@ -170,7 +189,23 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 				String lvl = I18n.format(level.getName());
 				minecraft.fontRendererObj.drawString(I18n.format("tomsmod.jei.recipeLevel", lvl), -19, -5, 4210752);
 			}
+			if(!shaped){
+				int shapelessIconX = recipeWidth - (int) (shapelessIcon.getWidth() * shapelessIconScale);
+				GlStateManager.pushMatrix();
+				GlStateManager.scale(shapelessIconScale, shapelessIconScale, 1.0);
+				GlStateManager.color(1f, 1f, 1f, 1f);
+				shapelessIcon.draw(minecraft, (int) (shapelessIconX / shapelessIconScale), 0);
+				GlStateManager.popMatrix();
+			}
+		}
+		@Nullable
+		@Override
+		public List<String> getTooltipStrings(int mouseX, int mouseY) {
+			if (!shaped && shapelessIconHoverChecker.checkHover(mouseX, mouseY)) {
+				return Collections.singletonList(Translator.translateToLocal("jei.tooltip.shapeless.recipe"));
+			}
+
+			return super.getTooltipStrings(mouseX, mouseY);
 		}
 	}
-
 }

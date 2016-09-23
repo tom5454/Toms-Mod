@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.apis.RecipeData;
 import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.core.TMResource.Type;
@@ -232,7 +233,7 @@ public class MachineCraftingHandler {
 		addBlastFurnaceRecipe(CraftingMaterial.TUNGSTATE_DUST.getStackNormal(), null, CraftingMaterial.HOT_WOLFRAM_INGOT.getStackNormal(), 6400, 0);
 		addAlloySmelterRecipe(new ItemStack(Blocks.REDSTONE_BLOCK), TMResource.ELECTRUM.getStackNormal(Type.INGOT, 4), TMResource.REDSTONE.getStackNormal(Type.INGOT, 4));
 		addAlloySmelterRecipe(TMResource.COPPER.getStackNormal(Type.INGOT), TMResource.NICKEL.getStackNormal(Type.INGOT), CraftingMaterial.CUPRONICKEL_INGOT.getStackNormal(2));
-		addWireMillRecipe(CraftingMaterial.CUPRONICKEL_INGOT.getStackNormal(4), CraftingMaterial.CUPRONICKEL_HEATING_COIL.getStackNormal(), 2);
+		addWireMillRecipe(CraftingMaterial.CUPRONICKEL_INGOT.getStackNormal(4), CraftingMaterial.CUPRONICKEL_HEATING_COIL.getStackNormal(), 1);
 		addBlastFurnaceRecipe(CraftingMaterial.TUNGSTATE_DUST.getStackNormal(), TMResource.COAL.getStackNormal(Type.DUST_TINY, 3), CraftingMaterial.HOT_WOLFRAM_INGOT.getStackNormal(), 6000, 2200);
 		addBlastFurnaceRecipe(new ItemStack(Items.IRON_INGOT), TMResource.COAL.getStackNormal(Type.DUST, 2), TMResource.STEEL.getStackNormal(Type.INGOT), 2800, 1020);
 		addBlastFurnaceRecipe(TMResource.IRON.getBlockStackNormal(1), TMResource.COAL.getStackNormal(Type.DUST, 18), TMResource.STEEL.getBlockStackNormal(1), 25000, 1020);
@@ -244,6 +245,9 @@ public class MachineCraftingHandler {
 		addBlastFurnaceRecipe(TMResource.TUNGSTENSTEEL.getStackNormal(Type.DUST), null, CraftingMaterial.HOT_TUNGSTENSTEEL_INGOT.getStackNormal(), 4000, 3000);
 		addBlastFurnaceRecipe(CraftingMaterial.BAUXITE_DUST.getStackNormal(), TMResource.MERCURY.getStackNormal(Type.GEM), TMResource.ALUMINUM.getStackNormal(Type.INGOT), 5000, 1700);
 		addBlastFurnaceRecipe(TMResource.MERCURY.getStackNormal(Type.CRUSHED_ORE), TMResource.COAL.getStackNormal(Type.DUST, 4), TMResource.MERCURY.getStackNormal(Type.GEM), 5000, 1700);
+		addAlloySmelterRecipe(TMResource.OBSIDIAN.getStackNormal(Type.DUST, 2), TMResource.LEAD.getStackNormal(Type.DUST), new ItemStack(CoreInit.hardenedGlass));
+		addAlloySmelterRecipe(new ItemStack(CoreInit.hardenedGlass, 2), TMResource.ENDERIUM.getStackNormal(Type.DUST), new ItemStack(CoreInit.hardenedGlass, 2, 1));
+		addWireMillRecipe(TMResource.STEEL.getStackNormal(Type.PLATE, 3), new ItemStack(CoreInit.steelFence, 2), 2);
 	}
 	public static ItemStack getFurnaceRecipe(ItemStack in){
 		if(in == null)return null;

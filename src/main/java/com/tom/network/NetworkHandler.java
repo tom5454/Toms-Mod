@@ -16,7 +16,7 @@ import com.tom.network.messages.MessageNBT;
 import com.tom.network.messages.MessageNBT.MessageNBTRequest;
 import com.tom.network.messages.MessageProgress;
 import com.tom.network.messages.MessageTabGuiAction;
-import com.tom.network.messages.PacketTabletGui;
+import com.tom.network.messages.MessageTabletGui;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -33,7 +33,7 @@ public class NetworkHandler {
 		CoreInit.log.info("Loading Messages");
 		if(CoreInit.isCCLoaded){
 			register(MessageMonitor.class, MessageMonitor.class, Side.CLIENT, 0);
-			register(PacketTabletGui.class, PacketTabletGui.class, Side.CLIENT, 1);
+			register(MessageTabletGui.class, MessageTabletGui.class, Side.CLIENT, 1);
 			register(MessageTabGuiAction.class, MessageTabGuiAction.class, Side.SERVER, 2);
 			register(MessageTabGuiAction.class, MessageTabGuiAction.class, Side.CLIENT, 3);
 			register(MessageCamera.class, MessageCamera.class, Side.CLIENT, 4);

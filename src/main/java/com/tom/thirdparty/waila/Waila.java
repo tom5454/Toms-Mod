@@ -11,6 +11,7 @@ import com.tom.energy.EnergyInit;
 import com.tom.factory.block.MultiblockFluidHatch;
 import com.tom.storage.tileentity.TMTank;
 
+import com.tom.core.block.BlockHidden;
 import com.tom.core.block.EnderMemory;
 import com.tom.core.block.EnderPlayerSensor;
 
@@ -42,6 +43,8 @@ public class Waila {
 		registrar.registerBodyProvider(new WailaTank(), TMTank.class);
 		registrar.registerNBTProvider(new WailaTank(), TMTank.class);
 		registrar.registerBodyProvider(new WailaOverloadInfo(), TileEntityTomsMod.class);
+		registrar.registerStackProvider(new WailaHidden(), BlockHidden.class);
+		registrar.registerNBTProvider(new WailaHidden(), BlockHidden.class);
 	}
 	public static boolean hasMultimeter(IWailaDataAccessor accessor, IWailaConfigHandler config){
 		InventoryPlayer inv = accessor.getPlayer().inventory;

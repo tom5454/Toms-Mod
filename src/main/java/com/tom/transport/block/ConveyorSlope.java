@@ -2,12 +2,6 @@ package com.tom.transport.block;
 
 import java.util.List;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.config.Config;
-import com.tom.transport.TransportInit;
-import com.tom.transport.tileentity.TileEntityConveyorSlope;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -28,18 +22,25 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ConveyorSlope extends BlockContainerTomsMod {
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.apis.TomsModUtils;
+import com.tom.config.Config;
+import com.tom.core.CoreInit;
+import com.tom.transport.TransportInit;
+import com.tom.transport.tileentity.TileEntityConveyorSlope;
+
+public class ConveyorSlope extends BlockContainerTomsMod implements IIconRegisterRequired{
 	//public static final PropertyDirection POSITION = PropertyDirection.create("pos");
-	public SlopeItemBlock itemBlock;
 	public static final PropertyDirection FACING = PropertyDirection.create("facing",Plane.HORIZONTAL);
 	public static final PropertyInteger BELT_POS = PropertyInteger.create("belt", 0, 15);
 	public static final PropertyBool IS_DOWN_SLOPE = PropertyBool.create("down");
 	public ConveyorSlope() {
 		super(Material.IRON);
-		itemBlock = new SlopeItemBlock();
 		setCreativeTab(TransportInit.tabTomsModTransport);
 		setUnlocalizedName("tm.conveyorBeltSlope");
 	}
@@ -220,5 +221,14 @@ public class ConveyorSlope extends BlockContainerTomsMod {
 		{
 			return super.getUnlocalizedName() + "." + (stack.getMetadata() == 1 ? "down" : "up");
 		}
+	}
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(Item.getItemFromBlock(this), 0, "tomsmodtransport:conveyorSlopeUp");
+		CoreInit.registerRender(Item.getItemFromBlock(this), 1, "tomsmodtransport:conveyorSlopeDown");
+	}
+	@Override
+	public ItemBlock createItemBlock() {
+		return new SlopeItemBlock();
 	}
 }

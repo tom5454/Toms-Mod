@@ -1,9 +1,5 @@
 package com.tom.api.block;
 
-import com.tom.api.tileentity.TileEntityControllerBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -19,6 +15,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.tileentity.TileEntityControllerBase;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 
 public abstract class BlockControllerBase extends BlockContainerTomsMod implements IBlockMultiblockPart, IBlockControler{
 	/*@SideOnly(Side.CLIENT)
@@ -130,7 +130,7 @@ public abstract class BlockControllerBase extends BlockContainerTomsMod implemen
         }
         //System.out.println("getState");
         return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(STATE, meta / 4);*/
-		return TomsModUtils.getBlockStateFromMeta(meta, STATE, FACING, getDefaultState());
+		return TomsModUtils.getBlockStateFromMeta(meta, STATE, FACING, getDefaultState(), 2);
 	}
 
 	/**

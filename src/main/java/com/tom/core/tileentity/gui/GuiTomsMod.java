@@ -48,7 +48,7 @@ public abstract class GuiTomsMod extends GuiContainer{
 	private static final int MIN_FLUID_HEIGHT = 1;
 	private static final int TANK_WIDTH = 20;
 	private static final int TANK_HEIGHT = 55;
-	protected static final ResourceLocation LIST_TEXTURE = new ResourceLocation("tomsmod:textures/gui/resSelect.png");
+	public static final ResourceLocation LIST_TEXTURE = new ResourceLocation("tomsmod:textures/gui/resSelect.png");
 	public GuiTomsMod(Container inv, String guiTexture) {
 		super(inv);
 		this.gui = new ResourceLocation(createGuiLocation(guiTexture));
@@ -361,11 +361,11 @@ public abstract class GuiTomsMod extends GuiContainer{
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableBlend();
+		GlStateManager.enableAlpha();
 		mc.getTextureManager().bindTexture(LIST_TEXTURE);
 		drawTexturedModalRect(xPosition, yPosition, 78, 120, TANK_WIDTH, TANK_HEIGHT);
 		drawFluid(xPosition + 4, yPosition + 4, tank.getFluid(), tank.getCapacity());
 		GlStateManager.color(1, 1, 1, 1);
-		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0, 200);
@@ -379,6 +379,7 @@ public abstract class GuiTomsMod extends GuiContainer{
 	public final void drawFluidTank(int xPosition, int yPosition, FluidTank tank, int texX, int texY) {
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.enableAlpha();
 		if(texX > -1){
 			mc.getTextureManager().bindTexture(gui);
 			drawTexturedModalRect(xPosition, yPosition, texX, texY, TANK_WIDTH, TANK_HEIGHT);
@@ -386,7 +387,6 @@ public abstract class GuiTomsMod extends GuiContainer{
 		GlStateManager.disableBlend();
 		drawFluid(xPosition + 4, yPosition + 4, tank.getFluid(), tank.getCapacity());
 		GlStateManager.color(1, 1, 1, 1);
-		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0, 200);

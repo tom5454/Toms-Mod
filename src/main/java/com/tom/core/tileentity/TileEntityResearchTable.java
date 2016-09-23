@@ -17,15 +17,15 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import com.tom.api.event.ItemAdvCraftedEvent;
-import com.tom.api.research.IResearch;
 import com.tom.api.research.IScanningInformation;
 import com.tom.api.research.IScanningInformation.ScanningInformation;
+import com.tom.api.research.Research;
 import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
-import com.tom.core.research.handler.ResearchHandler;
-import com.tom.core.research.handler.ResearchHandler.ResearchInformation;
+import com.tom.core.research.ResearchHandler;
+import com.tom.core.research.ResearchHandler.ResearchInformation;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
@@ -47,7 +47,7 @@ ISidedInventory, IGuiTile {
 	private int totalCrafingTime = 0;
 	private int researchProgress = 0;
 	private int totalResearchProgress = 0;
-	public IResearch currentResearch = null;
+	public Research currentResearch = null;
 	private ItemStack craftingStackOut = null;
 	private ItemStack craftingStackExtra = null;
 	public int craftingError = 0;

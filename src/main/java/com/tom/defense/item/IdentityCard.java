@@ -3,14 +3,6 @@ package com.tom.defense.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.item.IIdentityCard;
-import com.tom.api.item.IPowerLinkCard;
-import com.tom.api.item.ISecurityStationLinkCard;
-import com.tom.api.tileentity.AccessType;
-import com.tom.apis.TomsModUtils;
-import com.tom.defense.DefenseInit;
-import com.tom.defense.tileentity.inventory.ContainerSecurityStation;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,10 +11,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class IdentityCard extends Item implements IIdentityCard, IPowerLinkCard, ISecurityStationLinkCard {
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.item.IIdentityCard;
+import com.tom.api.item.IPowerLinkCard;
+import com.tom.api.item.ISecurityStationLinkCard;
+import com.tom.api.tileentity.AccessType;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.defense.DefenseInit;
+import com.tom.defense.tileentity.inventory.ContainerSecurityStation;
+
+public class IdentityCard extends Item implements IIdentityCard, IPowerLinkCard, ISecurityStationLinkCard, IIconRegisterRequired {
 	public IdentityCard() {
 		this.setMaxStackSize(4);
 		this.setCreativeTab(DefenseInit.tabTomsModDefense);
@@ -155,5 +158,12 @@ public class IdentityCard extends Item implements IIdentityCard, IPowerLinkCard,
 			if(contains(t, value))list.add(t);
 		}
 		return list;
+	}
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(this, 0, "tomsmoddefense:tmd.idCard_b");
+		CoreInit.registerRender(this, 1, "tomsmoddefense:tmd.idCard");
+		CoreInit.registerRender(this, 2, "tomsmoddefense:tmd.idCard_p");
+		CoreInit.registerRender(this, 3, "tomsmoddefense:tmd.idCard_s");
 	}
 }

@@ -27,8 +27,10 @@ import com.tom.factory.block.AlloySmelter;
 import com.tom.factory.block.BasicBoiler;
 import com.tom.factory.block.BlockBlastFurnace;
 import com.tom.factory.block.BlockCokeOven;
+import com.tom.factory.block.BlockComponents;
 import com.tom.factory.block.BlockCrusher;
 import com.tom.factory.block.BlockPump;
+import com.tom.factory.block.BlockRefinery;
 import com.tom.factory.block.BlockWaterCollector;
 import com.tom.factory.block.BlockWireMill;
 import com.tom.factory.block.Centrifuge;
@@ -81,6 +83,7 @@ import com.tom.factory.tileentity.TileEntityMBFuelRod;
 import com.tom.factory.tileentity.TileEntityMBHatch;
 import com.tom.factory.tileentity.TileEntityPlateBlendingMachine;
 import com.tom.factory.tileentity.TileEntityPump;
+import com.tom.factory.tileentity.TileEntityRefinery;
 import com.tom.factory.tileentity.TileEntitySolderingStation;
 import com.tom.factory.tileentity.TileEntitySteamAlloySmelter;
 import com.tom.factory.tileentity.TileEntitySteamCrusher;
@@ -103,9 +106,9 @@ public class FactoryInit {
 	public static Item speedUpgrade, extruderModule, coalCoke;
 
 	public static Block MultiblockCase, MultiblockEnergyPort, MultiblockHatch, MultiblockHeatPort, MultiblockPressurePort, MultiblockFluidHatch, MultiblockFuelRod, MultiblockCompressor;
-	public static Block Electrolyzer, Centrifuge, FusionPreHeater, CoolantTower, cokeOven, blastFurnace, industrialBlastFurnace;
+	public static Block Electrolyzer, Centrifuge, FusionPreHeater, CoolantTower, cokeOven, blastFurnace, industrialBlastFurnace, refinery;
 	public static Block AdvancedMultiblockCasing, plateBlendingMachine, wireMill, crusher, basicBoiler, advBoiler, steamFurnace, advSteamFurnace, electricFurnace, steamCrusher, coilerPlant, waterCollector, steamPlateBlender, alloySmelter, steamAlloySmelter, advElectricFurnace, steamSolderingStation, solderingStation, pump, fluidTransposer;
-	public static Block blockCoalCoke, cokeOvenWall, blastFurnaceWall;
+	public static Block blockCoalCoke, cokeOvenWall, blastFurnaceWall, components;
 	@EventHandler
 	public static void PreLoad(FMLPreInitializationEvent PreEvent){
 		log.info("Start Pre Initialization");
@@ -151,6 +154,8 @@ public class FactoryInit {
 		pump = new BlockPump().setUnlocalizedName("tm.blockPump").setCreativeTab(tabTomsModFactory);
 		fluidTransposer = new FluidTransposer().setUnlocalizedName("tm.fluidTransposer").setCreativeTab(tabTomsModFactory);
 		industrialBlastFurnace = new IndustrialBlastFurnace().setUnlocalizedName("tm.industrialBlastFurnace").setCreativeTab(tabTomsModFactory);
+		refinery = new BlockRefinery().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.refinery");
+		components = new BlockComponents().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.componentsBlock");
 		registerItem(speedUpgrade, speedUpgrade.getUnlocalizedName().substring(5));
 		CoreInit.addItemToGameRegistry(extruderModule, extruderModule.getUnlocalizedName().substring(5));
 		registerBlock(MultiblockCase, MultiblockCase.getUnlocalizedName().substring(5));
@@ -191,6 +196,8 @@ public class FactoryInit {
 		CoreInit.addBlockToGameRegistry(pump, pump.getUnlocalizedName().substring(5));
 		CoreInit.addBlockToGameRegistry(fluidTransposer, fluidTransposer.getUnlocalizedName().substring(5));
 		CoreInit.addBlockToGameRegistry(industrialBlastFurnace, industrialBlastFurnace.getUnlocalizedName().substring(5));
+		registerBlock(refinery, refinery.getUnlocalizedName().substring(5));
+		registerBlock(components, components.getUnlocalizedName().substring(5));
 		GameRegistry.registerTileEntity(TileEntityMultiblockCase.class, Configs.Modid+"MultiblockCase");
 		GameRegistry.registerTileEntity(TileEntityMBEnergyPort.class, Configs.Modid+"mbEnergyPort");
 		GameRegistry.registerTileEntity(TileEntityMBHatch.class, Configs.Modid+"mbHatch");
@@ -224,6 +231,7 @@ public class FactoryInit {
 		GameRegistry.registerTileEntity(TileEntityPump.class, Configs.Modid+"pump");
 		GameRegistry.registerTileEntity(TileEntityFluidTransposer.class, Configs.Modid+"fluidTransposer");
 		GameRegistry.registerTileEntity(TileEntityIndustrialBlastFurnace.class, Configs.Modid+"industrialBlastFurnace");
+		GameRegistry.registerTileEntity(TileEntityRefinery.class, Configs.Modid+"refinery");
 		FuelHandler.registerExtraFuelHandler(new ItemStack(blockCoalCoke), 32000);
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");

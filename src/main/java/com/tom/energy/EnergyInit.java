@@ -141,9 +141,9 @@ public class EnergyInit {
 		batteryBox = new BatteryBox().setUnlocalizedName("tm.batteryBox").setCreativeTab(tabTomsModEnergy);
 		registerItem(multimeter, multimeter.getUnlocalizedName().substring(5));
 		registerBlock(Generator, Generator.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(MK1Storage, MK1Storage.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(MK2Storage, MK2Storage.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(MK3Storage, MK3Storage.getUnlocalizedName().substring(5));
+		registerBlock(MK1Storage, MK1Storage.getUnlocalizedName().substring(5));
+		registerBlock(MK2Storage, MK2Storage.getUnlocalizedName().substring(5));
+		registerBlock(MK3Storage, MK3Storage.getUnlocalizedName().substring(5));
 		registerBlock(MK1Laser, MK1Laser.getUnlocalizedName().substring(5));
 		registerBlock(MK2Laser, MK2Laser.getUnlocalizedName().substring(5));
 		registerBlock(MK3Laser, MK3Laser.getUnlocalizedName().substring(5));
@@ -226,9 +226,6 @@ public class EnergyInit {
 			CoreInit.registerRender(Item.getItemFromBlock(MK3Laser), i, "tomsmodenergy:mk3Laser");
 			CoreInit.registerRender(Item.getItemFromBlock(FusionFluidExtractor), i, "tomsmodenergy:FusionFluidExtractor");
 		}*/
-		CoreInit.registerRender(Item.getItemFromBlock(MK1Storage), 0, "tomsmodenergy:mk1Storage");
-		CoreInit.registerRender(Item.getItemFromBlock(MK2Storage), 0, "tomsmodenergy:mk1Storage");
-		CoreInit.registerRender(Item.getItemFromBlock(MK3Storage), 0, "tomsmodenergy:mk1Storage");
 		CoreInit.registerRender(Item.getItemFromBlock(wirelessCharger), 0, "tomsmodenergy:wirelessCharger");
 		CoreInit.registerRender(Item.getItemFromBlock(wirelessCharger), 1, "tomsmodenergy:wirelessCharger");
 		/*for(int i = 0;i<TransformerType.values().length;i++){

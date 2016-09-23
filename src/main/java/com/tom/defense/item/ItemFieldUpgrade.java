@@ -6,7 +6,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class ItemFieldUpgrade extends Item {
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.core.CoreInit;
+
+public class ItemFieldUpgrade extends Item implements IIconRegisterRequired{
 	@Override
 	public void getSubItems(Item itemIn, CreativeTabs tab,
 			List<ItemStack> subItems) {
@@ -31,5 +34,12 @@ public class ItemFieldUpgrade extends Item {
 		public static UpgradeType get(int index){
 			return VALUES[index % VALUES.length];
 		}
+	}
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(this, 0, "tomsmoddefense:projectorUpgrade_"+UpgradeType.get(0).getName());
+		CoreInit.registerRender(this, 1, "tomsmoddefense:projectorUpgrade_"+UpgradeType.get(1).getName());
+		CoreInit.registerRender(this, 2, "tomsmoddefense:projectorUpgrade_"+UpgradeType.get(2).getName());
+		CoreInit.registerRender(this, 3, "tomsmoddefense:projectorUpgrade_"+UpgradeType.get(3).getName());
 	}
 }

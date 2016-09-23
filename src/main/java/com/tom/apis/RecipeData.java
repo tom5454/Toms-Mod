@@ -9,7 +9,7 @@ import net.minecraft.item.crafting.IRecipe;
 
 import net.minecraftforge.fluids.FluidStack;
 
-import com.tom.api.research.IResearch;
+import com.tom.api.research.Research;
 import com.tom.recipes.handler.AdvancedCraftingHandler.CraftingLevel;
 
 public class RecipeData {
@@ -53,7 +53,7 @@ public class RecipeData {
 		this.inputAmount = amount;
 		this.processTime = processTime;
 	}
-	public RecipeData(ItemStack is, int time, ItemStack[] isIn, List<IResearch> researchList, boolean shaped, ItemStack isExtra, CraftingLevel level) {
+	public RecipeData(ItemStack is, int time, ItemStack[] isIn, List<Research> researchList, boolean shaped, ItemStack isExtra, CraftingLevel level) {
 		this.processTime = time;
 		this.requiredResearches = researchList;
 		this.itemstack1 = isIn[0];
@@ -93,7 +93,7 @@ public class RecipeData {
 		this.itemstack2 = itemstack2;
 		this.hasInv = mode;
 	}
-	public RecipeData(IRecipe recipe, int time, List<IResearch> researchList, ItemStack extra, CraftingLevel level) {
+	public RecipeData(IRecipe recipe, int time, List<Research> researchList, ItemStack extra, CraftingLevel level) {
 		this.processTime = time;
 		this.requiredResearches = researchList;
 		this.recipe = recipe;
@@ -128,7 +128,7 @@ public class RecipeData {
 	public ItemStack itemstack8;
 	public ItemStack itemstack9;
 	public ItemStack itemstack10;
-	public List<IResearch> requiredResearches;
+	public List<Research> requiredResearches;
 	public boolean shaped;
 	public CraftingLevel level;
 	public IRecipe recipe;

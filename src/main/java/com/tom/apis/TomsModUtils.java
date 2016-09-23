@@ -74,6 +74,7 @@ import com.mojang.authlib.GameProfile;
 
 import com.tom.api.gui.GuiNumberValueBox;
 import com.tom.api.multipart.IModule;
+import com.tom.apis.Checker.RunnableStorage;
 import com.tom.client.EventHandlerClient;
 import com.tom.config.Config;
 import com.tom.lib.Configs;
@@ -793,7 +794,7 @@ public final class TomsModUtils {
 		}
 		return r;
 	}
-	public static IBlockState getBlockStateFromMeta(int meta, PropertyInteger propState, PropertyDirection propDir, IBlockState defState){
+	public static IBlockState getBlockStateFromMeta(int meta, PropertyInteger propState, PropertyDirection propDir, IBlockState defState, int max){
 		EnumFacing facing = EnumFacing.NORTH;
 		int state = 0;
 		switch(meta){
@@ -855,7 +856,7 @@ public final class TomsModUtils {
 		default:
 			break;
 		}
-		return defState.withProperty(propState, state).withProperty(propDir, facing);
+		return defState.withProperty(propState, Math.min(state, max)).withProperty(propDir, facing);
 	}
 
 	public static int getMetaFromState(EnumFacing facing, int state){
@@ -1609,5 +1610,31 @@ public final class TomsModUtils {
 	}
 	public static boolean areFluidStacksEqual2(FluidStack stackA, FluidStack stackB){
 		return stackA == null && stackB == null ? true : (stackA != null && stackB != null ? stackA.isFluidEqual(stackB) && stackA.amount <= stackB.amount : false);
+	}
+	public static boolean checkAll(RunnableStorage killList, final Checker... checkers){
+		boolean state = true;
+		killList.runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				for(Checker c : checkers){
+					c.apply(2);
+				}
+			}
+		};
+		for(Checker c : checkers){
+			int cS = c.apply(0);
+			if(cS == 0)return false;
+			if(cS == 1)state = false;
+		}
+		if(state){
+			for(Checker c : checkers){
+				c.apply(1);
+			}
+		}
+		return true;
+	}
+	public static boolean checkAll(List<Checker> checkers, RunnableStorage killList){
+		return checkAll(killList, checkers.toArray(new Checker[0]));
 	}
 }

@@ -207,7 +207,7 @@ public class TileEntityTomsMod extends TileEntity implements ITickable {
 		return super.getCapability(capability, facing);
 	}
 	@SuppressWarnings("unchecked")
-	private final <T> T getInstance(Map<EnumFacing, ?> in, EnumFacing f, Capability<T> capability){
+	protected final <T> T getInstance(Map<EnumFacing, ?> in, EnumFacing f, Capability<T> capability){
 		try{
 			return (T) (f == null ? in.get(EnumFacing.DOWN) : in.get(f));
 		}catch(ClassCastException e){}
