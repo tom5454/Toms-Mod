@@ -1,9 +1,5 @@
 package com.tom.factory.tileentity;
 
-import com.tom.api.tileentity.MultiblockPartList;
-import com.tom.api.tileentity.TileEntityMultiblockPartBase;
-import com.tom.factory.block.MultiblockHatch;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,6 +7,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
+import com.tom.api.tileentity.MultiblockPartList;
+import com.tom.api.tileentity.TileEntityMultiblockPartBase;
+import com.tom.factory.block.MultiblockHatch;
 
 public class TileEntityMBHatch extends TileEntityMultiblockPartBase implements IInventory/*, ISecurable, IGUITextFieldSensitive*/{
 	private int masterX = 0;

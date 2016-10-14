@@ -3,27 +3,30 @@ package com.tom.core.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.tileentity.IReceivable;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.BigEntry;
-import com.tom.apis.EmptyBigEntry;
-import com.tom.core.item.TabletHandler;
-import com.tom.lib.Configs;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageTabGuiAction;
-
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.ILuaObject;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+
 import net.minecraftforge.fml.common.Optional;
+
+import com.tom.api.tileentity.IReceivable;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.BigEntry;
+import com.tom.apis.EmptyBigEntry;
+import com.tom.lib.Configs;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageTabGuiAction;
+
+import com.tom.core.item.TabletHandler;
+
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaObject;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.peripheral.IPeripheral;
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
 public class TileEntityTabletController extends TileEntityTomsMod implements
 IPeripheral {

@@ -4,13 +4,6 @@ import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.api.terminal.TerminalObject;
-import com.tom.api.terminal.TerminalObjectTypes;
-import com.tom.core.entity.EntityCamera;
-import com.tom.core.tileentity.inventory.ContainerTablet;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageTabGuiAction;
-
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,6 +11,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import com.tom.api.terminal.TerminalObject;
+import com.tom.api.terminal.TerminalObjectTypes;
+import com.tom.core.entity.EntityCamera;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageTabGuiAction;
+
+import com.tom.core.tileentity.inventory.ContainerTablet;
 
 public class GuiTablet extends GuiTomsMod {
 	private ItemStack tabStack;

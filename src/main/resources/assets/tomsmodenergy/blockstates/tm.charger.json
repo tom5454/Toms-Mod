@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "tomsmodenergy:charger" },
+        "active=false,facing=south": { "model": "tomsmodenergy:charger", "y": 180 },
+        "active=false,facing=west":  { "model": "tomsmodenergy:charger", "y": 270 },
+        "active=false,facing=east":  { "model": "tomsmodenergy:charger", "y": 90 },
+         "active=true,facing=north": { "model": "tomsmodenergy:charger_on" },
+         "active=true,facing=south": { "model": "tomsmodenergy:charger_on", "y": 180 },
+         "active=true,facing=west":  { "model": "tomsmodenergy:charger_on", "y": 270 },
+         "active=true,facing=east":  { "model": "tomsmodenergy:charger_on", "y": 90 }
+    }
+}

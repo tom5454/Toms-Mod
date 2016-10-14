@@ -2,8 +2,6 @@ package com.tom.client;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.energy.tileentity.TileEntityLaserBase;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,6 +10,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+
+import com.tom.energy.tileentity.TileEntityLaserBase;
 
 public class TileEntityLaserRenderer extends TileEntitySpecialRendererTomsMod<TileEntityLaserBase>{
 

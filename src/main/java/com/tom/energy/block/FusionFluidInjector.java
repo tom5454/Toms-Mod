@@ -1,8 +1,5 @@
 package com.tom.energy.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.energy.tileentity.TileEntityFusionFluidInjector;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +9,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.FluidUtil;
+
+import com.tom.api.block.BlockContainerTomsMod;
+
+import com.tom.energy.tileentity.TileEntityFusionFluidInjector;
 
 public class FusionFluidInjector extends BlockContainerTomsMod {
 	/*@SideOnly(Side.CLIENT)

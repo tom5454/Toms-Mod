@@ -2,7 +2,6 @@ package com.tom.core.item;
 
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.IIconRegisterRequired;
 import com.tom.api.energy.IEnergyContainerItem;
+import com.tom.api.energy.ItemEnergyContainer;
 import com.tom.api.item.ILinkContainer;
 import com.tom.api.tileentity.TileEntityAntennaBase;
 import com.tom.api.tileentity.TileEntityJammerBase;
@@ -271,16 +271,10 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 		return 1000000;
 	}
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced)
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean isAdvanced)
 	{
-		super.addInformation(itemStack, player, list, isAdvanced);
-		double energy = this.getEnergyStored(itemStack);
-		double per = energy * 100 / 1000000;
-		//System.out.println(per);
-		int p = MathHelper.floor_double(per);
-		list.add(I18n.format("tomsMod.tooltip.charge") + ": "+this.getMaxEnergyStored(itemStack)+"/"+energy+" "+p+"%");
+		list.add(ItemEnergyContainer.getInfo(this, itemStack));
 	}
 	/*public boolean onItemUse(ItemStack is, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ){
 		this.onItemUse(is, player, world);

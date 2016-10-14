@@ -2,10 +2,6 @@ package com.tom.energy.item;
 
 import java.util.List;
 
-import com.tom.api.energy.IEnergyContainerItem;
-import com.tom.api.energy.ItemEnergyContainer;
-import com.tom.energy.EnergyInit;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,12 +10,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.energy.IEnergyContainerItem;
+import com.tom.api.energy.ItemEnergyContainer;
+import com.tom.energy.EnergyInit;
+
 public class PortableEnergyCell extends ItemEnergyContainer {
 	public PortableEnergyCell(){
-		super(100000000,65536);
+		super(10000000,65536);
 	}
 	@Override
 	public void onUpdate(ItemStack is, World world, Entity entity, int par4, boolean par5) {

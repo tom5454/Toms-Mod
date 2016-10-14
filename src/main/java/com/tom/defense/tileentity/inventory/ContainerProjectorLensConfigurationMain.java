@@ -3,17 +3,6 @@ package com.tom.defense.tileentity.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.api.tileentity.IGuiTile;
-import com.tom.core.CoreInit;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.defense.DefenseInit;
-import com.tom.defense.ProjectorLensConfigEntry;
-import com.tom.defense.item.ItemProjectorFieldType.FieldType;
-import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageNBT;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
@@ -21,6 +10,18 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import com.tom.api.network.INBTPacketReceiver;
+import com.tom.api.tileentity.IGuiTile;
+import com.tom.core.CoreInit;
+import com.tom.defense.DefenseInit;
+import com.tom.defense.ProjectorLensConfigEntry;
+import com.tom.defense.item.ItemProjectorFieldType.FieldType;
+import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageNBT;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerProjectorLensConfigurationMain extends ContainerTomsMod implements IGuiTile, INBTPacketReceiver{
 	public ItemStack lensStack;

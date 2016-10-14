@@ -4,15 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.tileentity.AccessType;
-import com.tom.api.tileentity.IConfigurable.IConfigurationOption.ConfigurationRedstoneControl.GuiButtonRedstoneMode;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.gui.GuiTomsMod;
-import com.tom.defense.DefenseInit;
-import com.tom.defense.item.IdentityCard;
-import com.tom.defense.tileentity.TileEntitySecurityStation;
-import com.tom.defense.tileentity.inventory.ContainerSecurityStation;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,6 +13,16 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.tom.api.tileentity.AccessType;
+import com.tom.api.tileentity.IConfigurable.IConfigurationOption.ConfigurationRedstoneControl.GuiButtonRedstoneMode;
+import com.tom.apis.TomsModUtils;
+import com.tom.defense.DefenseInit;
+import com.tom.defense.item.IdentityCard;
+import com.tom.defense.tileentity.TileEntitySecurityStation;
+import com.tom.defense.tileentity.inventory.ContainerSecurityStation;
+
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiSecurityStation extends GuiTomsMod {
 	private GuiButtonRedstoneMode buttonRedstone;

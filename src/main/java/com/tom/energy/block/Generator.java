@@ -2,10 +2,6 @@ package com.tom.energy.block;
 
 import java.util.Random;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.energy.tileentity.TileEntityGenerator;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -24,8 +20,14 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.apis.TomsModUtils;
+
+import com.tom.energy.tileentity.TileEntityGenerator;
 
 public class Generator extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);

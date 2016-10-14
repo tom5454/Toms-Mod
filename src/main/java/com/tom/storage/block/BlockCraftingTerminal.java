@@ -1,14 +1,5 @@
 package com.tom.storage.block;
 
-import com.tom.api.block.BlockGridDevice;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.tileentity.TileEntityBasicTerminal;
-import com.tom.storage.tileentity.TileEntityCraftingTerminal;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -24,6 +15,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockGridDevice;
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.tileentity.TileEntityBasicTerminal;
+import com.tom.storage.tileentity.TileEntityCraftingTerminal;
 
 public class BlockCraftingTerminal extends BlockGridDevice {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");

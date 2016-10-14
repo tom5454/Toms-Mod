@@ -2,8 +2,6 @@ package com.tom.core.block;
 
 import java.util.Random;
 
-import com.tom.worldgen.WorldGenRubberTree;
-
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
@@ -17,6 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+
+import com.tom.worldgen.WorldGenRubberTree;
 
 public class RubberSapling extends BlockBush implements IGrowable
 {

@@ -7,16 +7,8 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.apis.TomsModUtils;
-import com.tom.network.messages.MessageCraftingReportSync.MessageType;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.multipart.StorageNetworkGrid.CalculatedClientCrafting;
-import com.tom.storage.multipart.StorageNetworkGrid.ClientCraftingStack;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingReportScreen;
-import com.tom.storage.multipart.StorageNetworkGrid.IStorageTerminalGui;
-
 import mapwriterTm.util.Render;
+
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -29,8 +21,18 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.network.INBTPacketReceiver;
+import com.tom.apis.TomsModUtils;
+import com.tom.network.messages.MessageCraftingReportSync.MessageType;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.multipart.StorageNetworkGrid.CalculatedClientCrafting;
+import com.tom.storage.multipart.StorageNetworkGrid.ClientCraftingStack;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftingReportScreen;
+import com.tom.storage.multipart.StorageNetworkGrid.IStorageTerminalGui;
 
 @SideOnly(Side.CLIENT)
 public class GuiCraftingReport extends GuiScreen implements INBTPacketReceiver, ICraftingReportScreen {

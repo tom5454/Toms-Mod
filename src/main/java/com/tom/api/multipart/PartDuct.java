@@ -4,27 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import com.tom.api.grid.IGrid;
-import com.tom.api.grid.IGridDevice;
-import com.tom.api.item.ModuleItem;
-import com.tom.api.item.MultipartItem;
-import com.tom.api.tileentity.ICable;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import mcmultipart.MCMultiPartMod;
-import mcmultipart.client.multipart.AdvancedParticleManager;
-import mcmultipart.microblock.IMicroblock;
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.IMultipartContainer;
-import mcmultipart.multipart.INormallyOccludingPart;
-import mcmultipart.multipart.ISlottedPart;
-import mcmultipart.multipart.MultipartHelper;
-import mcmultipart.multipart.MultipartRegistry;
-import mcmultipart.multipart.PartSlot;
-import mcmultipart.raytrace.PartMOP;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
@@ -47,8 +26,31 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.grid.IGrid;
+import com.tom.api.grid.IGridDevice;
+import com.tom.api.item.ModuleItem;
+import com.tom.api.item.MultipartItem;
+import com.tom.api.tileentity.ICable;
+import com.tom.apis.TMLogger;
+import com.tom.apis.TomsModUtils;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import mcmultipart.MCMultiPartMod;
+import mcmultipart.client.multipart.AdvancedParticleManager;
+import mcmultipart.microblock.IMicroblock;
+import mcmultipart.multipart.IMultipart;
+import mcmultipart.multipart.IMultipartContainer;
+import mcmultipart.multipart.INormallyOccludingPart;
+import mcmultipart.multipart.ISlottedPart;
+import mcmultipart.multipart.MultipartHelper;
+import mcmultipart.multipart.MultipartRegistry;
+import mcmultipart.multipart.PartSlot;
+import mcmultipart.raytrace.PartMOP;
 
 public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod implements ISlottedPart, ITickable, ICable<G>, INormallyOccludingPart {
 	protected final AxisAlignedBB[] BOXES;

@@ -10,8 +10,10 @@ import mapwriterTm.map.Marker;
 import mapwriterTm.map.Marker.RenderType;
 import mapwriterTm.map.MarkerManager;
 import mapwriterTm.util.Utils;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+
 import net.minecraftforge.fml.relauncher.Side;
 
 @net.minecraftforge.fml.relauncher.SideOnly(Side.CLIENT)

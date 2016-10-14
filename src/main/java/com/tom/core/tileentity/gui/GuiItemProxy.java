@@ -2,14 +2,14 @@ package com.tom.core.tileentity.gui;
 
 import java.io.IOException;
 
-import com.tom.core.tileentity.TileEntityItemProxy;
-import com.tom.core.tileentity.inventory.ContainerItemProxy;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+
+import com.tom.core.tileentity.TileEntityItemProxy;
+import com.tom.core.tileentity.inventory.ContainerItemProxy;
 
 public class GuiItemProxy extends GuiTomsMod {
 	private GuiButton whiteListButton;

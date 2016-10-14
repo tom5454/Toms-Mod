@@ -1,10 +1,5 @@
 package com.tom.core.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.core.CoreInit;
-import com.tom.core.tileentity.TileEntityTabletCrafter;
-import com.tom.handler.GuiHandler;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +9,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.core.CoreInit;
+import com.tom.handler.GuiHandler;
+
+import com.tom.core.tileentity.TileEntityTabletCrafter;
 
 public class TabletCrafter extends BlockContainerTomsMod {
 

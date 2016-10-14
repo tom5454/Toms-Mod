@@ -1,18 +1,20 @@
 package com.tom.storage.tileentity.inventory;
 
-import com.tom.api.inventory.SlotPhantom;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.storage.StorageInit;
-import com.tom.storage.multipart.PartImportBus;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.inventory.SlotPhantom;
+import com.tom.storage.StorageInit;
+import com.tom.storage.multipart.PartImportBus;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerImportBus extends ContainerTomsMod {
 	private PartImportBus part;

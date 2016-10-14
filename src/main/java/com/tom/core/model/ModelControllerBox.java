@@ -7,15 +7,16 @@ package com.tom.core.model;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.core.tileentity.TileEntityControllerBox;
-import com.tom.lib.Configs;
-import com.tom.model.IBaseModel;
-
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+
+import com.tom.lib.Configs;
+import com.tom.model.IBaseModel;
+
+import com.tom.core.tileentity.TileEntityControllerBox;
 
 public class ModelControllerBox extends ModelBase implements IBaseModel
 {

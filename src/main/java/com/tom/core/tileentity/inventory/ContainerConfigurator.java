@@ -3,13 +3,13 @@ package com.tom.core.tileentity.inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.tileentity.IConfigurable;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import com.tom.api.tileentity.IConfigurable;
 
 public class ContainerConfigurator extends ContainerTomsMod {
 	public IConfigurable te;

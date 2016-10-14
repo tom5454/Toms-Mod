@@ -2,10 +2,6 @@ package com.tom.energy.item;
 
 import java.util.List;
 
-import com.tom.api.energy.IEnergyContainerItem;
-import com.tom.apis.TomsModUtils;
-import com.tom.energy.EnergyInit;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,8 +13,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.energy.IEnergyContainerItem;
+import com.tom.apis.TomsModUtils;
+import com.tom.energy.EnergyInit;
 
 public class PortableSolarPanel extends Item implements IEnergyContainerItem{
 	@Override

@@ -1,14 +1,17 @@
 package com.tom.network.messages;
 
+import mapwriterTm.Mw;
+import mapwriterTm.map.Marker.RenderType;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.MathHelper;
+
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+
 import com.tom.core.Minimap;
 import com.tom.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;
-import mapwriterTm.Mw;
-import mapwriterTm.map.Marker.RenderType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class MessageMinimap extends MessageBase<MessageMinimap> {
 	private int mx, my, mz,dim,color/*,borderColor,borderColorActive*/;

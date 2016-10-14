@@ -4,15 +4,15 @@ import static com.tom.api.energy.EnergyType.HV;
 
 import java.util.List;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyHandler;
 import com.tom.api.energy.IEnergyStorageHandler;
 import com.tom.api.multipart.PartDuct;
 import com.tom.apis.TomsModUtils;
 import com.tom.energy.EnergyInit;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 
 public class PartHVCable extends PartDuct<EnergyGrid> implements IEnergyHandler{
 

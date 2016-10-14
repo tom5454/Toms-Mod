@@ -2,11 +2,6 @@ package com.tom.core.item;
 
 import java.util.List;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.tom.api.item.ItemCraftingTool;
-import com.tom.core.TMResource;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,8 +10,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
+import com.tom.api.item.ItemCraftingTool;
+import com.tom.core.TMResource;
 
 public class Hammer extends ItemCraftingTool {
 	@Override

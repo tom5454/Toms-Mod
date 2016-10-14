@@ -3,9 +3,6 @@ package com.tom.core.block;
 import java.util.List;
 import java.util.Random;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.state.BlockStateContainer;
@@ -17,8 +14,12 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 
 public class RubberLeaves extends BlockLeaves {
 

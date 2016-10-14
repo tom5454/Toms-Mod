@@ -3,18 +3,19 @@ package com.tom.recipes.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tom.apis.RecipeData;
-import com.tom.core.CoreInit;
-import com.tom.factory.tileentity.TileEntityMBFluidPort;
-import com.tom.factory.tileentity.TileEntityMBHatch;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLLog;
+
+import com.tom.apis.RecipeData;
+import com.tom.core.CoreInit;
+import com.tom.factory.tileentity.TileEntityMBFluidPort;
+import com.tom.factory.tileentity.TileEntityMBHatch;
 
 public class CentrifugeRecipeHandler {
 	public static Map<Fluid, RecipeData> recipeListFluid = new HashMap<Fluid, RecipeData>();

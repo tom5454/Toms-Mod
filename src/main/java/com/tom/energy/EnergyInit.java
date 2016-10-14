@@ -16,24 +16,23 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.item.MultipartItem;
 import com.tom.core.CoreInit;
+import com.tom.core.IMod;
 import com.tom.energy.item.HVCable;
 import com.tom.energy.item.LVCable;
 import com.tom.energy.item.MVCable;
 import com.tom.energy.item.Multimeter;
 import com.tom.energy.item.PortableEnergyCell;
 import com.tom.energy.item.PortableSolarPanel;
-import com.tom.energy.item.WirelessChargerItemBlock;
 import com.tom.energy.multipart.PartHVCable;
 import com.tom.energy.multipart.PartLVCable;
 import com.tom.energy.multipart.PartMVCable;
 import com.tom.lib.Configs;
 
 import com.tom.energy.block.BatteryBox;
+import com.tom.energy.block.BlockCharger;
 import com.tom.energy.block.BlockSolarPanel;
 import com.tom.energy.block.CreativeCell;
 import com.tom.energy.block.EnergyCellCore;
@@ -46,14 +45,17 @@ import com.tom.energy.block.FusionFluidExtractor;
 import com.tom.energy.block.FusionFluidInjector;
 import com.tom.energy.block.FusionInjector;
 import com.tom.energy.block.Generator;
+import com.tom.energy.block.GeoGenerator;
 import com.tom.energy.block.LVSteamTurbinbe;
 import com.tom.energy.block.LavaGenerator;
+import com.tom.energy.block.LiquidFueledGenerator;
 import com.tom.energy.block.MK1Laser;
 import com.tom.energy.block.MK1Storage;
 import com.tom.energy.block.MK2Laser;
 import com.tom.energy.block.MK2Storage;
 import com.tom.energy.block.MK3Laser;
 import com.tom.energy.block.MK3Storage;
+import com.tom.energy.block.MVSteamTurbinbe;
 import com.tom.energy.block.TransformerHV;
 import com.tom.energy.block.TransformerLM;
 import com.tom.energy.block.TransformerLaser;
@@ -61,6 +63,7 @@ import com.tom.energy.block.TransformerMH;
 import com.tom.energy.block.WirelessCharger;
 
 import com.tom.energy.tileentity.TileEntityBatteryBox;
+import com.tom.energy.tileentity.TileEntityCharger;
 import com.tom.energy.tileentity.TileEntityCreativeCell;
 import com.tom.energy.tileentity.TileEntityEnergyCellMK1;
 import com.tom.energy.tileentity.TileEntityEnergyCellMK2;
@@ -72,11 +75,14 @@ import com.tom.energy.tileentity.TileEntityFusionFluidExtractor;
 import com.tom.energy.tileentity.TileEntityFusionFluidInjector;
 import com.tom.energy.tileentity.TileEntityFusionInjector;
 import com.tom.energy.tileentity.TileEntityGenerator;
+import com.tom.energy.tileentity.TileEntityGeoGenerator;
 import com.tom.energy.tileentity.TileEntityLVTurbine;
 import com.tom.energy.tileentity.TileEntityLaserMK1;
 import com.tom.energy.tileentity.TileEntityLaserMK2;
 import com.tom.energy.tileentity.TileEntityLaserMK3;
 import com.tom.energy.tileentity.TileEntityLavaGenerator;
+import com.tom.energy.tileentity.TileEntityLiquidFueledGenerator;
+import com.tom.energy.tileentity.TileEntityMVTurbine;
 import com.tom.energy.tileentity.TileEntitySolarPanel;
 import com.tom.energy.tileentity.TileEntityTransformerHV;
 import com.tom.energy.tileentity.TileEntityTransformerLMV;
@@ -84,10 +90,11 @@ import com.tom.energy.tileentity.TileEntityTransformerLaser;
 import com.tom.energy.tileentity.TileEntityTransformerMHV;
 import com.tom.energy.tileentity.TileEntityWirelessCharger;
 
-@Mod(modid = EnergyInit.modid,name = "Tom's Mod Energy",version = Configs.version, dependencies = Configs.coreDependencies)
+@Mod(modid = EnergyInit.modid,name = EnergyInit.modName,version = Configs.version, dependencies = Configs.coreDependencies)
 public class EnergyInit {
-	public static final String modid = Configs.Modid + "|Energy";
-	public static Logger log = LogManager.getLogger(modid);
+	public static final String modid = Configs.ModidL + "|energy";
+	public static final String modName = Configs.ModName + " Energy";
+	public static final Logger log = LogManager.getLogger(modName);
 
 	//Items
 	public static Item multimeter, portableSolarPanel, portableEnergyCell;
@@ -98,10 +105,10 @@ public class EnergyInit {
 	public static MultipartItem lvCable;
 
 	//Blocks
-	public static Block Generator, MK1Storage, MK1Laser, wirelessCharger, MK2Laser, MK3Laser, MK2Storage, MK3Storage, lavaGenerator, CreativeCell, hvEnergyCell, solarPanel, steamTurbine, batteryBox;
+	public static Block Generator, MK1Storage, MK1Laser, wirelessCharger, MK2Laser, MK3Laser, MK2Storage, MK3Storage, lavaGenerator, CreativeCell, hvEnergyCell, solarPanel, steamTurbine, batteryBox, steamTurbineMK2, geothermalGenerator, fluidGenerator;
 	public static Block FusionCore, FusionInjector, FusionCharger, FusionController, FusionFluidInjector, FusionFluidExtractor;
 	public static Block EnergyCellFrame, EnergyCellSide, EnergyCellCore;
-	public static Block transformerMHV, transformerLMV, transformerLaser, transformerHV;
+	public static Block transformerMHV, transformerLMV, transformerLaser, transformerHV, charger;
 
 	@EventHandler
 	public static void PreLoad(FMLPreInitializationEvent PreEvent){
@@ -139,6 +146,10 @@ public class EnergyInit {
 		transformerHV = new TransformerHV().setUnlocalizedName("transformerHV").setCreativeTab(tabTomsModEnergy);
 		steamTurbine = new LVSteamTurbinbe().setUnlocalizedName("tm.lvTurbine").setCreativeTab(tabTomsModEnergy);
 		batteryBox = new BatteryBox().setUnlocalizedName("tm.batteryBox").setCreativeTab(tabTomsModEnergy);
+		steamTurbineMK2 = new MVSteamTurbinbe().setUnlocalizedName("tm.mvTurbine").setCreativeTab(tabTomsModEnergy);
+		charger = new BlockCharger().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.charger");
+		geothermalGenerator = new GeoGenerator().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.geoGenerator");
+		fluidGenerator = new LiquidFueledGenerator().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.liqFueledGen");
 		registerItem(multimeter, multimeter.getUnlocalizedName().substring(5));
 		registerBlock(Generator, Generator.getUnlocalizedName().substring(5));
 		registerBlock(MK1Storage, MK1Storage.getUnlocalizedName().substring(5));
@@ -159,7 +170,7 @@ public class EnergyInit {
 		//registerBlock(EnergyCellFrame, EnergyCellFrame.getUnlocalizedName().substring(5));
 		//registerBlock(EnergyCellSide, EnergyCellSide.getUnlocalizedName().substring(5));
 		//registerBlock(EnergyCellCore, EnergyCellCore.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(wirelessCharger, wirelessCharger.getUnlocalizedName().substring(5), new WirelessChargerItemBlock());
+		registerBlock(wirelessCharger, wirelessCharger.getUnlocalizedName().substring(5));
 		registerBlock(lavaGenerator, lavaGenerator.getUnlocalizedName().substring(5));
 		registerBlock(CreativeCell, CreativeCell.getUnlocalizedName().substring(5));
 		registerBlock(solarPanel, solarPanel.getUnlocalizedName().substring(5));
@@ -169,6 +180,10 @@ public class EnergyInit {
 		registerBlock(transformerHV, transformerHV.getUnlocalizedName().substring(5));
 		registerBlock(steamTurbine, steamTurbine.getUnlocalizedName().substring(5));
 		registerBlock(batteryBox, batteryBox.getUnlocalizedName().substring(5));
+		registerBlock(steamTurbineMK2, steamTurbineMK2.getUnlocalizedName().substring(5));
+		registerBlock(charger, charger.getUnlocalizedName().substring(5));
+		registerBlock(geothermalGenerator, geothermalGenerator.getUnlocalizedName().substring(5));
+		registerBlock(fluidGenerator, fluidGenerator.getUnlocalizedName().substring(5));
 		GameRegistry.registerTileEntity(TileEntityGenerator.class, Configs.Modid + "generator");
 		GameRegistry.registerTileEntity(TileEntityFusionInjector.class, Configs.Modid+"injector");
 		GameRegistry.registerTileEntity(TileEntityFusionCharger.class, Configs.Modid+"Charger");
@@ -198,6 +213,12 @@ public class EnergyInit {
 		GameRegistry.registerTileEntity(TileEntityTransformerHV.class, Configs.Modid + "TransformerHV");
 		GameRegistry.registerTileEntity(TileEntityLVTurbine.class, Configs.Modid + "lvTurbine");
 		GameRegistry.registerTileEntity(TileEntityBatteryBox.class, Configs.Modid + "batteryBox");
+		GameRegistry.registerTileEntity(TileEntityMVTurbine.class, Configs.Modid + "mvTurbine");
+		GameRegistry.registerTileEntity(TileEntityCharger.class, Configs.Modid + "tmcharger");
+		GameRegistry.registerTileEntity(TileEntityGeoGenerator.class, Configs.Modid + "geoGenerator");
+		GameRegistry.registerTileEntity(TileEntityLiquidFueledGenerator.class, Configs.Modid + "liquidFueledGenerator");
+		hadPreInit = true;
+		CoreInit.tryLoadAfterPreInit(log);
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");
 	}
@@ -209,31 +230,19 @@ public class EnergyInit {
 		}
 
 	};
-	@SideOnly(Side.CLIENT)
-	public static void registerRenders(){
-		log.info("Loading Renderers");
-		/*for(int i = 0;i<12;i++){
-			CoreInit.registerRender(Item.getItemFromBlock(Generator), i, "tomsmodenergy:generator");
-		}
-		for(int i = 0;i<14;i++){
-			CoreInit.registerRender(Item.getItemFromBlock(FusionController), i, "tomsmodenergy:FusionController");
-		}
-		CoreInit.registerRender(Item.getItemFromBlock(FusionInjector), 0, "tomsmodenergy:FusionInjector");
-		CoreInit.registerRender(Item.getItemFromBlock(FusionInjector), 1, "tomsmodenergy:FusionInjector");
-		for(int i = 0;i<6;i++){
-			CoreInit.registerRender(Item.getItemFromBlock(MK1Laser), i, "tomsmodenergy:mk1Laser");
-			CoreInit.registerRender(Item.getItemFromBlock(MK2Laser), i, "tomsmodenergy:mk2Laser");
-			CoreInit.registerRender(Item.getItemFromBlock(MK3Laser), i, "tomsmodenergy:mk3Laser");
-			CoreInit.registerRender(Item.getItemFromBlock(FusionFluidExtractor), i, "tomsmodenergy:FusionFluidExtractor");
-		}*/
-		CoreInit.registerRender(Item.getItemFromBlock(wirelessCharger), 0, "tomsmodenergy:wirelessCharger");
-		CoreInit.registerRender(Item.getItemFromBlock(wirelessCharger), 1, "tomsmodenergy:wirelessCharger");
-		/*for(int i = 0;i<TransformerType.values().length;i++){
-			CoreInit.registerRender(Item.getItemFromBlock(transformer), i);
-		}*/
-	}
+	private static boolean hadPreInit = false;
 	@EventHandler
 	public static void construction(FMLConstructionEvent event){
-		CoreInit.modids.add(modid);
+		CoreInit.modids.add(new IMod(){
+			@Override
+			public String getModID() {
+				return modid;
+			}
+
+			@Override
+			public boolean hadPreInit() {
+				return hadPreInit;
+			}
+		});
 	}
 }

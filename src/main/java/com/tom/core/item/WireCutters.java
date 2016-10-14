@@ -2,16 +2,17 @@ package com.tom.core.item;
 
 import java.util.List;
 
-import com.tom.api.item.ItemCraftingTool;
-import com.tom.core.TMResource;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.item.ItemCraftingTool;
+import com.tom.core.TMResource;
 
 public class WireCutters extends ItemCraftingTool {
 

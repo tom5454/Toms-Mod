@@ -1,13 +1,5 @@
 package com.tom.defense.tileentity.inventory;
 
-import com.tom.api.item.IIdentityCard;
-import com.tom.api.tileentity.IGuiTile;
-import com.tom.core.CoreInit;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.defense.DefenseInit;
-import com.tom.defense.tileentity.inventory.ContainerSecurityStation.SlotIndentityCard;
-import com.tom.handler.GuiHandler.GuiIDs;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -16,6 +8,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
+import com.tom.api.item.IIdentityCard;
+import com.tom.api.tileentity.IGuiTile;
+import com.tom.core.CoreInit;
+import com.tom.defense.DefenseInit;
+import com.tom.defense.tileentity.inventory.ContainerSecurityStation.SlotIndentityCard;
+import com.tom.handler.GuiHandler.GuiIDs;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerMultitoolEncoder extends ContainerTomsMod implements IGuiTile{
 	public ItemStack writerStack;

@@ -2,18 +2,19 @@ package com.tom.core.item;
 
 import java.util.List;
 
-import com.tom.core.CoreInit;
-import com.tom.core.TMResource;
-import com.tom.core.TMResource.CraftingMaterial;
-import com.tom.core.TMResource.Type;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.core.CoreInit;
+import com.tom.core.TMResource;
+import com.tom.core.TMResource.CraftingMaterial;
+import com.tom.core.TMResource.Type;
 
 public class ResourceItem extends Item {
 	public ResourceItem(Type type){
@@ -43,7 +44,6 @@ public class ResourceItem extends Item {
 	public static class CraftingItem extends Item{
 		public CraftingItem(){
 			this.setUnlocalizedName("material");
-			this.setMaxStackSize(16);
 			setHasSubtypes(true);
 		}
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -74,6 +74,10 @@ public class ResourceItem extends Item {
 			}
 			if(s != entityItem.getEntityItem())entityItem.setEntityItemStack(s);
 			return false;
+		}
+		@Override
+		public int getItemStackLimit(ItemStack stack) {
+			return CraftingMaterial.VALUES[stack.getMetadata()].getMaxStackSize();
 		}
 	}
 }

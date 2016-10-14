@@ -5,10 +5,6 @@
 // - ZeuX
 package com.tom.storage.client;
 
-import com.tom.lib.Configs;
-import com.tom.model.IBaseModel;
-import com.tom.storage.tileentity.TileEntityDrive;
-
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,6 +13,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+
+import com.tom.lib.Configs;
+import com.tom.model.IBaseModel;
+import com.tom.storage.tileentity.TileEntityDrive;
 
 public class DriveCellsModel extends ModelBase implements IBaseModel
 {

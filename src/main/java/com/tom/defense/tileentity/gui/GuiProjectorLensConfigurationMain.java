@@ -6,17 +6,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.api.gui.GuiNumberValueBox;
-import com.tom.api.gui.GuiNumberValueBox.GuiButtonNextNum;
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.gui.GuiTomsMod;
-import com.tom.defense.ProjectorLensConfigEntry;
-import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationMain;
-import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationMain.ContainerProjectorLensConfig;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageNBT;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -26,6 +15,18 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import com.tom.api.gui.GuiNumberValueBox;
+import com.tom.api.gui.GuiNumberValueBox.GuiButtonNextNum;
+import com.tom.api.network.INBTPacketReceiver;
+import com.tom.apis.TomsModUtils;
+import com.tom.defense.ProjectorLensConfigEntry;
+import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationMain;
+import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationMain.ContainerProjectorLensConfig;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageNBT;
+
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements
 		INBTPacketReceiver {

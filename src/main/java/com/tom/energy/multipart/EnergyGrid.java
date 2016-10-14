@@ -1,11 +1,11 @@
 package com.tom.energy.multipart;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.grid.GridBase;
 import com.tom.api.grid.IGridDevice;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 
 public class EnergyGrid extends GridBase<EnergyStorage,EnergyGrid> {
 	private EnergyStorage energy = new EnergyStorage(100000, 10000, 12000);

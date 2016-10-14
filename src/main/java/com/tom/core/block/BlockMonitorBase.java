@@ -1,9 +1,5 @@
 package com.tom.core.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.TileEntityMonitorBase;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -14,6 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.apis.TomsModUtils;
+
+import com.tom.core.tileentity.TileEntityMonitorBase;
 
 public abstract class BlockMonitorBase extends BlockContainerTomsMod {
 

@@ -3,18 +3,19 @@ package mapwriterTm;
 import java.util.Arrays;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
-
 import mapwriterTm.config.Config;
 import mapwriterTm.region.MwChunk;
 import mapwriterTm.tasks.SaveChunkTask;
 import mapwriterTm.tasks.UpdateSurfaceChunksTask;
 import mapwriterTm.util.Utils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+
+import com.google.common.collect.Maps;
 
 public class ChunkManager
 {

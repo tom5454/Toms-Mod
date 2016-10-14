@@ -1,8 +1,5 @@
 package com.tom.factory.block;
 
-import com.tom.api.block.BlockMultiblockPart;
-import com.tom.factory.tileentity.TileEntityMBEnergyPort;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -12,6 +9,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockMultiblockPart;
+import com.tom.factory.tileentity.TileEntityMBEnergyPort;
 
 public class MultiblockEnergyPort extends BlockMultiblockPart{
 	/*@SideOnly(Side.CLIENT)

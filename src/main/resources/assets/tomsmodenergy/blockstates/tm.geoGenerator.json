@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "tomsmodenergy:geoGenerator" },
+        "active=false,facing=south": { "model": "tomsmodenergy:geoGenerator", "y": 180 },
+        "active=false,facing=west":  { "model": "tomsmodenergy:geoGenerator", "y": 270 },
+        "active=false,facing=east":  { "model": "tomsmodenergy:geoGenerator", "y": 90 },
+         "active=true,facing=north": { "model": "tomsmodenergy:geoGenerator_on" },
+         "active=true,facing=south": { "model": "tomsmodenergy:geoGenerator_on", "y": 180 },
+         "active=true,facing=west":  { "model": "tomsmodenergy:geoGenerator_on", "y": 270 },
+         "active=true,facing=east":  { "model": "tomsmodenergy:geoGenerator_on", "y": 90 }
+    }
+}

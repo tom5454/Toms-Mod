@@ -1,11 +1,11 @@
 package com.tom.core.tileentity.inventory;
 
-import com.tom.core.tileentity.TileEntityTabletCrafter;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import com.tom.core.tileentity.TileEntityTabletCrafter;
 
 public class ContainerTabletCrafter extends ContainerTomsMod {
 	private TileEntityTabletCrafter te;

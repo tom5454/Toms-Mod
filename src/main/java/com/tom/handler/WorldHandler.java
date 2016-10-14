@@ -10,17 +10,6 @@ import java.util.Queue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Queues;
-import com.tom.api.IValidationChecker;
-import com.tom.api.tileentity.AccessType;
-import com.tom.api.tileentity.ISecuredTileEntity;
-import com.tom.api.tileentity.ISecurityStation;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.core.block.BlockRubberWood;
-import com.tom.core.block.BlockRubberWood.WoodType;
-import com.tom.defense.tileentity.TileEntityForceField;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -43,6 +32,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
@@ -51,6 +41,19 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.WorldEvent.PotentialSpawns;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+
+import com.google.common.collect.Queues;
+
+import com.tom.api.IValidationChecker;
+import com.tom.api.tileentity.AccessType;
+import com.tom.api.tileentity.ISecuredTileEntity;
+import com.tom.api.tileentity.ISecurityStation;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.defense.tileentity.TileEntityForceField;
+
+import com.tom.core.block.BlockRubberWood;
+import com.tom.core.block.BlockRubberWood.WoodType;
 
 public class WorldHandler {
 	private static final String CHUNK_LOADING_KEY = "chunkLoading";

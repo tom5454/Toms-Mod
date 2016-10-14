@@ -1,8 +1,5 @@
 package com.tom.core;
 
-import com.tom.config.Config;
-import com.tom.handler.WrenchHandler;
-
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +10,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import com.tom.config.Config;
+import com.tom.handler.WrenchHandler;
 
 public class Tweaks {
 	public static boolean wrench(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c, EnumHand hand){

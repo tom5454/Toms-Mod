@@ -3,6 +3,13 @@ package com.tom.thirdparty.jei;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+
 import com.tom.api.inventory.IJEIAutoFillTerminal;
 import com.tom.apis.Function;
 import com.tom.storage.tileentity.gui.GuiBlockCraftingTerminal;
@@ -17,12 +24,6 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import mezz.jei.transfer.RecipeTransferErrorInternal;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 public class CraftingTerminalTransferHandler implements IRecipeTransferHandler{
 	private final Class<? extends Container> containerClass;
@@ -103,7 +104,7 @@ public class CraftingTerminalTransferHandler implements IRecipeTransferHandler{
 				//((IPatternTerminal)container).setRecipe(stacks, output);
 			}
 		}else{
-			return RecipeTransferErrorInternal.instance;
+			return RecipeTransferErrorInternal.INSTANCE;
 		}
 		return null;
 	}

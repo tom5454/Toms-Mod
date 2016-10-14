@@ -28,13 +28,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.api.block.IIconRegisterRequired;
 import com.tom.apis.EmptyEntry;
 import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntityMachineBase;
 import com.tom.recipes.AdvancedCraftingRecipes;
 
-public abstract class BlockMachineBase extends BlockContainerTomsMod {
+public abstract class BlockMachineBase extends BlockContainerTomsMod implements IIconRegisterRequired{
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
 	public BlockMachineBase(Material material) {
@@ -149,6 +150,16 @@ public abstract class BlockMachineBase extends BlockContainerTomsMod {
 			super(block);
 			setHasSubtypes(true);
 		}
-
 	}
+	@Override
+	public void registerIcons() {
+		Item item = Item.getItemFromBlock(this);
+		String name = CoreInit.getNameForItem(item).replace("|", "");
+		CoreInit.registerRender(item, 0, name);
+		CoreInit.registerRender(item, 1, name);
+		CoreInit.registerRender(item, 2, name);
+	}
+
+	@Override
+	public abstract TileEntityMachineBase createNewTileEntity(World worldIn, int meta);
 }

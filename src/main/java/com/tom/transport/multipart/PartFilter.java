@@ -1,13 +1,5 @@
 package com.tom.transport.multipart;
 
-import com.tom.api.grid.IGridDevice;
-import com.tom.api.multipart.PartModule;
-import com.tom.apis.TomsModUtils;
-import com.tom.transport.TransportInit;
-import com.tom.transport.multipart.IInventoryGrid.GridInventory.IInventoryHandler;
-import com.tom.transport.multipart.IInventoryGrid.GridInventory.InventoryData;
-
-import mcmultipart.raytrace.PartMOP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -19,6 +11,15 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+
+import com.tom.api.grid.IGridDevice;
+import com.tom.api.multipart.PartModule;
+import com.tom.apis.TomsModUtils;
+import com.tom.transport.TransportInit;
+import com.tom.transport.multipart.IInventoryGrid.GridInventory.IInventoryHandler;
+import com.tom.transport.multipart.IInventoryGrid.GridInventory.InventoryData;
+
+import mcmultipart.raytrace.PartMOP;
 
 public class PartFilter extends PartModule<IInventoryGrid> implements IInventoryHandler{
 	public PartFilter() {

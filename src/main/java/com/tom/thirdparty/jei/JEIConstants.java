@@ -10,4 +10,5 @@ public final class JEIConstants {
 	public static final String ALLOY_SMELTER_ID = Configs.Modid+":alloySmelter";
 	public static final String BLAST_FURNACE_ID = Configs.Modid+":blastFurnace";
 	public static final String COKE_OVEN_ID = Configs.Modid+":cokeOven";
+	public static final String COILER = Configs.Modid+":coiler";
 }

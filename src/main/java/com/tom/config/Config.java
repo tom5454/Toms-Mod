@@ -29,10 +29,11 @@ public class Config {
 	private static final String CATEGORY_RECIPES = "recipes";
 	public static final String[] CATEGORIES = new String[]{Configuration.CATEGORY_GENERAL};
 	private static final String CATEGORY_MINECRAFT = "Minecraft", CATEGORY_WAILA = "Waila";
+	public static final int backupSchedule_DEF = 120 * 60;
 	@Deprecated
 	private static final String CATEGORY_WORLDGEN = "WorldGen";
 	public static boolean enableAdventureItems;
-	public static boolean enableHardMode, enableHardRecipes;
+	public static boolean enableHardMode, enableHardRecipes, enableConveyorBelts, enableDefenseSystem, enableAutoWorldBackup, enableResearchSystem;
 	//public static boolean enable18AdvMode;
 	//public static boolean enableFlintAxe;
 	public static boolean enableGrassDrops;
@@ -43,7 +44,7 @@ public class Config {
 	public static double markerUnloadDist;
 	public static boolean enableConveyorBeltAnimation;
 	public static double forceMultipier;
-	public static int minecartMaxStackSize;
+	public static int minecartMaxStackSize, backupSchedule;
 	public static boolean saveDeathPoints;
 	public static UUID tomsmodFakePlayerUUID;
 	//public static String minecameraCommand;
@@ -198,7 +199,7 @@ public class Config {
 			enableBronkenTreeGen = property.getBoolean(true);
 			property2.set(enableBronkenTreeGen);
 			hasWorldgen = true;
-			TMLogger.warn("[Configuration] Option 'Gen Broken Trees' was moved under world_generation.cfg from Core.cfg. Value: " + enableBronkenTreeGen);
+			TMLogger.warn("[Configuration] Option 'Gen Broken Trees' was moved from Core.cfg to world_generation.cfg. Value: " + enableBronkenTreeGen);
 		}
 		property2 = configWorldGen.get(Configuration.CATEGORY_GENERAL, "Gen Rubber Trees", true);
 		property2.setComment("Generate Rubber trees in the world. (Default: true)");
@@ -209,7 +210,7 @@ public class Config {
 			genRubberTrees = property.getBoolean(true);
 			property2.set(genRubberTrees);
 			hasWorldgen = true;
-			TMLogger.warn("[Configuration] Option 'Gen Rubber Trees' was moved under world_generation.cfg from Core.cfg. Value: " + genRubberTrees);
+			TMLogger.warn("[Configuration] Option 'Gen Rubber Trees' was moved from Core.cfg to world_generation.cfg. Value: " + genRubberTrees);
 		}
 		if(!genRubberTrees){
 			String msg = "[World Gen] Rubber Tree generation is disabled.";
@@ -225,7 +226,7 @@ public class Config {
 			genOilLakes = property.getBoolean(true);
 			property2.set(genOilLakes);
 			hasWorldgen = true;
-			TMLogger.warn("[Configuration] Option 'Gen Oil' was moved under world_generation.cfg from Core.cfg. Value: " + genOilLakes);
+			TMLogger.warn("[Configuration] Option 'Gen Oil' was moved from Core.cfg to world_generation.cfg. Value: " + genOilLakes);
 		}
 		if(!genOilLakes){
 			String msg = "[World Gen] Oil Lake generation is disabled.";
@@ -257,6 +258,25 @@ public class Config {
 		property = configCore.get(CATEGORY_RECIPES, "Decreased item outputs", false);
 		property.setComment("Decrease crafting outputs.");
 		enableHardRecipes = property.getBoolean(false);
+
+		property = configTransport.get(Configuration.CATEGORY_GENERAL, "Enable Conveyor Belts", true);
+		enableConveyorBelts = property.getBoolean(true);
+
+		property = configDefense.get(Configuration.CATEGORY_GENERAL, "Enable Defense System", true);
+		property.setComment("Enable Base Defense Items And Blocks");
+		enableDefenseSystem = property.getBoolean(true);
+
+		property = configCore.get("backup", "Enable Auto Backup", true);
+		property.setComment("Enable automatic backup system.");
+		enableAutoWorldBackup = property.getBoolean(true);
+
+		property = configCore.get("backup", "Backup Schedule", backupSchedule_DEF);
+		property.setComment("Backup Schedule in seconds.");
+		backupSchedule = property.getInt(backupSchedule_DEF);
+
+		property = configCore.get(Configuration.CATEGORY_GENERAL, "Enable Research System", true);
+		property.setComment("Enable Research System and Custom Crafting. Can cause recipe conflict if disabled. (Default: true)");
+		enableResearchSystem = property.getBoolean(true);
 	}
 	public static void save(){
 		CoreInit.log.info("Saving configuration");

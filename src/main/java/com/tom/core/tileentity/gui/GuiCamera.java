@@ -2,16 +2,17 @@ package com.tom.core.tileentity.gui;
 
 import java.io.IOException;
 
-import com.tom.core.CoreInit;
-import com.tom.core.entity.EntityCamera;
-import com.tom.core.tileentity.TileEntityCamera;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageTabGuiAction;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+
+import com.tom.core.CoreInit;
+import com.tom.core.entity.EntityCamera;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageTabGuiAction;
+
+import com.tom.core.tileentity.TileEntityCamera;
 
 public class GuiCamera extends GuiScreen {
 	private TileEntityCamera te;

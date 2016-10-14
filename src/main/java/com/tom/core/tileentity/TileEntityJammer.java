@@ -1,10 +1,11 @@
 package com.tom.core.tileentity;
 
+import net.minecraft.block.state.IBlockState;
+
 import com.tom.api.tileentity.TileEntityJammerBase;
 import com.tom.apis.TomsModUtils;
-import com.tom.core.block.Jammer;
 
-import net.minecraft.block.state.IBlockState;
+import com.tom.core.block.Jammer;
 
 public class TileEntityJammer extends TileEntityJammerBase {
 	@Override

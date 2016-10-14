@@ -1,10 +1,10 @@
 package com.tom.core.tileentity.gui;
 
-import com.tom.core.tileentity.TileEntityTabletCrafter;
-import com.tom.core.tileentity.inventory.ContainerTabletCrafter;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+
+import com.tom.core.tileentity.TileEntityTabletCrafter;
+import com.tom.core.tileentity.inventory.ContainerTabletCrafter;
 
 public class GuiTabletCrafter extends GuiTomsMod {
 

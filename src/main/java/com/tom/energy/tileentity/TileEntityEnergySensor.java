@@ -2,6 +2,12 @@ package com.tom.energy.tileentity;
 
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyHandler;
 import com.tom.api.energy.IEnergyReceiver;
@@ -12,11 +18,6 @@ import com.tom.apis.TomsModUtils;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 
 public class TileEntityEnergySensor extends TileEntityTomsMod implements IEnergyHandler, IPeripheralProxyControllable{
 	public int direction = 0;

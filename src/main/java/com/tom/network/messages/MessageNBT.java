@@ -1,5 +1,14 @@
 package com.tom.network.messages;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+
 import com.tom.api.multipart.IGuiMultipart;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.network.INBTPacketReceiver.IANBTPacketReceiver;
@@ -14,13 +23,6 @@ import mcmultipart.multipart.IMultipartContainer;
 import mcmultipart.multipart.ISlottedPart;
 import mcmultipart.multipart.MultipartHelper;
 import mcmultipart.multipart.PartSlot;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class MessageNBT extends MessageBase<MessageNBT>{
 	private NBTTagCompound tag;

@@ -1,10 +1,5 @@
 package com.tom.core.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.core.tileentity.TileEntityTabletAccessPoint;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -23,6 +18,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+
+import com.tom.core.tileentity.TileEntityTabletAccessPoint;
 
 public class TabletAccessPoint extends BlockContainerTomsMod {
 	/*@SideOnly(Side.CLIENT)

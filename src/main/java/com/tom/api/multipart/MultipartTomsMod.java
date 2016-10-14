@@ -3,6 +3,19 @@ package com.tom.api.multipart;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.util.EnumFacing;
+
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
+
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.EnergyType.EnergyHandlerNormal;
@@ -16,17 +29,6 @@ import com.tom.api.energy.IEnergyStorageTile;
 import com.tom.api.tileentity.FluidHandlerWrapper;
 
 import mcmultipart.multipart.Multipart;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 public class MultipartTomsMod extends Multipart{
 	Map<EnumFacing, IItemHandler> itemHandlerSidedMap;

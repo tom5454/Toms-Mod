@@ -5,13 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.audio.ISound;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import com.tom.api.tileentity.MultiblockPartList;
 import com.tom.apis.TomsModUtils;
 
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import net.minecraft.client.audio.ISound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GlobalFields {
 	public static Object[][][][] EnderMemoryObj = {{/*public{ {playerName,Object}*/TomsModUtils.fillObjectSimple(65536) /*}*/},/*private{player{<playerName>},{Object0,Object1...}}*/TomsModUtils.fillObject(65536)};

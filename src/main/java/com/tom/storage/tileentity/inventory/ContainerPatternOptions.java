@@ -1,21 +1,23 @@
 package com.tom.storage.tileentity.inventory;
 
-import com.tom.api.inventory.IJEIAutoFillTerminal;
-import com.tom.api.inventory.SlotPhantom;
-import com.tom.api.tileentity.IPatternTerminal;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageNBT;
-import com.tom.storage.tileentity.inventory.ContainerBlockInterface.SlotPattern;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.inventory.IJEIAutoFillTerminal;
+import com.tom.api.inventory.SlotPhantom;
+import com.tom.api.tileentity.IPatternTerminal;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageNBT;
+import com.tom.storage.tileentity.inventory.ContainerBlockInterface.SlotPattern;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerPatternOptions extends ContainerTomsMod implements IJEIAutoFillTerminal{
 	protected IPatternTerminal te;

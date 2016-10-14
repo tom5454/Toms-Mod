@@ -2,14 +2,6 @@ package com.tom.storage.block;
 
 import java.util.List;
 
-import com.tom.api.block.BlockGridDevice;
-import com.tom.api.inventory.StoredItemStack;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftable;
-import com.tom.storage.tileentity.TileEntityCraftingController;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -22,6 +14,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockGridDevice;
+import com.tom.api.inventory.StoredItemStack;
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
+import com.tom.apis.TomsModUtils;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftable;
+import com.tom.storage.tileentity.TileEntityCraftingController;
 
 public class CraftingController extends BlockGridDevice {
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");

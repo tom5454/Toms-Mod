@@ -1,19 +1,21 @@
 package com.tom.defense.tileentity.inventory;
 
-import com.tom.api.item.IIdentityCard;
-import com.tom.api.item.IPowerLinkCard;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.defense.ForceDeviceControlType;
-import com.tom.defense.tileentity.TileEntitySecurityStation;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.item.IIdentityCard;
+import com.tom.api.item.IPowerLinkCard;
+import com.tom.defense.ForceDeviceControlType;
+import com.tom.defense.tileentity.TileEntitySecurityStation;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerSecurityStation extends ContainerTomsMod {
 	private int powerLast = -1, lastRS = -1, cardLast = -1;

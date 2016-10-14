@@ -3,13 +3,14 @@ package com.tom.factory.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.util.math.BlockPos;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import com.tom.api.tileentity.MultiblockPartList;
 import com.tom.api.tileentity.TileEntityControllerBase;
 import com.tom.recipes.handler.ElectrolyzerRecipesHandler;
-
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public class TileEntityElectrolyzer extends TileEntityControllerBase {
 	protected TileEntityElectrolyzer(int w, int h) {

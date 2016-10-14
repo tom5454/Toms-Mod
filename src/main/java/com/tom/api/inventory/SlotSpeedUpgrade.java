@@ -1,10 +1,10 @@
 package com.tom.api.inventory;
 
-import com.tom.factory.FactoryInit;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import com.tom.factory.FactoryInit;
 
 public class SlotSpeedUpgrade extends Slot {
 	private final int maxStackSize;

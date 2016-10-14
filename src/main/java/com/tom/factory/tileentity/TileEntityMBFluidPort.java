@@ -1,12 +1,5 @@
 package com.tom.factory.tileentity;
 
-import com.tom.api.ITileFluidHandler;
-import com.tom.api.tileentity.MultiblockPartList;
-import com.tom.api.tileentity.TileEntityMultiblockPartBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.factory.block.MultiblockFluidHatch;
-import com.tom.lib.Configs;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,9 +8,17 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
+import com.tom.api.ITileFluidHandler;
+import com.tom.api.tileentity.MultiblockPartList;
+import com.tom.api.tileentity.TileEntityMultiblockPartBase;
+import com.tom.apis.TomsModUtils;
+import com.tom.factory.block.MultiblockFluidHatch;
+import com.tom.lib.Configs;
 
 public class TileEntityMBFluidPort extends TileEntityMultiblockPartBase implements ITileFluidHandler, IInventory{
 	private final FluidTank tank = new FluidTank(Configs.BASIC_TANK_SIZE);

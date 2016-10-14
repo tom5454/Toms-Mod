@@ -2,16 +2,17 @@ package com.tom.worldgen;
 
 import java.util.Random;
 
-import com.tom.core.CoreInit;
-import com.tom.core.block.BlockRubberWood;
-import com.tom.core.block.BlockRubberWood.WoodType;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
+
+import com.tom.core.CoreInit;
+
+import com.tom.core.block.BlockRubberWood;
+import com.tom.core.block.BlockRubberWood.WoodType;
 
 public class WorldGenRubberTree extends WorldGenAbstractTree {
 

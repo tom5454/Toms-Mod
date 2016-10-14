@@ -1,9 +1,10 @@
 package com.tom.client;
 
-import mcmultipart.client.multipart.MultipartSpecialRenderer;
-import mcmultipart.multipart.IMultipart;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+
+import mcmultipart.client.multipart.MultipartSpecialRenderer;
+import mcmultipart.multipart.IMultipart;
 
 public abstract class MultipartSpecialRendererTomsMod<T extends IMultipart> extends
 MultipartSpecialRenderer<T> {

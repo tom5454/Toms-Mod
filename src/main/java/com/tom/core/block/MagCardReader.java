@@ -1,11 +1,5 @@
 package com.tom.core.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.api.block.IRotatable;
-import com.tom.api.item.IMagCard;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.TileEntityMagCardReader;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,6 +12,13 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.api.block.IRotatable;
+import com.tom.api.item.IMagCard;
+import com.tom.apis.TomsModUtils;
+
+import com.tom.core.tileentity.TileEntityMagCardReader;
 
 public class MagCardReader extends BlockContainerTomsMod implements IRotatable {
 

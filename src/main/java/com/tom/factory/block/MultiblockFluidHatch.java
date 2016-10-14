@@ -1,10 +1,5 @@
 package com.tom.factory.block;
 
-import com.tom.api.block.BlockMultiblockPart;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.factory.tileentity.TileEntityMBFluidPort;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -19,7 +14,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.FluidUtil;
+
+import com.tom.api.block.BlockMultiblockPart;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.factory.tileentity.TileEntityMBFluidPort;
 
 public class MultiblockFluidHatch extends BlockMultiblockPart {
 	/*@SideOnly(Side.CLIENT)

@@ -1,8 +1,5 @@
 package com.tom.api.block;
 
-import com.tom.api.grid.IGridDevice;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -12,6 +9,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.grid.IGridDevice;
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
 
 public abstract class BlockGridDevice extends BlockContainerTomsMod {
 

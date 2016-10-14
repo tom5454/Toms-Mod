@@ -5,6 +5,15 @@ import static com.tom.api.energy.EnergyType.LV;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.ITextComponent;
+
+import net.minecraftforge.fml.common.Optional;
+
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
@@ -12,20 +21,14 @@ import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.apis.TomsModUtils;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
-import com.tom.core.block.HolotapeWriter;
 import com.tom.lib.Configs;
+
+import com.tom.core.block.HolotapeWriter;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.common.Optional;
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
 public class TileEntityHolotapeWriter extends TileEntityTomsMod implements
 IPeripheral, IEnergyReceiver, ISidedInventory {

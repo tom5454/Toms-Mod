@@ -2,10 +2,10 @@ package com.tom.core.tileentity;
 
 import static com.tom.core.block.Antenna.STATE;
 
+import net.minecraft.block.state.IBlockState;
+
 import com.tom.api.tileentity.TileEntityAntennaBase;
 import com.tom.apis.TomsModUtils;
-
-import net.minecraft.block.state.IBlockState;
 
 public class TileEntityAntenna extends TileEntityAntennaBase{
 	@Override

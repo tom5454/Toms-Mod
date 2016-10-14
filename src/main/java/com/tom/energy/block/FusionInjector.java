@@ -1,8 +1,5 @@
 package com.tom.energy.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.energy.tileentity.TileEntityFusionInjector;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -12,6 +9,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+
+import com.tom.energy.tileentity.TileEntityFusionInjector;
 
 public class FusionInjector extends BlockContainerTomsMod {
 

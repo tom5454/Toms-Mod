@@ -1,11 +1,12 @@
 package com.tom.factory.tileentity.gui;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+
 import com.tom.factory.tileentity.TileEntitySteamFurnace;
 import com.tom.factory.tileentity.inventory.ContainerSteamFurnace;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiSteamFurnace extends GuiTomsMod {
 	private TileEntitySteamFurnace te;

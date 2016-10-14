@@ -2,16 +2,18 @@ package com.tom.api.multipart;
 
 import java.util.EnumSet;
 
-import mcmultipart.capabilities.ISlottedCapabilityProvider;
-import mcmultipart.multipart.IRedstonePart;
-import mcmultipart.multipart.PartSlot;
-import mcmultipart.raytrace.PartMOP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.common.capabilities.Capability;
+
+import mcmultipart.capabilities.ISlottedCapabilityProvider;
+import mcmultipart.multipart.IRedstonePart;
+import mcmultipart.multipart.PartSlot;
+import mcmultipart.raytrace.PartMOP;
 
 public abstract class PartWire extends MultipartTomsMod implements
 IRedstonePart.ISlottedRedstonePart,

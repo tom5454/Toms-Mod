@@ -1,16 +1,18 @@
 package com.tom.factory.tileentity.inventory;
 
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.factory.tileentity.TileEntitySteamFurnaceAdv;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnaceOutput;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.factory.tileentity.TileEntitySteamFurnaceAdv;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerAdvSteamFurnace extends ContainerTomsMod {
 	private TileEntitySteamFurnaceAdv te;

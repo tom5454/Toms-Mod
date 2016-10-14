@@ -1,14 +1,14 @@
 package com.tom.core.tileentity;
 
-import com.tom.api.tileentity.TileEntityTabletAccessPointBase;
-import com.tom.client.ICustomModelledTileEntity;
-import com.tom.core.CoreInit;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+
+import com.tom.api.tileentity.TileEntityTabletAccessPointBase;
+import com.tom.client.ICustomModelledTileEntity;
+import com.tom.core.CoreInit;
 
 public class TileEntityControllerBox extends TileEntityTabletAccessPointBase implements ICustomModelledTileEntity {
 	public boolean hasModem = false;

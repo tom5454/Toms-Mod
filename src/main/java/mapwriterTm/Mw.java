@@ -3,9 +3,6 @@ package mapwriterTm;
 import java.io.File;
 import java.util.Queue;
 
-import com.google.common.collect.Queues;
-import com.tom.core.CoreInit;
-
 import mapwriterTm.config.Config;
 import mapwriterTm.config.ConfigurationHandler;
 import mapwriterTm.config.WorldConfig;
@@ -30,13 +27,19 @@ import mapwriterTm.util.Logging;
 import mapwriterTm.util.Reference;
 import mapwriterTm.util.Render;
 import mapwriterTm.util.Utils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.chunk.Chunk;
+
 import net.minecraftforge.common.DimensionManager;
+
+import com.google.common.collect.Queues;
+
+import com.tom.core.CoreInit;
 
 public class Mw
 {

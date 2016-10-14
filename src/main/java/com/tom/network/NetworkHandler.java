@@ -1,5 +1,15 @@
 package com.tom.network;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
+
 import com.tom.apis.TomsModUtils.PacketNoSpamChat;
 import com.tom.apis.TomsModUtils.PacketNoSpamChat.Handler;
 import com.tom.core.CoreInit;
@@ -17,15 +27,6 @@ import com.tom.network.messages.MessageNBT.MessageNBTRequest;
 import com.tom.network.messages.MessageProgress;
 import com.tom.network.messages.MessageTabGuiAction;
 import com.tom.network.messages.MessageTabletGui;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class NetworkHandler {
 	private static SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Configs.Chanel1);

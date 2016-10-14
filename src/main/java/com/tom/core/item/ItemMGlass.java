@@ -1,10 +1,5 @@
 package com.tom.core.item;
 
-import com.tom.api.research.IScanningInformation;
-import com.tom.api.research.IScanningInformation.ScanningInformation;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +14,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import com.tom.api.research.IScanningInformation;
+import com.tom.api.research.IScanningInformation.ScanningInformation;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 
 public class ItemMGlass extends Item {
 	@Override

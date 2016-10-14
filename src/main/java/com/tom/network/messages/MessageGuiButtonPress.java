@@ -1,5 +1,9 @@
 package com.tom.network.messages;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+
 import com.tom.api.multipart.IGuiMultipart;
 import com.tom.api.tileentity.IGuiTile;
 import com.tom.network.MessageBase;
@@ -9,9 +13,6 @@ import mcmultipart.multipart.IMultipartContainer;
 import mcmultipart.multipart.ISlottedPart;
 import mcmultipart.multipart.MultipartHelper;
 import mcmultipart.multipart.PartSlot;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 
 public class MessageGuiButtonPress extends MessageBase<MessageGuiButtonPress>{
 	private int id, x, y, z, extra, pos = -1;

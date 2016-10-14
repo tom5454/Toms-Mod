@@ -2,17 +2,8 @@ package com.tom.core.tileentity;
 
 import java.util.Set;
 
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.Minimap;
-import com.tom.lib.Configs;
-
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.ILuaObject;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import mapwriterTm.map.Marker.RenderType;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.JsonToNBT;
@@ -24,7 +15,19 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.MathHelper;
+
 import net.minecraftforge.fml.common.Optional;
+
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.Minimap;
+import com.tom.lib.Configs;
+
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.lua.ILuaObject;
+import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.api.peripheral.IComputerAccess;
+import dan200.computercraft.api.peripheral.IPeripheral;
 
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
 public class TileEntityCommandExecutor extends TileEntityTomsMod implements

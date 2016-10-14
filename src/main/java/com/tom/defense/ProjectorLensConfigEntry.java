@@ -3,14 +3,6 @@ package com.tom.defense;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.IValidationChecker;
-import com.tom.apis.TomsModUtils;
-import com.tom.defense.ProjectorLensConfigEntry.CompiledProjectorLensConfigEntry.ProjectorLensUpgradeList;
-import com.tom.defense.item.ItemFieldUpgrade.UpgradeType;
-import com.tom.defense.item.ItemProjectorFieldType.FieldType;
-import com.tom.defense.tileentity.TileEntityForceField;
-import com.tom.handler.WorldHandler;
-
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.BlockStaticLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -27,7 +19,16 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.IFluidBlock;
+
+import com.tom.api.IValidationChecker;
+import com.tom.apis.TomsModUtils;
+import com.tom.defense.ProjectorLensConfigEntry.CompiledProjectorLensConfigEntry.ProjectorLensUpgradeList;
+import com.tom.defense.item.ItemFieldUpgrade.UpgradeType;
+import com.tom.defense.item.ItemProjectorFieldType.FieldType;
+import com.tom.defense.tileentity.TileEntityForceField;
+import com.tom.handler.WorldHandler;
 
 public class ProjectorLensConfigEntry{
 	private String name;

@@ -1,9 +1,5 @@
 package com.tom.core.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.core.entity.EntityCamera;
-import com.tom.core.tileentity.TileEntityCamera;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -13,6 +9,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.core.entity.EntityCamera;
+
+import com.tom.core.tileentity.TileEntityCamera;
 
 public class Camera extends BlockContainerTomsMod {
 

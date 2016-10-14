@@ -2,12 +2,12 @@ package com.tom.core.tileentity.gui;
 
 import java.io.IOException;
 
+import net.minecraft.client.gui.GuiScreen;
+
 import com.tom.api.terminal.GuiPartList;
 import com.tom.apis.BigEntry;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageTabGuiAction;
-
-import net.minecraft.client.gui.GuiScreen;
 
 public class GuiEmpty extends GuiScreen {
 	public GuiPartList gui;

@@ -3,17 +3,6 @@ package com.tom.energy.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.ITileFluidHandler;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyStorageTile;
-import com.tom.api.multipart.PartDuct;
-import com.tom.api.tileentity.ICustomMultimeterInformation;
-import com.tom.apis.TomsModUtils;
-
-import mcmultipart.multipart.IMultipartContainer;
-import mcmultipart.multipart.ISlottedPart;
-import mcmultipart.multipart.MultipartHelper;
-import mcmultipart.multipart.PartSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,7 +17,20 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+
+import com.tom.api.ITileFluidHandler;
+import com.tom.api.energy.EnergyType;
+import com.tom.api.energy.IEnergyStorageTile;
+import com.tom.api.multipart.PartDuct;
+import com.tom.api.tileentity.ICustomMultimeterInformation;
+import com.tom.apis.TomsModUtils;
+
+import mcmultipart.multipart.IMultipartContainer;
+import mcmultipart.multipart.ISlottedPart;
+import mcmultipart.multipart.MultipartHelper;
+import mcmultipart.multipart.PartSlot;
 
 public class Multimeter extends Item {
 

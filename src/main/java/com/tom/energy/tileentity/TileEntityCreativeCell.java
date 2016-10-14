@@ -2,9 +2,9 @@ package com.tom.energy.tileentity;
 
 import static com.tom.api.energy.EnergyType.LASER;
 
-import com.tom.api.energy.EnergyType;
-
 import net.minecraft.util.EnumFacing;
+
+import com.tom.api.energy.EnergyType;
 
 public class TileEntityCreativeCell extends TileEntityEnergyCellBase {
 

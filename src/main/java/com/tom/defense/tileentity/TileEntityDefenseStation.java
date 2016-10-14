@@ -2,25 +2,6 @@ package com.tom.defense.tileentity;
 
 import java.util.List;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.item.IPowerLinkCard;
-import com.tom.api.item.ISecurityStationLinkCard;
-import com.tom.api.item.ISwitch;
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.api.tileentity.AccessType;
-import com.tom.api.tileentity.IForceDevice;
-import com.tom.api.tileentity.IForcePowerStation;
-import com.tom.api.tileentity.IGuiTile;
-import com.tom.api.tileentity.ISecurityStation;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.core.DamageSourceTomsMod;
-import com.tom.defense.DefenseInit;
-import com.tom.defense.ForceDeviceControlType;
-import com.tom.defense.block.ForceCapacitor;
-import com.tom.handler.GuiHandler.GuiIDs;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
@@ -42,6 +23,25 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+
+import com.tom.api.energy.EnergyStorage;
+import com.tom.api.item.IPowerLinkCard;
+import com.tom.api.item.ISecurityStationLinkCard;
+import com.tom.api.item.ISwitch;
+import com.tom.api.network.INBTPacketReceiver;
+import com.tom.api.tileentity.AccessType;
+import com.tom.api.tileentity.IForceDevice;
+import com.tom.api.tileentity.IForcePowerStation;
+import com.tom.api.tileentity.IGuiTile;
+import com.tom.api.tileentity.ISecurityStation;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.core.DamageSourceTomsMod;
+import com.tom.defense.DefenseInit;
+import com.tom.defense.ForceDeviceControlType;
+import com.tom.defense.block.ForceCapacitor;
+import com.tom.handler.GuiHandler.GuiIDs;
 
 public class TileEntityDefenseStation extends TileEntityTomsMod implements
 IForceDevice, ISidedInventory, IGuiTile, INBTPacketReceiver {

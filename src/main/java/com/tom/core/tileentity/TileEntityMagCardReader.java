@@ -3,11 +3,6 @@ package com.tom.core.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.item.IMagCard;
-import com.tom.api.tileentity.IWirelessPeripheralController;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.client.ICustomModelledTileEntity;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +11,11 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+
+import com.tom.api.item.IMagCard;
+import com.tom.api.tileentity.IWirelessPeripheralController;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.client.ICustomModelledTileEntity;
 
 public class TileEntityMagCardReader extends TileEntityTomsMod implements ICustomModelledTileEntity{
 

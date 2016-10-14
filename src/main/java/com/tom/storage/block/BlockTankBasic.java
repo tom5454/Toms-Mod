@@ -3,10 +3,6 @@ package com.tom.storage.block;
 import java.util.List;
 import java.util.Random;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.core.CoreInit;
-import com.tom.storage.tileentity.TileEntityBasicTank;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -21,10 +17,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.core.CoreInit;
+import com.tom.storage.tileentity.TileEntityBasicTank;
 
 public class BlockTankBasic extends BlockContainerTomsMod {
 

@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.tom.api.block.BlockGridDevice;
 import com.tom.api.item.MultipartItem;
 import com.tom.core.CoreInit;
+import com.tom.core.IMod;
 import com.tom.lib.Configs;
 import com.tom.storage.block.BasicTerminal;
 import com.tom.storage.block.BlockAssembler;
@@ -63,10 +64,11 @@ import com.tom.storage.tileentity.TileEntityLimitableChest;
 import com.tom.storage.tileentity.TileEntityPatternTerminal;
 import com.tom.storage.tileentity.TileEntityUltimateTank;
 
-@Mod(modid = StorageInit.modid,name = "Tom's Mod Storage",version = Configs.version, dependencies = Configs.coreDependencies)
+@Mod(modid = StorageInit.modid,name = StorageInit.modName,version = Configs.version, dependencies = Configs.coreDependencies)
 public class StorageInit {
-	public static final String modid = Configs.Modid + "|Storage";
-	public static Logger log = LogManager.getLogger(modid);
+	public static final String modid = Configs.ModidL + "|storage";
+	public static final String modName = Configs.ModName + " Storage";
+	public static final Logger log = LogManager.getLogger(modName);
 	public static MultipartItem cable, exportBus, importBus, partInterface, storageBus;
 	public static Block limitableChest, assembler, tankBasic, tankAdv, tankElite, tankUltimate, quantumTank;
 	public static BlockGridDevice drive, basicTerminal, energyAcceptor, blockInterface, craftingController, patternTerminal, craftingTerminal;
@@ -143,6 +145,8 @@ public class StorageInit {
 		registerItem(partCraftingTerminal, partCraftingTerminal.getUnlocalizedName().substring(5));
 		registerItem(partPatternTerminal, partPatternTerminal.getUnlocalizedName().substring(5));
 		CacheRegistry.init();
+		hadPreInit = true;
+		CoreInit.tryLoadAfterPreInit(log);
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");
 	}
@@ -154,8 +158,19 @@ public class StorageInit {
 		}
 
 	};
+	private static boolean hadPreInit = false;
 	@EventHandler
 	public static void construction(FMLConstructionEvent event){
-		CoreInit.modids.add(modid);
+		CoreInit.modids.add(new IMod(){
+			@Override
+			public String getModID() {
+				return modid;
+			}
+
+			@Override
+			public boolean hadPreInit() {
+				return hadPreInit;
+			}
+		});
 	}
 }

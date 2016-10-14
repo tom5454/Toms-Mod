@@ -1,8 +1,9 @@
 package com.tom.api.multipart;
 
-import mcmultipart.multipart.PartSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
+
+import mcmultipart.multipart.PartSlot;
 
 public interface IGuiMultipart {
 	Object getGui(EntityPlayer player);

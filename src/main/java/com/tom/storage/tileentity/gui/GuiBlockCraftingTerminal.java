@@ -2,16 +2,17 @@ package com.tom.storage.tileentity.gui;
 
 import java.io.IOException;
 
-import com.tom.storage.tileentity.TileEntityCraftingTerminal;
-import com.tom.storage.tileentity.inventory.ContainerBlockCraftingTerminal;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.storage.tileentity.TileEntityCraftingTerminal;
+import com.tom.storage.tileentity.inventory.ContainerBlockCraftingTerminal;
 
 @SideOnly(Side.CLIENT)
 public class GuiBlockCraftingTerminal extends GuiTerminalBase {

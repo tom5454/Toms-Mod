@@ -24,11 +24,13 @@ import mapwriterTm.util.Logging;
 import mapwriterTm.util.Reference;
 import mapwriterTm.util.Utils;
 import mapwriterTm.util.VersionCheck;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

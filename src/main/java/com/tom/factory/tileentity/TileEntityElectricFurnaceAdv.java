@@ -4,15 +4,6 @@ import static com.tom.api.energy.EnergyType.HV;
 
 import java.util.List;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.factory.FactoryInit;
-import com.tom.factory.block.ElectricFurnace;
-import com.tom.recipes.handler.MachineCraftingHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -22,6 +13,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
+import com.tom.api.energy.EnergyStorage;
+import com.tom.api.energy.EnergyType;
+import com.tom.api.energy.IEnergyReceiver;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.factory.FactoryInit;
+import com.tom.factory.block.ElectricFurnace;
+import com.tom.recipes.handler.MachineCraftingHandler;
 
 public class TileEntityElectricFurnaceAdv extends TileEntityTomsMod implements ISidedInventory, IEnergyReceiver {
 	private ItemStack[] stack = new ItemStack[this.getSizeInventory()];

@@ -3,17 +3,6 @@ package com.tom.storage.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.inventory.StoredItemStack;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.storage.block.CraftingController;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.multipart.StorageNetworkGrid.CacheRegistry;
-import com.tom.storage.multipart.StorageNetworkGrid.CalculatedCrafting;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftable;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingController;
-import com.tom.storage.multipart.StorageNetworkGrid.RecipeToCraft;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,6 +14,17 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+
+import com.tom.api.inventory.StoredItemStack;
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
+import com.tom.apis.TomsModUtils;
+import com.tom.storage.block.CraftingController;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.multipart.StorageNetworkGrid.CacheRegistry;
+import com.tom.storage.multipart.StorageNetworkGrid.CalculatedCrafting;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftable;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftingController;
+import com.tom.storage.multipart.StorageNetworkGrid.RecipeToCraft;
 
 public class TileEntityCraftingController extends TileEntityGridDeviceBase<StorageNetworkGrid> implements ICraftingController {
 	private CalculatedCrafting crafting = null;

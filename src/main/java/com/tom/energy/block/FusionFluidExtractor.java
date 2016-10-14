@@ -1,9 +1,5 @@
 package com.tom.energy.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.energy.tileentity.TileEntityFusionFluidExtractor;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -18,7 +14,13 @@ import net.minecraft.util.EnumFacing.Plane;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.FluidUtil;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.apis.TomsModUtils;
+
+import com.tom.energy.tileentity.TileEntityFusionFluidExtractor;
 
 public class FusionFluidExtractor extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing",Plane.HORIZONTAL);

@@ -1,9 +1,9 @@
 package com.tom.network;
 
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler;
-
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class NetworkInit {
 	public static void init(){

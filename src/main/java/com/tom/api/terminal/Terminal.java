@@ -1,8 +1,9 @@
 package com.tom.api.terminal;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import io.netty.buffer.ByteBuf;
 
 public class Terminal extends TerminalBase {
 	public Terminal(int windows){

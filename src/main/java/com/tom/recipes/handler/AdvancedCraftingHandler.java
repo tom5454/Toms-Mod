@@ -10,11 +10,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.tom.api.research.Research;
 import com.tom.apis.RecipeData;
+import com.tom.config.Config;
 
 public class AdvancedCraftingHandler {
 	private static List<RecipeData> recipeList = new ArrayList<RecipeData>();
@@ -50,7 +52,11 @@ public class AdvancedCraftingHandler {
 	}*/
 	public static void addRecipe(IRecipe recipe, int craftingTime, List<Research> requiredResearches, ItemStack extra, CraftingLevel level) {
 		if(recipe != null){
-			recipeList.add(new RecipeData(recipe, craftingTime, requiredResearches, extra, level));
+			if(Config.enableResearchSystem){
+				recipeList.add(new RecipeData(recipe, craftingTime, requiredResearches, extra, level));
+			}else{
+				GameRegistry.addRecipe(recipe);
+			}
 		}
 	}
 	public static ReturnData craft(ItemStack[] input, List<Research> researchList, CraftingLevel level, World world){

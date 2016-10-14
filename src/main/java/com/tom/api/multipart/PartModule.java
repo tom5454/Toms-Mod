@@ -4,20 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import com.tom.api.grid.IGrid;
-import com.tom.api.grid.IGridDevice;
-import com.tom.api.item.MultipartItem;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import mcmultipart.MCMultiPartMod;
-import mcmultipart.client.multipart.AdvancedParticleManager;
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.INormallyOccludingPart;
-import mcmultipart.multipart.ISlottedPart;
-import mcmultipart.multipart.MultipartRegistry;
-import mcmultipart.multipart.PartSlot;
-import mcmultipart.raytrace.PartMOP;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -38,8 +24,24 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.grid.IGrid;
+import com.tom.api.grid.IGridDevice;
+import com.tom.api.item.MultipartItem;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import mcmultipart.MCMultiPartMod;
+import mcmultipart.client.multipart.AdvancedParticleManager;
+import mcmultipart.multipart.IMultipart;
+import mcmultipart.multipart.INormallyOccludingPart;
+import mcmultipart.multipart.ISlottedPart;
+import mcmultipart.multipart.MultipartRegistry;
+import mcmultipart.multipart.PartSlot;
+import mcmultipart.raytrace.PartMOP;
 
 public abstract class PartModule<G extends IGrid<?,G>> extends MultipartTomsMod implements ISlottedPart, ITickable, IDuctModule<G>, INormallyOccludingPart{
 	protected AxisAlignedBB BOX;

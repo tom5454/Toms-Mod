@@ -6,18 +6,6 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import com.tom.api.gui.GuiNumberValueBox;
-import com.tom.api.inventory.SlotPhantom;
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.api.tileentity.IPatternTerminal;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.gui.GuiTomsMod;
-import com.tom.lib.Keys;
-import com.tom.storage.multipart.StorageNetworkGrid.CraftableProperties;
-import com.tom.storage.tileentity.gui.GuiBlockPatternTerminal.GuiButtonUseContainerItems;
-import com.tom.storage.tileentity.gui.GuiCraftingAmountSelection.GuiButtonHidden;
-import com.tom.storage.tileentity.inventory.ContainerPatternOptions;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,6 +18,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+
+import com.tom.api.gui.GuiNumberValueBox;
+import com.tom.api.inventory.SlotPhantom;
+import com.tom.api.network.INBTPacketReceiver;
+import com.tom.api.tileentity.IPatternTerminal;
+import com.tom.apis.TomsModUtils;
+import com.tom.lib.Keys;
+import com.tom.storage.multipart.StorageNetworkGrid.CraftableProperties;
+import com.tom.storage.tileentity.gui.GuiBlockPatternTerminal.GuiButtonUseContainerItems;
+import com.tom.storage.tileentity.gui.GuiCraftingAmountSelection.GuiButtonHidden;
+import com.tom.storage.tileentity.inventory.ContainerPatternOptions;
+
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver{
 	private ItemStack backButton;

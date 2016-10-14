@@ -3,11 +3,13 @@ package com.tom.core.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.tom.api.terminal.Terminal;
+
 import com.tom.core.tileentity.TileEntityTabletController.LuaSound;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class TabletHandler {
 	public TabletHandler(int id){

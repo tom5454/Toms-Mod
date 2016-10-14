@@ -1,12 +1,5 @@
 package com.tom.factory.tileentity;
 
-import com.tom.api.ITileFluidHandler;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.factory.block.BasicBoiler;
-import com.tom.lib.Configs;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,12 +15,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.WorldType;
+
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import com.tom.api.ITileFluidHandler;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.factory.block.AdvBoiler;
+import com.tom.lib.Configs;
 
 public class TileEntityAdvBoiler extends TileEntityTomsMod implements ITileFluidHandler, IInventory{
 	private FluidTank tankWater = new FluidTank(Configs.BASIC_TANK_SIZE * 2);
@@ -95,7 +96,7 @@ public class TileEntityAdvBoiler extends TileEntityTomsMod implements ITileFluid
 				this.inv.decrStackSize(0, 1);
 				if(fss.getItem().getContainerItem(fss) != null){
 					ItemStack s = fss.getItem().getContainerItem(fss);
-					EnumFacing f = state.getValue(BasicBoiler.FACING);
+					EnumFacing f = state.getValue(AdvBoiler.FACING);
 					EnumFacing facing = f.getOpposite();
 					BlockPos invP = pos.offset(facing);
 					IInventory inv = TileEntityHopper.getInventoryAtPosition(worldObj, invP.getX(), invP.getY(), invP.getZ());
@@ -118,15 +119,15 @@ public class TileEntityAdvBoiler extends TileEntityTomsMod implements ITileFluid
 			this.markDirty();
 		}else if(burnTime > 0){
 			burnTime = Math.max(burnTime - 2, 0);
-			if(!state.getValue(BasicBoiler.ACTIVE)){
-				TomsModUtils.setBlockState(worldObj, pos, state.withProperty(BasicBoiler.ACTIVE, true), 2);
+			if(!state.getValue(AdvBoiler.ACTIVE)){
+				TomsModUtils.setBlockState(worldObj, pos, state.withProperty(AdvBoiler.ACTIVE, true), 2);
 				this.markDirty();
 			}
-			double increase = heat > 400 ? heat > 800 ? 0.09D : 0.1D : 0.12D;
+			double increase = heat > 400 ? heat > 800 ? heat > 1200 ? 0.08D : 0.09D : 0.1D : 0.12D;
 			heat = Math.min(increase + heat, MAX_TEMP);
 		}else{
-			if(state.getValue(BasicBoiler.ACTIVE)){
-				TomsModUtils.setBlockState(worldObj, pos, state.withProperty(BasicBoiler.ACTIVE, false), 2);
+			if(state.getValue(AdvBoiler.ACTIVE)){
+				TomsModUtils.setBlockState(worldObj, pos, state.withProperty(AdvBoiler.ACTIVE, false), 2);
 				this.markDirty();
 			}
 			heat = Math.max(heat - (heat / 500), 20);
@@ -134,12 +135,12 @@ public class TileEntityAdvBoiler extends TileEntityTomsMod implements ITileFluid
 		}
 		if(heat > 130 && tankWater.getFluidAmount() > 100 && tankSteam.getFluidAmount() != tankSteam.getCapacity()){
 			int p = MathHelper.ceiling_double_int((heat - 130) / 20);
-			tankWater.drainInternal(p, true);
+			tankWater.drainInternal(p / 2, true);
 			tankSteam.fillInternal(new FluidStack(CoreInit.steam, p), true);
 			heat -= 0.08D;
 		}
 		if(tankSteam.getFluidAmount() > tankSteam.getCapacity() / 2){
-			EnumFacing f = state.getValue(BasicBoiler.FACING);
+			EnumFacing f = state.getValue(AdvBoiler.FACING);
 			TileEntity tile = worldObj.getTileEntity(pos.offset(f.getOpposite()));
 			if(tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f)){
 				int extra = Math.min(tankSteam.getFluidAmount() - (tankSteam.getCapacity() / 2), 800);

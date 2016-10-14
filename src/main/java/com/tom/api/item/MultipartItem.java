@@ -1,7 +1,8 @@
 package com.tom.api.item;
 
-import mcmultipart.item.ItemMultiPart;
 import net.minecraft.creativetab.CreativeTabs;
+
+import mcmultipart.item.ItemMultiPart;
 
 public abstract class MultipartItem extends ItemMultiPart {
 	@Override

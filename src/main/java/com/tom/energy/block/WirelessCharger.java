@@ -13,6 +13,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -24,11 +25,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.api.block.IIconRegisterRequired;
 import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.energy.item.WirelessChargerItemBlock;
 
 import com.tom.energy.tileentity.TileEntityWirelessCharger;
 
-public class WirelessCharger extends BlockContainerTomsMod {
+public class WirelessCharger extends BlockContainerTomsMod implements IIconRegisterRequired{
 	/*@SideOnly(Side.CLIENT)
 	private IIcon off;*/
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
@@ -139,5 +143,15 @@ public class WirelessCharger extends BlockContainerTomsMod {
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return null;
+	}
+
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(Item.getItemFromBlock(this), 0, "tomsmodenergy:wirelessCharger");
+		CoreInit.registerRender(Item.getItemFromBlock(this), 1, "tomsmodenergy:wirelessCharger");
+	}
+	@Override
+	public ItemBlock createItemBlock() {
+		return new WirelessChargerItemBlock();
 	}
 }

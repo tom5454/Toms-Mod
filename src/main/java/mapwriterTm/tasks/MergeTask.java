@@ -5,6 +5,7 @@ import java.io.File;
 import mapwriterTm.region.MergeToImage;
 import mapwriterTm.region.RegionManager;
 import mapwriterTm.util.Utils;
+
 import net.minecraft.client.resources.I18n;
 
 public class MergeTask extends Task

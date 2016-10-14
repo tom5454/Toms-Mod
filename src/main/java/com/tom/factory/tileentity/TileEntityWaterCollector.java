@@ -1,19 +1,20 @@
 package com.tom.factory.tileentity;
 
-import com.tom.api.ITileFluidHandler;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import com.tom.api.ITileFluidHandler;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
 
 public class TileEntityWaterCollector extends TileEntityTomsMod implements ITileFluidHandler {
 	private final FluidTank tank = new FluidTank(1000);

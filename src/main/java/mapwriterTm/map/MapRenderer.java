@@ -12,6 +12,7 @@ import mapwriterTm.config.MapModeConfig;
 import mapwriterTm.map.mapmode.MapMode;
 import mapwriterTm.util.Reference;
 import mapwriterTm.util.Render;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;

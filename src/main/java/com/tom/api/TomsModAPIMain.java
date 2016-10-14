@@ -6,8 +6,6 @@ import java.nio.file.NoSuchFileException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tom.api.recipes.TomsModRecipeHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,6 +15,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.recipes.TomsModRecipeHelper;
 
 public class TomsModAPIMain {
 	public static Logger log = LogManager.getLogger("TomsMod|Api");

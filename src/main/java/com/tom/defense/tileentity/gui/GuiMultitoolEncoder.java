@@ -2,13 +2,14 @@ package com.tom.defense.tileentity.gui;
 
 import java.io.IOException;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-import com.tom.defense.tileentity.inventory.ContainerMultitoolEncoder;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+
+import com.tom.defense.tileentity.inventory.ContainerMultitoolEncoder;
+
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiMultitoolEncoder extends GuiTomsMod {
 	private GuiButton buttonWrite, buttonConfigure;

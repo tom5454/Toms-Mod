@@ -16,7 +16,9 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import net.minecraftforge.fml.common.registry.PersistentRegistryManager;
+import net.minecraftforge.fml.common.registry.RegistryBuilder;
+
+import com.google.common.collect.BiMap;
 
 import com.tom.api.research.IScanningInformation;
 import com.tom.api.research.IScanningInformation.ScanningInformation;
@@ -37,7 +39,12 @@ public class ResearchHandler {
 	private static final int MAX_ID = Integer.MAX_VALUE - 1;
 	public static void init(){
 		log.info("Loading Research Handler...");
-		iResearchRegistry = PersistentRegistryManager.createRegistry(loc, Research.class, new ResourceLocation("invalid"), MIN_ID, MAX_ID, true, ResearchCallbacks.INSTANCE, ResearchCallbacks.INSTANCE, ResearchCallbacks.INSTANCE);
+		RegistryBuilder<Research> builder = new RegistryBuilder<Research>();
+		builder.setName(loc);
+		builder.setType(Research.class);
+		builder.setIDRange(MIN_ID, MAX_ID);
+		iResearchRegistry = (FMLControlledNamespacedRegistry<Research>) builder.create();
+		//iResearchRegistry = PersistentRegistryManager.createRegistry(loc, Research.class, new ResourceLocation("invalid"), MIN_ID, MAX_ID, true, ResearchCallbacks.INSTANCE, ResearchCallbacks.INSTANCE, ResearchCallbacks.INSTANCE);
 	}
 	//private static boolean allowSave = false;
 	public static Research getResearchByID(int id){
@@ -254,20 +261,20 @@ public class ResearchHandler {
 		public static final ResearchCallbacks INSTANCE = new ResearchCallbacks();
 
 		@Override
-		public void onAdd(Research research, int id, Map<ResourceLocation, ?> slaves) {
-			// no op for the minute?
+		public void onCreate(Map<ResourceLocation, ?> slaveset,
+				BiMap<ResourceLocation, ? extends IForgeRegistry<?>> registries) {
+
 		}
 
 		@Override
-		public void onClear(Map<ResourceLocation, ?> slaveset)
-		{
-			// no op for the minute?
+		public void onClear(IForgeRegistry<Research> is, Map<ResourceLocation, ?> slaveset) {
+
 		}
 
 		@Override
-		public void onCreate(Map<ResourceLocation, ?> slaveset)
-		{
-			// no op for the minute?
+		public void onAdd(Research obj, int id, Map<ResourceLocation, ?> slaveset) {
+
 		}
+
 	}
 }

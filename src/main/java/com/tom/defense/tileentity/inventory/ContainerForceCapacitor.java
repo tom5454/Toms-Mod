@@ -1,20 +1,22 @@
 package com.tom.defense.tileentity.inventory;
 
-import com.tom.api.tileentity.IConfigurable.IConfigurationOption.SlotSecurityCard;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.defense.DefenseInit;
-import com.tom.defense.ForceDeviceControlType;
-import com.tom.defense.tileentity.TileEntityForceCapacitor;
-import com.tom.network.messages.MessageProgress;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.tileentity.IConfigurable.IConfigurationOption.SlotSecurityCard;
+import com.tom.defense.DefenseInit;
+import com.tom.defense.ForceDeviceControlType;
+import com.tom.defense.tileentity.TileEntityForceCapacitor;
+import com.tom.network.messages.MessageProgress;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerForceCapacitor extends ContainerTomsMod {
 	private int rangeLast = -1;

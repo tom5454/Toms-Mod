@@ -1,8 +1,5 @@
 package com.tom.core.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.core.tileentity.TileEntityJammer;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -10,6 +7,10 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+
+import com.tom.core.tileentity.TileEntityJammer;
 
 public class Jammer extends BlockContainerTomsMod {
 	/*@SideOnly(Side.CLIENT)

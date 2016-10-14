@@ -2,9 +2,6 @@ package com.tom.transport.model;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.client.TileEntitySpecialRendererTomsMod;
-import com.tom.transport.tileentity.TileEntityConveyor;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderEntityItem;
@@ -13,6 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
+
+import com.tom.client.TileEntitySpecialRendererTomsMod;
+import com.tom.transport.tileentity.TileEntityConveyor;
 
 public class TileEntityConveyorRenderer extends
 		TileEntitySpecialRendererTomsMod<TileEntityConveyor> {

@@ -1,16 +1,18 @@
 package com.tom.network.messages;
 
-import com.tom.network.MessageBase;
-import com.tom.network.NetworkHandler;
-
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.nbt.NBTTagCompound;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import com.tom.network.MessageBase;
+import com.tom.network.NetworkHandler;
+
+import io.netty.buffer.ByteBuf;
 
 public class MessageFluidStackSync extends MessageBase<MessageFluidStackSync> {
 	private int id;

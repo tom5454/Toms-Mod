@@ -2,15 +2,16 @@ package com.tom.core.item;
 
 import java.util.List;
 
-import com.tom.api.item.IMagCard;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.item.IMagCard;
 
 public class MagCard extends Item implements IMagCard{
 

@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "tomsmodfactory:geoBoiler" },
+        "active=false,facing=south": { "model": "tomsmodfactory:geoBoiler", "y": 180 },
+        "active=false,facing=west":  { "model": "tomsmodfactory:geoBoiler", "y": 270 },
+        "active=false,facing=east":  { "model": "tomsmodfactory:geoBoiler", "y": 90 },
+         "active=true,facing=north": { "model": "tomsmodfactory:geoBoiler_on" },
+         "active=true,facing=south": { "model": "tomsmodfactory:geoBoiler_on", "y": 180 },
+         "active=true,facing=west":  { "model": "tomsmodfactory:geoBoiler_on", "y": 270 },
+         "active=true,facing=east":  { "model": "tomsmodfactory:geoBoiler_on", "y": 90 }
+    }
+}

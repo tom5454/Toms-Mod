@@ -1,9 +1,5 @@
 package com.tom.storage.tileentity;
 
-import com.tom.api.tileentity.IGuiTile;
-import com.tom.storage.block.LimitableChest;
-import com.tom.storage.tileentity.inventory.ContainerLimitableChest;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -15,6 +11,10 @@ import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+
+import com.tom.api.tileentity.IGuiTile;
+import com.tom.storage.block.LimitableChest;
+import com.tom.storage.tileentity.inventory.ContainerLimitableChest;
 
 public class TileEntityLimitableChest extends TileEntityLockable implements ITickable, ISidedInventory, IGuiTile
 {

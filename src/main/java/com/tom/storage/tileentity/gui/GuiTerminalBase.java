@@ -482,13 +482,13 @@ INBTPacketReceiver, IStorageTerminalGui{
 		{
 			m = Pattern.compile(searchString.toLowerCase(), Pattern.CASE_INSENSITIVE);
 		}
-		catch( final Throwable ignore )
+		catch(Throwable ignore)
 		{
 			try
 			{
 				m = Pattern.compile(Pattern.quote(searchString.toLowerCase()), Pattern.CASE_INSENSITIVE);
 			}
-			catch( final Throwable __ )
+			catch(Throwable __)
 			{
 				return;
 			}
@@ -504,7 +504,7 @@ INBTPacketReceiver, IStorageTerminalGui{
 					addStackToClientList(is);
 					notDone = false;
 				}
-				if(true && notDone)
+				if(notDone)
 				{
 					for(String lp : is.stack.getTooltip(mc.thePlayer, mc.gameSettings.advancedItemTooltips))
 					{

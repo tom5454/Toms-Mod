@@ -1,15 +1,17 @@
 package com.tom.storage.tileentity.inventory;
 
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.storage.tileentity.TileEntityLimitableChest;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.storage.tileentity.TileEntityLimitableChest;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerLimitableChest extends ContainerTomsMod {
 	private static final int numRows = 3;

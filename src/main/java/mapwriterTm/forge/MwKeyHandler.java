@@ -3,7 +3,9 @@ package mapwriterTm.forge;
 import org.lwjgl.input.Keyboard;
 
 import mapwriterTm.Mw;
+
 import net.minecraft.client.settings.KeyBinding;
+
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;

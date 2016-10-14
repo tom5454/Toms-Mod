@@ -1,12 +1,13 @@
 package com.tom.energy.tileentity;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+
+import net.minecraftforge.fluids.FluidTank;
+
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.lib.Configs;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.FluidTank;
 
 public class TileEntityFusionFluidInjector extends TileEntityTomsMod implements ITileFluidHandler{
 	private final FluidTank tank = new FluidTank(Configs.BASIC_TANK_SIZE);

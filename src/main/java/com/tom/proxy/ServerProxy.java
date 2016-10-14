@@ -28,4 +28,9 @@ public class ServerProxy extends CommonProxy{
 	public void serverStart() {
 
 	}
+
+	@Override
+	public void construction() {
+
+	}
 }

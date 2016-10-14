@@ -1,15 +1,17 @@
 package com.tom.core.tileentity.inventory;
 
-import com.tom.api.inventory.SlotPhantom;
-import com.tom.core.tileentity.TileEntityItemProxy;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.inventory.SlotPhantom;
+
+import com.tom.core.tileentity.TileEntityItemProxy;
 
 public class ContainerItemProxy extends ContainerTomsMod{
 	private TileEntityItemProxy te;

@@ -29,4 +29,6 @@ public abstract class CommonProxy{//ClientProxy
 
 	}
 	public abstract void serverStart();
+
+	public abstract void construction();
 }

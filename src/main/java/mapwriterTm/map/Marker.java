@@ -4,12 +4,11 @@ import java.awt.Point;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.config.Config;
-
 import mapwriterTm.Mw;
 import mapwriterTm.map.mapmode.MapMode;
 import mapwriterTm.util.Logging;
 import mapwriterTm.util.Render;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -21,8 +20,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.config.Config;
 
 public class Marker
 {

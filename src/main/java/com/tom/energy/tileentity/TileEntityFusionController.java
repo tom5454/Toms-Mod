@@ -2,14 +2,6 @@ package com.tom.energy.tileentity;
 
 import java.util.List;
 
-import com.tom.api.tileentity.ICustomMultimeterInformation;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.energy.EnergyInit;
-import com.tom.energy.block.FusionController;
-import com.tom.lib.Configs;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,7 +14,17 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+
 import net.minecraftforge.common.ForgeChunkManager;
+
+import com.tom.api.tileentity.ICustomMultimeterInformation;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.energy.EnergyInit;
+import com.tom.lib.Configs;
+
+import com.tom.energy.block.FusionController;
 
 public class TileEntityFusionController extends TileEntityTomsMod implements ICustomMultimeterInformation{
 	private int cycle = 0;

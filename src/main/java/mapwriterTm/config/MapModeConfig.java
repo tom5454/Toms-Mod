@@ -3,6 +3,7 @@ package mapwriterTm.config;
 import mapwriterTm.gui.ModGuiConfig.ModNumberSliderEntry;
 import mapwriterTm.gui.ModGuiConfigHUD.MapPosConfigEntry;
 import mapwriterTm.util.Reference;
+
 import net.minecraftforge.common.config.Configuration;
 
 public class MapModeConfig

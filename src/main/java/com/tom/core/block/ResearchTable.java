@@ -1,11 +1,5 @@
 package com.tom.core.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.core.tileentity.TileEntityResearchTable;
-import com.tom.handler.GuiHandler.GuiIDs;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -22,6 +16,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.handler.GuiHandler.GuiIDs;
+
+import com.tom.core.tileentity.TileEntityResearchTable;
 
 public class ResearchTable extends BlockContainerTomsMod {
 	/**0:Base,1:Left,2:Right*/

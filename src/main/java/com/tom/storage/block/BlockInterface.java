@@ -3,13 +3,6 @@ package com.tom.storage.block;
 import java.util.List;
 import java.util.Random;
 
-import com.tom.api.block.BlockGridDevice;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.core.CoreInit;
-import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.tileentity.TileEntityInterface;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -23,8 +16,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.block.BlockGridDevice;
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
+import com.tom.core.CoreInit;
+import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.tileentity.TileEntityInterface;
 
 public class BlockInterface extends BlockGridDevice {
 

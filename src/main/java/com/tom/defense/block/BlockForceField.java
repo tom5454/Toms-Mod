@@ -2,10 +2,6 @@ package com.tom.defense.block;
 
 import java.util.Random;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.core.DamageSourceTomsMod;
-import com.tom.defense.tileentity.TileEntityForceField;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
@@ -23,8 +19,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.core.DamageSourceTomsMod;
+import com.tom.defense.tileentity.TileEntityForceField;
 
 public class BlockForceField extends BlockContainerTomsMod {
 	public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 2);

@@ -8,6 +8,7 @@ import mapwriterTm.api.IMwChunkOverlay;
 import mapwriterTm.api.IMwDataProvider;
 import mapwriterTm.map.MapView;
 import mapwriterTm.map.mapmode.MapMode;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.math.MathHelper;

@@ -1,13 +1,15 @@
 package com.tom.network.messages;
 
-import com.tom.api.tileentity.ILookDetector;
-import com.tom.core.tileentity.TileEntityCamera;
-import com.tom.network.MessageBase;
-
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+
+import com.tom.api.tileentity.ILookDetector;
+import com.tom.network.MessageBase;
+
+import com.tom.core.tileentity.TileEntityCamera;
+
+import io.netty.buffer.ByteBuf;
 
 public class MessageCamera extends MessageBase<MessageCamera>{
 	private int camX, camY, camZ;

@@ -3,23 +3,6 @@ package com.tom.network.messages;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.terminal.GuiPartList;
-import com.tom.apis.BigEntry;
-import com.tom.apis.EmptyBigEntry;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.core.item.TabletHandler;
-import com.tom.core.tileentity.TileEntityTabletController;
-import com.tom.core.tileentity.TileEntityTabletController.LuaSound;
-import com.tom.core.tileentity.TileEntityWirelessPeripheral;
-import com.tom.core.tileentity.gui.GuiEmpty;
-import com.tom.core.tileentity.gui.GuiTablet;
-import com.tom.lib.GlobalFields;
-import com.tom.network.MessageBase;
-import com.tom.network.NetworkHandler;
-
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -35,9 +18,30 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.terminal.GuiPartList;
+import com.tom.apis.BigEntry;
+import com.tom.apis.EmptyBigEntry;
+import com.tom.apis.TMLogger;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.lib.GlobalFields;
+import com.tom.network.MessageBase;
+import com.tom.network.NetworkHandler;
+
+import com.tom.core.item.TabletHandler;
+
+import com.tom.core.tileentity.TileEntityTabletController;
+import com.tom.core.tileentity.TileEntityTabletController.LuaSound;
+import com.tom.core.tileentity.TileEntityWirelessPeripheral;
+import com.tom.core.tileentity.gui.GuiEmpty;
+import com.tom.core.tileentity.gui.GuiTablet;
+
+import io.netty.buffer.ByteBuf;
 
 public class MessageTabGuiAction extends MessageBase<MessageTabGuiAction> {
 	private int id,x,y,button,charId, z;

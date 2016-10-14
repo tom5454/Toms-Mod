@@ -1,10 +1,11 @@
 package com.tom.storage.tileentity.gui;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
+import net.minecraft.entity.player.InventoryPlayer;
+
 import com.tom.storage.multipart.PartStorageBus;
 import com.tom.storage.tileentity.inventory.ContainerStorageBus;
 
-import net.minecraft.entity.player.InventoryPlayer;
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiStorageBus extends GuiTomsMod {
 

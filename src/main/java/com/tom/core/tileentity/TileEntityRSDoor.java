@@ -1,9 +1,5 @@
 package com.tom.core.tileentity;
 
-import com.tom.api.tileentity.TileEntityCamoable;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +12,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+
+import com.tom.api.tileentity.TileEntityCamoable;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 
 public class TileEntityRSDoor extends TileEntityCamoable {
 	public EnumFacing dir = EnumFacing.NORTH;

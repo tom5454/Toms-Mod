@@ -21,7 +21,9 @@ import com.tom.recipes.AdvancedCraftingRecipes;
 import com.tom.storage.StorageInit;
 
 public class ResearchLoader {
-	public static Research researchAcids, researchPower, researchPower2, hammer, mortar, bronzeAge, basicBoiler, basicBronzeMachines, bronzeAlloySmelter, bronzePlateBlender, refinedBricks, cokeOven, blastFurnace, advancedTank, steelBoiler, steelFurnace, rubberProcessing, soldering, basicTurbine, multimeter, lvCable, batteryBox, basicLvMachines, wireProcessing, speedUpgrade, lvPlateBlender, lvAlloySmelter, waterCollector, pump, fluidTransposer, eSolderingStation, solarPanel, industrialBlastFurnace, mvTransformer, mvCable, mvCircuit, mvMachines, refinery, multiblockComponents, plasticProcessing, electrolyzer, centrifuge, advancedMultiblockParts, hvTransformer, advancedCircuit, hvCable, hvMachines, eliteTank, ultimateTank, limitableChest, advancedExtruder;
+	public static Research researchAcids, researchPower, researchPower2, hammer, mortar, bronzeAge, basicBoiler, basicBronzeMachines, bronzeAlloySmelter, bronzePlateBlender, refinedBricks, cokeOven, blastFurnace, advancedTank, steelBoiler, steelFurnace, rubberProcessing, soldering, basicTurbine, multimeter, lvCable, batteryBox, basicLvMachines, wireProcessing, speedUpgrade, lvPlateBlender, lvAlloySmelter, waterCollector, pump, fluidTransposer, eSolderingStation, solarPanel, industrialBlastFurnace, mvTransformer, mvCable, mvCircuit, mvMachines, refinery, multiblockComponents, plasticProcessing, electrolyzer, centrifuge, advancedMultiblockParts, hvTransformer, advancedCircuit,
+	hvCable, hvMachines, eliteTank, ultimateTank, limitableChest, advancedExtruder, mvTurbine, charger, configurator, geoThermalBoiler, geoThermalGenerator, liquidFueledBoiler, liquidFueledSteelBoiler, liquidFueledGenerator;
+
 	public static void init(){
 		CoreInit.log.info("Loading Researches...");
 		researchAcids = new Research("acids", TMResource.SULFUR.getStackNormal(Type.DUST)).setResearchTime(200).setRequiredItems(TomsModUtils.getItemStackList(TMResource.SULFUR.getStackNormal(Type.DUST,6), new ItemStack(Items.IRON_INGOT,2), TMResource.COPPER.getStackNormal(Type.INGOT,2),TMResource.TIN.getStackNormal(Type.INGOT,2)));
@@ -75,6 +77,14 @@ public class ResearchLoader {
 		ultimateTank = new Research("ultimateTank", new ItemStack(StorageInit.tankUltimate)).setResearchTime(3000).addParent(eliteTank).addParent(hvMachines).addRequiredItem(TMResource.ENDERIUM.getStackNormal(Type.PLATE, 20)).addRequiredItem(new ItemStack(CoreInit.hardenedGlass, 10)).addRequiredItem(new ItemStack(Blocks.GLASS, 5)).addRequiredItem(new ItemStack(StorageInit.tankElite));
 		limitableChest = new Research("configurableChest", new ItemStack(StorageInit.limitableChest)).setResearchTime(500).addParent(bronzeAge).addRequiredItem(new ItemStack(Blocks.CHEST, 2)).addRequiredItem(new ItemStack(Blocks.TRAPDOOR)).addRequiredItem(new ItemStack(Blocks.LEVER)).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.PLATE));
 		advancedExtruder = new Research("advExtruder", new ItemStack(FactoryInit.extruderModule, 1, 1)).setResearchTime(2000).addParent(mvMachines).addRequiredItem(TMResource.WOLFRAM.getStackNormal(Type.PLATE, 5)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 10)).addRequiredItem(new ItemStack(Items.DIAMOND)).addRequiredItem(CraftingMaterial.UPGRADE_FRAME.getStackNormal());
+		mvTurbine = new Research("mvTurbine", new ItemStack(EnergyInit.steamTurbineMK2)).setResearchTime(1600).addParent(mvCircuit).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 4)).addRequiredItem(CraftingMaterial.NORMAL_CIRCUIT.getStackNormal()).addRequiredItem(new ItemStack(CoreInit.MachineFrameSteel)).addRequiredItem(new ItemStack(Items.REDSTONE, 16));
+		charger = new Research("charger", new ItemStack(EnergyInit.charger)).setResearchTime(1500).addParent(basicLvMachines).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addRequiredItem(CraftingMaterial.BASIC_CIRCUIT.getStackNormal()).addRequiredItem(new ItemStack(CoreInit.Battery, 2)).addRequiredItem(TMResource.COPPER.getStackNormal(Type.CABLE, 5));
+		configurator = new Research("configurator", new ItemStack(CoreInit.configurator)).setResearchTime(1600).addParent(charger).addParent(lvAlloySmelter).addParent(eSolderingStation).addRequiredItem(CraftingMaterial.BASIC_CIRCUIT.getStackNormal(2)).addRequiredItem(new ItemStack(CoreInit.Display)).addRequiredItem(TMResource.IRON.getStackNormal(Type.PLATE, 2)).addRequiredItem(new ItemStack(Items.REDSTONE, 6));
+		geoThermalBoiler = new Research("geoBoiler", new ItemStack(FactoryInit.geothermalBoiler)).addParent(steelBoiler).setResearchTime(800).addRequiredItem(new ItemStack(FactoryInit.advBoiler)).addRequiredItem(new ItemStack(CoreInit.MachineFrameSteel)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE)).addRequiredItem(CraftingMaterial.REFINED_BRICK.getStackNormal(4));
+		geoThermalGenerator = new Research("geoGenerator", new ItemStack(EnergyInit.geothermalGenerator)).addParent(geoThermalBoiler).setResearchTime(2000).addRequiredItem(new ItemStack(FactoryInit.geothermalBoiler)).addRequiredItem(CraftingMaterial.GENERATOR_COMPONENT.getStackNormal(2)).addRequiredItem(CraftingMaterial.BASIC_CIRCUIT.getStackNormal()).addRequiredItem(CraftingMaterial.REFINED_BRICK.getStackNormal(4));
+		liquidFueledBoiler = new Research("liquidFueledBoiler", new ItemStack(FactoryInit.fluidBolier)).setResearchTime(600).addParent(basicBoiler).addRequiredItem(new ItemStack(CoreInit.MachineFrameBronze)).addRequiredItem(new ItemStack(StorageInit.tankBasic)).addRequiredItem(new ItemStack(Blocks.BRICK_BLOCK)).addParent(refinedBricks).addRequiredItem(CraftingMaterial.REFINED_BRICK.getStackNormal(3));
+		liquidFueledSteelBoiler = new Research("liquidFueledAdvBoiler", new ItemStack(FactoryInit.advFluidBoiler)).setResearchTime(1200).addParent(liquidFueledBoiler).addParent(steelBoiler).addRequiredItem(new ItemStack(CoreInit.MachineFrameSteel)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 10)).addRequiredItem(CraftingMaterial.REFINED_BRICK.getStackNormal(5));
+		liquidFueledGenerator = new Research("liquidFueledGenerator", new ItemStack(EnergyInit.fluidGenerator)).setResearchTime(1600).addParent(basicLvMachines).addParent(liquidFueledSteelBoiler).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addRequiredItem(CraftingMaterial.BASIC_CIRCUIT.getStackNormal(2)).addRequiredItem(new ItemStack(StorageInit.tankAdv)).addRequiredItem(CraftingMaterial.GENERATOR_COMPONENT.getStackNormal());
 		registerResearch(researchAcids);
 		registerResearch(researchPower);
 		registerResearch(researchPower2);
@@ -125,6 +135,14 @@ public class ResearchLoader {
 		registerResearch(ultimateTank);
 		registerResearch(limitableChest);
 		registerResearch(advancedExtruder);
+		registerResearch(mvTurbine);
+		registerResearch(charger);
+		registerResearch(configurator);
+		registerResearch(geoThermalBoiler);
+		registerResearch(geoThermalGenerator);
+		registerResearch(liquidFueledBoiler);
+		registerResearch(liquidFueledSteelBoiler);
+		registerResearch(liquidFueledGenerator);
 	}
 	private static void registerResearch(Research research){
 		research.setPrefix("tomsmod.");

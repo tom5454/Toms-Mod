@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+
 import com.tom.api.inventory.IJEIAutoFillTerminal;
 import com.tom.apis.Function;
 import com.tom.apis.Function.BiFunction;
@@ -20,12 +27,6 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import mezz.jei.transfer.RecipeTransferErrorInternal;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 public class PatternTerminalJEITransferHandler implements IRecipeTransferHandler{
 	private final Class<? extends Container> containerClass;
@@ -95,7 +96,7 @@ public class PatternTerminalJEITransferHandler implements IRecipeTransferHandler
 				//((IPatternTerminal)container).setRecipe(stacks, output);
 			}
 		}else{
-			return RecipeTransferErrorInternal.instance;
+			return RecipeTransferErrorInternal.INSTANCE;
 		}
 		return null;
 	}

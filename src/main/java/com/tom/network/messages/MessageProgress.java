@@ -4,14 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.tom.network.MessageBase;
-import com.tom.network.NetworkHandler;
-
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
+
+import com.tom.network.MessageBase;
+import com.tom.network.NetworkHandler;
+
+import io.netty.buffer.ByteBuf;
 
 public class MessageProgress extends MessageBase<MessageProgress> {
 	private boolean update = false;

@@ -1,6 +1,7 @@
 package mapwriterTm.gui;
 
 import mapwriterTm.map.Marker.RenderType;
+
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 

@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import com.tom.lib.Configs;
 
 public class TMLogger {
-	public static org.apache.logging.log4j.Logger log = LogManager.getLogger(Configs.Modid);//FMLLog
+	public static org.apache.logging.log4j.Logger log = LogManager.getLogger(Configs.ModName);//FMLLog
 
 	public static void catching(Throwable t) {
 		log.catching(t);

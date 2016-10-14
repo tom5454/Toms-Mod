@@ -7,6 +7,7 @@ import java.util.List;
 import mapwriterTm.Mw;
 import mapwriterTm.util.Reference;
 import mapwriterTm.util.Utils;
+
 import net.minecraftforge.common.config.Configuration;
 
 public class WorldConfig

@@ -12,9 +12,11 @@ import mapwriterTm.gui.ModGuiConfig.ModNumberSliderEntry;
 import mapwriterTm.map.MapRenderer;
 import mapwriterTm.map.mapmode.MapMode;
 import mapwriterTm.util.Reference;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiConfig;

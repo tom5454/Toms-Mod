@@ -1,9 +1,9 @@
 package com.tom.core.item;
 
+import net.minecraft.item.ItemStack;
+
 import com.tom.api.item.ItemCraftingTool;
 import com.tom.config.Config;
-
-import net.minecraft.item.ItemStack;
 
 public class MortarAndPestle extends ItemCraftingTool {
 

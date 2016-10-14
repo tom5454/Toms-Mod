@@ -211,6 +211,8 @@ item.material_solar1.name=Solar Panel Component MK1
 item.material_pipeSteel.name=Steel Pipe
 item.material_electricMotor.name=Electric Motor
 item.material_sheetPlastic.name=Plastic Sheet
+item.tm.crushedMonazit.name=Crushed Monazit Ore
+item.tm.crushedMonazit.end.name=Crushed End Monazit Ore
 
 item.plate_chrome.name=Chrome Plate
 item.ingot_chrome.name=Chrome Ingot
@@ -910,6 +912,13 @@ tile.MachineFrameAluminum.name=Aluminum Machine Frame
 tile.tm.hardenedGlass0.name=Hardened Glass
 tile.tm.hardenedGlass1.name=Hardened Ender Glass
 tile.tm.steelFence.name=Steel Fence
+tile.tm.mvTurbine.name=Advanced Turbine
+tile.tm.charger.name=Charger
+tile.tm.geoGenerator.name=Geothermal Generator
+tile.tm.liqFueledGen.name=Liquid Fueled Generator
+tile.tm.geoBoiler.name=Geothermal Boiler
+tile.tm.fluidBoiler.name=Liquid Fueled Boiler
+tile.tm.advFluidBoiler.name=Advanced Liquid Fueled Boiler
 
 tomsMod.waila.playerName=Owner:
 tomsMod.waila.mode=Mode:
@@ -936,6 +945,7 @@ tomsmod.jei.heatRequired=Heat Required: %,d K
 tomsmod.jei.blastFurnace=Blast Furnace
 tomsmod.jei.time=Process Time: %d tick(s)
 tomsmod.jei.normalBlastFurnaceRequired=Basic Blast Furnace Required
+tomsmod.jei.coiler=Coiler Plant
 
 tomsmod.gui.mbHatch=Multiblock Hatch
 tomsmod.gui.mbFluidHatch=Multiblock Fluid Port
@@ -1033,6 +1043,11 @@ research.tomsmod.eliteTank.name=Elite Tank
 research.tomsmod.ultimateTank.name=Ultimate Tank
 research.tomsmod.configurableChest.name=Configurable Chest
 research.tomsmod.advExtruder.name=Advanced Extruder Module
+research.tomsmod.mvTurbine.name=Advanced Steam Turbine
+research.tomsmod.charger.name=Charger
+research.tomsmod.configurator.name=Configurator
+research.tomsmod.geoBoiler.name=Geothermal Boiler
+research.tomsmod.geoGenerator.name=Geothermal Generator
 
 tomsmod.render.energy=Energy
 tomsmod.render.capacity=Capacity
@@ -1108,6 +1123,11 @@ tomsMod.craftingLevel.basic=Basic
 tomsMod.craftingLevel.soldering=Soldering
 tomsMod.craftingLevel.esoldering=Electrical Soldering
 tomsMod.craftingFailedError=[%s] Crafting Failed! Error: %s.
+tomsMod.backupStarted=Automatic Backup Started. Server may lag a bit.
+tomsMod.backupSuccess=Automatic Backup Success. Next backup: %d minutes later.
+tomsMod.backupFailed=Automatic Backup Failed. Retry: %d minutes later.
+tomsMod.backupStartedBy=%s started a backup.
+tomsMod.backupAlreadyRunning=[Tom's Mod Backup] Backup Already Running
 
 tomsMod.tooltip.tier=Tier
 tomsMod.tooltip.tierInvalid=Invalid Tier
@@ -1279,14 +1299,14 @@ fluid.kerosene=Kerosene
 
 keys.tomsmod.category=Tom's Mod
 
-keys.tomsmod.key.up=Tablet Up (▲)
-keys.tomsmod.key.down=Tablet Down (▼)
-keys.tomsmod.key.left=Tablet Left (◀)
-keys.tomsmod.key.right=Tablet Right (▶)
-keys.tomsmod.key.enter=Tablet Enter (↵)
-keys.tomsmod.key.back=Tablet Back (←)
+keys.tomsmod.key.up=Tablet Up
+keys.tomsmod.key.down=Tablet Down
+keys.tomsmod.key.left=Tablet Left
+keys.tomsmod.key.right=Tablet Right
+keys.tomsmod.key.enter=Tablet Enter
+keys.tomsmod.key.back=Tablet Back
 keys.tomsmod.key.interact=Tablet Interact
-keys.tomsmod.key.menu=Tablet Menu (≡)
+keys.tomsmod.key.menu=Tablet Menu
 keys.tomsmod.key.config=Configure
 
 death.friedByField=%s was fried by a forcefield!
@@ -1298,6 +1318,7 @@ commands.tmWaypoint.usage.addServer=/tm_server_waypoint add <waypoint name> <gro
 commands.tmWaypoint.usage.add=/tm_waypoint add <waypoint name> <group> <x> <y> <z> <dimension> <player name> [icon location] [color] [reloadable] [beam type] [label type] [beam texture]
 commands.tmWaypoint.usage.removeServer=/tm_server_waypoint remove <waypoint name> <group>
 commands.tmWaypoint.usage.remove=/tm_waypoint remove <waypoint name> <group> <player name>
+commands.tm_backup.usage=/tm_backup
 
 achievement.researchTable=Time to Research
 achievement.researchTable.desc=Craft a Research Table.

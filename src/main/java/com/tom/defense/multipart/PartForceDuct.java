@@ -4,6 +4,10 @@ import static com.tom.api.energy.EnergyType.FORCE;
 
 import java.util.List;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyConnection;
 import com.tom.api.energy.IEnergyHandler;
@@ -12,10 +16,6 @@ import com.tom.api.multipart.PartDuct;
 import com.tom.apis.TomsModUtils;
 import com.tom.defense.DefenseInit;
 import com.tom.energy.multipart.EnergyGrid;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
 
 public class PartForceDuct extends PartDuct<EnergyGrid> implements
 ICustomPartBounds, IEnergyHandler {

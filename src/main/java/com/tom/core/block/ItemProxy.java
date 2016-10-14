@@ -1,10 +1,5 @@
 package com.tom.core.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.core.CoreInit;
-import com.tom.core.tileentity.TileEntityItemProxy;
-import com.tom.handler.GuiHandler;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -17,6 +12,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.core.CoreInit;
+import com.tom.handler.GuiHandler;
+
+import com.tom.core.tileentity.TileEntityItemProxy;
 
 public class ItemProxy extends BlockContainerTomsMod {
 	/*@SideOnly(Side.CLIENT)

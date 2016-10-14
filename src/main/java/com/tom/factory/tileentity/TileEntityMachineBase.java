@@ -26,7 +26,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	protected ItemStack[] stack = new ItemStack[this.getSizeInventory()];
 	protected EnergyType TYPE = HV;
 	protected static final float[] TYPE_MULTIPLIER_SPEED = new float[]{1.0F, 0.85F, 0.7F};
-	protected static final int[] MAX_SPEED_UPGRADE_COUNT = new int[]{4, 10, 24};
+	protected static final int[] MAX_SPEED_UPGRADE_COUNT = new int[]{24, 10, 4};
 	protected int maxProgress = 1;
 	protected int progress = -1;
 	@Override
@@ -122,6 +122,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 			}
 		}
 		getEnergy().readFromNBT(compound);
+		TYPE = EnergyType.VALUES[compound.getInteger("energyType")];
 	}
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
@@ -137,6 +138,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 		}
 		compound.setTag("inventory", list);
 		getEnergy().writeToNBT(compound);
+		compound.setInteger("energyType", TYPE.ordinal());
 		return compound;
 	}
 	@Override
@@ -194,7 +196,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	public abstract int getUpgradeSlot();
 
 	public int getMaxProgress(){
-		return MathHelper.floor_double(getMaxProcessTimeNormal() / TYPE_MULTIPLIER_SPEED[getType()]);
+		return !worldObj.isRemote ? MathHelper.floor_double(getMaxProcessTimeNormal() / TYPE_MULTIPLIER_SPEED[getType()]) : maxProgress;
 	}
 	@Override
 	public int getField(int id) {
@@ -208,7 +210,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	}
 	@Override
 	public final void preUpdate() {
-		maxProgress = getMaxProgress();
+		if(!worldObj.isRemote)maxProgress = getMaxProgress();
 	}
 	public abstract int getMaxProcessTimeNormal();
 

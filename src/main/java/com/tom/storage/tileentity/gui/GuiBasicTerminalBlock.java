@@ -1,9 +1,9 @@
 package com.tom.storage.tileentity.gui;
 
+import net.minecraft.entity.player.InventoryPlayer;
+
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
 import com.tom.storage.tileentity.inventory.ContainerBasicTerminalBlock;
-
-import net.minecraft.entity.player.InventoryPlayer;
 
 public class GuiBasicTerminalBlock extends GuiTerminalBase {
 

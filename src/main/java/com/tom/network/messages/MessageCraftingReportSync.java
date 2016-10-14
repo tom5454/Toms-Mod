@@ -1,15 +1,17 @@
 package com.tom.network.messages;
 
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.network.MessageBase;
-
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
+
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import com.tom.api.network.INBTPacketReceiver;
+import com.tom.network.MessageBase;
+
+import io.netty.buffer.ByteBuf;
 
 public class MessageCraftingReportSync extends MessageBase<MessageCraftingReportSync>{
 	public MessageCraftingReportSync() {

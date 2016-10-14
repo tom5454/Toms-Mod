@@ -1,11 +1,12 @@
 package com.tom.network.messages;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 import com.tom.core.Keybindings;
 import com.tom.handler.KeyInputHandler;
 import com.tom.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageKey extends MessageBase<MessageKey> {
 	private int key;

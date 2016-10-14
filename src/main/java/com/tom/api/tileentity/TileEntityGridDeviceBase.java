@@ -1,12 +1,12 @@
 package com.tom.api.tileentity;
 
-import com.tom.api.grid.IGrid;
-import com.tom.api.grid.IGridDevice;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.grid.IGrid;
+import com.tom.api.grid.IGridDevice;
 
 public abstract class TileEntityGridDeviceBase<G extends IGrid<?,G>> extends TileEntityTomsMod implements
 IGridDevice<G> {

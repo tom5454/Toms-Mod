@@ -33,6 +33,7 @@ import com.tom.api.item.ICustomCraftingHandler;
 import com.tom.api.item.ICustomCraftingHandlerAdv;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.Config;
+import com.tom.core.AutoBackup;
 import com.tom.core.CoreInit;
 import com.tom.handler.WorldHandler.Action;
 import com.tom.network.NetworkHandler;
@@ -198,6 +199,11 @@ public class EventHandler {
 	public void tickServer(ServerTickEvent event){
 		if(event.phase == Phase.START && event.type == Type.SERVER){
 			teList.update(false);
+			if(Config.enableAutoWorldBackup){
+				if(AutoBackup.tick()){
+					AutoBackup.createBackup();
+				}
+			}
 		}
 	}
 	@SubscribeEvent

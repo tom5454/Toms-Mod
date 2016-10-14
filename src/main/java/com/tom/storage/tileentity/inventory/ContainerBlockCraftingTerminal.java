@@ -1,10 +1,5 @@
 package com.tom.storage.tileentity.inventory;
 
-import com.tom.api.inventory.IJEIAutoFillTerminal;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageNBT;
-import com.tom.storage.tileentity.TileEntityCraftingTerminal;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -15,6 +10,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.tom.api.inventory.IJEIAutoFillTerminal;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageNBT;
+import com.tom.storage.tileentity.TileEntityCraftingTerminal;
 
 public class ContainerBlockCraftingTerminal extends ContainerTerminalBase implements IJEIAutoFillTerminal{
 	//private int crafted;

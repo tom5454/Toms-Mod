@@ -4,12 +4,6 @@ import static com.tom.api.energy.EnergyType.HV;
 
 import java.util.List;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
-import com.tom.api.tileentity.IGuiTile;
-import com.tom.api.tileentity.TileEntityTomsMod;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +17,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
+import com.tom.api.energy.EnergyStorage;
+import com.tom.api.energy.EnergyType;
+import com.tom.api.energy.IEnergyReceiver;
+import com.tom.api.tileentity.IGuiTile;
+import com.tom.api.tileentity.TileEntityTomsMod;
 
 public class TileEntityItemProxy extends TileEntityTomsMod implements
 IEnergyReceiver, ISidedInventory, IGuiTile {

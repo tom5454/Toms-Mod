@@ -3,16 +3,6 @@ package com.tom.storage.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.inventory.StoredItemStack;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingHandler;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingPatternListener;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingRecipe;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingRecipeContainer;
-import com.tom.storage.multipart.StorageNetworkGrid.SavedCraftingRecipe;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -24,6 +14,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
+import com.tom.api.inventory.StoredItemStack;
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
+import com.tom.apis.TomsModUtils;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftingHandler;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftingPatternListener;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftingRecipe;
+import com.tom.storage.multipart.StorageNetworkGrid.ICraftingRecipeContainer;
+import com.tom.storage.multipart.StorageNetworkGrid.SavedCraftingRecipe;
 
 public class TileEntityInterface extends
 TileEntityGridDeviceBase<StorageNetworkGrid> implements ICraftingHandler<StoredItemStack>, ISidedInventory{

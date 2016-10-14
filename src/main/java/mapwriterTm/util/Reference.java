@@ -3,14 +3,16 @@ package mapwriterTm.util;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
-import com.google.common.collect.Sets;
-import com.tom.lib.Configs;
-
 import net.minecraft.util.ResourceLocation;
+
+import com.google.common.collect.Sets;
+
+import com.tom.lib.Configs;
 
 public final class Reference
 {
-	public static final String MOD_ID = "MapWriterTm";
+	public static final String MOD_ID = "mapwritertm";
+	public static final String MOD_ID_CAP = "MapWriterTm";
 	public static final String MOD_NAME = "MapWriter in Tom's Mod";
 	public static final String VERSION = Configs.version;
 	public static final String MOD_GUIFACTORY_CLASS = "mapwriterTm.gui.ModGuiFactoryHandler";

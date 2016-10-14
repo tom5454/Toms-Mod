@@ -1,11 +1,12 @@
 package com.tom.factory.tileentity.gui;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+
 import com.tom.factory.tileentity.TileEntitySteamCrusher;
 import com.tom.factory.tileentity.inventory.ContainerSteamCrusher;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiSteamCrusher extends GuiTomsMod {
 	private TileEntitySteamCrusher te;

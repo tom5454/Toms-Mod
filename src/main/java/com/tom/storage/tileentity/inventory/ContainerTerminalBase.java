@@ -120,18 +120,14 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 		}
 		@SideOnly(Side.CLIENT)
 		public boolean drawTooltip(GuiTerminalBase gui, int mouseX, int mouseY){
-			boolean ret = false;
 			if(stack != null){
 				if(stack.itemCount > 9999){
 					gui.renderItemInGui(stack.stack, gui.getGuiLeft()+xDisplayPosition, gui.getGuiTop()+yDisplayPosition, mouseX, mouseY, false, 0, true, I18n.format("tomsmod.gui.amount", stack.itemCount));
 				}else{
 					gui.renderItemInGui(stack.stack, gui.getGuiLeft()+xDisplayPosition, gui.getGuiTop()+yDisplayPosition, mouseX, mouseY, false, 0, true);
 				}
-				if(mouseX >= (gui.getGuiLeft()+xDisplayPosition)-1 && mouseY >= (gui.getGuiTop()+yDisplayPosition)-1 && mouseX < (gui.getGuiLeft()+xDisplayPosition) + 17 && mouseY < (gui.getGuiTop()+yDisplayPosition) + 17){
-					ret = true;
-				}
 			}
-			return ret;
+			return mouseX >= (gui.getGuiLeft()+xDisplayPosition)-1 && mouseY >= (gui.getGuiTop()+yDisplayPosition)-1 && mouseX < (gui.getGuiLeft()+xDisplayPosition) + 17 && mouseY < (gui.getGuiTop()+yDisplayPosition) + 17;
 		}
 		@SideOnly(Side.CLIENT)
 		private void drawStackSize(FontRenderer fr, int size, int x, int y){
@@ -173,10 +169,6 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 		storageSlotList.add(slotStorage);
 	}
 
-	@Override
-	public boolean canInteractWith(EntityPlayer playerIn) {
-		return true;
-	}
 	/**Use {@link #sendToCrafter(IContainerListener)}, {@link #afterSending()}*/
 	@Override
 	public final void detectAndSendChanges() {
@@ -549,6 +541,10 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile{
 	protected final void addPlayerSlotsExceptHeldItem(InventoryPlayer playerInventory, int x, int y) {
 		this.playerSlotsStart = inventorySlots.size() - 1;
 		super.addPlayerSlotsExceptHeldItem(playerInventory, x, y);
+	}
+	@Override
+	public boolean canInteractWith(EntityPlayer playerIn) {
+		return true;
 	}
 	public void sendToCrafter(IContainerListener crafter){}
 	public void afterSending(){}

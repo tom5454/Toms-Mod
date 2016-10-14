@@ -1,9 +1,9 @@
 package com.tom.energy.block;
 
-import com.tom.energy.tileentity.TileEntityLaserMK1;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import com.tom.energy.tileentity.TileEntityLaserMK1;
 
 public class MK1Laser extends BlockLaserBase {
 

@@ -10,9 +10,6 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.core.Minimap;
-import com.tom.network.messages.MessageMarkerSync;
-
 import mapwriterTm.Mw;
 import mapwriterTm.config.Config;
 import mapwriterTm.config.WorldConfig;
@@ -21,6 +18,7 @@ import mapwriterTm.map.mapmode.MapMode;
 import mapwriterTm.util.Logging;
 import mapwriterTm.util.Reference;
 import mapwriterTm.util.Utils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,9 +30,13 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.core.Minimap;
+import com.tom.network.messages.MessageMarkerSync;
 
 public class MarkerManager
 {

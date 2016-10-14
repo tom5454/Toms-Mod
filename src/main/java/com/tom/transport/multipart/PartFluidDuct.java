@@ -21,6 +21,7 @@ import io.netty.buffer.ByteBuf;
 public class PartFluidDuct extends PartDuct<FluidGrid> implements ICustomPartBounds, ITileFluidHandler{
 	private final AxisAlignedBB connectionBox;
 	//private byte eConnectionCache = 0;
+	private int timer = 0;
 	public FluidStack stack;
 	public PartFluidDuct() {
 		super(TransportInit.fluidDuct, "tomsmodtransport:tm.fluidDuct", 0.1875, 2);
@@ -39,6 +40,11 @@ public class PartFluidDuct extends PartDuct<FluidGrid> implements ICustomPartBou
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote){
+			timer++;
+			if(timer > Configs.updateRate){
+				timer = 0;
+				sendUpdatePacket();
+			}
 			for(EnumFacing f : EnumFacing.VALUES){
 				/*if(connectsE(f)){
 					if(grid.getData().getFluid() == null || grid.getData().getCapacity() >= grid.getData().getFluidAmount()){

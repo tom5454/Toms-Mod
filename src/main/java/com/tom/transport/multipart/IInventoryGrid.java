@@ -7,6 +7,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Stack;
 
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+
 import com.tom.api.grid.GridBase;
 import com.tom.api.grid.IGridDevice;
 import com.tom.api.multipart.PartDuct;
@@ -20,15 +31,6 @@ import mcmultipart.multipart.IMultipartContainer;
 import mcmultipart.multipart.ISlottedPart;
 import mcmultipart.multipart.MultipartHelper;
 import mcmultipart.multipart.PartSlot;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class IInventoryGrid extends GridBase<GridInventory, IInventoryGrid> {
 	private GridInventory currentStack = new GridInventory();

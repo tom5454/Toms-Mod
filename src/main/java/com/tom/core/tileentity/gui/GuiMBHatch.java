@@ -1,10 +1,11 @@
 package com.tom.core.tileentity.gui;
 
-import com.tom.core.tileentity.inventory.ContainerMBHatch;
-import com.tom.factory.tileentity.TileEntityMBHatch;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+
+import com.tom.factory.tileentity.TileEntityMBHatch;
+
+import com.tom.core.tileentity.inventory.ContainerMBHatch;
 
 public class GuiMBHatch extends GuiTomsMod{
 

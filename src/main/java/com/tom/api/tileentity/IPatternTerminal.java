@@ -1,15 +1,17 @@
 package com.tom.api.tileentity;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import com.tom.storage.multipart.StorageNetworkGrid.CraftableProperties;
 import com.tom.storage.multipart.StorageNetworkGrid.CraftingPatternProperties;
 import com.tom.storage.multipart.StorageNetworkGrid.ITerminal;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public interface IPatternTerminal extends ITerminal {
 	IInventory getRecipeInv();

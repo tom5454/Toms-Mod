@@ -2,10 +2,6 @@ package com.tom.core.block;
 
 import java.util.Random;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.core.CoreInit;
-import com.tom.core.tileentity.TileEntityRSDoor;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -21,6 +17,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.core.CoreInit;
+
+import com.tom.core.tileentity.TileEntityRSDoor;
 
 public class BlockRsDoor extends BlockContainerTomsMod {
 	public BlockRsDoor() {

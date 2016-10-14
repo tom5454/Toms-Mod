@@ -715,9 +715,9 @@ public final class TomsModUtils {
 	public static void sendNoSpamTranslate(EntityPlayer player, Style style, String key, Object... args){
 		if(!player.worldObj.isRemote)sendNoSpam(player, new TextComponentTranslation(key, args).setStyle(style));
 	}
-	public static <T extends Comparable<T>> void setBlockStateWithCondition(World worldIn, BlockPos pos, IBlockState state, IProperty<T> p, T valueE){
+	public static <T extends Comparable<T>> void setBlockStateWithCondition(World worldObj, BlockPos pos, IBlockState state, IProperty<T> p, T valueE){
 		try{
-			if(state.getValue(p) != valueE) setBlockState(worldIn, pos, state.withProperty(p, valueE), 2);
+			if(state.getValue(p) != valueE) setBlockState(worldObj, pos, state.withProperty(p, valueE), 2);
 		}catch(Exception e){
 			log.catching(e);
 		}
@@ -770,8 +770,8 @@ public final class TomsModUtils {
 		}
 		return server.worldServerForDimension(dim);
 	}
-	public static <T extends Comparable<T>> void setBlockStateWithCondition(World worldIn, BlockPos pos, IProperty<T> p, T valueE){
-		setBlockStateWithCondition(worldIn, pos, worldIn.getBlockState(pos), p, valueE);
+	public static <T extends Comparable<T>> void setBlockStateWithCondition(World worldObj, BlockPos pos, IProperty<T> p, T valueE){
+		setBlockStateWithCondition(worldObj, pos, worldObj.getBlockState(pos), p, valueE);
 	}
 	/*public static List<ItemStack> getItemStackList(ItemStack... stacks){
     	List<ItemStack> list = new ArrayList<ItemStack>();

@@ -1,11 +1,5 @@
 package com.tom.core.item;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.core.block.BlockRubberWood;
-import com.tom.core.block.BlockRubberWood.WoodType;
-import com.tom.core.block.BlockTreeTap;
-
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -20,6 +14,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+
+import com.tom.core.block.BlockRubberWood;
+import com.tom.core.block.BlockRubberWood.WoodType;
+import com.tom.core.block.BlockTreeTap;
 
 public class ItemTreeTap extends Item {
 	@Override
@@ -40,7 +41,7 @@ public class ItemTreeTap extends Item {
 					if(stateF.getBlock().isReplaceable(worldIn, pos.offset(facing))){
 						if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos.offset(facing), facing, stack) && worldIn.canBlockBePlaced(CoreInit.blockTreetap, pos.offset(facing), false, facing, (Entity)null, stack)){
 							worldIn.setBlockState(pos.offset(facing), CoreInit.blockTreetap.getDefaultState().withProperty(BlockTreeTap.FACING, facing).withProperty(BlockTreeTap.STATE, 0), 3);
-							SoundType soundtype = Blocks.PLANKS.getSoundType();
+							SoundType soundtype = Blocks.PLANKS.getSoundType(Blocks.PLANKS.getDefaultState(), worldIn, BlockPos.ORIGIN, playerIn);
 							worldIn.playSound(playerIn, pos.offset(facing), soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 							--stack.stackSize;
 							return EnumActionResult.SUCCESS;

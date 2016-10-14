@@ -1,12 +1,12 @@
 package com.tom.defense.tileentity;
 
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+
+import com.tom.apis.TMLogger;
+import com.tom.apis.TomsModUtils;
 
 public class TileEntityForceField extends TileEntity {
 	public BlockPos ownerPos;

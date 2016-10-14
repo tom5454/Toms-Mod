@@ -1,14 +1,14 @@
 package com.tom.factory.block;
 
-import com.tom.api.block.BlockMultiblockCasing;
-import com.tom.factory.tileentity.TileEntityAdvMBCasing;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockMultiblockCasing;
+import com.tom.factory.tileentity.TileEntityAdvMBCasing;
 
 public class AdvancedMultiblockCasing extends BlockMultiblockCasing {
 	/*@SideOnly(Side.CLIENT)

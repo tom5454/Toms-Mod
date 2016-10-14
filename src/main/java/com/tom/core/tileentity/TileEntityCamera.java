@@ -3,14 +3,6 @@ package com.tom.core.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.tileentity.ILookDetector;
-import com.tom.api.tileentity.IWirelessPeripheralController;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.core.entity.EntityCamera;
-import com.tom.core.tileentity.gui.GuiCamera;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageCamera;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,8 +14,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.tileentity.ILookDetector;
+import com.tom.api.tileentity.IWirelessPeripheralController;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.core.entity.EntityCamera;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageCamera;
+
+import com.tom.core.tileentity.gui.GuiCamera;
 
 public class TileEntityCamera extends TileEntityTomsMod implements ILookDetector{
 	public int posX = 0;

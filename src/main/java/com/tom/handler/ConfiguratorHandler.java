@@ -1,14 +1,5 @@
 package com.tom.handler;
 
-import com.tom.api.item.IConfigurator;
-import com.tom.api.tileentity.AccessType;
-import com.tom.api.tileentity.IConfigurable;
-import com.tom.api.tileentity.IConfigurable.ICustomConfigurationErrorMessage;
-import com.tom.api.tileentity.ISecurityStation;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.handler.GuiHandler.GuiIDs;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,6 +8,15 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import com.tom.api.item.IConfigurator;
+import com.tom.api.tileentity.AccessType;
+import com.tom.api.tileentity.IConfigurable;
+import com.tom.api.tileentity.IConfigurable.ICustomConfigurationErrorMessage;
+import com.tom.api.tileentity.ISecurityStation;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.handler.GuiHandler.GuiIDs;
 
 public class ConfiguratorHandler {
 	public static boolean openConfigurator(ItemStack stack, EntityPlayer player,

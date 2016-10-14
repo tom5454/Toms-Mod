@@ -1,11 +1,5 @@
 package com.tom.factory.tileentity;
 
-import com.tom.api.ITileFluidHandler;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.factory.block.SteamFurnace;
-import com.tom.recipes.handler.MachineCraftingHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -14,8 +8,15 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import com.tom.api.ITileFluidHandler;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.factory.block.SteamFurnace;
+import com.tom.recipes.handler.MachineCraftingHandler;
 
 public class TileEntitySteamFurnaceAdv extends TileEntityTomsMod implements ITileFluidHandler, ISidedInventory {
 	private FluidTank tank = new FluidTank(3000);

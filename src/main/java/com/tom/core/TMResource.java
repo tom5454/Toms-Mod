@@ -623,6 +623,7 @@ public enum TMResource implements IStringSerializable{
 		public static final CraftingMaterial[] VALUES = values();
 		private final String name, oreDictName;
 		private final BiFunction<Entry<World, BlockPos>, Entry<EntityItem, ItemStack>, ItemStack> tickFunc;
+		private int maxStackSize = 64;
 		private CraftingMaterial(String name, boolean hasOreDict, BiFunction<Entry<World, BlockPos>, Entry<EntityItem, ItemStack>, ItemStack> worldTickF){
 			this(name, hasOreDict ? name : null, worldTickF);
 		}
@@ -706,6 +707,34 @@ public enum TMResource implements IStringSerializable{
 				return u.getValue();
 			}
 
+		}
+		public int getMaxStackSize() {
+			return maxStackSize;
+		}
+		protected void setMaxStackSize(int maxStackSize) {
+			this.maxStackSize = maxStackSize;
+		}
+		protected static void init(){
+			if(CoreInit.isInit()){
+				CoreInit.log.info("Loading custom stack sizes for Crafting Materials.");
+				ACID_PAPER.setMaxStackSize(16);
+				HOT_COPPER.setMaxStackSize(16);
+				HOT_IRON.setMaxStackSize(16);
+				HOT_TIN.setMaxStackSize(16);
+				HOT_COPPER_HAMMER_HEAD.setMaxStackSize(1);
+				HOT_IRON_HAMMER_HEAD.setMaxStackSize(1);
+				HOT_TIN_HAMMER_HEAD.setMaxStackSize(1);
+				COPPER_HAMMER_HEAD.setMaxStackSize(16);
+				IRON_HAMMER_HEAD.setMaxStackSize(16);
+				TIN_HAMMER_HEAD.setMaxStackSize(16);
+				UPGRADE_FRAME.setMaxStackSize(16);
+				FLINT_HAMMER_HEAD.setMaxStackSize(16);
+				WOLFRAMIUM_GRINDER.setMaxStackSize(1);
+				HOT_WOLFRAM_INGOT.setMaxStackSize(16);
+			}else{
+				CoreInit.log.fatal("Somebody tries to corrupt the material registry!");
+				throw new RuntimeException("Somebody tries to corrupt the material registry!");
+			}
 		}
 	}
 	/*@SideOnly(Side.CLIENT)

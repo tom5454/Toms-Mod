@@ -4,7 +4,7 @@
   "defaults": {
     "textures": {
     	"connection":"tomsmodstorage:blocks/offline",
-        "front":"tomsmodstorage:blocks/basicTerminal"
+        "front":"tomsmodstorage:blocks/basicTerminalPart"
     },
     "uvlock": false
   },

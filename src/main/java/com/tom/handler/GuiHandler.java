@@ -30,6 +30,7 @@ import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationM
 import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationMain.ContainerProjectorLensConfig;
 import com.tom.defense.tileentity.inventory.ContainerSecurityStation;
 import com.tom.factory.tileentity.TileEntityAdvBoiler;
+import com.tom.factory.tileentity.TileEntityAdvFluidBoiler;
 import com.tom.factory.tileentity.TileEntityAlloySmelter;
 import com.tom.factory.tileentity.TileEntityBasicBoiler;
 import com.tom.factory.tileentity.TileEntityBlastFurnace;
@@ -38,7 +39,9 @@ import com.tom.factory.tileentity.TileEntityCokeOven;
 import com.tom.factory.tileentity.TileEntityCrusher;
 import com.tom.factory.tileentity.TileEntityElectricFurnace;
 import com.tom.factory.tileentity.TileEntityElectricFurnaceAdv;
+import com.tom.factory.tileentity.TileEntityFluidBoiler;
 import com.tom.factory.tileentity.TileEntityFluidTransposer;
+import com.tom.factory.tileentity.TileEntityGeoBoiler;
 import com.tom.factory.tileentity.TileEntityIndustrialBlastFurnace;
 import com.tom.factory.tileentity.TileEntityMBFluidPort;
 import com.tom.factory.tileentity.TileEntityMBHatch;
@@ -54,6 +57,7 @@ import com.tom.factory.tileentity.TileEntitySteamSolderingStation;
 import com.tom.factory.tileentity.TileEntityWireMill;
 import com.tom.factory.tileentity.gui.GuiAdvBoiler;
 import com.tom.factory.tileentity.gui.GuiAdvElectricFurnace;
+import com.tom.factory.tileentity.gui.GuiAdvFluidBoiler;
 import com.tom.factory.tileentity.gui.GuiAdvSteamFurnace;
 import com.tom.factory.tileentity.gui.GuiAlloySmelter;
 import com.tom.factory.tileentity.gui.GuiBasicBoiler;
@@ -62,7 +66,9 @@ import com.tom.factory.tileentity.gui.GuiCoiler;
 import com.tom.factory.tileentity.gui.GuiCokeOven;
 import com.tom.factory.tileentity.gui.GuiCrusher;
 import com.tom.factory.tileentity.gui.GuiElectricFurnace;
+import com.tom.factory.tileentity.gui.GuiFluidBoiler;
 import com.tom.factory.tileentity.gui.GuiFluidTransposer;
+import com.tom.factory.tileentity.gui.GuiGeoBoiler;
 import com.tom.factory.tileentity.gui.GuiIndustrialBlastFurnace;
 import com.tom.factory.tileentity.gui.GuiPlateBlendingMachine;
 import com.tom.factory.tileentity.gui.GuiRefinery;
@@ -75,6 +81,7 @@ import com.tom.factory.tileentity.gui.GuiSteamSolderingStation;
 import com.tom.factory.tileentity.gui.GuiWireMill;
 import com.tom.factory.tileentity.inventory.ContainerAdvBoiler;
 import com.tom.factory.tileentity.inventory.ContainerAdvElectricFurnace;
+import com.tom.factory.tileentity.inventory.ContainerAdvFluidBoiler;
 import com.tom.factory.tileentity.inventory.ContainerAdvSteamFurnace;
 import com.tom.factory.tileentity.inventory.ContainerAlloySmelter;
 import com.tom.factory.tileentity.inventory.ContainerBasicBoiler;
@@ -83,7 +90,9 @@ import com.tom.factory.tileentity.inventory.ContainerCoiler;
 import com.tom.factory.tileentity.inventory.ContainerCokeOven;
 import com.tom.factory.tileentity.inventory.ContainerCrusher;
 import com.tom.factory.tileentity.inventory.ContainerElectricFurnace;
+import com.tom.factory.tileentity.inventory.ContainerFluidBoiler;
 import com.tom.factory.tileentity.inventory.ContainerFluidTransposer;
+import com.tom.factory.tileentity.inventory.ContainerGeoBoiler;
 import com.tom.factory.tileentity.inventory.ContainerIndustrialBlastFurnace;
 import com.tom.factory.tileentity.inventory.ContainerPlateBlendingMachine;
 import com.tom.factory.tileentity.inventory.ContainerRefinery;
@@ -133,6 +142,10 @@ import com.tom.core.tileentity.inventory.ContainerResearchTable;
 import com.tom.core.tileentity.inventory.ContainerTablet;
 import com.tom.core.tileentity.inventory.ContainerTabletCrafter;
 
+import com.tom.energy.tileentity.TileEntityCharger;
+import com.tom.energy.tileentity.gui.GuiCharger;
+import com.tom.energy.tileentity.inventory.ContainerCharger;
+
 import mcmultipart.multipart.IMultipartContainer;
 import mcmultipart.multipart.ISlottedPart;
 import mcmultipart.multipart.MultipartHelper;
@@ -147,7 +160,7 @@ public class GuiHandler implements IGuiHandler{
 		multipartEast, multipartWest, blockInterface, patternTerminal, crusher, plateBlendingMachine, wireMill, coilerPlant,
 		basicBoiler, advBoiler, steamCrusher, steamFurnace, steamPlateBlender, steamFurnaceAdv, electricFurnace, alloySmelter,
 		steamAlloySmelter, electricFurnaceAdv, blockCraftingTerminal, patternOptions, steamSolderingStation, cokeOven, blastFurnace,
-		solderingStation, fluidTransposer, industrialBlastFurnace, refinery,
+		solderingStation, fluidTransposer, industrialBlastFurnace, refinery, charger, geoBoiler, fluidBoiler, advFluidBoiler,
 
 		;
 		private static final GuiIDs[] VALUES = values();
@@ -271,6 +284,14 @@ public class GuiHandler implements IGuiHandler{
 			return new ContainerIndustrialBlastFurnace(player.inventory, (TileEntityIndustrialBlastFurnace) world.getTileEntity(new BlockPos(x,y,z)));
 		case refinery:
 			return new ContainerRefinery(player.inventory, (TileEntityRefinery) world.getTileEntity(new BlockPos(x,y,z)));
+		case charger:
+			return new ContainerCharger(player.inventory, (TileEntityCharger) world.getTileEntity(new BlockPos(x,y,z)));
+		case geoBoiler:
+			return new ContainerGeoBoiler(player.inventory, (TileEntityGeoBoiler) world.getTileEntity(new BlockPos(x,y,z)));
+		case fluidBoiler:
+			return new ContainerFluidBoiler(player.inventory, (TileEntityFluidBoiler) world.getTileEntity(new BlockPos(x,y,z)));
+		case advFluidBoiler:
+			return new ContainerAdvFluidBoiler(player.inventory, (TileEntityAdvFluidBoiler) world.getTileEntity(new BlockPos(x,y,z)));
 		default:
 			break;
 		}
@@ -390,6 +411,14 @@ public class GuiHandler implements IGuiHandler{
 			return new GuiIndustrialBlastFurnace(player.inventory, (TileEntityIndustrialBlastFurnace) world.getTileEntity(new BlockPos(x,y,z)));
 		case refinery:
 			return new GuiRefinery(player.inventory, (TileEntityRefinery) world.getTileEntity(new BlockPos(x,y,z)));
+		case charger:
+			return new GuiCharger(player.inventory, (TileEntityCharger) world.getTileEntity(new BlockPos(x,y,z)));
+		case geoBoiler:
+			return new GuiGeoBoiler(player.inventory, (TileEntityGeoBoiler) world.getTileEntity(new BlockPos(x,y,z)));
+		case fluidBoiler:
+			return new GuiFluidBoiler(player.inventory, (TileEntityFluidBoiler) world.getTileEntity(new BlockPos(x,y,z)));
+		case advFluidBoiler:
+			return new GuiAdvFluidBoiler(player.inventory, (TileEntityAdvFluidBoiler) world.getTileEntity(new BlockPos(x,y,z)));
 		default:
 			break;
 		}

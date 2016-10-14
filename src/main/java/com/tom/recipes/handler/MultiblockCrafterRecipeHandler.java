@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.tom.apis.RecipeData;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -14,7 +12,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.FMLLog;
+
+import com.tom.apis.RecipeData;
 
 public class MultiblockCrafterRecipeHandler {
 	public static Map<Block, List<RecipeData>> recipeList = new HashMap<Block, List<RecipeData>>();

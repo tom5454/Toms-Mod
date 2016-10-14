@@ -2,8 +2,6 @@ package com.tom.factory.item;
 
 import java.util.List;
 
-import com.tom.api.item.IExtruderModule;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,10 +10,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ExtruderModule extends Item implements IExtruderModule{
+import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.item.IExtruderModule;
+import com.tom.core.CoreInit;
+
+public class ExtruderModule extends Item implements IExtruderModule, IIconRegisterRequired{
 	public ExtruderModule() {
 		setHasSubtypes(true);
 		ExtruderLevel.item = this;
@@ -76,5 +79,12 @@ public class ExtruderModule extends Item implements IExtruderModule{
 		public int getSpeed() {
 			return speed;
 		}
+	}
+	@Override
+	public void registerIcons() {
+		CoreInit.registerRender(this, 0, "tomsmodfactory:extruder1");
+		CoreInit.registerRender(this, 1, "tomsmodfactory:extruder2");
+		CoreInit.registerRender(this, 2, "tomsmodfactory:extruder3");
+		CoreInit.registerRender(this, 3, "tomsmodfactory:extruder4");
 	}
 }

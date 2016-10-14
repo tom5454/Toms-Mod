@@ -2,16 +2,17 @@ package com.tom.storage.tileentity.gui;
 
 import java.io.IOException;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.gui.GuiTomsMod;
-import com.tom.storage.multipart.PartImportBus;
-import com.tom.storage.tileentity.inventory.ContainerImportBus;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+
+import com.tom.apis.TomsModUtils;
+import com.tom.storage.multipart.PartImportBus;
+import com.tom.storage.tileentity.inventory.ContainerImportBus;
+
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiImportBus extends GuiTomsMod {
 	//private static final ResourceLocation LIST_TEXTURE = new ResourceLocation("tomsmod:textures/gui/resSelect.png");

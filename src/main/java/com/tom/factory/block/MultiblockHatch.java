@@ -1,12 +1,5 @@
 package com.tom.factory.block;
 
-import com.tom.api.block.BlockMultiblockPart;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.factory.tileentity.TileEntityMBHatch;
-import com.tom.handler.GuiHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -21,6 +14,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockMultiblockPart;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.factory.tileentity.TileEntityMBHatch;
+import com.tom.handler.GuiHandler;
 
 public class MultiblockHatch extends BlockMultiblockPart {
 	/*@SideOnly(Side.CLIENT)

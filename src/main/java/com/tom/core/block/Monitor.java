@@ -1,10 +1,5 @@
 package com.tom.core.block;
 
-import com.tom.core.tileentity.TileEntityMonitor;
-import com.tom.lib.Configs;
-
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +10,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.common.Optional;
+
+import com.tom.lib.Configs;
+
+import com.tom.core.tileentity.TileEntityMonitor;
+
+import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralProvider;
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
 public class Monitor extends BlockMonitorBase implements IPeripheralProvider{
 	/*@SideOnly(Side.CLIENT)

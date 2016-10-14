@@ -119,8 +119,8 @@ public enum EnergyType {
 		}*/
 		return 0;
 	}
-	public double pushEnergyTo(World world, BlockPos pos, EnumFacing side, EnergyStorage energy, boolean simulate){
-		double energyPushed = this.pushEnergyTo(world, pos, side, energy.energy, energy.maxExtract,simulate);
+	public double pushEnergyTo(World world, BlockPos pos, EnumFacing side, IEnergyStorage energy, boolean simulate){
+		double energyPushed = this.pushEnergyTo(world, pos, side, energy.getEnergyStored(), energy.getMaxExtract(), simulate);
 		if(energyPushed > 0 && !simulate){
 			energy.extractEnergy(energyPushed, false);
 		}

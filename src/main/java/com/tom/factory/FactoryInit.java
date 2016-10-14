@@ -17,11 +17,11 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.core.CoreInit;
+import com.tom.core.IMod;
 import com.tom.factory.block.AdvBoiler;
+import com.tom.factory.block.AdvancedFluidBoiler;
 import com.tom.factory.block.AdvancedMultiblockCasing;
 import com.tom.factory.block.AlloySmelter;
 import com.tom.factory.block.BasicBoiler;
@@ -29,6 +29,7 @@ import com.tom.factory.block.BlockBlastFurnace;
 import com.tom.factory.block.BlockCokeOven;
 import com.tom.factory.block.BlockComponents;
 import com.tom.factory.block.BlockCrusher;
+import com.tom.factory.block.BlockGeoBoiler;
 import com.tom.factory.block.BlockPump;
 import com.tom.factory.block.BlockRefinery;
 import com.tom.factory.block.BlockWaterCollector;
@@ -39,6 +40,7 @@ import com.tom.factory.block.CoolantTower;
 import com.tom.factory.block.ElectricFurnace;
 import com.tom.factory.block.ElectricFurnaceAdv;
 import com.tom.factory.block.Electrolyzer;
+import com.tom.factory.block.FluidBoiler;
 import com.tom.factory.block.FluidTransposer;
 import com.tom.factory.block.FusionPreHeater;
 import com.tom.factory.block.IndustrialBlastFurnace;
@@ -61,6 +63,7 @@ import com.tom.factory.block.SteamSolderingStation;
 import com.tom.factory.item.ExtruderModule;
 import com.tom.factory.item.ItemCoalCoke;
 import com.tom.factory.tileentity.TileEntityAdvBoiler;
+import com.tom.factory.tileentity.TileEntityAdvFluidBoiler;
 import com.tom.factory.tileentity.TileEntityAdvMBCasing;
 import com.tom.factory.tileentity.TileEntityAlloySmelter;
 import com.tom.factory.tileentity.TileEntityBasicBoiler;
@@ -73,8 +76,10 @@ import com.tom.factory.tileentity.TileEntityCrusher;
 import com.tom.factory.tileentity.TileEntityElectricFurnace;
 import com.tom.factory.tileentity.TileEntityElectricFurnaceAdv;
 import com.tom.factory.tileentity.TileEntityElectrolyzer;
+import com.tom.factory.tileentity.TileEntityFluidBoiler;
 import com.tom.factory.tileentity.TileEntityFluidTransposer;
 import com.tom.factory.tileentity.TileEntityFusionPreHeater;
+import com.tom.factory.tileentity.TileEntityGeoBoiler;
 import com.tom.factory.tileentity.TileEntityIndustrialBlastFurnace;
 import com.tom.factory.tileentity.TileEntityMBCompressor;
 import com.tom.factory.tileentity.TileEntityMBEnergyPort;
@@ -98,16 +103,18 @@ import com.tom.lib.Configs;
 
 import com.tom.core.tileentity.TileEntityMultiblockCase;
 
-@Mod(modid = FactoryInit.modid,name = "Tom's Mod Factory",version = Configs.version, dependencies = Configs.coreDependencies)
+@Mod(modid = FactoryInit.modid,name = FactoryInit.modName,version = Configs.version, dependencies = Configs.coreDependencies)
 public class FactoryInit {
-	public static final String modid = Configs.Modid + "|Factory";
-	public static Logger log = LogManager.getLogger(modid);
+	public static final String modid = Configs.ModidL + "|factory";
+	public static final String modName = Configs.ModName + " Factory";
+	public static final Logger log = LogManager.getLogger(modName);
 
 	public static Item speedUpgrade, extruderModule, coalCoke;
 
 	public static Block MultiblockCase, MultiblockEnergyPort, MultiblockHatch, MultiblockHeatPort, MultiblockPressurePort, MultiblockFluidHatch, MultiblockFuelRod, MultiblockCompressor;
 	public static Block Electrolyzer, Centrifuge, FusionPreHeater, CoolantTower, cokeOven, blastFurnace, industrialBlastFurnace, refinery;
-	public static Block AdvancedMultiblockCasing, plateBlendingMachine, wireMill, crusher, basicBoiler, advBoiler, steamFurnace, advSteamFurnace, electricFurnace, steamCrusher, coilerPlant, waterCollector, steamPlateBlender, alloySmelter, steamAlloySmelter, advElectricFurnace, steamSolderingStation, solderingStation, pump, fluidTransposer;
+	public static Block AdvancedMultiblockCasing, plateBlendingMachine, wireMill, crusher, basicBoiler, advBoiler, steamFurnace, advSteamFurnace, electricFurnace, steamCrusher, coilerPlant, waterCollector, steamPlateBlender;
+	public static Block advElectricFurnace, steamSolderingStation, solderingStation, pump, fluidTransposer, plasticProcessor, geothermalBoiler, fluidBolier, advFluidBoiler, alloySmelter, steamAlloySmelter;
 	public static Block blockCoalCoke, cokeOvenWall, blastFurnaceWall, components;
 	@EventHandler
 	public static void PreLoad(FMLPreInitializationEvent PreEvent){
@@ -156,8 +163,11 @@ public class FactoryInit {
 		industrialBlastFurnace = new IndustrialBlastFurnace().setUnlocalizedName("tm.industrialBlastFurnace").setCreativeTab(tabTomsModFactory);
 		refinery = new BlockRefinery().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.refinery");
 		components = new BlockComponents().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.componentsBlock");
+		geothermalBoiler = new BlockGeoBoiler().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.geoBoiler");
+		fluidBolier = new FluidBoiler().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.fluidBoiler");
+		advFluidBoiler = new AdvancedFluidBoiler().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.advFluidBoiler");
 		registerItem(speedUpgrade, speedUpgrade.getUnlocalizedName().substring(5));
-		CoreInit.addItemToGameRegistry(extruderModule, extruderModule.getUnlocalizedName().substring(5));
+		registerItem(extruderModule, extruderModule.getUnlocalizedName().substring(5));
 		registerBlock(MultiblockCase, MultiblockCase.getUnlocalizedName().substring(5));
 		registerBlock(MultiblockEnergyPort, MultiblockEnergyPort.getUnlocalizedName().substring(5));
 		registerBlock(MultiblockHatch, MultiblockHatch.getUnlocalizedName().substring(5));
@@ -170,10 +180,10 @@ public class FactoryInit {
 		registerBlock(FusionPreHeater, FusionPreHeater.getUnlocalizedName().substring(5));
 		registerBlock(MultiblockCompressor, MultiblockCompressor.getUnlocalizedName().substring(5));
 		registerBlock(CoolantTower, CoolantTower.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(crusher, crusher.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(plateBlendingMachine, plateBlendingMachine.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(wireMill, wireMill.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(coilerPlant, coilerPlant.getUnlocalizedName().substring(5));
+		registerBlock(crusher, crusher.getUnlocalizedName().substring(5));
+		registerBlock(plateBlendingMachine, plateBlendingMachine.getUnlocalizedName().substring(5));
+		registerBlock(wireMill, wireMill.getUnlocalizedName().substring(5));
+		registerBlock(coilerPlant, coilerPlant.getUnlocalizedName().substring(5));
 		registerBlock(basicBoiler, basicBoiler.getUnlocalizedName().substring(5));
 		registerBlock(advBoiler, advBoiler.getUnlocalizedName().substring(5));
 		registerBlock(waterCollector, waterCollector.getUnlocalizedName().substring(5));
@@ -181,8 +191,8 @@ public class FactoryInit {
 		registerBlock(steamFurnace, steamFurnace.getUnlocalizedName().substring(5));
 		registerBlock(steamPlateBlender, steamPlateBlender.getUnlocalizedName().substring(5));
 		registerBlock(advSteamFurnace, advSteamFurnace.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(electricFurnace, electricFurnace.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(alloySmelter, alloySmelter.getUnlocalizedName().substring(5));
+		registerBlock(electricFurnace, electricFurnace.getUnlocalizedName().substring(5));
+		registerBlock(alloySmelter, alloySmelter.getUnlocalizedName().substring(5));
 		registerBlock(steamAlloySmelter, steamAlloySmelter.getUnlocalizedName().substring(5));
 		registerBlock(advElectricFurnace, advElectricFurnace.getUnlocalizedName().substring(5));
 		registerItem(coalCoke, coalCoke.getUnlocalizedName().substring(5));
@@ -192,12 +202,15 @@ public class FactoryInit {
 		registerBlock(blastFurnaceWall, blastFurnaceWall.getUnlocalizedName().substring(5));
 		registerBlock(cokeOven, cokeOven.getUnlocalizedName().substring(5));
 		registerBlock(blastFurnace, blastFurnace.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(solderingStation, solderingStation.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(pump, pump.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(fluidTransposer, fluidTransposer.getUnlocalizedName().substring(5));
-		CoreInit.addBlockToGameRegistry(industrialBlastFurnace, industrialBlastFurnace.getUnlocalizedName().substring(5));
+		registerBlock(solderingStation, solderingStation.getUnlocalizedName().substring(5));
+		registerBlock(pump, pump.getUnlocalizedName().substring(5));
+		registerBlock(fluidTransposer, fluidTransposer.getUnlocalizedName().substring(5));
+		registerBlock(industrialBlastFurnace, industrialBlastFurnace.getUnlocalizedName().substring(5));
 		registerBlock(refinery, refinery.getUnlocalizedName().substring(5));
 		registerBlock(components, components.getUnlocalizedName().substring(5));
+		registerBlock(geothermalBoiler, geothermalBoiler.getUnlocalizedName().substring(5));
+		registerBlock(fluidBolier, fluidBolier.getUnlocalizedName().substring(5));
+		registerBlock(advFluidBoiler, advFluidBoiler.getUnlocalizedName().substring(5));
 		GameRegistry.registerTileEntity(TileEntityMultiblockCase.class, Configs.Modid+"MultiblockCase");
 		GameRegistry.registerTileEntity(TileEntityMBEnergyPort.class, Configs.Modid+"mbEnergyPort");
 		GameRegistry.registerTileEntity(TileEntityMBHatch.class, Configs.Modid+"mbHatch");
@@ -232,7 +245,12 @@ public class FactoryInit {
 		GameRegistry.registerTileEntity(TileEntityFluidTransposer.class, Configs.Modid+"fluidTransposer");
 		GameRegistry.registerTileEntity(TileEntityIndustrialBlastFurnace.class, Configs.Modid+"industrialBlastFurnace");
 		GameRegistry.registerTileEntity(TileEntityRefinery.class, Configs.Modid+"refinery");
+		GameRegistry.registerTileEntity(TileEntityGeoBoiler.class, Configs.Modid+"geoBoiler");
+		GameRegistry.registerTileEntity(TileEntityFluidBoiler.class, Configs.Modid+"fluidBoiler");
+		GameRegistry.registerTileEntity(TileEntityAdvFluidBoiler.class, Configs.Modid+"advFluidBoiler");
 		FuelHandler.registerExtraFuelHandler(new ItemStack(blockCoalCoke), 32000);
+		hadPreInit = true;
+		CoreInit.tryLoadAfterPreInit(log);
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");
 	}
@@ -243,33 +261,19 @@ public class FactoryInit {
 			return Item.getItemFromBlock(Electrolyzer);
 		}
 	};
-	@SideOnly(Side.CLIENT)
-	public static void registerRenders(){
-		log.info("Loading Renderers");
-		CoreInit.registerRender(extruderModule, 0, "tomsmodfactory:extruder1");
-		CoreInit.registerRender(extruderModule, 1, "tomsmodfactory:extruder2");
-		CoreInit.registerRender(extruderModule, 2, "tomsmodfactory:extruder3");
-		CoreInit.registerRender(extruderModule, 3, "tomsmodfactory:extruder4");
-		registerMachineRenderer(crusher);
-		registerMachineRenderer(alloySmelter);
-		registerMachineRenderer(coilerPlant);
-		registerMachineRenderer(electricFurnace);
-		registerMachineRenderer(plateBlendingMachine);
-		registerMachineRenderer(wireMill);
-		registerMachineRenderer(solderingStation);
-		registerMachineRenderer(pump);
-		registerMachineRenderer(fluidTransposer);
-		registerMachineRenderer(industrialBlastFurnace);
-	}
-	@SideOnly(Side.CLIENT)
-	private static void registerMachineRenderer(Block block){
-		String name = "tomsmodfactory:"+block.getUnlocalizedName().substring(5);
-		CoreInit.registerRender(Item.getItemFromBlock(block), 0, name);
-		CoreInit.registerRender(Item.getItemFromBlock(block), 1, name);
-		CoreInit.registerRender(Item.getItemFromBlock(block), 2, name);
-	}
+	private static boolean hadPreInit = false;
 	@EventHandler
 	public static void construction(FMLConstructionEvent event){
-		CoreInit.modids.add(modid);
+		CoreInit.modids.add(new IMod(){
+			@Override
+			public String getModID() {
+				return modid;
+			}
+
+			@Override
+			public boolean hadPreInit() {
+				return hadPreInit;
+			}
+		});
 	}
 }

@@ -2,17 +2,19 @@ package com.tom.storage.tileentity.gui;
 
 import java.io.IOException;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-import com.tom.storage.tileentity.TileEntityLimitableChest;
-import com.tom.storage.tileentity.inventory.ContainerLimitableChest;
-
 import mapwriterTm.util.Render;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+
+import com.tom.storage.tileentity.TileEntityLimitableChest;
+import com.tom.storage.tileentity.inventory.ContainerLimitableChest;
+
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiLimitableChest extends GuiTomsMod {
 	private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");

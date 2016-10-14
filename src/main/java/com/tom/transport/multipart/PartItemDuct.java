@@ -3,6 +3,16 @@ package com.tom.transport.multipart;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+
 import com.tom.api.grid.IGridDevice;
 import com.tom.api.grid.IGridUpdateListener;
 import com.tom.api.multipart.ICustomPartBounds;
@@ -16,15 +26,6 @@ import com.tom.transport.multipart.IInventoryGrid.GridInventory.InventoryData;
 import com.tom.transport.multipart.IInventoryGrid.GridInventory.TransferingItemStack;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 
 public class PartItemDuct extends PartDuct<IInventoryGrid> implements ICustomPartBounds, IGridUpdateListener, IItemDuct{
 	private final AxisAlignedBB connectionBox;

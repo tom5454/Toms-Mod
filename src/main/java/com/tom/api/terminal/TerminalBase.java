@@ -3,10 +3,12 @@ package com.tom.api.terminal;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import io.netty.buffer.ByteBuf;
 
 public class TerminalBase {
 	public List<TerminalObject> term = new ArrayList<TerminalObject>();

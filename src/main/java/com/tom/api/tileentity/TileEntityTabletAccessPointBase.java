@@ -3,10 +3,6 @@ package com.tom.api.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.core.CoreInit;
-import com.tom.core.item.Tablet;
-import com.tom.core.tileentity.TileEntityWirelessPeripheral;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,6 +11,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+
+import com.tom.core.CoreInit;
+
+import com.tom.core.item.Tablet;
+
+import com.tom.core.tileentity.TileEntityWirelessPeripheral;
 
 public class TileEntityTabletAccessPointBase extends TileEntityTomsMod implements
 IReceivable {

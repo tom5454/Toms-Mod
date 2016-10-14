@@ -2,9 +2,6 @@ package com.tom.core.item;
 
 import java.util.List;
 
-import com.tom.api.item.ICustomCraftingHandler;
-import com.tom.core.research.ResearchHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -15,6 +12,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.item.ICustomCraftingHandler;
+import com.tom.core.research.ResearchHandler;
 
 public class ItemBigNoteBook extends Item implements ICustomCraftingHandler {
 

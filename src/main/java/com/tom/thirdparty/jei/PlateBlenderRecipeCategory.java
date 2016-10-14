@@ -6,6 +6,11 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
 import com.tom.apis.RecipeData;
 import com.tom.apis.TomsModUtils;
 import com.tom.recipes.handler.MachineCraftingHandler;
@@ -17,10 +22,6 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderRecipeJEI>{
 	public static List<PlateBlenderRecipeJEI> get() {

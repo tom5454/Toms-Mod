@@ -17,7 +17,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.tom.api.item.MultipartItem;
+import com.tom.config.Config;
 import com.tom.core.CoreInit;
+import com.tom.core.IMod;
 import com.tom.lib.Configs;
 import com.tom.transport.block.ConveyorBelt;
 import com.tom.transport.block.ConveyorSlope;
@@ -34,10 +36,11 @@ import com.tom.transport.multipart.PartServo;
 import com.tom.transport.tileentity.TileEntityConveyor;
 import com.tom.transport.tileentity.TileEntityConveyorSlope;
 
-@Mod(modid = TransportInit.modid,name = "Tom's Mod Transport",version = Configs.version, dependencies = Configs.coreDependencies)
+@Mod(modid = TransportInit.modid,name = TransportInit.modName,version = Configs.version, dependencies = Configs.coreDependencies)
 public class TransportInit {
-	public static final String modid = Configs.Modid + "|Transport";
-	public static Logger log = LogManager.getLogger(modid);
+	public static final String modid = Configs.ModidL + "|transport";
+	public static final String modName = Configs.ModName + " Transport";
+	public static final Logger log = LogManager.getLogger(modName);
 	public static MultipartItem itemDuct, filter, servo, fluidDuct, fluidServo;
 	public static Block conveyorBelt, fastConveyorBelt, doubleConveyorBelt, doubleConveyorBeltTurn;
 	public static ConveyorSlope conveyorSlope;
@@ -56,11 +59,15 @@ public class TransportInit {
 		CoreInit.registerMultipart(filter, PartFilter.class, "tomsmodtransport");
 		CoreInit.registerMultipart(servo, PartServo.class, "tomsmodtransport");
 		CoreInit.registerMultipart(fluidDuct, PartFluidDuct.class, "tomsmodtransport");
-		registerBlock(conveyorBelt, conveyorBelt.getUnlocalizedName().substring(5));
-		registerBlock(conveyorSlope, conveyorSlope.getUnlocalizedName().substring(5));
 		CoreInit.registerMultipart(fluidServo, PartFluidServo.class, "tomsmodtransport");
-		GameRegistry.registerTileEntity(TileEntityConveyor.class, Configs.Modid + "conveyor");
-		GameRegistry.registerTileEntity(TileEntityConveyorSlope.class, Configs.Modid + "conveyorSlope");
+		if(Config.enableConveyorBelts){
+			registerBlock(conveyorBelt, conveyorBelt.getUnlocalizedName().substring(5));
+			registerBlock(conveyorSlope, conveyorSlope.getUnlocalizedName().substring(5));
+			GameRegistry.registerTileEntity(TileEntityConveyor.class, Configs.Modid + "conveyor");
+			GameRegistry.registerTileEntity(TileEntityConveyorSlope.class, Configs.Modid + "conveyorSlope");
+		}
+		hadPreInit = true;
+		CoreInit.tryLoadAfterPreInit(log);
 		long time = System.currentTimeMillis() - tM;
 		log.info("Pre Initialization took in "+time+" milliseconds");
 	}
@@ -72,8 +79,19 @@ public class TransportInit {
 		}
 
 	};
+	private static boolean hadPreInit = false;
 	@EventHandler
 	public static void construction(FMLConstructionEvent event){
-		CoreInit.modids.add(modid);
+		CoreInit.modids.add(new IMod(){
+			@Override
+			public String getModID() {
+				return modid;
+			}
+
+			@Override
+			public boolean hadPreInit() {
+				return hadPreInit;
+			}
+		});
 	}
 }

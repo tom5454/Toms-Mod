@@ -1,9 +1,10 @@
 package com.tom.network.messages;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 import com.tom.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageMonitor extends MessageBase<MessageMonitor>{
 

@@ -2,17 +2,18 @@ package com.tom.defense.tileentity.gui;
 
 import java.io.IOException;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+
 import com.tom.api.gui.GuiNumberValueBox;
 import com.tom.api.gui.GuiNumberValueBox.GuiButtonNextNum;
 import com.tom.api.tileentity.IConfigurable.IConfigurationOption.ConfigurationRedstoneControl.GuiButtonRedstoneMode;
 import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.gui.GuiTomsMod;
 import com.tom.defense.tileentity.TileEntityForceFieldProjector;
 import com.tom.defense.tileentity.inventory.ContainerForceFieldProjector;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiForceFieldProjector extends GuiTomsMod {
 	private TileEntityForceFieldProjector te;

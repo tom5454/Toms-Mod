@@ -62,7 +62,7 @@ public class TileEntitySolarPanel extends TileEntityTomsMod implements IEnergyPr
 				long ticksCR = worldObj.getWorldTime() - 6000;
 				long ticksC = ticksCR < 0 ? -ticksCR : ticksCR;
 				double ticksM = (6000 / e) - (ticksC / e);
-				energy.receiveEnergy(ticksM * 1000, false);
+				energy.receiveEnergy(ticksM * 5, false);
 			}
 			EnergyType.LV.pushEnergyTo(worldObj, pos, EnumFacing.UP, energy, false);
 		}

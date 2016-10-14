@@ -2,15 +2,16 @@ package com.tom.handler;
 
 import org.apache.logging.log4j.Logger;
 
-import com.tom.core.CoreInit;
-import com.tom.recipes.handler.ElectrolyzerRecipesHandler;
-import com.tom.recipes.handler.MultiblockCrafterRecipeHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
+
+import com.tom.core.CoreInit;
+import com.tom.recipes.handler.ElectrolyzerRecipesHandler;
+import com.tom.recipes.handler.MultiblockCrafterRecipeHandler;
 
 public class IMCHandler {
 	public static void receive(IMCMessage msg) throws Exception{

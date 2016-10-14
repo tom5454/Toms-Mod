@@ -5,11 +5,8 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
-import com.tom.storage.multipart.StorageNetworkGrid.IStorageTerminalGui;
-
 import mapwriterTm.util.Render;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -22,6 +19,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+
+import com.tom.apis.TMLogger;
+import com.tom.apis.TomsModUtils;
+import com.tom.storage.multipart.StorageNetworkGrid.IStorageTerminalGui;
 
 public class GuiCraftingAmountSelection extends GuiScreen {
 	private static final ResourceLocation gui = new ResourceLocation("tomsmod:textures/gui/crafting1.png");

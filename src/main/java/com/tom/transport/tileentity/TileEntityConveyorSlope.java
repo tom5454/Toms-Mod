@@ -1,10 +1,5 @@
 package com.tom.transport.tileentity;
 
-import com.tom.api.tileentity.IExtendedInventory;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.transport.block.ConveyorSlope;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -16,6 +11,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import com.tom.api.tileentity.IExtendedInventory;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.transport.block.ConveyorSlope;
 
 public class TileEntityConveyorSlope extends TileEntityTomsMod implements
 ISidedInventory, IExtendedInventory {

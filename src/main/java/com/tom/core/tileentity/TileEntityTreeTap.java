@@ -1,16 +1,17 @@
 package com.tom.core.tileentity;
 
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.core.TMResource.CraftingMaterial;
-import com.tom.core.block.BlockTreeTap;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.core.TMResource.CraftingMaterial;
+
+import com.tom.core.block.BlockTreeTap;
 
 public class TileEntityTreeTap extends TileEntityTomsMod {
 	private ItemStack bottleStack;

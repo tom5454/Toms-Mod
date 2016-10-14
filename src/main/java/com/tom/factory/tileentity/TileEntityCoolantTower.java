@@ -1,12 +1,13 @@
 package com.tom.factory.tileentity;
 
+import net.minecraft.nbt.NBTTagCompound;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+
 import com.tom.api.tileentity.MultiblockPartList;
 import com.tom.api.tileentity.TileEntityControllerBase;
 import com.tom.core.CoreInit;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 public class TileEntityCoolantTower extends TileEntityControllerBase {
 	public TileEntityCoolantTower(){

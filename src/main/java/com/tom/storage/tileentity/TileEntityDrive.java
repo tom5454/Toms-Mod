@@ -1,5 +1,15 @@
 package com.tom.storage.tileentity;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+
 import com.tom.api.grid.GridEnergyStorage;
 import com.tom.api.grid.IGridUpdateListener;
 import com.tom.api.item.IStorageCell;
@@ -11,16 +21,6 @@ import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.storage.block.Drive;
 import com.tom.storage.multipart.StorageNetworkGrid;
 import com.tom.storage.multipart.StorageNetworkGrid.IStorageData;
-
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 public class TileEntityDrive extends TileEntityGridDeviceBase<StorageNetworkGrid> implements IInventory, ICustomModelledTileEntity, IGridUpdateListener{
 	private ItemStack[] stack = new ItemStack[this.getSizeInventory()];

@@ -22,17 +22,19 @@ import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.core.TMResource.Type;
+import com.tom.defense.DefenseInit;
 import com.tom.factory.FactoryInit;
 
 public class MachineCraftingHandler {
-	private static Map<ItemStackChecker, ItemStackChecker> crusherRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
-	private static Map<ItemStackChecker, ItemStackChecker> plateBlenderRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
-	private static Map<ItemStackChecker, ItemStackChecker> wireMillRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
-	private static Map<ItemStackChecker, ItemStackChecker> coilerPlantRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
-	private static Map<ItemStackChecker, ItemStackChecker> alloySmelterRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
-	private static Map<ItemStackChecker, ItemStackChecker> cokeOvenRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
-	private static Map<ItemStackChecker, ItemStackChecker> blastFurnaceRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
-	private static Map<ItemStackChecker, ItemStackChecker> fluidTransposerRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
+	private static final ItemStack COIL_EMPTY = new ItemStack(CoreInit.emptyWireCoil);
+	private static final Map<ItemStackChecker, ItemStackChecker> crusherRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
+	private static final Map<ItemStackChecker, ItemStackChecker> plateBlenderRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
+	private static final Map<ItemStackChecker, ItemStackChecker> wireMillRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
+	private static final Map<ItemStackChecker, ItemStackChecker> coilerPlantRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
+	private static final Map<ItemStackChecker, ItemStackChecker> alloySmelterRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
+	private static final Map<ItemStackChecker, ItemStackChecker> cokeOvenRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
+	private static final Map<ItemStackChecker, ItemStackChecker> blastFurnaceRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
+	private static final Map<ItemStackChecker, ItemStackChecker> fluidTransposerRecipes = new HashMap<ItemStackChecker, ItemStackChecker>();
 	public static void addCrusherRecipe(ItemStack input, ItemStack output){
 		ItemStackChecker c = new ItemStackChecker(input);
 		boolean found = false;
@@ -208,7 +210,7 @@ public class MachineCraftingHandler {
 	public static List<RecipeData> getCoilerRecipes() {
 		List<RecipeData> ret = new ArrayList<RecipeData>();
 		for(Entry<ItemStackChecker, ItemStackChecker> recipe : coilerPlantRecipes.entrySet()){
-			ret.add(new RecipeData(recipe.getKey().stack, recipe.getValue().stack));
+			ret.add(new RecipeData(recipe.getKey().stack, COIL_EMPTY, recipe.getValue().stack));
 		}
 		return ret;
 	}
@@ -248,6 +250,8 @@ public class MachineCraftingHandler {
 		addAlloySmelterRecipe(TMResource.OBSIDIAN.getStackNormal(Type.DUST, 2), TMResource.LEAD.getStackNormal(Type.DUST), new ItemStack(CoreInit.hardenedGlass));
 		addAlloySmelterRecipe(new ItemStack(CoreInit.hardenedGlass, 2), TMResource.ENDERIUM.getStackNormal(Type.DUST), new ItemStack(CoreInit.hardenedGlass, 2, 1));
 		addWireMillRecipe(TMResource.STEEL.getStackNormal(Type.PLATE, 3), new ItemStack(CoreInit.steelFence, 2), 2);
+		addCrusherRecipe(new ItemStack(DefenseInit.oreMonazit, 1, 0), new ItemStack(DefenseInit.crushedMonazit, 2, 0));
+		addCrusherRecipe(new ItemStack(DefenseInit.oreMonazit, 1, 1), new ItemStack(DefenseInit.crushedMonazit, 2, 1));
 	}
 	public static ItemStack getFurnaceRecipe(ItemStack in){
 		if(in == null)return null;

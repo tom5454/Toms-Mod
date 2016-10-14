@@ -1,12 +1,12 @@
 package com.tom.core.entity;
 
-import com.tom.core.tileentity.TileEntityCamera;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
+
+import com.tom.core.tileentity.TileEntityCamera;
 
 public class EntityCamera extends EntityLivingBase {
 	public boolean enableControls, eEsc;

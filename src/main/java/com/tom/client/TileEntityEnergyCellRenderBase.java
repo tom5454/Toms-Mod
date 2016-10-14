@@ -4,8 +4,6 @@ import static org.lwjgl.opengl.ARBDepthClamp.GL_DEPTH_CLAMP;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.energy.tileentity.TileEntityEnergyCellBase;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -15,8 +13,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.energy.tileentity.TileEntityEnergyCellBase;
 
 @SideOnly(Side.CLIENT)
 public class TileEntityEnergyCellRenderBase extends TileEntitySpecialRendererTomsMod<TileEntityEnergyCellBase>{

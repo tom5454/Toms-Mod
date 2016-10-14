@@ -1,12 +1,13 @@
 package com.tom.network;
 
-import com.tom.core.CoreInit;
-
 import net.minecraft.entity.player.EntityPlayer;
+
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import com.tom.core.CoreInit;
 
 public abstract class MessageBase<REQ extends IMessage> implements IMessage, IMessageHandler<REQ, REQ> {
 

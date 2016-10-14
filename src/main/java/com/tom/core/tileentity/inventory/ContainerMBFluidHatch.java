@@ -1,12 +1,13 @@
 package com.tom.core.tileentity.inventory;
 
-import com.tom.factory.tileentity.TileEntityMBFluidPort;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fluids.IFluidContainerItem;
+
+import com.tom.factory.tileentity.TileEntityMBFluidPort;
 
 @SuppressWarnings("deprecation")
 public class ContainerMBFluidHatch extends ContainerTomsMod{

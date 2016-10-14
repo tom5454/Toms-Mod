@@ -19,6 +19,7 @@ import com.tom.factory.tileentity.gui.GuiAdvSteamFurnace;
 import com.tom.factory.tileentity.gui.GuiAlloySmelter;
 import com.tom.factory.tileentity.gui.GuiBasicBoiler;
 import com.tom.factory.tileentity.gui.GuiBlastFurnace;
+import com.tom.factory.tileentity.gui.GuiCoiler;
 import com.tom.factory.tileentity.gui.GuiCrusher;
 import com.tom.factory.tileentity.gui.GuiElectricFurnace;
 import com.tom.factory.tileentity.gui.GuiIndustrialBlastFurnace;
@@ -35,6 +36,7 @@ import com.tom.factory.tileentity.inventory.ContainerAdvElectricFurnace;
 import com.tom.factory.tileentity.inventory.ContainerAdvSteamFurnace;
 import com.tom.factory.tileentity.inventory.ContainerAlloySmelter;
 import com.tom.factory.tileentity.inventory.ContainerBasicBoiler;
+import com.tom.factory.tileentity.inventory.ContainerCoiler;
 import com.tom.factory.tileentity.inventory.ContainerCrusher;
 import com.tom.factory.tileentity.inventory.ContainerElectricFurnace;
 import com.tom.factory.tileentity.inventory.ContainerPlateBlendingMachine;
@@ -48,6 +50,7 @@ import com.tom.factory.tileentity.inventory.ContainerWireMill;
 import com.tom.storage.StorageInit;
 import com.tom.thirdparty.jei.AlloySmelterRecipeCategory.AlloySmelterHandler;
 import com.tom.thirdparty.jei.BlastFurnaceRecipeCategory.BlastFurnaceHandler;
+import com.tom.thirdparty.jei.CoilerRecipeCategory.CoilerHandler;
 import com.tom.thirdparty.jei.CrusherRecipeCategory.CrusherHandler;
 import com.tom.thirdparty.jei.CustomCraftingRecipeCategory.CustomCraftingHandler;
 import com.tom.thirdparty.jei.PlateBlenderRecipeCategory.PlateBlenderHandler;
@@ -130,6 +133,9 @@ public class JEIHandler extends BlankModPlugin{
 		registry.addRecipeCategories(new BlastFurnaceRecipeCategory());
 		registry.addRecipeHandlers(new BlastFurnaceHandler());
 		registry.addRecipes(BlastFurnaceRecipeCategory.get());
+		registry.addRecipeCategories(new CoilerRecipeCategory());
+		registry.addRecipeHandlers(new CoilerHandler());
+		registry.addRecipes(CoilerRecipeCategory.get());
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, VanillaRecipeCategoryUid.CRAFTING, directTransfer, true);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.CUSTOM_CRAFTING_ID, directTransfer);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, VanillaRecipeCategoryUid.SMELTING, directTransfer);
@@ -138,6 +144,7 @@ public class JEIHandler extends BlankModPlugin{
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.WIREMILL_ID, directTransfer);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.ALLOY_SMELTER_ID, directTransfer);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.BLAST_FURNACE_ID, directTransfer);
+		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.COILER, directTransfer);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, VanillaRecipeCategoryUid.BREWING, directTransfer);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerWireMill.class, JEIConstants.WIREMILL_ID, 0, 1, 4, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerPlateBlendingMachine.class, JEIConstants.PLATE_BLENDER_ID, 0, 1, 4, 36);
@@ -192,6 +199,9 @@ public class JEIHandler extends BlankModPlugin{
 		registry.addRecipeClickArea(GuiIndustrialBlastFurnace.class, 60, 45, 52, 17, JEIConstants.BLAST_FURNACE_ID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.blastFurnace), JEIConstants.BLAST_FURNACE_ID);
 		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.industrialBlastFurnace), JEIConstants.BLAST_FURNACE_ID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.coilerPlant), JEIConstants.COILER);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerCoiler.class, JEIConstants.COILER, 0, 2, 4, 36);
+		registry.addRecipeClickArea(GuiCoiler.class, 65, 34, 52, 17, JEIConstants.COILER);
 		TMLogger.info("JEI Handler: Load Complete.");
 	}
 	@Override

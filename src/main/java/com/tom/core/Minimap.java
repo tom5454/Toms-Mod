@@ -2,18 +2,20 @@ package com.tom.core;
 
 import java.io.File;
 
-import com.tom.apis.TMLogger;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageMinimap;
-
 import mapwriterTm.Mw;
 import mapwriterTm.map.Marker.RenderType;
 import mapwriterTm.map.MarkerManager;
 import mapwriterTm.util.Reference;
+
 import net.minecraft.entity.player.EntityPlayerMP;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+
+import com.tom.apis.TMLogger;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageMinimap;
 
 public class Minimap {
 	public static MarkerManager markerManagerServer;

@@ -1,8 +1,8 @@
 package com.tom.storage.tileentity.inventory;
 
-import com.tom.storage.tileentity.TileEntityBasicTerminal;
-
 import net.minecraft.entity.player.InventoryPlayer;
+
+import com.tom.storage.tileentity.TileEntityBasicTerminal;
 
 public class ContainerBasicTerminalBlock extends ContainerTerminalBase{
 	public ContainerBasicTerminalBlock(InventoryPlayer playerInv, TileEntityBasicTerminal te) {

@@ -5,15 +5,6 @@ import static com.tom.api.energy.EnergyType.HV;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
-import com.tom.apis.ExtraBlockHitInfo;
-import com.tom.core.CoreInit;
-import com.tom.core.block.AntennaController;
-import com.tom.core.item.Tablet;
-import com.tom.core.tileentity.TileEntityAntennaController;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,6 +15,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+
+import com.tom.api.energy.EnergyStorage;
+import com.tom.api.energy.EnergyType;
+import com.tom.api.energy.IEnergyReceiver;
+import com.tom.apis.ExtraBlockHitInfo;
+import com.tom.core.CoreInit;
+
+import com.tom.core.block.AntennaController;
+
+import com.tom.core.item.Tablet;
+
+import com.tom.core.tileentity.TileEntityAntennaController;
 
 public class TileEntityAntennaBase extends TileEntityTomsMod implements
 IEnergyReceiver, ILinkable, IReceivable{

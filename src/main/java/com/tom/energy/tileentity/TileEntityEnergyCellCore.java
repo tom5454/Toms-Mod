@@ -1,10 +1,10 @@
 package com.tom.energy.tileentity;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.tom.api.tileentity.MultiblockPartList;
 import com.tom.api.tileentity.TileEntityControllerBase;
 import com.tom.lib.Configs;
-
-import net.minecraft.nbt.NBTTagCompound;
 
 public class TileEntityEnergyCellCore extends TileEntityControllerBase {
 	public TileEntityEnergyCellCore(){

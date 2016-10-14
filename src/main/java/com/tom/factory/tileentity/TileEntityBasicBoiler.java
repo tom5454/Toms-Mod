@@ -1,12 +1,5 @@
 package com.tom.factory.tileentity;
 
-import com.tom.api.ITileFluidHandler;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.factory.block.BasicBoiler;
-import com.tom.lib.Configs;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,12 +15,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.WorldType;
+
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import com.tom.api.ITileFluidHandler;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.factory.block.BasicBoiler;
+import com.tom.lib.Configs;
 
 public class TileEntityBasicBoiler extends TileEntityTomsMod implements ITileFluidHandler, IInventory {
 	private FluidTank tankWater = new FluidTank(Configs.BASIC_TANK_SIZE);
@@ -134,7 +135,7 @@ public class TileEntityBasicBoiler extends TileEntityTomsMod implements ITileFlu
 		}
 		if(heat > 120 && tankWater.getFluidAmount() > 100 && tankSteam.getFluidAmount() != tankSteam.getCapacity()){
 			int p = MathHelper.ceiling_double_int((heat - 120) / 80);
-			tankWater.drainInternal(p, true);
+			tankWater.drainInternal(p / 2, true);
 			tankSteam.fillInternal(new FluidStack(CoreInit.steam, p), true);
 			heat -= 0.05D;
 		}

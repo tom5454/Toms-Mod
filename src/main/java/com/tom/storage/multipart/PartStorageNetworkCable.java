@@ -1,11 +1,11 @@
 package com.tom.storage.multipart;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+
 import com.tom.api.grid.IGridDevice;
 import com.tom.api.multipart.PartDuct;
 import com.tom.storage.StorageInit;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 
 public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> {
 

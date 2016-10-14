@@ -2,15 +2,16 @@ package com.tom.api.tileentity;
 
 import java.util.List;
 
-import com.tom.core.CoreInit;
-import com.tom.core.item.Tablet;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
+
+import com.tom.core.CoreInit;
+
+import com.tom.core.item.Tablet;
 
 public class TileEntityJammerBase extends TileEntityTomsMod {
 	//public boolean connected = false;

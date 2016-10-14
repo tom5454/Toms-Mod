@@ -2,17 +2,6 @@ package com.tom.storage.multipart;
 
 import java.util.List;
 
-import com.tom.api.multipart.IGuiMultipart;
-import com.tom.api.multipart.PartModule;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.storage.StorageInit;
-import com.tom.storage.tileentity.gui.GuiImportBus;
-import com.tom.storage.tileentity.inventory.ContainerImportBus;
-
-import mcmultipart.multipart.PartSlot;
-import mcmultipart.raytrace.PartMOP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -24,6 +13,18 @@ import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+
+import com.tom.api.multipart.IGuiMultipart;
+import com.tom.api.multipart.PartModule;
+import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
+import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.storage.StorageInit;
+import com.tom.storage.tileentity.gui.GuiImportBus;
+import com.tom.storage.tileentity.inventory.ContainerImportBus;
+
+import mcmultipart.multipart.PartSlot;
+import mcmultipart.raytrace.PartMOP;
 
 public class PartImportBus extends PartModule<StorageNetworkGrid> implements IGuiMultipart{
 	public PartImportBus() {

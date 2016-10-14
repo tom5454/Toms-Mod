@@ -20,7 +20,7 @@ import com.tom.storage.StorageInit;
 import com.tom.transport.TransportInit;
 import com.tom.weaponsAndTools.ToolsInit;
 
-public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes OreDict
+public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes OreDict ResearchLoader
 	public static void init(){
 		int machineFrameAmount = Config.enableHardRecipes ? 2 : 4;
 		addRecipe(CraftingMaterial.BIG_REDSTONE.getStackNormal(), new Object[]{"RR",'R',Items.REDSTONE});
@@ -104,16 +104,18 @@ public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes OreDict
 			tag2.setInteger("tier",i);
 			GameRegistry.addRecipe(new ItemStack(CoreInit.trProcessor, 1, tag), new Object[]{"RRR","RPR","RRR",'R',Items.REDSTONE,'P', new ItemStack(CoreInit.trProcessor, 1, tag2)});
 		}*/
-		addShapelessRecipe(new ItemStack(CoreInit.bigNoteBook), new ItemStack(Items.WRITABLE_BOOK), new ItemStack(Items.PAPER), new ItemStack(Items.PAPER));
+		if(Config.enableResearchSystem){
+			addShapelessRecipe(new ItemStack(CoreInit.bigNoteBook), new ItemStack(Items.WRITABLE_BOOK), new ItemStack(Items.PAPER), new ItemStack(Items.PAPER));
+			addRecipe(new ItemStack(CoreInit.researchTable, 2), new Object[]{"BSI","WCW","RPR",'B', Items.GLASS_BOTTLE, 'S', "slabWood", 'I', "dyeBlack", 'W', "plankWood", 'C', Blocks.CRAFTING_TABLE, 'R', Items.STICK, 'P', Items.PAPER});
+			addRecipe(new ItemStack(CoreInit.magnifyingGlass, 1), new Object[]{" G","I ", 'I', "rodIron", 'G', "paneGlassColorless"});
+			addShapelessRecipe(new ItemStack(CoreInit.noteBook, 1), new Object[]{Items.WRITABLE_BOOK, Items.PAPER, "dyeBlack", Items.FEATHER, Items.PAPER, Items.STICK});
+		}
 		addRecipe(new ItemStack(ToolsInit.flintAxe, 1), new Object[]{"FS"," S",'F',CoreInit.flintAxeHead,'S',Items.STICK});
 		addRecipe(new ItemStack(CoreInit.flintAxeHead, 1), new Object[]{"FF"," F",'F',Items.FLINT});
 		addShapelessRecipe(new ItemStack(ToolsInit.portableComparator), new ItemStack(Items.COMPARATOR), new ItemStack(Items.REDSTONE), new ItemStack(Items.COMPASS));
 		addShapelessRecipe(new ItemStack(DefenseInit.projectorFieldType,1,3), new ItemStack(DefenseInit.projectorFieldType,1,3));
-		addRecipe(new ItemStack(CoreInit.researchTable, 2), new Object[]{"BSI","WCW","RPR",'B', Items.GLASS_BOTTLE, 'S', "slabWood", 'I', "dyeBlack", 'W', "plankWood", 'C', Blocks.CRAFTING_TABLE, 'R', Items.STICK, 'P', Items.PAPER});
 		addRecipe(CraftingMaterial.IRON_ROD.getStackNormal(), new Object[]{"I","I","I", 'I', "ingotIron"});
 		addRecipe(CraftingMaterial.IRON_ROD.getStackNormal(4), new Object[]{" I","HI"," I", 'I', "plateIron", 'H', "itemHammer_lvl1"});
-		addRecipe(new ItemStack(CoreInit.magnifyingGlass, 1), new Object[]{" G","I ", 'I', "rodIron", 'G', "paneGlassColorless"});
-		addShapelessRecipe(new ItemStack(CoreInit.noteBook, 1), new Object[]{Items.WRITABLE_BOOK, Items.PAPER, "dyeBlack", Items.FEATHER, Items.PAPER, Items.STICK});
 		addRecipe(CraftingMaterial.HOT_COPPER_HAMMER_HEAD.getStackNormal(), new Object[]{" H ","III","III",'I', CraftingMaterial.HOT_COPPER.getStackNormal(), 'H', "itemHammer_lvl0"});
 		addRecipe(CraftingMaterial.HOT_TIN_HAMMER_HEAD.getStackNormal(), new Object[]{" H ","III","III",'I', CraftingMaterial.HOT_TIN.getStackNormal(), 'H', "itemHammer_lvl0"});
 		addRecipe(CraftingMaterial.HOT_IRON_HAMMER_HEAD.getStackNormal(), new Object[]{" H ","III","III",'I', CraftingMaterial.HOT_IRON.getStackNormal(), 'H', "itemHammer_lvl0"});
@@ -123,7 +125,7 @@ public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes OreDict
 		addRecipe(new ItemStack(TransportInit.fluidDuct, 6), new Object[]{"IGI",'I', "plateIron", 'G', "blockGlassColorless"});
 		//addRecipe(new ItemStack(TransportInit.servo, 2), new Object[]{"IGI", "RPR",'I', "ingotIron", 'G', "blockGlass", 'R', Items.REDSTONE, 'P', Items.paper});
 		//addRecipe(new ItemStack(TransportInit.filter, 2), new Object[]{"IPI", "NGN",'I', "ingotIron", 'G', "blockGlass", 'N', "nuggetIron", 'P', Items.paper});
-		addRecipe(new ItemStack(CoreInit.wrench), new Object[]{" RE", " BG", "S  ",'B', "ingotBronze", 'G', "nuggetGold", 'R', Blocks.REDSTONE_BLOCK, 'E', Items.ENDER_PEARL, 'S', Items.STICK});
+		addRecipe(new ItemStack(CoreInit.wrench), new Object[]{"S S", "BRB", " I ",'B', "plateBronze", 'R', Blocks.REDSTONE_BLOCK, 'S', "plateSteel", 'I', CraftingMaterial.IRON_ROD.getStack()});
 		addShapelessRecipe(TMResource.ELECTRUM.getStackNormal(Type.DUST, 2), new Object[]{TMResource.GOLD.getStackName(Type.DUST), TMResource.SILVER.getStackName(Type.DUST)});
 		addRecipe(new ItemStack(StorageInit.tankBasic), new Object[]{"OGO", "GGG", "OGO",'O', TMResource.COPPER.getStackName(Type.PLATE), 'G', "paneGlassColorless"});
 		addRecipe(new ItemStack(CoreInit.treeTap, 2), new Object[]{" _S", "WWW", "  W", 'W', "plankWood", '_', "slabWood", 'S', Items.STICK});

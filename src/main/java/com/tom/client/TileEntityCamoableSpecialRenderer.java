@@ -2,9 +2,6 @@ package com.tom.client;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.api.tileentity.TileEntityCamoable;
-import com.tom.apis.TomsModUtils;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,6 +11,9 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.AxisAlignedBB;
+
+import com.tom.api.tileentity.TileEntityCamoable;
+import com.tom.apis.TomsModUtils;
 
 public class TileEntityCamoableSpecialRenderer extends TileEntitySpecialRendererTomsMod<TileEntityCamoable> {
 
@@ -43,6 +43,7 @@ public class TileEntityCamoableSpecialRenderer extends TileEntitySpecialRenderer
 			bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 			GlStateManager.enableBlend();
 			GlStateManager.disableLighting();
+			GlStateManager.enableRescaleNormal();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			/*drawTexturedModalRect(xStart, yStart, zStart, s, bbRaw.maxX, bbRaw.maxY);
 			drawTexturedModalRect(xStart, yStart, zStop, s, bbRaw.maxX, bbRaw.maxY);*/

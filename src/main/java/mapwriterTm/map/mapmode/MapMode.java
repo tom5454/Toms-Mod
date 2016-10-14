@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import mapwriterTm.config.MapModeConfig;
 import mapwriterTm.map.MapView;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 

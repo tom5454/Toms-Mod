@@ -2,10 +2,14 @@ package com.tom.lib;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+
+import com.tom.core.CoreInit;
 /**{@link com.tom.config.Config}*/
 public final class Configs {
+	public static final String ModidL = "tomsmod";
 	public static final String Modid = "TomsMod";
-	public static final String version = "2.0.14";
+	public static final String ModName = "Tom's Mod";
+	public static final String version = "2.0.15";
 	public static final String CLIENT_PROXY_CLASS = "com.tom.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.tom.proxy.ServerProxy";
 	public static final String Chanel1 = Modid + ":Chanel1";
@@ -47,7 +51,7 @@ public final class Configs {
 	public static final ResourceLocation monitor = new ResourceLocation(MODEL_LOCATION+"monitor.png");
 	public static final ResourceLocation pixel = new ResourceLocation("tm:pixel.png");
 	public static final String modid_Short = "tm";
-	public static final String coreDependencies = "required-after:TomsMod|Core";
+	public static final String coreDependencies = "required-after:"+CoreInit.modid;
 	public static final ResourceLocation driveModel = new ResourceLocation(MODEL_LOCATION+"driveCellsModel.png");
 	public static final String fakePlayerName = "[TomsMod]";
 	public static final int fluidDuctMaxInsert = 1000;
@@ -55,4 +59,6 @@ public final class Configs {
 	public static final String mainDependencies = "";
 	public static final String OPEN_COMPUTERS = "OpenComputers|Core";
 	public static final String updateJson = "https://raw.githubusercontent.com/tom5454/Toms-Mod/master/version-check.json";
+	public static final String EIO = "EnderIO";
+	public static final String Railcraft = "Railcraft";
 }

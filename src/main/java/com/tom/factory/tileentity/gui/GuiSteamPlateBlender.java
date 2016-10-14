@@ -1,11 +1,12 @@
 package com.tom.factory.tileentity.gui;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
+
 import com.tom.factory.tileentity.TileEntitySteamPlateBlender;
 import com.tom.factory.tileentity.inventory.ContainerSteamPlateBlender;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public class GuiSteamPlateBlender extends GuiTomsMod {
 	private TileEntitySteamPlateBlender te;

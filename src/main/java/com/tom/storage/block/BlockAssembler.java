@@ -1,11 +1,11 @@
 package com.tom.storage.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.storage.tileentity.TileEntityAssembler;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.storage.tileentity.TileEntityAssembler;
 
 public class BlockAssembler extends BlockContainerTomsMod {
 

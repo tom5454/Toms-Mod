@@ -1,18 +1,20 @@
 package com.tom.factory.tileentity.inventory;
 
-import com.tom.api.inventory.SlotSpeedUpgrade;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.factory.tileentity.TileEntityElectricFurnaceAdv;
-import com.tom.network.messages.MessageProgress;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnaceOutput;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.inventory.SlotSpeedUpgrade;
+import com.tom.factory.tileentity.TileEntityElectricFurnaceAdv;
+import com.tom.network.messages.MessageProgress;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerAdvElectricFurnace extends ContainerTomsMod {
 	private TileEntityElectricFurnaceAdv te;

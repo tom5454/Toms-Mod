@@ -3,8 +3,10 @@ package mapwriterTm.gui;
 import mapwriterTm.Mw;
 import mapwriterTm.config.Config;
 import mapwriterTm.map.MapView;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

@@ -1,14 +1,15 @@
 package com.tom.storage.tileentity.inventory;
 
-import com.tom.api.item.IStorageCell;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.storage.tileentity.TileEntityDrive;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import com.tom.api.item.IStorageCell;
+import com.tom.storage.tileentity.TileEntityDrive;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerDrive extends ContainerTomsMod {
 	private TileEntityDrive te;

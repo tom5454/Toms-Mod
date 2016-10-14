@@ -4,12 +4,12 @@ import static com.tom.api.energy.EnergyType.HV;
 
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 
 public class TileEntityMBCompressor extends TileEntityMBPressurePortBase implements IEnergyReceiver{
 	protected EnergyStorage energy = new EnergyStorage(1000000, 1200, 100);

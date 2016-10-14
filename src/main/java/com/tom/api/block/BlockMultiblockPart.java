@@ -1,13 +1,13 @@
 package com.tom.api.block;
 
-import com.tom.api.tileentity.TileEntityMultiblockPartBase;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.tileentity.TileEntityMultiblockPartBase;
 
 public abstract class BlockMultiblockPart extends BlockContainerTomsMod implements IBlockMultiblockPart{
 

@@ -1,11 +1,12 @@
 package com.tom.core.tileentity;
 
-import com.tom.api.tileentity.TileEntityTabletAccessPointBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.block.TabletAccessPoint;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.tom.api.tileentity.TileEntityTabletAccessPointBase;
+import com.tom.apis.TomsModUtils;
+
+import com.tom.core.block.TabletAccessPoint;
 
 public class TileEntityTabletAccessPoint extends TileEntityTabletAccessPointBase{
 	//	public float thickness = 0.125F;

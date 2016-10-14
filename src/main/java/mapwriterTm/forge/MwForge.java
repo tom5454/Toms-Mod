@@ -3,12 +3,11 @@ package mapwriterTm.forge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.config.Config;
-
 import mapwriterTm.Mw;
 import mapwriterTm.util.Reference;
+
 import net.minecraft.client.Minecraft;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -19,6 +18,9 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import com.tom.apis.TomsModUtils;
+import com.tom.config.Config;
 
 @Mod(modid = Reference.MOD_ID,
 name = Reference.MOD_NAME,
@@ -36,7 +38,7 @@ public class MwForge
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
 	public static CommonProxy proxy;
 
-	public static Logger logger = LogManager.getLogger(Reference.MOD_ID);
+	public static Logger logger = LogManager.getLogger(Reference.MOD_ID_CAP);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)

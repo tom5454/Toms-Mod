@@ -1,8 +1,5 @@
 package com.tom.core.item;
 
-import com.tom.api.item.IMagCard;
-import com.tom.core.CoreInit;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
@@ -11,6 +8,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
+
+import com.tom.api.item.IMagCard;
+import com.tom.core.CoreInit;
 
 public class ElectricalMagCard extends Item implements IMagCard {
 

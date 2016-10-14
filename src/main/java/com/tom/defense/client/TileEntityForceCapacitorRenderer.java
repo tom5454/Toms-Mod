@@ -2,14 +2,14 @@ package com.tom.defense.client;
 
 import org.lwjgl.opengl.GL11;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.client.TileEntitySpecialRendererTomsMod;
-import com.tom.defense.tileentity.TileEntityForceCapacitor;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
+
+import com.tom.apis.TomsModUtils;
+import com.tom.client.TileEntitySpecialRendererTomsMod;
+import com.tom.defense.tileentity.TileEntityForceCapacitor;
 
 public class TileEntityForceCapacitorRenderer extends
 		TileEntitySpecialRendererTomsMod<TileEntityForceCapacitor> {

@@ -652,6 +652,14 @@ public class StorageNetworkGrid extends GridBase<StorageData, StorageNetworkGrid
 			}
 			return -1;
 		}
+		@Override
+		public double getMaxExtract() {
+			return 100000;
+		}
+		@Override
+		public double getMaxReceive() {
+			return 100000;
+		}
 	}
 	private StorageData data = new StorageData();
 	@Override

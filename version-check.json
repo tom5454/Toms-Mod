@@ -1,10 +1,11 @@
 {
   "homepage": "https://minecraft.curseforge.com/projects/toms-mod",
   "promos": {
-    "1.10.2-latest": "2.0.14",
-    "1.10.2-recommended": "2.0.14"
+    "1.10.2-latest": "2.0.15",
+    "1.10.2-recommended": "2.0.15"
   },
   "1.10.2": {
+    "2.0.15": "See changelog: https://minecraft.curseforge.com/projects/toms-mod/files/2336631",
     "2.0.14": "See changelog: https://minecraft.curseforge.com/projects/toms-mod/files/2331925",
     "2.0.13": "See changelog: https://minecraft.curseforge.com/projects/toms-mod/files/2326014",
     "2.0.12": "See changelog: https://minecraft.curseforge.com/projects/toms-mod/files/2322339",

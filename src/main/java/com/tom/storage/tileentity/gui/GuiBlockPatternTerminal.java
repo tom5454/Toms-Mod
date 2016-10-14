@@ -2,19 +2,20 @@ package com.tom.storage.tileentity.gui;
 
 import java.io.IOException;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.storage.StorageInit;
-import com.tom.storage.tileentity.TileEntityPatternTerminal;
-import com.tom.storage.tileentity.inventory.ContainerBlockPatternTerminal;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.apis.TomsModUtils;
+import com.tom.storage.StorageInit;
+import com.tom.storage.tileentity.TileEntityPatternTerminal;
+import com.tom.storage.tileentity.inventory.ContainerBlockPatternTerminal;
 
 @SideOnly(Side.CLIENT)
 public class GuiBlockPatternTerminal extends GuiTerminalBase {

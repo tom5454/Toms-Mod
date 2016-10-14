@@ -1,9 +1,9 @@
 package com.tom.energy.block;
 
-import com.tom.energy.tileentity.TileEntityCreativeCell;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import com.tom.energy.tileentity.TileEntityCreativeCell;
 
 public class CreativeCell extends BlockPowerStorageBase {
 

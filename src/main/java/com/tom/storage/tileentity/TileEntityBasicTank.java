@@ -1,14 +1,15 @@
 package com.tom.storage.tileentity;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.lib.Configs;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
+import com.tom.apis.TomsModUtils;
+import com.tom.lib.Configs;
 
 public class TileEntityBasicTank extends TMTank{
 	private final FluidTank tank = new FluidTank(Configs.BASIC_TANK_SIZE);

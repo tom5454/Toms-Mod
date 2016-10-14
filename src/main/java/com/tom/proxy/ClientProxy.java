@@ -198,4 +198,9 @@ public class ClientProxy extends CommonProxy{
 	public void serverStart() {
 		CustomModelLoader.printExceptions();
 	}
+
+	@Override
+	public void construction() {
+
+	}
 }

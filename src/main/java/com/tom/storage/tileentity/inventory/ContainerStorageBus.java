@@ -1,12 +1,13 @@
 package com.tom.storage.tileentity.inventory;
 
-import com.tom.api.inventory.SlotPhantom;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.storage.multipart.PartStorageBus;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+
+import com.tom.api.inventory.SlotPhantom;
+import com.tom.storage.multipart.PartStorageBus;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerStorageBus extends ContainerTomsMod {
 

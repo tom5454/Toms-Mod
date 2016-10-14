@@ -2,12 +2,8 @@ package com.tom.api.tileentity;
 
 import java.util.List;
 
-import com.tom.api.item.ISecurityStationLinkCard;
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.api.network.INBTPacketSender;
-import com.tom.defense.ForceDeviceControlType;
-
 import mapwriterTm.util.Render;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,8 +17,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.item.ISecurityStationLinkCard;
+import com.tom.api.network.INBTPacketReceiver;
+import com.tom.api.network.INBTPacketSender;
+import com.tom.defense.ForceDeviceControlType;
 
 public interface IConfigurable extends INBTPacketReceiver, INBTPacketSender{
 	IConfigurationOption getOption();

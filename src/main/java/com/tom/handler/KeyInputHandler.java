@@ -1,21 +1,23 @@
 package com.tom.handler;
 
-import com.tom.core.CoreInit;
-import com.tom.core.Keybindings;
-import com.tom.core.tileentity.TileEntityTabletController;
-import com.tom.lib.Keys;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageKey;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.core.CoreInit;
+import com.tom.core.Keybindings;
+import com.tom.lib.Keys;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageKey;
+
+import com.tom.core.tileentity.TileEntityTabletController;
 
 public class KeyInputHandler{
 	public static final KeyInputHandler instance = new KeyInputHandler();

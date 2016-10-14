@@ -1,19 +1,21 @@
 package com.tom.factory.tileentity.inventory;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.factory.tileentity.TileEntityAdvBoiler;
-import com.tom.network.messages.MessageFluidStackSync;
-import com.tom.network.messages.MessageFluidStackSync.IFluidContainer;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.SlotFurnaceFuel;
 import net.minecraft.util.math.MathHelper;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.apis.TomsModUtils;
+import com.tom.factory.tileentity.TileEntityAdvBoiler;
+import com.tom.network.messages.MessageFluidStackSync;
+import com.tom.network.messages.MessageFluidStackSync.IFluidContainer;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerAdvBoiler extends ContainerTomsMod implements IFluidContainer{
 	private TileEntityAdvBoiler te;

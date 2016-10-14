@@ -6,6 +6,21 @@ import java.util.Stack;
 
 import org.lwjgl.opengl.GL11;
 
+import mapwriterTm.util.Render;
+
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import com.tom.apis.TomsModUtils;
 import com.tom.storage.multipart.StorageNetworkGrid;
 import com.tom.storage.multipart.StorageNetworkGrid.CalculatedCrafting;
@@ -21,18 +36,6 @@ import com.tom.storage.multipart.StorageNetworkGrid.RecipeReturnInformation;
 import com.tom.storage.multipart.StorageNetworkGrid.RecipeToCraft;
 
 import io.netty.buffer.ByteBuf;
-import mapwriterTm.util.Render;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class StoredItemStack implements ICraftable{
 	public ItemStack stack;

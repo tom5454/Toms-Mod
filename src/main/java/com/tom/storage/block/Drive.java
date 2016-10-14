@@ -3,12 +3,6 @@ package com.tom.storage.block;
 import java.util.List;
 import java.util.Random;
 
-import com.tom.api.block.BlockGridDevice;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.tileentity.TileEntityDrive;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -25,8 +19,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.block.BlockGridDevice;
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
+import com.tom.apis.TomsModUtils;
+import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.storage.tileentity.TileEntityDrive;
 
 public class Drive extends BlockGridDevice {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");

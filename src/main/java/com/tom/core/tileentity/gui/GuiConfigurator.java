@@ -2,17 +2,18 @@ package com.tom.core.tileentity.gui;
 
 import java.io.IOException;
 
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.api.tileentity.IConfigurable;
-import com.tom.core.tileentity.inventory.ContainerConfigurator;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageNBT;
-import com.tom.network.messages.MessageNBT.MessageNBTRequest;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.tom.api.network.INBTPacketReceiver;
+import com.tom.api.tileentity.IConfigurable;
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageNBT;
+import com.tom.network.messages.MessageNBT.MessageNBTRequest;
+
+import com.tom.core.tileentity.inventory.ContainerConfigurator;
 
 public class GuiConfigurator extends GuiTomsMod implements INBTPacketReceiver{
 	private IConfigurable te;

@@ -1,18 +1,20 @@
 package com.tom.energy.tileentity;
 
-import com.tom.api.ITileFluidHandler;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.core.CoreInit;
-import com.tom.energy.block.FusionFluidExtractor;
-import com.tom.lib.Configs;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import com.tom.api.ITileFluidHandler;
+import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.core.CoreInit;
+import com.tom.lib.Configs;
+
+import com.tom.energy.block.FusionFluidExtractor;
 
 public class TileEntityFusionFluidExtractor extends TileEntityTomsMod implements ITileFluidHandler{
 	private final FluidTank tank = new FluidTank(Configs.BASIC_TANK_SIZE);

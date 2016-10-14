@@ -5,15 +5,16 @@
 // - ZeuX
 package com.tom.core.model;
 
-import com.tom.core.tileentity.TileEntityCamera;
-import com.tom.lib.Configs;
-import com.tom.model.IBaseModel;
-
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+
+import com.tom.lib.Configs;
+import com.tom.model.IBaseModel;
+
+import com.tom.core.tileentity.TileEntityCamera;
 
 public class ModelCamera extends ModelBase implements IBaseModel
 {

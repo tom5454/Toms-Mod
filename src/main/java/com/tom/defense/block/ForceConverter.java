@@ -1,9 +1,5 @@
 package com.tom.defense.block;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.defense.tileentity.TileEntityForceConverter;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -19,6 +15,10 @@ import net.minecraft.util.EnumFacing.Plane;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.apis.TomsModUtils;
+import com.tom.defense.tileentity.TileEntityForceConverter;
 
 public class ForceConverter extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing",Plane.HORIZONTAL);

@@ -1,7 +1,20 @@
 package com.tom.core.item;
 
-import net.minecraft.item.ItemStack;
+import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.ItemEnergyContainer;
 
 public class ItemBattery extends ItemEnergyContainer {
@@ -25,5 +38,26 @@ public class ItemBattery extends ItemEnergyContainer {
 	@Override
 	public boolean canInteract(ItemStack container) {
 		return container.stackSize == 1;
+	}
+	@Override
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
+			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if(tile != null && tile.hasCapability(EnergyType.ENERGY_HANDLER_CAPABILITY, facing)){
+			if(getEnergyStored(stack) > 0){
+				EnergyType.LV.pushEnergyTo(worldIn, pos.offset(facing), facing, getItemContainerAsStorage(stack, 500), false);
+			}
+			return EnumActionResult.SUCCESS;
+		}
+		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+	}
+	/**
+	 * allows items to add custom lines of information to the mouseover description
+	 */
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+	{
+		tooltip.add(getInfo(stack));
 	}
 }

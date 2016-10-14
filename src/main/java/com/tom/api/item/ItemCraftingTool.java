@@ -2,8 +2,6 @@ package com.tom.api.item;
 
 import java.util.List;
 
-import com.tom.core.CoreInit;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,8 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.core.CoreInit;
 
 public abstract class ItemCraftingTool extends Item implements ICustomCraftingHandler{
 	public ItemCraftingTool() {

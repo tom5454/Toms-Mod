@@ -1,16 +1,18 @@
 package com.tom.factory.tileentity.inventory;
 
-import com.tom.api.inventory.SlotOutput;
-import com.tom.core.tileentity.inventory.ContainerTomsMod;
-import com.tom.factory.tileentity.TileEntitySteamCrusher;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.inventory.SlotOutput;
+import com.tom.factory.tileentity.TileEntitySteamCrusher;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerSteamCrusher extends ContainerTomsMod {
 	private TileEntitySteamCrusher te;

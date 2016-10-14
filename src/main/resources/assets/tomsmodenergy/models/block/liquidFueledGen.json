@@ -1,0 +1,8 @@
+{
+    "parent": "block/adv_facing",
+    "textures": {
+        "top": "tomsmodenergy:blocks/liqFueledGenerator",
+        "front": "tomsmodfactory:blocks/machineSide",
+        "side": "tomsmodfactory:blocks/machineSide"
+    }
+}

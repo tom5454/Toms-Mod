@@ -3,9 +3,6 @@ package com.tom.defense.block;
 import java.util.List;
 import java.util.Random;
 
-import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.defense.tileentity.TileEntitySecurityStation;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -21,8 +18,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.defense.tileentity.TileEntitySecurityStation;
 
 public class SecurityStation extends BlockContainerTomsMod {
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");

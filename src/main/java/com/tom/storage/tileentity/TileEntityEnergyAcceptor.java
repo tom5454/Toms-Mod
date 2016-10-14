@@ -2,14 +2,6 @@ package com.tom.storage.tileentity;
 
 import java.util.List;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
-import com.tom.api.grid.GridEnergyStorage;
-import com.tom.api.tileentity.ICustomMultimeterInformation;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.storage.multipart.StorageNetworkGrid;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -18,6 +10,14 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+
+import com.tom.api.energy.EnergyStorage;
+import com.tom.api.energy.EnergyType;
+import com.tom.api.energy.IEnergyReceiver;
+import com.tom.api.grid.GridEnergyStorage;
+import com.tom.api.tileentity.ICustomMultimeterInformation;
+import com.tom.api.tileentity.TileEntityGridDeviceBase;
+import com.tom.storage.multipart.StorageNetworkGrid;
 
 public class TileEntityEnergyAcceptor extends
 TileEntityGridDeviceBase<StorageNetworkGrid> implements IEnergyReceiver, ICustomMultimeterInformation {

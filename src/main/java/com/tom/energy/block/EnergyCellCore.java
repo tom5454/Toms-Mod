@@ -1,9 +1,5 @@
 package com.tom.energy.block;
 
-import com.tom.api.block.BlockControllerBase;
-import com.tom.api.tileentity.TileEntityControllerBase;
-import com.tom.energy.tileentity.TileEntityEnergyCellCore;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -14,6 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockControllerBase;
+import com.tom.api.tileentity.TileEntityControllerBase;
+
+import com.tom.energy.tileentity.TileEntityEnergyCellCore;
 
 public class EnergyCellCore extends BlockControllerBase {
 

@@ -1,10 +1,5 @@
 package com.tom.core.tileentity.inventory;
 
-import com.tom.core.item.TabletHandler;
-import com.tom.core.tileentity.TileEntityTabletController;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageTabletGui;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
@@ -12,6 +7,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageTabletGui;
+
+import com.tom.core.item.TabletHandler;
+
+import com.tom.core.tileentity.TileEntityTabletController;
 
 public class ContainerTablet extends ContainerTomsMod {
 	public TabletHandler tab;

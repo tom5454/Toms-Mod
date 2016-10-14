@@ -1,10 +1,5 @@
 package com.tom.handler;
 
-import com.tom.api.tileentity.AccessType;
-import com.tom.api.tileentity.ISecuredTileEntity;
-import com.tom.api.tileentity.ISecurityStation;
-import com.tom.apis.TomsModUtils;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,6 +8,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import com.tom.api.tileentity.AccessType;
+import com.tom.api.tileentity.ISecuredTileEntity;
+import com.tom.api.tileentity.ISecurityStation;
+import com.tom.apis.TomsModUtils;
 
 public class WrenchHandler {
 	public static boolean use(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c, EnumHand hand){

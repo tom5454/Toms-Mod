@@ -2,9 +2,9 @@ package com.tom.api.item;
 
 import java.util.List;
 
-import com.tom.api.tileentity.AccessType;
-
 import net.minecraft.item.ItemStack;
+
+import com.tom.api.tileentity.AccessType;
 
 public interface IIdentityCard {
 	String getUsername(ItemStack stack);

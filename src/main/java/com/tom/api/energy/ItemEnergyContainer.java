@@ -1,14 +1,21 @@
 package com.tom.api.energy;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 
 	protected int capacity;
 	protected double maxReceive;
 	protected double maxExtract;
+
+	public static final EnergyStorage NULL_STORAGE = new EnergyStorage(0);
 
 	public ItemEnergyContainer(int capacity) {
 
@@ -88,7 +95,7 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
 			return 0;
 		}
-		return container.getTagCompound().getInteger("Energy");
+		return container.getTagCompound().getDouble("Energy");
 	}
 
 	@Override
@@ -106,5 +113,74 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 	}
 	public boolean canInteract(ItemStack container){
 		return true;
+	}
+	public static IEnergyStorage getItemContainerAsStorage(ItemStack stack, double maxTransfer){
+		if(stack == null || !(stack.getItem() instanceof ItemEnergyContainer)){
+			return NULL_STORAGE;
+		}else{
+			ItemEnergyContainer c = (ItemEnergyContainer) stack.getItem();
+			return new ItemEnergyStorage(maxTransfer, c, stack);
+		}
+	}
+	public static class ItemEnergyStorage implements IEnergyStorage{
+		private final ItemEnergyContainer c;
+		private final ItemStack stack;
+		private final double maxTransfer;
+		public ItemEnergyStorage(double maxTransfer, ItemEnergyContainer c, ItemStack stack) {
+			this.c = c;
+			this.stack = stack;
+			this.maxTransfer = maxTransfer;
+		}
+		@Override
+		public double getEnergyStored() {
+			return c.getEnergyStored(stack);
+		}
+		@Override
+		public int getMaxEnergyStored() {
+			return c.getMaxEnergyStored(stack);
+		}
+		@Override
+		public double receiveEnergy(double maxReceive, boolean simulate) {
+			return c.receiveEnergy(stack, Math.min(maxReceive, maxTransfer), simulate);
+		}
+		@Override
+		public double extractEnergy(double maxExtract, boolean simulate) {
+			return c.extractEnergy(stack, Math.min(maxExtract, maxTransfer), simulate);
+		}
+		@Override
+		public boolean isFull() {
+			return c.isFull(stack);
+		}
+		@Override
+		public boolean hasEnergy() {
+			return c.hasEnergy(stack);
+		}
+		@Override
+		public double getMaxExtract() {
+			return Math.min(maxTransfer, c.maxExtract);
+		}
+		@Override
+		public double getMaxReceive() {
+			return Math.min(maxTransfer, c.maxReceive);
+		}
+	}
+	public boolean isFull(ItemStack stack) {
+		return getEnergyStored(stack) == capacity;
+	}
+
+	public boolean hasEnergy(ItemStack stack) {
+		return getEnergyStored(stack) > 0;
+	}
+	@SideOnly(Side.CLIENT)
+	public static String getInfo(IEnergyContainerItem item, ItemStack stack){
+		double energy = item.getEnergyStored(stack);
+		int max = item.getMaxEnergyStored(stack);
+		double per = energy / max * 1000;
+		double p = MathHelper.floor_double(per) / 10D;
+		return I18n.format("tomsMod.tooltip.charge") + ": "+max+"/"+energy+" "+p+"%";
+	}
+	@SideOnly(Side.CLIENT)
+	public String getInfo(ItemStack stack){
+		return getInfo(this, stack);
 	}
 }

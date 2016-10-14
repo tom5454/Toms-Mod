@@ -1,5 +1,10 @@
 package com.tom.core.tileentity;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
+
+import net.minecraftforge.fml.common.Optional;
+
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.lib.Configs;
 
@@ -7,9 +12,6 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.Optional;
 
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
 public class TileEntityRedstonePort extends TileEntityTomsMod implements

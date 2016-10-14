@@ -1,14 +1,15 @@
 package com.tom.energy.block;
 
-import com.tom.api.block.BlockMultiblockPart;
-import com.tom.energy.tileentity.TileEntityEnergyCellSide;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.api.block.BlockMultiblockPart;
+
+import com.tom.energy.tileentity.TileEntityEnergyCellSide;
 
 public class EnergyCellSide extends BlockMultiblockPart {
 	/*@SideOnly(Side.CLIENT)
