@@ -14,6 +14,7 @@ WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If y
     Added Plastic Processor
     Added Laser Engraver
     Added Auto Machine Output & Powersharing with adjacent machines(Use the Configurator)
+    Added Colored Cables
     Few bugfixes.
 
 2.0.15_ALPHA for Minecraft 1.10.2
