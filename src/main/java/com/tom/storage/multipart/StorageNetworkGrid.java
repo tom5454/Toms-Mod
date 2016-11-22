@@ -29,6 +29,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.google.common.base.Function;
+
 import com.tom.api.energy.IEnergyStorage;
 import com.tom.api.grid.GridBase;
 import com.tom.api.grid.GridEnergyStorage;
@@ -39,7 +41,6 @@ import com.tom.api.inventory.IStorageInventory.IStorageInv;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.tileentity.IGuiTile;
 import com.tom.apis.EmptyEntry;
-import com.tom.apis.Function;
 import com.tom.apis.TMLogger;
 import com.tom.apis.TomsModUtils;
 import com.tom.network.NetworkHandler;
@@ -1683,6 +1684,9 @@ public class StorageNetworkGrid extends GridBase<StorageData, StorageNetworkGrid
 			sendCompiledCraftingTo(c, player);
 			TMLogger.info("Crafting Data Sent.");
 		}
+	}
+	public interface IChannelUpdateListener{
+		void channelUpdate();
 	}
 	/*public static class StackToCraft{
 		public ItemStack stack;

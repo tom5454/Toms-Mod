@@ -8,7 +8,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.multipart.ICustomPartBounds;
@@ -16,13 +15,12 @@ import com.tom.api.multipart.PartDuct;
 import com.tom.lib.Configs;
 import com.tom.transport.TransportInit;
 
-import io.netty.buffer.ByteBuf;
-
 public class PartFluidDuct extends PartDuct<FluidGrid> implements ICustomPartBounds, ITileFluidHandler{
 	private final AxisAlignedBB connectionBox;
 	//private byte eConnectionCache = 0;
 	private int timer = 0;
-	public FluidStack stack;
+	public FluidStack stack, stackOld;
+	public Integer render;
 	public PartFluidDuct() {
 		super(TransportInit.fluidDuct, "tomsmodtransport:tm.fluidDuct", 0.1875, 2);
 		double start = 0.5 - 0.25;
@@ -72,8 +70,8 @@ public class PartFluidDuct extends PartDuct<FluidGrid> implements ICustomPartBou
 				}else*/ if(connectsInv(f)){
 					if(grid.getData().getFluid() != null && grid.getData().getFluidAmount() > 0){
 						TileEntity tile = worldObj.getTileEntity(pos.offset(f));
-						if(tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f)){
-							IFluidHandler t = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f);
+						if(tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f.getOpposite())){
+							IFluidHandler t = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f.getOpposite());
 							//if(t.canFill(f, grid.getData().getFluid().getFluid())){
 							if(t != null){
 								int filled = t.fill(grid.getData().getFluid(), false);
@@ -104,35 +102,24 @@ public class PartFluidDuct extends PartDuct<FluidGrid> implements ICustomPartBou
 	public int getPropertyValue(EnumFacing side) {
 		return connectsInv(side) ? /*connectsE(side) ? 3 :*/ 2 : connects(side) || connectsM(side) ? 1 : 0;
 	}
-	/*public boolean connectsE(EnumFacing side) {
-		return (eConnectionCache & (1 << side.ordinal())) != 0;
-	}*/
 	@Override
-	public boolean readFromPacket(ByteBuf buf) {
-		//byte oldECC = eConnectionCache;
-		//eConnectionCache = buf.readByte();
-		NBTTagCompound tag = ByteBufUtils.readTag(buf);
+	public boolean readFromPacket(NBTTagCompound tag) {
 		stack = FluidStack.loadFluidStackFromNBT(tag);
-		return true;
+		return false;
 	}
 	@Override
-	public void writeToPacket(ByteBuf buf) {
-		//buf.writeByte(eConnectionCache);
+	public void writeToPacket(NBTTagCompound tag) {
 		FluidStack stack = grid.getData().getFluid();
-		NBTTagCompound tag = new NBTTagCompound();
 		if(stack != null)stack.writeToNBT(tag);
-		ByteBufUtils.writeTag(buf, tag);
 	}
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		//nbt.setByte("exportConfig", eConnectionCache);
 		return nbt;
 	}
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		//eConnectionCache = nbt.getByte("exportConfig");
 	}
 	/*@Override
 	public boolean onConnectionBoxClicked(EnumFacing side, EntityPlayer player, ItemStack stack, EnumHand hand) {

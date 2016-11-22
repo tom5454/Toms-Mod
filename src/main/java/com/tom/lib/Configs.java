@@ -9,7 +9,7 @@ public final class Configs {
 	public static final String ModidL = "tomsmod";
 	public static final String Modid = "TomsMod";
 	public static final String ModName = "Tom's Mod";
-	public static final String version = "2.0.15";
+	public static final String version = "2.0.16";
 	public static final String CLIENT_PROXY_CLASS = "com.tom.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.tom.proxy.ServerProxy";
 	public static final String Chanel1 = Modid + ":Chanel1";

@@ -16,6 +16,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 import com.tom.core.research.ResearchHandler;
 import com.tom.factory.block.SteamSolderingStation;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
@@ -36,7 +37,7 @@ public class TileEntitySteamSolderingStation extends TileEntityTomsMod implement
 	private int solderingAlloyLevel = 0;
 	@Override
 	public IFluidHandler getTankOnSide(EnumFacing f) {
-		return tank;
+		return Helper.getFluidHandlerFromTank(tank, true, false, CoreInit.steam);
 	}
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {

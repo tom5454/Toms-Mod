@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 import com.tom.factory.block.SteamFurnace;
 import com.tom.recipes.handler.MachineCraftingHandler;
 
@@ -26,7 +27,7 @@ public class TileEntitySteamFurnaceAdv extends TileEntityTomsMod implements ITil
 	public static final int MAX_PROCESS_TIME = 70;
 	@Override
 	public IFluidHandler getTankOnSide(EnumFacing f) {
-		return tank;
+		return Helper.getFluidHandlerFromTank(tank, true, false, CoreInit.steam);
 	}
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {

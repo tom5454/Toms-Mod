@@ -4,9 +4,14 @@ import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -58,7 +63,7 @@ public class ResourceItem extends Item {
 		public String getUnlocalizedName(ItemStack stack)
 		{
 			int meta = stack.getMetadata();
-			return this.getUnlocalizedName() + "_" + CraftingMaterial.VALUES[meta].getName();
+			return this.getUnlocalizedName() + "_" + CraftingMaterial.get(meta).getName();
 		}
 		@Override
 		public CraftingItem setCreativeTab(CreativeTabs tab) {
@@ -71,13 +76,30 @@ public class ResourceItem extends Item {
 			if(s == null){
 				entityItem.setDead();
 				return true;
-			}
-			if(s != entityItem.getEntityItem())entityItem.setEntityItemStack(s);
+			}else entityItem.setEntityItemStack(s);
 			return false;
 		}
 		@Override
 		public int getItemStackLimit(ItemStack stack) {
-			return CraftingMaterial.VALUES[stack.getMetadata()].getMaxStackSize();
+			return CraftingMaterial.get(stack.getMetadata()).getMaxStackSize();
+		}
+		@Override
+		public boolean showDurabilityBar(ItemStack stack) {
+			return CraftingMaterial.get(stack.getMetadata()).hasDurabilityBar(stack);
+		}
+		@Override
+		public double getDurabilityForDisplay(ItemStack stack) {
+			return CraftingMaterial.get(stack.getMetadata()).getDurabilityBar(stack);
+		}
+		@Override
+		public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
+				EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+			return CraftingMaterial.get(stack.getMetadata()).onItemUse(stack, player, world, pos, side, hitX, hitY, hitZ, hand);
+		}
+		@Override
+		@SideOnly(Side.CLIENT)
+		public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+			CraftingMaterial.get(stack.getMetadata()).getTooltip(stack, playerIn, tooltip, advanced);
 		}
 	}
 }

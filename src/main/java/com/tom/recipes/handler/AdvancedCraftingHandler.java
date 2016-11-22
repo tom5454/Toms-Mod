@@ -3,9 +3,11 @@ package com.tom.recipes.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
@@ -14,12 +16,14 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import com.tom.api.item.ItemCraftingTool;
 import com.tom.api.research.Research;
 import com.tom.apis.RecipeData;
 import com.tom.config.Config;
 
 public class AdvancedCraftingHandler {
 	private static List<RecipeData> recipeList = new ArrayList<RecipeData>();
+	private static List<RecipeData> recipeListExtra = new ArrayList<RecipeData>();
 	private static final InventoryCrafting craftingInv = new InventoryCrafting(new Container() {
 
 		@Override
@@ -50,10 +54,16 @@ public class AdvancedCraftingHandler {
 	public static void addRecipe(ItemStack out, int craftingTime, ItemStack[] input, List<IResearch> requiredResearches, CraftingLevel level){
 		addRecipe(out, craftingTime, input, requiredResearches, true, null, level);
 	}*/
-	public static void addRecipe(IRecipe recipe, int craftingTime, List<Research> requiredResearches, ItemStack extra, CraftingLevel level) {
+	public static void addRecipe(IRecipe recipe, int craftingTime, List<Research> requiredResearches, ItemStack extra, CraftingLevel level, Integer extraD) {
 		if(recipe != null){
 			if(Config.enableResearchSystem){
-				recipeList.add(new RecipeData(recipe, craftingTime, requiredResearches, extra, level));
+				if(extraD != null){
+					RecipeData r = new RecipeData(recipe, craftingTime, requiredResearches, extra, level, extraD);
+					recipeList.add(r);
+					recipeListExtra.add(r);
+				}else{
+					recipeList.add(new RecipeData(recipe, craftingTime, requiredResearches, extra, level, 0));
+				}
 			}else{
 				GameRegistry.addRecipe(recipe);
 			}
@@ -133,6 +143,13 @@ public class AdvancedCraftingHandler {
 		addRecipe(out, craftingTime, requiredResearches, extra, false, level, recipe);
 	}
 	public static void addRecipe(ItemStack result, int craftingTime, List<Research> requiredResearches, ItemStack extra, boolean shaped, CraftingLevel level, Object... recipe){
+		Integer extraD = null;
+		if(recipe[0] instanceof Integer){
+			extraD = (Integer) recipe[0];
+			Object[] r = new Object[recipe.length - 1];
+			System.arraycopy(recipe, 1, r, 0, r.length);
+			recipe = r;
+		}
 		/*ItemStack output = result.copy();
 		int width = 3;
 		int height = 3;
@@ -224,30 +241,63 @@ public class AdvancedCraftingHandler {
 		}catch(Throwable e){
 			TMLogger.bigCatching(e, "Error occurred while adding a recipe.");
 		}*/
-		addRecipe(shaped ? new ShapedOreRecipe(result, recipe) : new ShapelessOreRecipe(result, recipe), craftingTime, requiredResearches, extra, level);
+		addRecipe(shaped ? new ShapedRecipe(result, recipe) : new ShapelessRecipe(result, recipe), craftingTime, requiredResearches, extra, level, extraD);
 	}
 	public static enum CraftingLevel{
-		BASIC("tomsMod.craftingLevel.basic"),
-		SOLDERING_STATION("tomsMod.craftingLevel.soldering"){
-			@Override
-			public boolean isEqual(CraftingLevel other) {
-				return this == other || other == E_SOLDERING_STATION;
-			}
-		},
-		E_SOLDERING_STATION("tomsMod.craftingLevel.esoldering"),
+		BASIC_WOODEN("tomsMod.craftingLevel.basic", 0, 0),
+		BRONZE("tomsMod.craftingLevel.bronze", 0, 1),
+		BASIC_ELECTRICAL("tomsMod.craftingLevel.electrical", 0, 2),
+		SOLDERING_STATION("tomsMod.craftingLevel.soldering", 1, 0),
+		E_SOLDERING_STATION("tomsMod.craftingLevel.esoldering", 1, 1),
 		;
 		private final String name;
-		private CraftingLevel(String name) {
+		private final int type, lvl;
+		private CraftingLevel(String name, int type, int lvl) {
 			this.name = name;
+			this.type = type;
+			this.lvl = lvl;
 		}
 		public String getName(){
 			return name;
 		}
 		public boolean isAdvanced(){
-			return this != BASIC;
+			return this != BASIC_WOODEN;
 		}
 		public boolean isEqual(CraftingLevel other){
-			return this == other;
+			return type == other.type && lvl <= other.lvl;
 		}
+	}
+	public static class ShapedRecipe extends ShapedOreRecipe{
+		public ShapedRecipe(Block     result, Object... recipe){ this(new ItemStack(result), recipe); }
+		public ShapedRecipe(Item      result, Object... recipe){ this(new ItemStack(result), recipe); }
+		public ShapedRecipe(ItemStack result, Object[] recipe) {
+			super(result, recipe);
+			for(int i = 0;i<input.length;i++){
+				Object obj = input[i];
+				if(obj instanceof ItemStack && ((ItemStack)obj).getItem() instanceof ItemCraftingTool){
+					ItemCraftingTool item = (ItemCraftingTool) ((ItemStack)obj).getItem();
+					List<ItemStack> list = new ArrayList<ItemStack>();
+					item.addToList(list);
+					input[i] = list;
+				}
+			}
+		}
+	}
+	public static class ShapelessRecipe extends ShapelessOreRecipe{
+		public ShapelessRecipe(Block result, Object... recipe){ this(new ItemStack(result), recipe); }
+		public ShapelessRecipe(Item  result, Object... recipe){ this(new ItemStack(result), recipe); }
+		public ShapelessRecipe(ItemStack result, Object[] recipe) {
+			super(result, recipe);
+			for(int i = 0;i<input.size();i++){
+				Object obj = input.get(i);
+				if(obj instanceof ItemStack && ((ItemStack)obj).getItem() instanceof ItemCraftingTool){
+					ItemCraftingTool item = (ItemCraftingTool) ((ItemStack)obj).getItem();
+					List<ItemStack> list = new ArrayList<ItemStack>();
+					item.addToList(list);
+					input.set(i, list);
+				}
+			}
+		}
+
 	}
 }

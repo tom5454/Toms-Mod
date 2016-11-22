@@ -358,7 +358,9 @@ public class MapRenderer
 
 	public void draw()
 	{
+		mw.mc.mcProfiler.startSection("UpdateMargin");
 		this.mapMode.updateMargin();
+		mw.mc.mcProfiler.endSection();
 		this.mapMode.setScreenRes();
 		this.mapView.setMapWH(this.mapMode);
 		this.mapView.setTextureSize(this.mw.textureSize);
@@ -367,17 +369,19 @@ public class MapRenderer
 
 		// translate to center of minimap
 		GlStateManager.translate(this.mapMode.xTranslation, this.mapMode.yTranslation, 00.0);
-
+		mw.mc.mcProfiler.startSection("DrawMap");
 		// draw background, the map texture, and enabled overlays
 		this.drawMap();
-
+		mw.mc.mcProfiler.endStartSection("DrawBorder");
 		if (this.mapMode.config.borderMode)
 		{
 			this.drawBorder();
 		}
+		mw.mc.mcProfiler.endStartSection("DrawIcons");
 		this.drawIcons();
-
+		mw.mc.mcProfiler.endStartSection("DrawStatus");
 		this.drawStatusText();
+		mw.mc.mcProfiler.endSection();
 
 		// some shader mods seem to need depth testing re-enabled
 		GlStateManager.enableDepth();

@@ -33,7 +33,7 @@ public class Config {
 	@Deprecated
 	private static final String CATEGORY_WORLDGEN = "WorldGen";
 	public static boolean enableAdventureItems;
-	public static boolean enableHardMode, enableHardRecipes, enableConveyorBelts, enableDefenseSystem, enableAutoWorldBackup, enableResearchSystem;
+	public static boolean enableHardModeStarting, enableHardRecipes, enableDefenseSystem, enableAutoWorldBackup, enableResearchSystem, logOredictNames, enableInitialBackup, enableServerExitBackup;
 	//public static boolean enable18AdvMode;
 	//public static boolean enableFlintAxe;
 	public static boolean enableGrassDrops;
@@ -49,7 +49,7 @@ public class Config {
 	public static UUID tomsmodFakePlayerUUID;
 	//public static String minecameraCommand;
 	public static int commandFillMaxSize;
-	public static boolean commandFillLogging, wailaUsesMultimeterForce, advEntityTrackerTexture, enableBronkenTreeGen, genOilLakes, genRubberTrees, logConfigWarnings, addUnbreakableElytraRecipe, enableTickSpeeding;
+	public static boolean commandFillLogging, wailaUsesMultimeterForce, enableBronkenTreeGen, genOilLakes, genRubberTrees, logConfigWarnings, addUnbreakableElytraRecipe, enableTickSpeeding;
 	public static List<String> warnMessages = new ArrayList<String>();
 	public static void init(File configFile){
 		CoreInit.log.info("Init Configuration");
@@ -96,8 +96,9 @@ public class Config {
 		}
 
 		property = configCore.get(Configuration.CATEGORY_GENERAL, "Enable Hard Mode", false);
-		enableHardMode = property.getBoolean(false);
+		enableHardModeStarting = property.getBoolean(false);
 		property.setRequiresMcRestart(true);
+		property.setComment("WIP");
 
 		/*property = config.get(Configuration.CATEGORY_GENERAL, "1.8 Adventure Mode", false);
         enable18AdvMode = property.getBoolean(false);*/
@@ -185,10 +186,6 @@ public class Config {
 		property.setComment("Forces Waila to require a multimeter in the hotbar. (Also removes the config option on the Waila modules page) (Default: false)");
 		wailaUsesMultimeterForce = property.getBoolean(false);
 
-		property = configMinimap.get(Configuration.CATEGORY_GENERAL, "Advanced Entity Tracker Texture", false);
-		property.setComment("High Resolution texture for the entity tracker. (Default: false)");
-		advEntityTrackerTexture = property.getBoolean(false);
-
 		Property property2 = configWorldGen.get(Configuration.CATEGORY_GENERAL, "Gen Broken Trees", true);
 		property2.setComment("Generate broken trees in the world. (Default: true)");
 		enableBronkenTreeGen = property2.getBoolean(true);
@@ -259,9 +256,6 @@ public class Config {
 		property.setComment("Decrease crafting outputs.");
 		enableHardRecipes = property.getBoolean(false);
 
-		property = configTransport.get(Configuration.CATEGORY_GENERAL, "Enable Conveyor Belts", true);
-		enableConveyorBelts = property.getBoolean(true);
-
 		property = configDefense.get(Configuration.CATEGORY_GENERAL, "Enable Defense System", true);
 		property.setComment("Enable Base Defense Items And Blocks");
 		enableDefenseSystem = property.getBoolean(true);
@@ -277,6 +271,17 @@ public class Config {
 		property = configCore.get(Configuration.CATEGORY_GENERAL, "Enable Research System", true);
 		property.setComment("Enable Research System and Custom Crafting. Can cause recipe conflict if disabled. (Default: true)");
 		enableResearchSystem = property.getBoolean(true);
+
+		property = configCore.get(Configuration.CATEGORY_GENERAL, "Log Ore Dictionary Names", false);
+		logOredictNames = property.getBoolean(false);
+
+		property = configCore.get("backup", "Enable Backup before Server start", false);
+		property.setComment("Enable Backup before Server loads the world. This delays the server loading! (Default: false)");
+		enableInitialBackup = property.getBoolean(false);
+
+		property = configCore.get("backup", "Enable Backup after Sterver exit", false);
+		property.setComment("Enable Backup after Server saved and closed the world. This delays the server loading! (Default: false)");
+		enableServerExitBackup = property.getBoolean(false);
 	}
 	public static void save(){
 		CoreInit.log.info("Saving configuration");

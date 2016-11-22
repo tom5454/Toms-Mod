@@ -14,6 +14,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
+import com.tom.api.block.IMethod;
+import com.tom.api.block.IMethod.IClientMethod;
 import com.tom.api.tileentity.TileEntityCamoable;
 import com.tom.client.CustomModelLoader;
 import com.tom.client.EventHandlerClient;
@@ -202,5 +204,12 @@ public class ClientProxy extends CommonProxy{
 	@Override
 	public void construction() {
 
+	}
+
+	@Override
+	public void runMethod(IMethod m) {
+		if(m instanceof IClientMethod){
+			m.exec();
+		}
 	}
 }

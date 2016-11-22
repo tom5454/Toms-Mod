@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.tom.api.tileentity.AccessType;
-import com.tom.api.tileentity.IConfigurable.IConfigurationOption.ConfigurationRedstoneControl.GuiButtonRedstoneMode;
+import com.tom.api.tileentity.IConfigurable.IConfigurationOption.GuiButtonRedstoneMode;
 import com.tom.apis.TomsModUtils;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.item.IdentityCard;
@@ -229,5 +229,6 @@ public class GuiSecurityStation extends GuiTomsMod {
 		for(int i = 0;i<this.renderExtraButtonInformation.size();i++){
 			this.renderExtraButtonInformation.get(i).render(mouseX, mouseY);
 		}
+		buttonRedstone.postDraw(mc, mouseX, mouseY, this);
 	}
 }

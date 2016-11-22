@@ -6,6 +6,7 @@ public enum ForceDeviceControlType {
 	HIGH_REDSTONE("tomsmod.gui.highRedstone",new ResourceLocation("textures/blocks/redstone_torch_on.png")),
 	LOW_REDSTONE("tomsmod.gui.lowRedstone",new ResourceLocation("textures/blocks/redstone_torch_off.png")),
 	SWITCH("tomsmod.gui.switch",new ResourceLocation("tomsmoddefense:textures/items/multitool/switch.png")),
+	IGNORE("tomsmod.gui.ignore",new ResourceLocation("textures/items/gunpowder.png")),
 	;
 	public static final ForceDeviceControlType[] VALUES = values();
 	public final String name;

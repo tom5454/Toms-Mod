@@ -12,6 +12,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +20,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,6 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.tom.api.grid.IGrid;
 import com.tom.api.grid.IGridDevice;
 import com.tom.api.item.MultipartItem;
+import com.tom.core.CoreInit;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -421,5 +424,23 @@ public abstract class PartModule<G extends IGrid<?,G>> extends MultipartTomsMod 
 	@Override
 	public World getWorld2(){
 		return getWorld();
+	}
+	@Override
+	public final boolean onActivated(EntityPlayer player, EnumHand hand,
+			ItemStack stack, PartMOP hit) {
+		if(!player.worldObj.isRemote && player.isSneaking() && CoreInit.isWrench(stack, player)){
+			for (ItemStack stacks : getDrops()) {
+				EntityItem item = new EntityItem(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), stacks);
+				item.setDefaultPickupDelay();
+				player.worldObj.spawnEntityInWorld(item);
+			}
+			getContainer().removePart(this);
+			return true;
+		}
+		return onPartActivated(player, hand, stack, hit);
+	}
+	public boolean onPartActivated(EntityPlayer player, EnumHand hand,
+			ItemStack stack, PartMOP hit){
+		return false;
 	}
 }

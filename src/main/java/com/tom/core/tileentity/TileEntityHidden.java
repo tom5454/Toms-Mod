@@ -115,7 +115,7 @@ public class TileEntityHidden extends TileEntity {
 		IBlockState old = world.getBlockState(pos);
 		TileEntity oldTile = world.getTileEntity(pos);
 		AxisAlignedBB box = old.getBoundingBox(world, pos);
-		Item item = Item.getItemFromBlock(old.getBlock());
+		Item item = old.getBlock().getItemDropped(old, world.rand, 0);
 		ItemStack drop = item != null ? new ItemStack(item, old.getBlock().quantityDropped(old, 0, world.rand), old.getBlock().damageDropped(old)) : null;
 		world.setBlockState(pos, CoreInit.blockHidden.getDefaultState());
 		TileEntityHidden te = (TileEntityHidden) world.getTileEntity(pos);
@@ -137,7 +137,7 @@ public class TileEntityHidden extends TileEntity {
 		drop = null;
 		worldObj.setBlockState(pos, blockOld.getStateFromMeta(metaOld));
 		if(tileOld != null){
-			TileEntity tile = TileEntity.func_190200_a(worldObj, tileOld);
+			TileEntity tile = TileEntity.create(worldObj, tileOld);
 			tile.validate();
 
 			worldObj.setTileEntity(pos, tile);

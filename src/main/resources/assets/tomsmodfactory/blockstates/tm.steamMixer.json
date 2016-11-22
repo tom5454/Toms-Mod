@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "tomsmodfactory:steamMixer" },
+        "active=false,facing=south": { "model": "tomsmodfactory:steamMixer", "y": 180 },
+        "active=false,facing=west":  { "model": "tomsmodfactory:steamMixer", "y": 270 },
+        "active=false,facing=east":  { "model": "tomsmodfactory:steamMixer", "y": 90 },
+         "active=true,facing=north": { "model": "tomsmodfactory:steamMixer_on" },
+         "active=true,facing=south": { "model": "tomsmodfactory:steamMixer_on", "y": 180 },
+         "active=true,facing=west":  { "model": "tomsmodfactory:steamMixer_on", "y": 270 },
+         "active=true,facing=east":  { "model": "tomsmodfactory:steamMixer_on", "y": 90 }
+    }
+}

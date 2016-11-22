@@ -312,6 +312,8 @@ IForceDevice, ISidedInventory, IGuiTile {
 				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
 			}else if(rsMode == ForceDeviceControlType.LOW_REDSTONE){
 				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) == 0;
+			}else if(rsMode == ForceDeviceControlType.IGNORE){
+				this.active = true;
 			}
 			if(!lastActive && active){
 				this.updateConfig();

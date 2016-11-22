@@ -54,36 +54,17 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 	private GuiButtonCraft craftButton;
 	private final TileEntityResearchTable te;
 	private static final Comparator<ResearchEntry> sorter = new ResearchEntrySorter();
-	//private static final ResourceLocation LIST_TEXTURE = new ResourceLocation("tomsmod:textures/gui/resSelect.png");
 	private NBTTagCompound tag = new NBTTagCompound();
 	public GuiResearchTable(InventoryPlayer playerInv, TileEntityResearchTable te) {
-		super(new ContainerResearchTable(playerInv, te), "restableGui");
+		super(new ContainerResearchTable(playerInv, te), "restableGui_" + te.getType().getName());
 		this.xSize = 221;
 		this.ySize = 219;
 		this.te = te;
 	}
 	@Override
-	public void drawGuiContainerForegroundLayer(int mX, int mY){
-		//String s = I18n.format("tomsmod.gui.resTable"); GuiFurnace
-		//fontRendererObj.drawString(s, xSize / 2 - fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-		//fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
-		/*if(te.currentResearch != null){
-			ItemStack is = te.currentResearch.getResearchRequirements().get(0);
-			//this.drawHoveringText(is.getTooltip(mc.thePlayer,this.mc.gameSettings.advancedItemTooltips), mX, my);
-			//this.renderToolTip(is, mX, my);
-			this.renderItemInGui(is, guiLeft, guiTop, mX, mY,1);
-		}*/
-	}
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		super.drawScreen(mouseX, mouseY, partialTicks);
-	}
-	@Override
 	protected void drawGuiContainerBackgroundLayer(float particalTick,
 			int mouseX, int mouseY) {
 		super.drawGuiContainerBackgroundLayer(particalTick, mouseX, mouseY);
-		//int i = (this.width - this.xSize) / 2;
-		//int j = (this.height - this.ySize) / 2;
 		int craftingTime = te.getField(1);
 		int totalCraftingTime = te.getField(2);
 		int researchTime = te.getField(3);
@@ -92,7 +73,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 		float totalResearchTimeF = totalResearchTime < 1 ? 1 : totalResearchTime;
 		float perCraftingTime = craftingTime / totalCraftingTimeF;
 		float perResearchTime = researchTime / totalResearchTimeF;
-		//System.out.println(perCraftingTime + " " + perResearchTime + " " + totalCraftingTime + " " + totalResearchTime + " " + craftingTime);
 		double p1Per = perResearchTime * 100;
 		double p3Per = perCraftingTime * 100;
 		double p = p1Per / 100D * 55;//max:55
@@ -111,38 +91,16 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 		this.drawTexturedModalRect(guiLeft + 167, guiTop + 71,2,219,p3,15);
 		if(te.currentResearch != null){
 			mc.renderEngine.bindTexture(LIST_TEXTURE);
+			GL11.glPushMatrix();
 			this.drawTexturedModalRect(guiLeft + 30, guiTop + 6,0,120,78,100);
-			//ResourceLocation l = this.te.currentResearch.getIcon();
-			//if(!l.toString().contains(".png"))l = new ResourceLocation(l.toString()+".png");
-			//mc.getTextureManager().bindTexture(l);
-			//this.drawTexturedModalRect(this.xPosition+4, this.yPosition+4, 0, 0, 16, 16);
-			//GL11.glScalef(1.5F, 1.5F, 1.5F);
-			//Render.drawTexturedRect(guiLeft+60, guiTop+15, 16, 16);
 			ItemStack icon = te.currentResearch.getIcon();
 			if(icon == null)icon = new ItemStack(Blocks.BARRIER);
 			GL11.glPushMatrix();
-			RenderHelper.enableGUIStandardItemLighting();
 			renderItemInGui(icon, guiLeft+60, guiTop+15, -50, -50);
+			GL11.glPopMatrix();
 			GL11.glPopMatrix();
 			String text = I18n.format(te.currentResearch.getUnlocalizedName());
 			drawResearchName(guiLeft+68, guiTop+38, text);
-			//float textScale = 0.9F;
-			//GL11.glPushMatrix();
-			//GL11.glScalef(textScale, textScale, textScale);
-			//mc.fontRendererObj.drawString(text, guiLeft+78/textScale-textWidth/2/textScale, guiTop+38/textScale, 16777215,true);
-			//GL11.glPopMatrix();
-			//ItemStack is = te.currentResearch.getResearchRequirements().get(0);
-			//GL11.glPushMatrix();
-			//this.zLevel = 100.0F;
-			//this.itemRender.zLevel = 100.0F;
-			//GL11.glTranslated(mouseX, mouseY, this.zLevel);
-			//this.itemRender.renderItem(is, this.itemRender.getItemModelMesher().getItemModel(is));
-			//this.itemRender.renderItemIntoGUI(is, guiLeft + 50, guiTop + 71);
-			//this.renderItemInGui(is, guiLeft + 50, guiTop + 71, mouseX, mouseY,0);
-
-			//GL11.glPopMatrix();
-			//this.itemRender.zLevel = 0.0F;
-			//this.zLevel = 0.0F;
 		}
 	}
 	private static final int LINE_SPACING = 2;
@@ -158,7 +116,8 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		int id = button.id;
-		if(id < 4){
+		if(id == 3)sendButtonUpdate(3, te, te.craftAll ? -1 : isShiftKeyDown() ? 1 : 0);
+		else if(id < 4){
 			this.sendButtonUpdate(id, te);
 		}
 	}
@@ -168,7 +127,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 		super.initGui();
 		copyButton = new GuiButtonCopy(0, guiLeft + 8, guiTop + 64);
 		buttonList.add(copyButton);
-		researchButton = new GuiButtonResearchStart(1, guiLeft + 30, guiTop + 108,I18n.format("tomsMod.research.name"));
+		researchButton = new GuiButtonResearchStart(1, guiLeft + 30, guiTop + 108);
 		buttonList.add(researchButton);
 		menuButton = new GuiButtonMenu(2, guiLeft + 6, guiTop + 104);
 		buttonList.add(menuButton);
@@ -180,11 +139,9 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 			public void run(int mouseX, int mouseY) {
 				RenderHelper.disableStandardItemLighting();
 				if(te.getField(4) < 1){
-					boolean flag = te.currentResearch != null;
+					boolean flag = te.currentResearch != null && !te.completed;
 					if(flag){
 						List<ItemStack> stackList = te.currentResearch.getResearchRequirements();
-						//this.drawHoveringText(is.getTooltip(mc.thePlayer,this.mc.gameSettings.advancedItemTooltips), mX, my);
-						//this.renderToolTip(is, mouseX, mouseY);
 						if(stackList != null){
 							ItemStack[] stackA = te.getStacks();
 							List<ItemStack> inStacks = new ArrayList<ItemStack>();
@@ -222,7 +179,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 					boolean hasPaper = te.getStacks()[17] != null && te.getStacks()[17].getItem() == Items.PAPER;
 					boolean hasInk = te.getField(0) > 0;
 					researchButton.enabled = flag && hasPaper && hasInk;
-					if(te.currentResearch != null){
+					if(te.currentResearch != null && !te.completed){
 						if(!hasPaper){
 							Render.setColourWithAlphaPercent(0xFF0000,30);
 							Render.drawRect(guiLeft+6, guiTop+24, 16, 16);
@@ -254,7 +211,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 	public void updateScreen() {
 		super.updateScreen();
 		this.copyButton.enabled = te.getStacks()[0] != null && te.getStacks()[0].getItem() == CoreInit.bigNoteBook && te.getStacks()[0].getTagCompound() != null && te.getStacks()[0].getTagCompound().hasKey("owner") && te.getStacks()[1] != null && te.getStacks()[1].getItem() == CoreInit.noteBook;
-		//this.researchButton.enabled = te.currentResearch != null;
 		this.menuButton.enabled = te.getStacks()[0] != null && te.getStacks()[0].getItem() == CoreInit.bigNoteBook && te.getStacks()[0].getTagCompound() != null && te.getStacks()[0].getTagCompound().hasKey("owner") && te.getField(4) < 1;
 		this.craftButton.enabled = te.getField(2) < 1 && te.getStacks()[0] != null && te.getStacks()[0].getItem() == CoreInit.bigNoteBook && te.getStacks()[0].getTagCompound() != null && te.getStacks()[0].getTagCompound().hasKey("owner") && te.hasItemsInCrafting();
 	}
@@ -271,7 +227,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 		{
 			if (this.visible)
 			{
-				//FontRenderer fontrenderer = mc.fontRendererObj;
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
@@ -280,32 +235,14 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 				GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 				GlStateManager.blendFunc(770, 771);
 				this.drawTexturedModalRect(this.xPosition, this.yPosition,/**u*/ 25 + i * 12, 219,/**u*/ this.width, this.height);
-				//this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, /**u*/200 - this.width / 2, 46 + i * 20,/**u*/ this.width / 2, this.height);
 				this.mouseDragged(mc, mouseX, mouseY);
-				/*int j = 14737632;
-
-	            if (packedFGColour != 0)
-	            {
-	                j = packedFGColour;
-	            }
-	            else
-	            if (!this.enabled)
-	            {
-	                j = 10526880;
-	            }
-	            else if (this.hovered)
-	            {
-	                j = 16777120;
-	            }*/
-
-				//this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
 			}
 		}
 	}
 	public class GuiButtonResearchStart extends GuiButton{
 
-		public GuiButtonResearchStart(int buttonId, int x, int y, String buttonText) {
-			super(buttonId, x, y,78,12, buttonText);
+		public GuiButtonResearchStart(int buttonId, int x, int y) {
+			super(buttonId, x, y,78,12, "");
 		}
 		/**
 		 * Draws this button to the screen.
@@ -319,20 +256,13 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-				int i = this.getHoverState(this.hovered);
 				GlStateManager.enableBlend();
 				GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 				GlStateManager.blendFunc(770, 771);
-				if(i != 0)this.drawTexturedModalRect(this.xPosition, this.yPosition,/**u*/ 0, 238,/**u*/ this.width, this.height);
-				//if(i != 0)this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition,/**u*/ 0, 0,/**u*/ this.width / 2, this.height);
+				this.drawTexturedModalRect(this.xPosition, this.yPosition,/**u*/ 0, 238,/**u*/ this.width, this.height);
 				this.mouseDragged(mc, mouseX, mouseY);
 				int j = 14737632;
 
-				/*if (packedFGColour != 0)
-	            {
-	                j = packedFGColour;
-	            }
-	            else*/
 				if (!this.enabled)
 				{
 					j = 10526880;
@@ -341,9 +271,18 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 				{
 					j = 0x00FA9A;
 				}
-
-				if(i!=0)this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
+				String s = te.completed ? I18n.format("tomsMod.completed") : I18n.format("tomsMod.research.name");
+				this.drawCenteredString(fontrenderer, s, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
 			}
+		}
+		/**
+		 * Returns true if the mouse has been pressed on this control. Equivalent of MouseListener.mousePressed(MouseEvent
+		 * e).
+		 */
+		@Override
+		public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
+		{
+			return !te.completed && super.mousePressed(mc, mouseX, mouseY);
 		}
 	}
 	public class GuiButtonMenu extends GuiButton{
@@ -359,7 +298,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 		{
 			if (this.visible)
 			{
-				//FontRenderer fontrenderer = mc.fontRendererObj;
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
@@ -368,25 +306,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 				GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 				GlStateManager.blendFunc(770, 771);
 				this.drawTexturedModalRect(this.xPosition, this.yPosition,/**u*/ 61 + i * 16, 219,/**u*/ this.width, this.height);
-				//this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, /**u*/200 - this.width / 2, 46 + i * 20,/**u*/ this.width / 2, this.height);
 				this.mouseDragged(mc, mouseX, mouseY);
-				/*int j = 14737632;
-
-	            if (packedFGColour != 0)
-	            {
-	                j = packedFGColour;
-	            }
-	            else
-	            if (!this.enabled)
-	            {
-	                j = 10526880;
-	            }
-	            else if (this.hovered)
-	            {
-	                j = 16777120;
-	            }*/
-
-				//this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
 			}
 		}
 	}
@@ -401,7 +321,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 		@Override
 		public void initGui() {
 			super.initGui();
-			//sendButtonUpdate(6, te);
 			this.list = new GuiResearchSelectionList(Minecraft.getMinecraft(), this);
 			this.buttonDone = new GuiButton(200, this.width / 2 - 155, this.height - 29, 150, 20, I18n.format("gui.done"));
 			this.buttonCancel = new GuiButton(201, this.width / 2 - 155 + 160, this.height - 29, 150, 20, I18n.format("gui.cancel"));
@@ -433,48 +352,44 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 			private List<IGuiListEntry> researchList;
 			private final ResearchHandler handler;
 			private List<Runnable> hoverRender = new ArrayList<Runnable>();
-			//private final GuiResearchSelection parent;
 			private int selected = -1;
+			private boolean showCompleted = true;
+			private List<ResearchEntry> compRes;
 			public GuiResearchSelectionList(Minecraft mcIn, GuiResearchSelection parent) {
 				super(mcIn, parent.width, parent.height, 63, parent.height-32, 24);
-				//this.parent = parent;
 				this.researchList = new ArrayList<IGuiListEntry>();
 				this.handler = ResearchHandler.fromNBT(tag, "");
 				List<ResearchInformation> list = this.handler.getAvailableResearches();
 				this.researchList.clear();
 				this.researchList.add(new ResearchHeader(ResearchComplexity.BASIC));
-				List<ResearchEntry> basRes = new ArrayList<ResearchEntry>();
-				List<ResearchEntry> advRes = new ArrayList<ResearchEntry>();
+				List<ResearchEntry> defRes = new ArrayList<ResearchEntry>();
+				List<ResearchEntry> tooCompRes = new ArrayList<ResearchEntry>();
 				List<ResearchEntry> labRes = new ArrayList<ResearchEntry>();
+				compRes = new ArrayList<ResearchEntry>();
+				List<Research> completed = this.handler.getResearchesCompleted();
 				for(ResearchInformation r : list){
 					switch(r.getResearch().getComplexity()){
-					case ADVANCED:
-						advRes.add(new ResearchEntry(r));
-						break;
-					case BASIC:
-						basRes.add(new ResearchEntry(r));
-						break;
 					case LABORATORY:
-						labRes.add(new ResearchEntry(r));
+						labRes.add(new ResearchEntry(r, false));
 						break;
 					default:
+						defRes.add(new ResearchEntry(r, false));
 						break;
 					}
 				}
-				Collections.sort(basRes, sorter);
-				Collections.sort(advRes, sorter);
+				for(Research r : completed){
+					compRes.add(new ResearchEntry(new ResearchInformation(r), true));
+				}
+				Collections.sort(defRes, sorter);
+				Collections.sort(tooCompRes, sorter);
 				Collections.sort(labRes, sorter);
-				for(ResearchEntry e : basRes){
-					this.researchList.add(e);
-				}
-				this.researchList.add(new ResearchHeader(ResearchComplexity.ADVANCED));
-				for(ResearchEntry e : advRes){
-					this.researchList.add(e);
-				}
-				this.researchList.add(new ResearchHeader(ResearchComplexity.LABORATORY));
-				for(ResearchEntry e : labRes){
-					this.researchList.add(e);
-				}
+				Collections.sort(compRes, sorter);
+				researchList.addAll(defRes);
+				researchList.addAll(tooCompRes);
+				researchList.add(new ResearchHeader(ResearchComplexity.LABORATORY));
+				researchList.addAll(labRes);
+				researchList.add(new ResearchHeaderCompleted());
+				researchList.addAll(compRes);
 			}
 			@Override
 			public IGuiListEntry getListEntry(int index) {
@@ -485,11 +400,27 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 			protected int getSize() {
 				return this.researchList.size();
 			}
+			private boolean showCompletedLast = true;
 			@Override
 			public void drawScreen(int mouseXIn, int mouseYIn, float p_148128_3_)
 			{
 				if (this.visible)
 				{
+					if(showCompletedLast && !showCompleted){
+						List<ResearchEntry> toRemove = new ArrayList<ResearchEntry>();
+						for(IGuiListEntry r : researchList){
+							if(r instanceof ResearchEntry){
+								ResearchEntry re = (ResearchEntry) r;
+								if(re.completed){
+									toRemove.add(re);
+								}
+							}
+						}
+						researchList.removeAll(toRemove);
+					}else if(!showCompletedLast && showCompleted){
+						researchList.addAll(compRes);
+					}
+					showCompletedLast = showCompleted;
 					this.mouseX = mouseXIn;
 					this.mouseY = mouseYIn;
 					this.drawBackground();
@@ -584,11 +515,11 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 			@SideOnly(Side.CLIENT)
 			public class ResearchEntry implements IGuiListEntry
 			{
-				//private final IResearch research;
 				private GuiResearchSelectButton button;
-				public ResearchEntry(ResearchInformation r) {
-					//this.research = research;
+				private final boolean completed;
+				public ResearchEntry(ResearchInformation r, boolean completed) {
 					this.button = new GuiResearchSelectButton(0, 0, 0, r);
+					this.completed = completed;
 				}
 				@Override
 				public void setSelected(int id, int p_178011_2_,
@@ -600,7 +531,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 					this.button.xPosition = x + listWidth/7 + 1;
 					this.button.yPosition = y;
 					this.button.drawButton(mc, mouseX, mouseY);
-					//new Throwable().printStackTrace();
 				}
 
 				@Override
@@ -608,7 +538,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 						int p_148278_3_, int p_148278_4_, int p_148278_5_,
 						int p_148278_6_) {
 					boolean pressed = this.button.mousePressed(mc, p_148278_2_, p_148278_3_);
-					//System.out.println(pressed);
 					if(pressed){
 						this.button.playPressSound(mc.getSoundHandler());
 						if(slotIndex == selected){
@@ -640,7 +569,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 					 * Draws this button to the screen.
 					 */
 					@Override
-					public void drawButton(Minecraft mc, final int mouseX, final int mouseY)
+					public void drawButton(final Minecraft mc, final int mouseX, final int mouseY)
 					{
 						if (this.visible)
 						{
@@ -653,25 +582,14 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 							GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 							GlStateManager.blendFunc(770, 771);
 							this.drawTexturedModalRect(this.xPosition, this.yPosition,/**u*/ 0, 0+ i * 24 + (selected == researchList.indexOf(ResearchEntry.this) ? 48 : 0),/**u*/ this.width, this.height);
-							//this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, /**u*/200 - this.width / 2, 46 + i * 20,/**u*/ this.width / 2, this.height);
 							this.mouseDragged(mc, mouseX, mouseY);
 							int j = 14737632;
-							/*ResourceLocation l = this.research.getIcon();
-							if(!l.toString().contains(".png"))l = new ResourceLocation(l.toString()+".png");
-							mc.getTextureManager().bindTexture(l);
-							//this.drawTexturedModalRect(this.xPosition+4, this.yPosition+4, 0, 0, 16, 16);
-							Render.drawTexturedRect(this.xPosition+4, this.yPosition+4, 16, 16);*/
 							ItemStack icon = research.getIcon();
 							if(icon == null)icon = new ItemStack(Blocks.BARRIER);
 							GL11.glPushMatrix();
 							RenderHelper.enableGUIStandardItemLighting();
 							renderItemInGui(icon, this.xPosition+4, this.yPosition+4, -50, -50);
 							GL11.glPopMatrix();
-							/*if (packedFGColour != 0)
-				            {
-				                j = packedFGColour;
-				            }
-				            else*/
 							if (!this.enabled)
 							{
 								j = 10526880;
@@ -682,7 +600,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 							}
 
 							this.drawCenteredString(fontrenderer, I18n.format(research.getUnlocalizedName()), this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
-							final Minecraft mcf = mc;
 							if(this.hovered && (!this.enabled)){
 								hoverRender.add(new Runnable(){
 
@@ -692,22 +609,14 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 										textLines.add(TextFormatting.RED+I18n.format("tomsmod.gui.missing")+":");
 										for(int k = 0;k<missing.size();k++){
 											IScanningInformation info = missing.get(k);
-											//IBlockState requiredState = info.getBlock().getStateFromMeta(info.getMeta());
 											String name = I18n.format(info.getBlock().getUnlocalizedName()+".name");
-											//@SuppressWarnings("rawtypes")
-											//ImmutableMap<IProperty, Comparable> stateMap = requiredState.getProperties();
-											if(mcf.gameSettings.advancedItemTooltips){
+											if(mc.gameSettings.advancedItemTooltips){
 												if(info.getMeta() == -1)textLines.add("|  "+name + " " + TextFormatting.GRAY + info.getBlock().delegate.name().toString());
 												else textLines.add("|  "+name+":"+info.getMeta() + " " + TextFormatting.GRAY + info.getBlock().delegate.name().toString());
 											}else{
 												if(info.getMeta() == -1)textLines.add("|  "+name);
 												else textLines.add("|  "+name+":"+info.getMeta());
 											}
-											/*for(@SuppressWarnings("rawtypes") Entry<IProperty, Comparable> ent : stateMap.entrySet()){
-						            			String stateName = ent.getKey().getName();
-						            			String value = ent.getValue().toString();
-						            			textLines.add("|    "+stateName+":"+value);
-						            		}*/
 										}
 										drawHoveringText(textLines, mouseX, mouseY);
 									}
@@ -770,6 +679,79 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 				}
 
 			}
+			@SideOnly(Side.CLIENT)
+			public class ResearchHeaderCompleted implements IGuiListEntry
+			{
+				private GuiListButton button = new GuiListButton(0, 0, 0);
+				@Override
+				public void setSelected(int id, int p_178011_2_,
+						int p_178011_3_) {}
+
+				@Override
+				public void drawEntry(int slotIndex, int x, int y, int listWidth,
+						int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+					this.button.xPosition = x + listWidth/7 + 1;
+					this.button.yPosition = y;
+					this.button.drawButton(mc, mouseX, mouseY);
+				}
+
+				@Override
+				public boolean mousePressed(int slotIndex, int p_148278_2_,
+						int p_148278_3_, int p_148278_4_, int p_148278_5_,
+						int p_148278_6_) {
+					boolean pressed = this.button.mousePressed(mc, p_148278_2_, p_148278_3_);
+					if(pressed){
+						this.button.playPressSound(mc.getSoundHandler());
+						showCompleted = !showCompleted;
+						return true;
+					}
+					return false;
+				}
+
+				@Override
+				public void mouseReleased(int slotIndex, int x, int y,
+						int mouseEvent, int relativeX, int relativeY) {
+					this.button.mouseReleased(x, y);
+				}
+
+				public class GuiListButton extends GuiButton{
+					public GuiListButton(int buttonId, int x, int y) {
+						super(buttonId, x, y, 175,24,"");
+					}
+
+					/**
+					 * Draws this button to the screen.
+					 */
+					@Override
+					public void drawButton(Minecraft mc, final int mouseX, final int mouseY)
+					{
+						if (this.visible)
+						{
+							FontRenderer fontrenderer = mc.fontRendererObj;
+							mc.getTextureManager().bindTexture(LIST_TEXTURE);
+							GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+							this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+							int i = this.getHoverState(this.hovered);
+							GlStateManager.enableBlend();
+							GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+							GlStateManager.blendFunc(770, 771);
+							this.drawTexturedModalRect(this.xPosition, this.yPosition,/**u*/ 0, 0+ i * 24,/**u*/ this.width, this.height);
+							this.mouseDragged(mc, mouseX, mouseY);
+							int j = 14737632;
+							if (!this.enabled)
+							{
+								j = 10526880;
+							}
+							else if (this.hovered)
+							{
+								j = 16777120;
+							}
+
+							this.drawCenteredString(fontrenderer, I18n.format("tomsMod.completed"), this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
+						}
+					}
+				}
+			}
 		}
 		/**
 		 * Called when a mouse button is released.  Args : mouseX, mouseY, releaseButton
@@ -824,35 +806,34 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver{
 		{
 			if (this.visible)
 			{
-				//FontRenderer fontrenderer = mc.fontRendererObj;
-				mc.getTextureManager().bindTexture(gui);
+				int x, y;
+				if(te.craftAll){
+					mc.getTextureManager().bindTexture(LIST_TEXTURE);
+					x = 78;
+					y = 191;
+				}else{
+					mc.getTextureManager().bindTexture(gui);
+					x = 109;
+					y = 219;
+				}
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
 				int i = this.getHoverState(this.hovered);
 				GlStateManager.enableBlend();
 				GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 				GlStateManager.blendFunc(770, 771);
-				this.drawTexturedModalRect(this.xPosition, this.yPosition,/**u*/ 109, 219+ i * 7,/**u*/ this.width, this.height);
-				//this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, /**u*/200 - this.width / 2, 46 + i * 20,/**u*/ this.width / 2, this.height);
+				this.drawTexturedModalRect(this.xPosition, this.yPosition,/**u*/ x, y + i * 7,/**u*/ this.width, this.height);
 				this.mouseDragged(mc, mouseX, mouseY);
-				/*int j = 14737632;
-
-	            if (packedFGColour != 0)
-	            {
-	                j = packedFGColour;
-	            }
-	            else
-	            if (!this.enabled)
-	            {
-	                j = 10526880;
-	            }
-	            else if (this.hovered)
-	            {
-	                j = 16777120;
-	            }*/
-
-				//this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
 			}
+		}
+		/**
+		 * Returns true if the mouse has been pressed on this control. Equivalent of MouseListener.mousePressed(MouseEvent
+		 * e).
+		 */
+		@Override
+		public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
+		{
+			return (this.enabled || te.craftAll) && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
 		}
 	}
 	@Override

@@ -1,9 +1,10 @@
 package com.tom.defense.tileentity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -60,7 +61,6 @@ IForceDevice, ISidedInventory, IGuiTile, INBTPacketReceiver {
 					32,33,34,35,36,37,38,
 					39,40,41,42,43,44,45
 	};
-	private static final int KILLING_USAGE = 50;
 	public DefenseStationConfig config = DefenseStationConfig.INFORM;
 	public String customName = "Defense Station";
 	private boolean isWhiteList = false, useMeta = true, useNBT = true, useMod = false;
@@ -332,6 +332,8 @@ IForceDevice, ISidedInventory, IGuiTile, INBTPacketReceiver {
 				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
 			}else if(rsMode == ForceDeviceControlType.LOW_REDSTONE){
 				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) == 0;
+			}else if(rsMode == ForceDeviceControlType.IGNORE){
+				this.active = true;
 			}
 			if(!lastActive && active){
 			}
@@ -345,33 +347,53 @@ IForceDevice, ISidedInventory, IGuiTile, INBTPacketReceiver {
 				double realEnergyUsed = 0.01 + (energyUsed / (100D + (stack[3] != null && stack[3].getItem() == DefenseInit.efficiencyUpgrade ? stack[3].stackSize * 50 : 0)));
 				energy.extractEnergy(realEnergyUsed, false);
 				this.lastDrained = MathHelper.floor_double(realEnergyUsed * 100);*/
-				double killingUsage = KILLING_USAGE * ((this.getEfficiencyLevel() * 0.4) + 1);
+				double killingUsage = ((this.getEfficiencyLevel() * 0.4) + 1);
 				ISecurityStation te = (ISecurityStation) tile;
 				if(config == DefenseStationConfig.KILL_HOSTILE){
 					AxisAlignedBB bounds = getActionBounds();
 					List<EntityMob> mobs = worldObj.getEntitiesWithinAABB(EntityMob.class, bounds);
 					for(EntityMob mob : mobs){
-						mob.attackEntityFrom(DamageSourceTomsMod.securityDamage, 999);
-						energy.extractEnergy(killingUsage, false);
-						if(this.energy.getEnergyStored() < killingUsage)break;
+						double u = killingUsage * mob.getHealth();
+						if(this.energy.getEnergyStored() < u)break;
+						if(mob.attackEntityFrom(DamageSourceTomsMod.securityDamage, 999))
+							energy.extractEnergy(u, false);
 					}
 					this.handleItems(true, bounds);
 				}else if(config == DefenseStationConfig.KILL_FRIENDLY){
 					AxisAlignedBB bounds = getActionBounds();
 					List<EntityAnimal> animals = worldObj.getEntitiesWithinAABB(EntityAnimal.class, bounds);
 					for(EntityAnimal animal : animals){
-						animal.attackEntityFrom(DamageSourceTomsMod.securityDamage, 999);
-						energy.extractEnergy(killingUsage, false);
-						if(this.energy.getEnergyStored() < killingUsage)break;
+						double u = killingUsage * animal.getHealth();
+						if(this.energy.getEnergyStored() < u)break;
+						if(animal.attackEntityFrom(DamageSourceTomsMod.securityDamage, 999))
+							energy.extractEnergy(u, false);
 					}
 					this.handleItems(true, bounds);
 				}else if(config == DefenseStationConfig.KILL_ALL){
 					AxisAlignedBB bounds = getActionBounds();
-					List<EntityLiving> animals = worldObj.getEntitiesWithinAABB(EntityLiving.class, bounds);
-					for(EntityLiving animal : animals){
-						animal.attackEntityFrom(DamageSourceTomsMod.securityDamage, 999);
-						energy.extractEnergy(killingUsage, false);
-						if(this.energy.getEnergyStored() < killingUsage)break;
+					AxisAlignedBB informBounds = getInformBounds();
+					List<EntityLivingBase> animals = new ArrayList<EntityLivingBase>(worldObj.getEntitiesWithinAABB(EntityLivingBase.class, bounds));
+					List<EntityPlayer> informPlayers = worldObj.getEntitiesWithinAABB(EntityPlayer.class, informBounds);
+					for(EntityPlayer player : informPlayers){
+						if(animals.contains(player)){
+							if(!te.canPlayerAccess(AccessType.STAY_IN_AREA, player)){
+								double u = killingUsage * player.getHealth() * 2;
+								if(this.energy.getEnergyStored() < u)break;
+								if(player.attackEntityFrom(DamageSourceTomsMod.securityDamage, 999))
+									energy.extractEnergy(u, false);
+								this.pullPlayerInventory(player, true, false);
+								TomsModUtils.sendNoSpamTranslate(player, TextFormatting.RED, "tomsMod.defense.beenWarned");
+							}
+						}else{
+							TomsModUtils.sendNoSpamTranslate(player, TextFormatting.RED, "tomsMod.defense.deathWarning");
+						}
+						animals.remove(player);
+					}
+					for(EntityLivingBase animal : animals){
+						double u = killingUsage * animal.getHealth();
+						if(this.energy.getEnergyStored() < u)break;
+						if(animal.attackEntityFrom(DamageSourceTomsMod.securityDamage, 999))
+							energy.extractEnergy(u, false);
 					}
 					this.handleItems(true, bounds);
 				}else if(config == DefenseStationConfig.KILL){

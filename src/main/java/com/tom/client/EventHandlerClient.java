@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -16,6 +18,7 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -25,12 +28,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.collect.Maps;
 
+import com.tom.api.inventory.SlotPhantom;
 import com.tom.apis.TMLogger;
 import com.tom.core.CoreInit;
 import com.tom.handler.EventHandler;
 import com.tom.lib.GlobalFields;
 
 import com.tom.core.tileentity.gui.GuiCamera;
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 @SideOnly(Side.CLIENT)
 public class EventHandlerClient {
@@ -124,5 +129,30 @@ public class EventHandlerClient {
 			event.setCanceled(true);
 		}
 	}
-
+	/*@SubscribeEvent
+	public void openGui(GuiOpenEvent e){
+		if(e.getGui() instanceof GuiWorldSelection && !(e.getGui() instanceof GuiWorldSelectionTM)){
+			System.out.println("Gui World Selection opened");
+			e.setCanceled(true);
+			Minecraft mc = Minecraft.getMinecraft();
+			mc.displayGuiScreen(new GuiWorldSelectionTM(mc.currentScreen));
+		}
+	}*/
+	@SubscribeEvent
+	public void addTooltip(ItemTooltipEvent e){
+		if(e.getItemStack() != null){
+			Minecraft mc = Minecraft.getMinecraft();
+			if(mc.currentScreen instanceof GuiContainer){
+				GuiContainer c = (GuiContainer) mc.currentScreen;
+				if(c.inventorySlots != null){
+					for(int i = 0;i<c.inventorySlots.inventorySlots.size();i++){
+						Slot s = c.inventorySlots.inventorySlots.get(i);
+						if(s instanceof SlotPhantom && e.getItemStack() == s.getStack()){
+							ContainerTomsMod.addTooltipForPhantomSlot(e.getToolTip());
+						}
+					}
+				}
+			}
+		}
+	}
 }

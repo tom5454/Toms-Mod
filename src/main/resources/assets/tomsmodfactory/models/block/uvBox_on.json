@@ -1,0 +1,8 @@
+{
+    "parent": "block/adv_facing",
+    "textures": {
+        "top": "tomsmodfactory:blocks/crusherTopOn",
+        "front": "tomsmodfactory:blocks/uvBoxOn",
+        "side": "tomsmodfactory:blocks/machineSide"
+    }
+}

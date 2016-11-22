@@ -45,6 +45,8 @@ import com.tom.storage.item.ItemPartTerminal;
 import com.tom.storage.item.ItemStorageCell;
 import com.tom.storage.item.StorageBus;
 import com.tom.storage.item.StorageNetworkCable;
+import com.tom.storage.item.StorageNetworkCable.CableColor;
+import com.tom.storage.item.StorageNetworkCable.CableType;
 import com.tom.storage.multipart.PartExportBus;
 import com.tom.storage.multipart.PartImportBus;
 import com.tom.storage.multipart.PartStorageBus;
@@ -69,7 +71,8 @@ public class StorageInit {
 	public static final String modid = Configs.ModidL + "|storage";
 	public static final String modName = Configs.ModName + " Storage";
 	public static final Logger log = LogManager.getLogger(modName);
-	public static MultipartItem cable, exportBus, importBus, partInterface, storageBus;
+	public static MultipartItem exportBus, importBus, partInterface, storageBus;
+	public static StorageNetworkCable cable;
 	public static Block limitableChest, assembler, tankBasic, tankAdv, tankElite, tankUltimate, quantumTank;
 	public static BlockGridDevice drive, basicTerminal, energyAcceptor, blockInterface, craftingController, patternTerminal, craftingTerminal;
 	public static ItemStorageCell itemStorageCell;
@@ -156,7 +159,10 @@ public class StorageInit {
 		public Item getTabIconItem() {
 			return new ItemStack(cable).getItem();
 		}
-
+		@Override
+		public int getIconItemDamage() {
+			return StorageNetworkCable.getMeta(CableType.NORMAL, CableColor.BLUE);
+		}
 	};
 	private static boolean hadPreInit = false;
 	@EventHandler

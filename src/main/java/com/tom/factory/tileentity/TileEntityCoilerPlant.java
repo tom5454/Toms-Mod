@@ -3,6 +3,7 @@ package com.tom.factory.tileentity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
@@ -14,7 +15,6 @@ import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
 public class TileEntityCoilerPlant extends TileEntityMachineBase {
 	private EnergyStorage energy = new EnergyStorage(20000, 100);
-	private static final int[] SLOTS = new int[]{0,1};
 	private static final int MAX_PROCESS_TIME = 400;
 	//private int maxProgress = 1;
 	public int clientEnergy = 0;
@@ -25,7 +25,7 @@ public class TileEntityCoilerPlant extends TileEntityMachineBase {
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return true;
+		return index == 3 ? stack.getItem() == CoreInit.emptyWireCoil : true;
 	}
 
 	@Override
@@ -34,13 +34,8 @@ public class TileEntityCoilerPlant extends TileEntityMachineBase {
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		return SLOTS;
-	}
-
-	@Override
-	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-		return index == 0;
+	public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction) {
+		return (index == 0 || index == 3) && isItemValidForSlot(index, stack);
 	}
 
 	@Override
@@ -64,7 +59,7 @@ public class TileEntityCoilerPlant extends TileEntityMachineBase {
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote){
-			if(energy.extractEnergy(30D, true) == 30D){
+			if(energy.extractEnergy(30D, true) == 30D && canRun()){
 				if(progress > 0){
 					updateProgress();
 				}else if(progress == 0){
@@ -136,5 +131,19 @@ public class TileEntityCoilerPlant extends TileEntityMachineBase {
 	@Override
 	public int getMaxProcessTimeNormal() {
 		return MAX_PROCESS_TIME;
+	}
+	@Override
+	public ResourceLocation getFront() {
+		return new ResourceLocation("tomsmodfactory:textures/blocks/coilerFront.png");
+	}
+
+	@Override
+	public int[] getOutputSlots() {
+		return new int[]{1};
+	}
+
+	@Override
+	public int[] getInputSlots() {
+		return new int[]{0, 3};
 	}
 }

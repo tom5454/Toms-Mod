@@ -147,7 +147,7 @@ public class Render
 
 	/*
 	 * Drawing Methods
-	 * 
+	 *
 	 * Note that EntityRenderer.setupOverlayRendering must be called before
 	 * drawing for the scene to appear correctly on the overlay. If these
 	 * functions are called from the hookUpdateCameraAndRender method of Mw this
@@ -158,6 +158,12 @@ public class Render
 	public static void drawTexturedRect(double x, double y, double w, double h)
 	{
 		drawTexturedRect(x, y, w, h, 0.0D, 0.0D, 1.0D, 1.0D);
+	}
+
+	// draw rectangle with texture stretched to fill the shape with UV
+	public static void drawTexturedRect(double x, double y, double w, double h, double u, double v)
+	{
+		drawTexturedRect(x, y, w, h, u, v, u+(w/256D), v+(h/256D));
 	}
 
 	// draw rectangle with texture UV coordinates specified (so only part of the
@@ -408,13 +414,13 @@ public class Render
 	 * clear stencil buffer, with mask 0xff
 	 * GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT); // draw stencil pattern
 	 * Render.setColour(0xffffffff); Render.drawCircle(x, y, r);
-	 * 
+	 *
 	 * // re-enable drawing to colour and depth buffers GL11.glColorMask(true,
 	 * true, true, true); // probably shouldn't enable? ->
 	 * GL11.glDepthMask(true); // disable writing to stencil buffer
 	 * GL11.glStencilMask(0x00); // draw only when stencil buffer value == 1
 	 * (inside circle) GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0x01); }
-	 * 
+	 *
 	 * public static void disableStencil() {
 	 * GL11.glDisable(GL11.GL_STENCIL_TEST); }
 	 */

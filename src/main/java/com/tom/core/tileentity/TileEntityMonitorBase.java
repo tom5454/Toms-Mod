@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
@@ -485,8 +486,8 @@ public class TileEntityMonitorBase extends TileEntityTomsMod implements ICustomM
 
 	}
 	@Override
-	public void postUpdate() {
-		int d = worldObj.getBlockState(pos).getValue(BlockMonitorBase.FACING).ordinal();
+	public void postUpdate(IBlockState state) {
+		int d = state.getValue(BlockMonitorBase.FACING).ordinal();
 		if (d == 5) this.direction = 4;
 		else if(d == 4) this.direction = 5;
 		else if (d == 3) this.direction = 2;

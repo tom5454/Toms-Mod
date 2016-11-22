@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.storage.StorageInit;
@@ -43,9 +44,10 @@ public class OreDict {
 		registerOre("itemMortar", CoreInit.mortarAndPestle);
 		registerOre("blockPiston", Blocks.PISTON);
 		registerOre("blockPiston", Blocks.STICKY_PISTON);
-		registerOre("storageNetworkCable", StorageInit.cable);
 		registerOre("glassHardened", new ItemStack(CoreInit.hardenedGlass, 1, 0));
 		registerOre("glassEnder", new ItemStack(CoreInit.hardenedGlass, 1, 1));
+		registerOre("glassPaneHardened", new ItemStack(CoreInit.hardenedGlassPane));
+		StorageInit.cable.loadOreDict();
 		//registerOre("dustIron", Items.gunpowder);
 		/*OreDictionary.registerOre("ingotCopper", TMResource.COPPER.getStack(Type.INGOT));
 		OreDictionary.registerOre("ingotUranium", TMResource.URANIUM.getStack(Type.INGOT));
@@ -61,7 +63,7 @@ public class OreDict {
 	public static void registerOre(String name, Item      ore){ registerOre(name, new ItemStack(ore));  }
 	public static void registerOre(String name, Block     ore){ registerOre(name, new ItemStack(ore));  }
 	public static void registerOre(String name, ItemStack ore){
-		if(!printedIDs.contains(name)){
+		if(Config.logOredictNames && !printedIDs.contains(name)){
 			CoreInit.log.info("OreDict name: " + name);
 			printedIDs.add(name);
 		}
@@ -83,5 +85,14 @@ public class OreDict {
 			}*/
 		}
 		return stackList;
+	}
+	public static boolean isOre(ItemStack itemStack, String oreID) {
+		if(itemStack == null)return false;
+		int id = OreDictionary.getOreID(oreID);
+		int[] ids = OreDictionary.getOreIDs(itemStack);
+		for(int i = 0;i<ids.length;i++){
+			if(ids[i] == id)return true;
+		}
+		return false;
 	}
 }

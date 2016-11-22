@@ -25,6 +25,7 @@ TileEntityGridDeviceBase<StorageNetworkGrid> implements ITerminal{
 			if(poweredLast != poweredClient){
 				poweredLast = poweredClient;
 				markBlockForUpdate(pos);
+				worldObj.checkLight(pos);
 			}
 		}
 	}
@@ -36,6 +37,7 @@ TileEntityGridDeviceBase<StorageNetworkGrid> implements ITerminal{
 	public void readFromPacket(NBTTagCompound buf) {
 		poweredClient = buf.getBoolean("p");
 		worldObj.markBlockRangeForRenderUpdate(pos, pos);
+		worldObj.checkLight(pos);
 	}
 	@Override
 	public void buttonPressed(EntityPlayer player, int id, int extra) {

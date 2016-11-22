@@ -1,0 +1,6 @@
+{
+  "parent": "tomsmodstorage:block/cable_item_covered",
+  "textures": {
+    "duct": "tomsmodstorage:blocks/cable/cable_covered_purple"
+  }
+}

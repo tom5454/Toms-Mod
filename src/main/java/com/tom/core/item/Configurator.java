@@ -28,16 +28,15 @@ import com.tom.handler.ConfiguratorHandler;
 import com.tom.energy.tileentity.TileEntityBatteryBox;
 
 public class Configurator extends ItemEnergyContainer implements IConfigurator{
-	private static final double CONFIGURATOR_USAGE = 0.2;
+	public static final double CONFIGURATOR_USAGE = 0.2;
 	public Configurator() {
 		super(1000, 5, 1);
 	}
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn,
-			World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
-			float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
+			EnumFacing facing, float hitX, float hitY, float hitZ, EnumHand hand) {
 		boolean ret = false;
-		if(getEnergyStored(stack) < capacity){
+		if(getEnergyStored(stack) < capacity && !worldIn.isRemote){
 			TileEntity tile = worldIn.getTileEntity(pos);
 			if(tile instanceof TileEntityBatteryBox){
 				TileEntityBatteryBox te = (TileEntityBatteryBox) tile;
@@ -46,15 +45,16 @@ public class Configurator extends ItemEnergyContainer implements IConfigurator{
 					double rec = receiveEnergy(stack, max, true);
 					if(rec > 0){
 						receiveEnergy(stack, te.extractEnergy(facing, EnergyType.LV, rec, false), false);
+						ret = true;
 					}
 				}
 			}
 		}
-		if(hand == EnumHand.MAIN_HAND)return ConfiguratorHandler.openConfigurator(stack, playerIn, worldIn, pos) || ret ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
-		else if(ret)return EnumActionResult.SUCCESS;
+		if(hand == EnumHand.MAIN_HAND)return ConfiguratorHandler.openConfigurator(stack, playerIn, worldIn, pos) || ret ? worldIn.isRemote ? EnumActionResult.PASS : EnumActionResult.SUCCESS : worldIn.isRemote ? EnumActionResult.PASS : EnumActionResult.FAIL;
+		else if(ret)return worldIn.isRemote ? EnumActionResult.PASS : EnumActionResult.SUCCESS;
 		else{
 			TomsModUtils.sendNoSpamTranslateWithTag(playerIn, new Style().setColor(TextFormatting.RED), stack.getUnlocalizedName()+".name", "tomsMod.invalidHandUseMain");
-			return EnumActionResult.FAIL;
+			return EnumActionResult.PASS;
 		}
 	}
 	@Override
@@ -89,6 +89,5 @@ public class Configurator extends ItemEnergyContainer implements IConfigurator{
 	@Override
 	public boolean showDurabilityBar(ItemStack stack) {
 		return !(stack.getTagCompound() != null && stack.getTagCompound().hasKey("isInCreativeTabIcon"));
-		//return false;
 	}
 }

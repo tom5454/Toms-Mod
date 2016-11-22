@@ -137,7 +137,7 @@ public class EnergyInit {
 		transformerLMV = new TransformerLM().setUnlocalizedName("transformerLMV").setCreativeTab(tabTomsModEnergy);
 		lvCable = new LVCable().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("lvCable");
 		lavaGenerator = new LavaGenerator().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.lavaGenerator");
-		CreativeCell = new CreativeCell().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.creativeEnergyCell");
+		CreativeCell = new CreativeCell().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.creativeEnergyCell").setBlockUnbreakable().setResistance(18000000F);
 		solarPanel = new BlockSolarPanel().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.solarPanelBasic");
 		portableSolarPanel = new PortableSolarPanel().setUnlocalizedName("PortableSolarPanel").setCreativeTab(tabTomsModEnergy)/*.setTextureName("minecraft:tm/solar")*/.setMaxStackSize(1);
 		portableEnergyCell = new PortableEnergyCell().setUnlocalizedName("PortableEnergyCell").setCreativeTab(tabTomsModEnergy)/*.setTextureName("minecraft:tm/portableEnergyCell")*/.setMaxStackSize(1);

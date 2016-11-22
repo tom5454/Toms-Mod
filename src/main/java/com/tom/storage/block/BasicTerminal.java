@@ -26,18 +26,24 @@ import com.tom.storage.tileentity.TileEntityBasicTerminal;
 public class BasicTerminal extends BlockGridDevice {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");
 	public BasicTerminal() {
-		super(Material.IRON);
+		super(Material.GLASS);
 	}
 
 	@Override
 	public TileEntityGridDeviceBase<StorageNetworkGrid> createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityBasicTerminal();
 	}
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos,
 			IBlockState state, EntityPlayer playerIn, EnumHand hand,
 			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
+		if(!worldIn.isRemote && playerIn.isSneaking() && CoreInit.isWrench(heldItem, playerIn)){
+			spawnAsEntity(worldIn, pos, getItem(worldIn, pos, state));
+			worldIn.setBlockToAir(pos);
+			return true;
+		}
 		if(!worldIn.isRemote)playerIn.openGui(CoreInit.modInstance, GuiIDs.basicTerminalBlock.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}

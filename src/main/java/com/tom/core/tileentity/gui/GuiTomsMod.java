@@ -2,6 +2,7 @@ package com.tom.core.tileentity.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import mapwriterTm.util.Render;
@@ -245,10 +246,7 @@ public abstract class GuiTomsMod extends GuiContainer{
 		Slot slot = this.getSlotUnderMouse();
 		if(slot instanceof SlotPhantom){
 			SlotPhantom s = (SlotPhantom) slot;
-			/*ItemStack draggedStack = this.mc.thePlayer.inventory.getItemStack();
-			if(draggedStack != null){*/
-			this.handleMouseClick(s, s.slotNumber, mouseButton, ClickType.PICKUP);
-			//}
+			this.handleMouseClick(s, s.slotNumber, mouseButton, isCtrlKeyDown() ? isShiftKeyDown() ? ClickType.QUICK_CRAFT : ClickType.CLONE : isShiftKeyDown() ? ClickType.PICKUP_ALL : ClickType.PICKUP);
 		}else
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -357,6 +355,19 @@ public abstract class GuiTomsMod extends GuiContainer{
 			drawHoveringText(tooltip, mouseX, mouseY);
 		}
 	}
+	public final void drawFluidTankTooltip(int posX, int posY, FluidTank tank, int mouseX, int mouseY, String tankName) {
+		if(isPointInRegion(posX, posY, TANK_WIDTH, TANK_HEIGHT, mouseX, mouseY)){
+			List<String> tooltip = new ArrayList<String>();
+			tooltip.add(tankName);
+			if (tank.getFluid() == null || tank.getFluid().getFluid() == null) {
+				tooltip.add(I18n.format("tomsMod.chat.empty"));
+			}else{
+				//tooltip.add(tank.getFluid().getLocalizedName());
+				tooltip.add(TextFormatting.GRAY + I18n.format("tomsmod.gui.fluid", tank.getFluidAmount(), tank.getCapacity()));
+			}
+			drawHoveringText(tooltip, mouseX, mouseY);
+		}
+	}
 	public final void drawFluidTank(int xPosition, int yPosition, FluidTank tank) {
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1, 1, 1, 1);
@@ -460,5 +471,12 @@ public abstract class GuiTomsMod extends GuiContainer{
 		}else{
 			return new Runnable() {@Override public void run() {}};
 		}
+	}
+	public final void drawHoveringTextI(List<String> textLines, int x, int y) {
+		drawHoveringText(textLines, x, y);
+		RenderHelper.disableStandardItemLighting();
+	}
+	public final void drawHoveringTextI(String text, int x, int y) {
+		drawHoveringTextI(Collections.<String>singletonList(text), x, y);
 	}
 }

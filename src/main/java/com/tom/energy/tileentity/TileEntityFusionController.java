@@ -16,6 +16,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Type;
 
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.api.tileentity.TileEntityTomsMod;
@@ -35,13 +36,12 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 	private boolean redstone = false;
 	private int cooldown = 0;
 	private int cooldownState = 0;
-	private boolean started = false;
+	private boolean started = false, t = false;
 	public boolean active() {
 		return this.active;
 	}
 	private boolean getBlock(int x, int y, int z, Block block){
 		boolean ret = block == worldObj.getBlockState(new BlockPos(x, y, z)).getBlock();
-		//worldObj.setBlock(x, y, z, block);
 		return ret;
 	}
 	@Override
@@ -80,7 +80,6 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 			}
 			this.run();
 			this.markDirty();
-			//System.out.println("update");
 		}else{
 			if(formed && this.started){
 				if(this.cooldownState == 0){
@@ -93,6 +92,10 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 					this.active = false;
 					this.started = false;
 					this.markDirty();
+					if(ticket != null){
+						ForgeChunkManager.releaseTicket(ticket);
+						ticket = null;
+					}
 				}
 			}else{
 				if(this.started){
@@ -102,17 +105,16 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 					this.timer = 0;
 					this.active = false;
 					this.started = false;
+					worldObj.setBlockToAir(pos);
 					worldObj.createExplosion(null, xCoord, yCoord, zCoord, 10.0F, Configs.machinesExplode);
 				}
 			}
 		}
 		if(this.timer > 0){
 			this.timer = this.timer - 1;
-			//System.out.println(this.timer);
 		}
 		if(this.cooldown > 0){
 			this.cooldown = this.cooldown - 1;
-			//System.out.println(this.cooldown);
 		}
 		if(formed){
 			if(this.active){
@@ -181,15 +183,6 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 		return ret;
 	}
 	public int getDirection(){
-		/*int xCoord = pos.getX();
-		int yCoord = pos.getY();
-		int zCoord = pos.getZ();
-		Block block1 = worldObj.getBlockState(new BlockPos(xCoord+1,yCoord,zCoord)).getBlock(),
-			  block2 = worldObj.getBlockState(new BlockPos(xCoord-1,yCoord,zCoord)).getBlock(),
-			  block3 = worldObj.getBlockState(new BlockPos(xCoord,yCoord,zCoord+1)).getBlock();
-		boolean b1 = block1 == EnergyInit.FusionCore,
-				b2 = block2 == EnergyInit.FusionCore,
-				b3 = block3 == EnergyInit.FusionCore;*/
 		IBlockState state = worldObj.getBlockState(pos);
 		EnumFacing ret = state.getValue(FusionController.FACING);
 		return ret == EnumFacing.EAST ? 0 : (ret == EnumFacing.WEST ? 1 : (ret == EnumFacing.SOUTH ? 2 : 3));
@@ -358,18 +351,6 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 		TileEntity tilee = worldObj.getTileEntity(new BlockPos(x, y, z));
 		((TileEntityFusionFluidInjector)tilee).remove(a);
 	}
-	/*@SuppressWarnings("unused")
-	private void discharge(int xPos, int yPos, int zPos, int d){
-		int[] current;
-		current = this.getCoord(xPos, yPos, zPos, d);
-		int x = current[0], y = current[1], z = current[2];
-		TileEntity tilee = worldObj.getTileEntity(new BlockPos(x, y, z));
-		if(tilee instanceof TileEntityFusionInjector){
-			((TileEntityFusionInjector)tilee).disCharge(false);
-		}else if (tilee instanceof TileEntityFusionCharger){
-			((TileEntityFusionCharger)tilee).disCharge();
-		}
-	}*/
 	private void discharge(int xPos, int yPos, int zPos, int d, int ammount){
 		int[] current;
 		current = this.getCoord(xPos, yPos, zPos, d);
@@ -388,13 +369,28 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 		TileEntity tilee = worldObj.getTileEntity(new BlockPos(x, y, z));
 		((TileEntityFusionInjector)tilee).disCharge(true);
 	}
+	@Override
+	public void invalidate() {
+		if(ticket != null)ForgeChunkManager.releaseTicket(ticket);
+		super.invalidate();
+	}
 	private void run(){
 		int xCoord = pos.getX();
 		int yCoord = pos.getY();
 		int zCoord = pos.getZ();
 		int chunkX = xCoord >> 4;
 		int chunkZ = zCoord >> 4;
+		if(ticket != null)ForgeChunkManager.releaseTicket(ticket);
+		ticket = ForgeChunkManager.requestTicket(CoreInit.modInstance, worldObj, Type.NORMAL);
 		ForgeChunkManager.forceChunk(ticket, new ChunkPos(chunkX, chunkZ));
+		ForgeChunkManager.forceChunk(ticket, new ChunkPos(chunkX+1, chunkZ));
+		ForgeChunkManager.forceChunk(ticket, new ChunkPos(chunkX-1, chunkZ));
+		ForgeChunkManager.forceChunk(ticket, new ChunkPos(chunkX, chunkZ+1));
+		ForgeChunkManager.forceChunk(ticket, new ChunkPos(chunkX, chunkZ-1));
+		ForgeChunkManager.forceChunk(ticket, new ChunkPos(chunkX+1, chunkZ+1));
+		ForgeChunkManager.forceChunk(ticket, new ChunkPos(chunkX-1, chunkZ+1));
+		ForgeChunkManager.forceChunk(ticket, new ChunkPos(chunkX+1, chunkZ-1));
+		ForgeChunkManager.forceChunk(ticket, new ChunkPos(chunkX-1, chunkZ-1));
 		if(this.cycle(0)){
 			if(this.getMultiblock() && this.charged(true) && this.injectorsReady() && !this.started && this.redstone){
 				this.cycle = 1;
@@ -403,7 +399,6 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 				this.discharge();
 				this.started = true;
 				System.out.println("Fusion Reactor Started at " + xCoord + ", " + yCoord + ", " + zCoord + ".");
-				//System.out.println(this.redstone);
 			}
 		}else if(this.cycle(1)){
 			if(this.timer(0)){
@@ -510,8 +505,9 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 			}
 			this.dischargeChargers(Configs.ChargerUsage);
 			this.discharge(Configs.InjectorUsage);
-			this.drain(2);
-			this.fill(1);
+			if(t)  this.drain(2);
+			else   this.fill(1);
+			t = !t;
 		}else if(this.cycle(14)){
 			if(this.timer(0)){
 				this.cycle = 15;
@@ -519,13 +515,15 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 			}
 			this.dischargeChargers(Configs.ChargerUsage);
 			this.discharge(Configs.InjectorUsage);
-			this.drain(3);
-			this.fill(timer % 2 == 0 ? 2 : 1);
+			if(t)  this.drain(3);
+			else   this.fill(timer % 3 == 0 ? 2 : 1);
+			t = !t;
 		}else if(this.cycle(15)){
 			this.dischargeChargers(Configs.ChargerUsage);
 			this.discharge(Configs.InjectorUsage);
-			this.drain(4);
-			this.fill(2);
+			if(t)  this.drain(4);
+			else   this.fill(2);
+			t = !t;
 		}
 	}
 	private void dischargeChargers(int a){
@@ -606,5 +604,10 @@ public class TileEntityFusionController extends TileEntityTomsMod implements ICu
 			}
 		}
 		return list;
+	}
+	@Override
+	public void onTicksped() {
+		worldObj.setBlockToAir(pos);
+		worldObj.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 10.0F, Configs.machinesExplode);
 	}
 }

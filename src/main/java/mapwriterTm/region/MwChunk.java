@@ -158,7 +158,7 @@ public class MwChunk implements IChunk
 					for (int i1 = 0; i1 < nbttaglist2.tagCount(); ++i1)
 					{
 						NBTTagCompound nbttagcompound4 = nbttaglist2.getCompoundTagAt(i1);
-						TileEntity tileentity = TileEntity.func_190200_a(null, nbttagcompound4);
+						TileEntity tileentity = TileEntity.create(null, nbttagcompound4);
 						if (tileentity != null)
 						{
 							TileEntityMap.put(tileentity.getPos(), tileentity);
@@ -453,6 +453,6 @@ public class MwChunk implements IChunk
 
 	public Long getCoordIntPair()
 	{
-		return ChunkPos.chunkXZ2Int(this.x, this.z);
+		return ChunkPos.asLong(this.x, this.z);
 	}
 }

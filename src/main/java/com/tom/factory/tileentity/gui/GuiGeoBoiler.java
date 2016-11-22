@@ -44,6 +44,7 @@ public class GuiGeoBoiler extends GuiTomsMod {
 	@Override
 	public void initGui() {
 		ySize = 176;
+		labelList.clear();
 		super.initGui();
 		TomsModUtils.addRunnableToLabelList(new GuiRenderRunnable() {
 

@@ -7,12 +7,17 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyInteger;
@@ -31,6 +36,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -43,6 +49,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -60,6 +67,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -72,14 +80,19 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import com.mojang.authlib.GameProfile;
 
+import com.google.common.base.Predicate;
+
 import com.tom.api.gui.GuiNumberValueBox;
 import com.tom.api.multipart.IModule;
+import com.tom.apis.Checker.CheckerPredicate;
 import com.tom.apis.Checker.RunnableStorage;
 import com.tom.client.EventHandlerClient;
 import com.tom.config.Config;
+import com.tom.core.CoreInit;
 import com.tom.lib.Configs;
 import com.tom.network.NetworkHandler;
 
+import com.tom.core.tileentity.TileEntityHidden;
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 import io.netty.buffer.ByteBuf;
@@ -98,6 +111,21 @@ public final class TomsModUtils {
 	private static final int SHADE = 3;*/
 	private static final int DIVISION_BASE = 1000;
 	private static final char[] ENCODED_POSTFIXES = "KMGTPE".toCharArray();
+	public static final CheckerPredicate<WorldPos> AIR = new CheckerPredicate<WorldPos>() {
+
+		@Override
+		public int apply(WorldPos worldPos) {
+			IBlockState input = worldPos.world.getBlockState(worldPos.pos);
+			return input.getMaterial() == Material.AIR ? 2 : 0;
+		}
+	};
+	public static final Predicate<Character> HATCH_PREDICATE = new Predicate<Character>() {
+
+		@Override
+		public boolean apply(Character input) {
+			return input.charValue() == 'H';
+		}
+	};
 	private static MinecraftServer server;
 	private static Format format;
 	private static GameProfile profile;
@@ -946,9 +974,9 @@ public final class TomsModUtils {
 		}
 		return file;
 	}
-	public static <A,B extends A> A[] toArray(B... in){
+	/*public static <A,B extends A> A[] toArray(B... in){
 		return in;
-	}
+	}*/
 	public static IModule getModule(World world, BlockPos blockPos, EnumFacing pos){
 		if(pos == null)return null;
 		IMultipartContainer container = MultipartHelper.getPartContainer(world, blockPos);
@@ -1544,11 +1572,19 @@ public final class TomsModUtils {
 		return getBakedModelFromBlockState(state, getBakedModelFromBlockState(defaultBlock, null));
 	}
 	public static List<ItemStack> copyItemStackList(List<ItemStack> in, boolean nullCheck){
+		return copyItemStackList(in, nullCheck, -1);
+	}
+	public static List<ItemStack> copyItemStackList(List<ItemStack> in, int stacksize){
+		return copyItemStackList(in, false, stacksize);
+	}
+	public static List<ItemStack> copyItemStackList(List<ItemStack> in, boolean nullCheck, int stacksize){
 		List<ItemStack> list = new ArrayList<ItemStack>();
 		for(int i = 0;i<in.size();i++){
 			ItemStack stack = in.get(i);
 			if(stack != null){
-				list.add(stack.copy());
+				ItemStack s = stack.copy();
+				if(stacksize > 0)s.stackSize = stacksize;
+				list.add(s);
 			}else if(!nullCheck){
 				list.add(null);
 			}
@@ -1636,5 +1672,309 @@ public final class TomsModUtils {
 	}
 	public static boolean checkAll(List<Checker> checkers, RunnableStorage killList){
 		return checkAll(killList, checkers.toArray(new Checker[0]));
+	}
+	public static int[] getCompiledIntArrayFromBlockPos(BlockPos pos){
+		long l = pos.toLong();
+		return new int[]{(int)(l >> 32), (int)l};
+	}
+	public static BlockPos getBlockPosFromCompiledIntArray(int[] a){
+		long l = (long)a[0] << 32 | a[1] & 0xFFFFFFFFL;
+		return BlockPos.fromLong(l);
+	}
+	public static BlockPos getBlockPosFromCompiledIntArray(int a, int b){
+		return getBlockPosFromCompiledIntArray(new int[]{a, b});
+	}
+	@SuppressWarnings("unchecked")
+	public static boolean matches(List<Object> input, IInventory inv){
+		ArrayList<Object> required = new ArrayList<Object>(input);
+		for (int x = 0; x < inv.getSizeInventory(); x++){
+			ItemStack slot = inv.getStackInSlot(x);
+			if (slot != null){
+				boolean inRecipe = false;
+				Iterator<Object> req = required.iterator();
+				while (req.hasNext()){
+					boolean match = false;
+					Object next = req.next();
+					if (next instanceof ItemStack){
+						match = itemMatches((ItemStack)next, slot);
+					}
+					else if (next instanceof List){
+						Iterator<ItemStack> itr = ((List<ItemStack>)next).iterator();
+						while (itr.hasNext() && !match){
+							match = itemMatches(itr.next(), slot);
+						}
+					}
+					if (match){
+						inRecipe = true;
+						required.remove(next);
+						break;
+					}
+				}
+				if (!inRecipe){
+					return false;
+				}
+			}
+		}
+		return required.isEmpty();
+	}
+	@SuppressWarnings("unchecked")
+	public static Runnable matchesAndConsume(List<Object> input, final IInventory inv){
+		ArrayList<Object> required = new ArrayList<Object>(input);
+		final List<Runnable> applyChanges = new ArrayList<Runnable>();
+		for (int x = 0; x < inv.getSizeInventory(); x++){
+			ItemStack slot = inv.getStackInSlot(x);
+			if (slot != null){
+				boolean inRecipe = false;
+				Iterator<Object> req = required.iterator();
+				while (req.hasNext()){
+					boolean match = false;
+					Object next = req.next();
+					int amount = -1;
+					if (next instanceof ItemStack){
+						match = itemMatches((ItemStack)next, slot);
+						amount = ((ItemStack)next).stackSize;
+					}
+					else if (next instanceof List){
+						Iterator<ItemStack> itr = ((List<ItemStack>)next).iterator();
+						while (itr.hasNext() && !match){
+							ItemStack s = itr.next();
+							match = itemMatches(s, slot);
+							amount = s.stackSize;
+						}
+					}
+					if (match){
+						inRecipe = true;
+						required.remove(next);
+						final int fx = x;
+						final int famount = amount;
+						applyChanges.add(new Runnable() {
+
+							@Override
+							public void run() {
+								inv.decrStackSize(fx, famount);
+							}
+						});
+						break;
+					}
+				}
+				if (!inRecipe){
+					return null;
+				}
+			}
+		}
+		return required.isEmpty() ? new Runnable() {
+
+			@Override
+			public void run() {
+				runAll(applyChanges);
+			}
+		} : null;
+	}
+	public static boolean itemMatches(ItemStack target, ItemStack input){
+		if (input == null && target != null || input != null && target == null){
+			return false;
+		}
+		return target.getItem() == input.getItem() && target.getItemDamage() == input.getItemDamage() && target.stackSize <= input.stackSize;
+	}
+	public static List<Object> createRecipe(Object... recipe){
+		List<Object> input = new ArrayList<Object>();
+		for (Object in : recipe){
+			if (in instanceof ItemStack){
+				input.add(((ItemStack)in).copy());
+			}
+			else if (in instanceof Item){
+				input.add(new ItemStack((Item)in));
+			}
+			else if (in instanceof Block){
+				input.add(new ItemStack((Block)in));
+			}
+			else if (in instanceof String){
+				input.add(OreDictionary.getOres((String)in));
+			}
+			else if (in instanceof Object[]){
+				List<ItemStack> ores = OreDictionary.getOres((String) ((Object[])in)[0]);
+				input.add(copyItemStackList(ores, (Integer) ((Object[])in)[1]));
+			}
+			else{
+				String ret = "Invalid shapeless ore recipe: ";
+				for (Object tmp :  recipe){
+					ret += tmp + ", ";
+				}
+				throw new RuntimeException(ret);
+			}
+		}
+		return input;
+	}
+	public static Map<Character, CheckerPredicate<WorldPos>> createMaterialMap(Object[][] config, final ItemStack master){
+		Map<Character, CheckerPredicate<WorldPos>> materialMap = new HashMap<Character, CheckerPredicate<WorldPos>>();
+		for(int i = 0;i<config[0].length;i+=2){
+			char c = (Character) config[0][i];
+			Object stateO = config[0][i+1];
+			int m = 0;
+			Block b = null;
+			if(stateO instanceof IBlockState){
+				IBlockState state = (IBlockState) config[0][i+1];
+				b = state.getBlock();
+				m = b.getMetaFromState(state);
+			}else{
+				m = -1;
+				b = (Block) stateO;
+			}
+			final int meta = m;
+			final Block block = b;
+			materialMap.put(c, new CheckerPredicate<WorldPos>(){
+
+				@Override
+				public int apply(WorldPos worldPos) {
+					IBlockState input = worldPos.world.getBlockState(worldPos.pos);
+					if(input.getBlock() == CoreInit.blockHidden){
+						TileEntityHidden te = (TileEntityHidden) worldPos.world.getTileEntity(worldPos.pos);
+						if(worldPos.num1 == 2){
+							te.kill();
+							return 0;
+						}
+						return te.blockEquals(block, meta) ? 1 : 0;
+					}else{
+						if(worldPos.num1 == 1){
+							TileEntityHidden.place(worldPos.world, worldPos.pos, worldPos.pos2, master, worldPos.num2);
+							return 0;
+						}else{
+							int m = input.getBlock().getMetaFromState(input);
+							return input.getBlock() == block && (m == meta || meta == -1) ? 2 : 0;
+						}
+					}
+				}
+
+			});
+		}
+		return materialMap;
+	}
+	public static boolean getLayers(Object[][] config, final Map<Character, CheckerPredicate<WorldPos>> materialMap, final World world, final EnumFacing facing, final BlockPos pos, RunnableStorage killList){
+		List<Checker> list = new ArrayList<Checker>();
+		final MutableBlockPos corner = new MutableBlockPos(pos);
+		for(int l = 1;l<config.length;l++){
+			final int m = l - 1;
+			Object[] objA = config[l];
+			for(int k = 0;k<objA.length;k++){
+				Object o = objA[k];
+				final int n = k;
+				char[] cA = o.toString().toCharArray();
+				for(int i = 0;i<cA.length;i++){
+					final int j = i;
+					final char c = cA[i];
+					if(c == '@'){
+						corner.setPos(pos.offset(facing.rotateY(), -i).offset(facing, -k).offset(EnumFacing.DOWN, -(l-1)));
+					}else if(c == ' '){
+						list.add(new Checker() {
+
+							@Override
+							public int apply(int doRun) {
+								return AIR.apply(new WorldPos(world, corner.offset(facing.rotateY(), j).offset(facing, n).offset(EnumFacing.UP, m), pos, 0, 0));
+							}
+						});
+					}else{
+						list.add(new Checker() {
+
+							@Override
+							public int apply(int doRun) {
+								CheckerPredicate<WorldPos> predicate = materialMap.get(c);
+								if(predicate == null)predicate = AIR;
+								return predicate.apply(new WorldPos(world, corner.offset(facing.rotateY(), j).offset(facing, n).offset(EnumFacing.UP, m), pos, doRun, HATCH_PREDICATE.apply(c) ? m+1 : 0));
+							}
+						});
+					}
+				}
+			}
+		}
+		return checkAll(list, killList);
+	}
+	@SuppressWarnings("unchecked")
+	public static Object[] checkAndConsumeMatch(Object[][] recipeA, final IInventory inv, Object[] parts){
+		for(int i = 0;i<recipeA.length;i++){
+			Object[] recipe = recipeA[i];
+			List<Object> input = (List<Object>) recipe[0];
+			Object[][] extra = (Object[][]) recipe[1];
+			Runnable removeItems = matchesAndConsume(input, inv);
+			if(removeItems != null){
+				List<Runnable> applyChanges = new ArrayList<Runnable>();
+				applyChanges.add(removeItems);
+				for(int j = 0;j<extra.length;j++){
+					Object[] e = extra[j];
+					Object m = e[0];
+					if(m instanceof ItemStack){
+						final int slot = (Integer) e[1];
+						final ItemStack s = (ItemStack) m;
+						final ItemStack ss = inv.getStackInSlot(slot);
+						if(ss == null || (s.isItemEqual(ss) && ItemStack.areItemStackTagsEqual(s, ss) && ss.stackSize + s.stackSize <= Math.min(s.getMaxStackSize(), inv.getInventoryStackLimit()))){
+							applyChanges.add(new Runnable() {
+
+								@Override
+								public void run() {
+									if(ss == null){
+										inv.setInventorySlotContents(slot, s.copy());
+									}else{
+										ss.stackSize += s.stackSize;
+									}
+								}
+							});
+						}
+					}else if(m instanceof FluidStack){
+						//Drain
+						boolean mode = (Boolean) e[1];
+						final FluidStack s = (FluidStack) m;
+						final FluidTank h = (FluidTank) parts[(Integer) e[2]];
+						if(mode){
+							final FluidStack r = h.drainInternal(s, false);
+							if(s.isFluidStackIdentical(r)){
+								applyChanges.add(new Runnable() {
+
+									@Override
+									public void run() {
+										h.drainInternal(r, true);
+									}
+								});
+							}else return new Object[]{-1};
+						}else{
+							int fill = h.fillInternal(s, false);
+							if(fill == s.amount){
+								applyChanges.add(new Runnable() {
+
+									@Override
+									public void run() {
+										h.fillInternal(s, true);
+									}
+								});
+							}else return new Object[]{-1};
+						}
+					}
+				}
+				return new Object[]{i, applyChanges};
+			}
+		}
+		return new Object[]{-1};
+	}
+	public static void runAll(List<Runnable> list){
+		for(int i = 0;i<list.size();i++)
+			if(list.get(i) != null)list.get(i).run();
+	}
+	public static List<FluidStack> getFluidStack(Object[][] in, boolean mode){
+		List<FluidStack> list = new ArrayList<FluidStack>();
+		for(int i = 0;i<in.length;i++){
+			Object[] e = in[i];
+			Object m = e[0];
+			if(m instanceof FluidStack){
+				if((Boolean) e[1] == mode){
+					list.add((FluidStack) m);
+				}
+			}
+		}
+		return list;
+	}
+	public static List<ResourceLocation> getResourceLocationList(String... strings) {
+		List<ResourceLocation> ret = new ArrayList<ResourceLocation>();
+		for(int i = 0;i<strings.length;i++){
+			ret.add(new ResourceLocation(strings[i]));
+		}
+		return ret;
 	}
 }

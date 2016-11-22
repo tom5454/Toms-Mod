@@ -275,6 +275,14 @@ public class ResearchHandler {
 		public void onAdd(Research obj, int id, Map<ResourceLocation, ?> slaveset) {
 
 		}
-
+	}
+	public boolean isCompleted(Research research){
+		if(research == null)return false;
+		return researchDone.contains(research);
+	}
+	public static boolean isCompleted(ResearchHandler handler, Research research){
+		if(handler == null)return false;
+		if(research == null)return false;
+		return handler.isCompleted(research);
 	}
 }

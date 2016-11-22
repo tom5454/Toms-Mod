@@ -28,44 +28,6 @@ public class TileEntityMBFluidPort extends TileEntityMultiblockPartBase implemen
 	private boolean formed = false;
 	private boolean hasMaster = false;
 	private ItemStack[] stack = new ItemStack[2];
-	//private boolean input = false;
-	//	@Override
-	//	public boolean canDrain(EnumFacing arg0, Fluid fluid) {
-	//		return !this.isInput() && this.tank.getFluid() != null && this.tank.getFluid().getFluid() == fluid;
-	//	}
-	//
-	//	@Override
-	//	public boolean canFill(EnumFacing from, Fluid fluid) {
-	//		return this.isInput() && !(this.tank.getCapacity() == this.tank.getFluidAmount()) && (tank.getFluid() == null || (tank.getFluid().getFluid() == fluid));
-	//	}
-	//
-	//	@Override
-	//	public FluidStack drain(EnumFacing from, FluidStack fluidStack, boolean doDrain) {
-	//		if(this.canDrain(from, fluidStack != null ? fluidStack.getFluid() : null)){
-	//			return this.tank.drain(fluidStack.amount, doDrain);
-	//		}else{
-	//			return null;
-	//		}
-	//	}
-	//
-	//	@Override
-	//	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-	//		if(!this.isInput() && this.tank.getFluid() != null){
-	//			return this.tank.drain(maxDrain, doDrain);
-	//		}else{
-	//			return null;
-	//		}
-	//	}
-	//
-	//	@Override
-	//	public int fill(EnumFacing from, FluidStack fluid, boolean doFill) {
-	//		return this.canFill(from, fluid != null ? fluid.getFluid() : null) ? this.tank.fill(fluid, doFill) : 0;
-	//	}
-	//
-	//	@Override
-	//	public FluidTankInfo[] getTankInfo(EnumFacing arg0) {
-	//		return new FluidTankInfo[]{new FluidTankInfo(this.tank)};
-	//	}
 	@Override
 	public void readFromNBT(NBTTagCompound tag){
 		super.readFromNBT(tag);
@@ -74,7 +36,6 @@ public class TileEntityMBFluidPort extends TileEntityMultiblockPartBase implemen
 		this.masterZ = tag.getInteger("mZ");
 		this.hasMaster = tag.getBoolean("hM");
 		this.formed = tag.getBoolean("formed");
-		//this.input = tag.getBoolean("mode");
 		this.tank.readFromNBT(tag.getCompoundTag("tank"));
 		this.stack = new ItemStack[2];
 		NBTTagList list = tag.getTagList("inventory", 10);
@@ -85,7 +46,6 @@ public class TileEntityMBFluidPort extends TileEntityMultiblockPartBase implemen
 				this.stack[index] = ItemStack.loadItemStackFromNBT(t);
 			}
 		}
-		//this.mode = TomsMathHelper.getAccess(tag.getInteger("mode"));
 	}
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag){
@@ -95,7 +55,6 @@ public class TileEntityMBFluidPort extends TileEntityMultiblockPartBase implemen
 		tag.setInteger("mZ", this.masterZ);
 		tag.setBoolean("hM", this.hasMaster);
 		tag.setBoolean("formed", this.formed);
-		//tag.setBoolean("mode", this.input);
 		NBTTagCompound tankTag = new NBTTagCompound();
 		this.tank.writeToNBT(tankTag);
 		tag.setTag("tank",tankTag);
@@ -110,7 +69,6 @@ public class TileEntityMBFluidPort extends TileEntityMultiblockPartBase implemen
 			}
 		}
 		tag.setTag("inventory", list);
-		//tag.setInteger("mode", TomsMathHelper.getAccess(this.mode));
 		return tag;
 	}
 
@@ -270,18 +228,6 @@ public class TileEntityMBFluidPort extends TileEntityMultiblockPartBase implemen
 	public void setFluidStack(FluidStack stack){
 		this.tank.setFluid(stack);
 	}
-	//	@Override
-	//	public void writeToPacket(ByteBuf buf){
-	//		//buf.writeBoolean(this.input);
-	//	}
-	//	@Override
-	//	public void readFromPacket(ByteBuf buf){
-	//		/*this.input = buf.readBoolean();
-	//		int xCoord = pos.getX();
-	//		int yCoord = pos.getY();
-	//		int zCoord = pos.getZ();
-	//		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);*/
-	//	}
 	public int getMaxFluidAmount(){
 		return this.tank.getCapacity();
 	}

@@ -2,6 +2,7 @@ package com.tom.core.tileentity.gui;
 
 import java.io.IOException;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -61,5 +62,23 @@ public class GuiConfigurator extends GuiTomsMod implements INBTPacketReceiver{
 	public void updateScreen() {
 		super.updateScreen();
 		te.getOption().update(mc, guiLeft+100-te.getOption().getWidth(), guiTop+70-te.getOption().getHeight());
+	}
+	public static class GuiButtonConfig extends GuiButton{
+
+		public GuiButtonConfig(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
+			super(buttonId, x, y, widthIn, heightIn, buttonText);
+		}
+
+		public GuiButtonConfig(int buttonId, int x, int y, String buttonText) {
+			super(buttonId, x, y, buttonText);
+		}
+		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {}
+	}
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		for (int i = 0; i < this.buttonList.size(); ++i) {
+			if(this.buttonList.get(i) instanceof GuiButtonConfig)((GuiButtonConfig)this.buttonList.get(i)).postDraw(this.mc, mouseX, mouseY, this);
+		}
 	}
 }

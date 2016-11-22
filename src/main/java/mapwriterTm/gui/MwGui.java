@@ -639,7 +639,7 @@ public class MwGui extends GuiScreen
 			if (!this.mc.theWorld.getChunkFromBlockCoords(new BlockPos(bX, 0, bZ)).isEmpty())
 			{
 				builder.append(", ");
-				builder.append(I18n.format("mw.gui.mwgui.status.biome", this.mc.theWorld.getBiomeGenForCoords(new BlockPos(bX, 0, bZ)).getBiomeName()));
+				builder.append(I18n.format("mw.gui.mwgui.status.biome", this.mc.theWorld.getBiome(new BlockPos(bX, 0, bZ)).getBiomeName()));
 			}
 		}
 

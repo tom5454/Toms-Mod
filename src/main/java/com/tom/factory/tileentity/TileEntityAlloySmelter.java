@@ -3,6 +3,7 @@ package com.tom.factory.tileentity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
@@ -13,7 +14,8 @@ import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
 public class TileEntityAlloySmelter extends TileEntityMachineBase {
 	private EnergyStorage energy = new EnergyStorage(10000, 100);
-	private static final int[] SLOTS = new int[]{0,1,2};
+	private static final int[] SLOTS_IN = new int[]{0,1};
+	private static final int[] SLOTS_OUT = new int[]{2};
 	private static final int MAX_PROCESS_TIME = 300;
 	//private int maxProgress = 1;
 	public int clientEnergy = 0;
@@ -30,11 +32,6 @@ public class TileEntityAlloySmelter extends TileEntityMachineBase {
 	@Override
 	public String getName() {
 		return "alloySmelter";
-	}
-
-	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		return SLOTS;
 	}
 
 	@Override
@@ -63,7 +60,7 @@ public class TileEntityAlloySmelter extends TileEntityMachineBase {
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote){
-			if(energy.extractEnergy(20D, true) == 20D){
+			if(energy.extractEnergy(20D, true) == 20D && canRun()){
 				if(progress > 0){
 					updateProgress();
 				}else if(progress == 0){
@@ -131,5 +128,20 @@ public class TileEntityAlloySmelter extends TileEntityMachineBase {
 	@Override
 	public int getMaxProcessTimeNormal() {
 		return MAX_PROCESS_TIME;
+	}
+
+	@Override
+	public ResourceLocation getFront() {
+		return new ResourceLocation("tomsmodfactory:textures/blocks/alloySmelter.png");
+	}
+
+	@Override
+	public int[] getOutputSlots() {
+		return SLOTS_OUT;
+	}
+
+	@Override
+	public int[] getInputSlots() {
+		return SLOTS_IN;
 	}
 }

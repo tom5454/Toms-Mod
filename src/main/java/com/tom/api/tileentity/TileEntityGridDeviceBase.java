@@ -1,5 +1,6 @@
 package com.tom.api.tileentity;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -93,7 +94,7 @@ IGridDevice<G> {
 		return true;
 	}
 	@Override
-	public void preUpdate() {
+	public void preUpdate(IBlockState state) {
 		if(!this.worldObj.isRemote){
 			if(firstStart){
 				this.firstStart = false;

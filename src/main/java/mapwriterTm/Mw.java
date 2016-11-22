@@ -164,7 +164,7 @@ public class Mw
 		{
 			if (!this.mc.theWorld.getChunkFromBlockCoords(new BlockPos(this.playerX, 0, this.playerZ)).isEmpty())
 			{
-				this.playerBiome = this.mc.theWorld.getBiomeGenForCoords(new BlockPos(this.playerX, 0, this.playerZ)).getBiomeName();
+				this.playerBiome = this.mc.theWorld.getBiome(new BlockPos(this.playerX, 0, this.playerZ)).getBiomeName();
 			}
 		}
 
@@ -487,19 +487,19 @@ public class Mw
 		this.load();
 		if (this.ready && (this.mc.thePlayer != null))
 		{
+			mc.mcProfiler.startSection("MapwriterTm");
 			this.setTextureSize();
-
+			mc.mcProfiler.startSection("UpdatePlayer");
 			this.updatePlayer();
-
+			mc.mcProfiler.endStartSection("UpdateUndergroundMap");
 			//check every tick for a change in underground mode.
 			//this makes it posible to change to underground mode in the config screen.
 			this.miniMap.view.setUndergroundMode(Config.undergroundMode);
-
 			if (Config.undergroundMode && ((this.tickCounter % 30) == 0))
 			{
 				this.undergroundMapTexture.update();
 			}
-
+			mc.mcProfiler.endStartSection("DrawMap");
 			if (!(this.mc.currentScreen instanceof MwGui))
 			{
 				// if in game (no gui screen) center the minimap on the player
@@ -507,16 +507,16 @@ public class Mw
 				this.miniMap.view.setViewCentreScaled(this.playerX, this.playerZ, this.playerDimension);
 				this.miniMap.drawCurrentMap();
 			}
-
+			mc.mcProfiler.endStartSection("ProcessTasks");
 			// process background tasks
 			int maxTasks = 50;
 			while (!this.executor.processTaskQueue() && (maxTasks > 0))
 			{
 				maxTasks--;
 			}
-
+			mc.mcProfiler.endStartSection("UpdateChunkManager");
 			this.chunkManager.onTick();
-
+			mc.mcProfiler.endStartSection("UpdateMapTexture");
 			// update GL texture of mapTexture if updated
 			this.mapTexture.processTextureUpdates();
 
@@ -526,16 +526,17 @@ public class Mw
 			// if (this.tickCounter % 100 == 0) {
 			// MwUtil.log("tick %d", this.tickCounter);
 			// }
+			mc.mcProfiler.endStartSection("ProcessTasks2");
 			this.playerTrail.onTick();
-
 			while(!runnableQueue.isEmpty()){
 				Runnable r = runnableQueue.poll();
 				if(r != null){
 					addRunnable(r);
 				}
 			}
-
+			mc.mcProfiler.endSection();
 			this.tickCounter++;
+			mc.mcProfiler.endSection();
 		}
 	}
 

@@ -43,8 +43,11 @@ import com.tom.factory.tileentity.TileEntityFluidBoiler;
 import com.tom.factory.tileentity.TileEntityFluidTransposer;
 import com.tom.factory.tileentity.TileEntityGeoBoiler;
 import com.tom.factory.tileentity.TileEntityIndustrialBlastFurnace;
+import com.tom.factory.tileentity.TileEntityLaserEngraver;
 import com.tom.factory.tileentity.TileEntityMBFluidPort;
 import com.tom.factory.tileentity.TileEntityMBHatch;
+import com.tom.factory.tileentity.TileEntityMixer;
+import com.tom.factory.tileentity.TileEntityPlasticProcessor;
 import com.tom.factory.tileentity.TileEntityPlateBlendingMachine;
 import com.tom.factory.tileentity.TileEntityRefinery;
 import com.tom.factory.tileentity.TileEntitySolderingStation;
@@ -52,8 +55,10 @@ import com.tom.factory.tileentity.TileEntitySteamAlloySmelter;
 import com.tom.factory.tileentity.TileEntitySteamCrusher;
 import com.tom.factory.tileentity.TileEntitySteamFurnace;
 import com.tom.factory.tileentity.TileEntitySteamFurnaceAdv;
+import com.tom.factory.tileentity.TileEntitySteamMixer;
 import com.tom.factory.tileentity.TileEntitySteamPlateBlender;
 import com.tom.factory.tileentity.TileEntitySteamSolderingStation;
+import com.tom.factory.tileentity.TileEntityUVLightbox;
 import com.tom.factory.tileentity.TileEntityWireMill;
 import com.tom.factory.tileentity.gui.GuiAdvBoiler;
 import com.tom.factory.tileentity.gui.GuiAdvElectricFurnace;
@@ -70,14 +75,19 @@ import com.tom.factory.tileentity.gui.GuiFluidBoiler;
 import com.tom.factory.tileentity.gui.GuiFluidTransposer;
 import com.tom.factory.tileentity.gui.GuiGeoBoiler;
 import com.tom.factory.tileentity.gui.GuiIndustrialBlastFurnace;
+import com.tom.factory.tileentity.gui.GuiLaserEngraver;
+import com.tom.factory.tileentity.gui.GuiMixer;
+import com.tom.factory.tileentity.gui.GuiPlasticProcessor;
 import com.tom.factory.tileentity.gui.GuiPlateBlendingMachine;
 import com.tom.factory.tileentity.gui.GuiRefinery;
 import com.tom.factory.tileentity.gui.GuiSolderingStation;
 import com.tom.factory.tileentity.gui.GuiSteamAlloySmelter;
 import com.tom.factory.tileentity.gui.GuiSteamCrusher;
 import com.tom.factory.tileentity.gui.GuiSteamFurnace;
+import com.tom.factory.tileentity.gui.GuiSteamMixer;
 import com.tom.factory.tileentity.gui.GuiSteamPlateBlender;
 import com.tom.factory.tileentity.gui.GuiSteamSolderingStation;
+import com.tom.factory.tileentity.gui.GuiUVLightbox;
 import com.tom.factory.tileentity.gui.GuiWireMill;
 import com.tom.factory.tileentity.inventory.ContainerAdvBoiler;
 import com.tom.factory.tileentity.inventory.ContainerAdvElectricFurnace;
@@ -94,14 +104,19 @@ import com.tom.factory.tileentity.inventory.ContainerFluidBoiler;
 import com.tom.factory.tileentity.inventory.ContainerFluidTransposer;
 import com.tom.factory.tileentity.inventory.ContainerGeoBoiler;
 import com.tom.factory.tileentity.inventory.ContainerIndustrialBlastFurnace;
+import com.tom.factory.tileentity.inventory.ContainerLaserEngraver;
+import com.tom.factory.tileentity.inventory.ContainerMixer;
+import com.tom.factory.tileentity.inventory.ContainerPlasticProcessor;
 import com.tom.factory.tileentity.inventory.ContainerPlateBlendingMachine;
 import com.tom.factory.tileentity.inventory.ContainerRefinery;
 import com.tom.factory.tileentity.inventory.ContainerSolderingStation;
 import com.tom.factory.tileentity.inventory.ContainerSteamAlloySmelter;
 import com.tom.factory.tileentity.inventory.ContainerSteamCrusher;
 import com.tom.factory.tileentity.inventory.ContainerSteamFurnace;
+import com.tom.factory.tileentity.inventory.ContainerSteamMixer;
 import com.tom.factory.tileentity.inventory.ContainerSteamPlateBlender;
 import com.tom.factory.tileentity.inventory.ContainerSteamSolderingStation;
+import com.tom.factory.tileentity.inventory.ContainerUVLightbox;
 import com.tom.factory.tileentity.inventory.ContainerWireMill;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
 import com.tom.storage.tileentity.TileEntityCraftingTerminal;
@@ -160,7 +175,8 @@ public class GuiHandler implements IGuiHandler{
 		multipartEast, multipartWest, blockInterface, patternTerminal, crusher, plateBlendingMachine, wireMill, coilerPlant,
 		basicBoiler, advBoiler, steamCrusher, steamFurnace, steamPlateBlender, steamFurnaceAdv, electricFurnace, alloySmelter,
 		steamAlloySmelter, electricFurnaceAdv, blockCraftingTerminal, patternOptions, steamSolderingStation, cokeOven, blastFurnace,
-		solderingStation, fluidTransposer, industrialBlastFurnace, refinery, charger, geoBoiler, fluidBoiler, advFluidBoiler,
+		solderingStation, fluidTransposer, industrialBlastFurnace, refinery, charger, geoBoiler, fluidBoiler, advFluidBoiler, uvLightbox,
+		plasticProcessor, steamMixer, mixer, laserEngraver,
 
 		;
 		private static final GuiIDs[] VALUES = values();
@@ -185,7 +201,7 @@ public class GuiHandler implements IGuiHandler{
 		case itemProxy:
 			return new ContainerItemProxy(player.inventory, (TileEntityItemProxy) world.getTileEntity(new BlockPos(x, y, z)));
 		case researchTable:
-			return new ContainerResearchTable(player.inventory, (TileEntityResearchTable) world.getTileEntity(new BlockPos(x, y, z)));
+			return new ContainerResearchTable(player.inventory, (TileEntityResearchTable) world.getTileEntity((new BlockPos(x, y, z))));
 		case limitableChest:
 			return new ContainerLimitableChest(player.inventory, (TileEntityLimitableChest) world.getTileEntity(new BlockPos(x, y, z)));
 		case configurator:
@@ -292,6 +308,16 @@ public class GuiHandler implements IGuiHandler{
 			return new ContainerFluidBoiler(player.inventory, (TileEntityFluidBoiler) world.getTileEntity(new BlockPos(x,y,z)));
 		case advFluidBoiler:
 			return new ContainerAdvFluidBoiler(player.inventory, (TileEntityAdvFluidBoiler) world.getTileEntity(new BlockPos(x,y,z)));
+		case uvLightbox:
+			return new ContainerUVLightbox(player.inventory, (TileEntityUVLightbox) world.getTileEntity(new BlockPos(x,y,z)));
+		case steamMixer:
+			return new ContainerSteamMixer(player.inventory, (TileEntitySteamMixer) world.getTileEntity(new BlockPos(x,y,z)));
+		case mixer:
+			return new ContainerMixer(player.inventory, (TileEntityMixer) world.getTileEntity(new BlockPos(x,y,z)));
+		case plasticProcessor:
+			return new ContainerPlasticProcessor(player.inventory, (TileEntityPlasticProcessor) world.getTileEntity(new BlockPos(x,y,z)));
+		case laserEngraver:
+			return new ContainerLaserEngraver(player.inventory, (TileEntityLaserEngraver) world.getTileEntity(new BlockPos(x,y,z)));
 		default:
 			break;
 		}
@@ -312,7 +338,7 @@ public class GuiHandler implements IGuiHandler{
 		case itemProxy:
 			return new GuiItemProxy(player.inventory, (TileEntityItemProxy) world.getTileEntity(new BlockPos(x, y, z)));
 		case researchTable:
-			return new GuiResearchTable(player.inventory, (TileEntityResearchTable) world.getTileEntity(new BlockPos(x, y, z)));
+			return new GuiResearchTable(player.inventory, (TileEntityResearchTable) world.getTileEntity((new BlockPos(x, y, z))));
 		case limitableChest:
 			return new GuiLimitableChest(player.inventory, (TileEntityLimitableChest) world.getTileEntity(new BlockPos(x, y, z)));
 		case configurator:
@@ -419,6 +445,16 @@ public class GuiHandler implements IGuiHandler{
 			return new GuiFluidBoiler(player.inventory, (TileEntityFluidBoiler) world.getTileEntity(new BlockPos(x,y,z)));
 		case advFluidBoiler:
 			return new GuiAdvFluidBoiler(player.inventory, (TileEntityAdvFluidBoiler) world.getTileEntity(new BlockPos(x,y,z)));
+		case uvLightbox:
+			return new GuiUVLightbox(player.inventory, (TileEntityUVLightbox) world.getTileEntity(new BlockPos(x,y,z)));
+		case steamMixer:
+			return new GuiSteamMixer(player.inventory, (TileEntitySteamMixer) world.getTileEntity(new BlockPos(x,y,z)));
+		case mixer:
+			return new GuiMixer(player.inventory, (TileEntityMixer) world.getTileEntity(new BlockPos(x,y,z)));
+		case plasticProcessor:
+			return new GuiPlasticProcessor(player.inventory, (TileEntityPlasticProcessor) world.getTileEntity(new BlockPos(x,y,z)));
+		case laserEngraver:
+			return new GuiLaserEngraver(player.inventory, (TileEntityLaserEngraver) world.getTileEntity(new BlockPos(x,y,z)));
 		default:
 			break;
 		}

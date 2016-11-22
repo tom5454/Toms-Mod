@@ -252,6 +252,10 @@ public class MachineCraftingHandler {
 		addWireMillRecipe(TMResource.STEEL.getStackNormal(Type.PLATE, 3), new ItemStack(CoreInit.steelFence, 2), 2);
 		addCrusherRecipe(new ItemStack(DefenseInit.oreMonazit, 1, 0), new ItemStack(DefenseInit.crushedMonazit, 2, 0));
 		addCrusherRecipe(new ItemStack(DefenseInit.oreMonazit, 1, 1), new ItemStack(DefenseInit.crushedMonazit, 2, 1));
+		addPlateBlenderRecipe(TMResource.TIN.getStackNormal(Type.PLATE), CraftingMaterial.TIN_CAN.getStackNormal(), 1);
+		addCrusherRecipe(TMResource.ALUMINUM.getStackNormal(Type.CRUSHED_ORE), CraftingMaterial.BAUXITE_DUST.getStackNormal());
+		addBlastFurnaceRecipe(TMResource.ALUMINUM.getStackNormal(Type.DUST, 2), TMResource.COAL.getStackNormal(Type.DUST), TMResource.ALUMINUM.getStackNormal(Type.INGOT, 2), 5000, 1700);
+		addBlastFurnaceRecipe(TMResource.ALUMINUM.getStackNormal(Type.DUST), null, TMResource.ALUMINUM.getStackNormal(Type.INGOT), 5000, 0);
 	}
 	public static ItemStack getFurnaceRecipe(ItemStack in){
 		if(in == null)return null;

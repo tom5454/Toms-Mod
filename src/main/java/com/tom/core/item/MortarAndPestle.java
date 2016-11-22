@@ -9,7 +9,7 @@ public class MortarAndPestle extends ItemCraftingTool {
 
 	@Override
 	public int getDurability(ItemStack stack) {
-		return Config.enableHardMode ? 150 : 200;
+		return Config.enableHardRecipes ? 150 : 200;
 	}
 
 }

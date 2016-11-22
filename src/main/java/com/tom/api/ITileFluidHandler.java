@@ -21,6 +21,13 @@ import com.tom.apis.PredicatedLinkedHashMap;
 public interface ITileFluidHandler {
 	IFluidHandler getTankOnSide(EnumFacing f);
 	public static class Helper{
+		private static final Predicate<Fluid> ALWAYS_TRUE = new Predicate<Fluid>() {
+
+			@Override
+			public boolean apply(Fluid input) {
+				return true;
+			}
+		};
 		public static IFluidHandler getFluidHandlerFromTank(FluidTank tank, Fluid fluid, boolean canFill, boolean canDrain){
 			tank.setCanFill(canFill);
 			tank.setCanDrain(canDrain);
@@ -58,7 +65,25 @@ public interface ITileFluidHandler {
 				tanks[i].setCanDrain(canDrain[i]);
 				tanks[i].setCanFill(canFill[i]);
 				final Object obj = fluid[i];
-				if(obj instanceof Predicate){
+				if(obj == null){
+					m.addHandler(ALWAYS_TRUE, tanks[i]);
+				}else if(obj instanceof Object[]){
+					Object[] objA = (Object[]) obj;
+					for(int j = 0;j<objA.length;j++){
+						final Object obj2 = objA[j];
+						if(obj2 instanceof Predicate){
+							m.addHandler((Predicate<Fluid>) obj2, tanks[i]);
+						}else{
+							m.addHandler(new Predicate<Fluid>() {
+
+								@Override
+								public boolean apply(Fluid input) {
+									return obj2.equals(input);
+								}
+							}, tanks[i]);
+						}
+					}
+				}else if(obj instanceof Predicate){
 					m.addHandler((Predicate<Fluid>) obj, tanks[i]);
 				}else{
 					m.addHandler(new Predicate<Fluid>() {

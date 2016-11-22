@@ -3,18 +3,23 @@ package com.tom.core.block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.tom.api.block.BlockContainerTomsMod;
@@ -23,11 +28,13 @@ import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
 
 import com.tom.core.tileentity.TileEntityResearchTable;
+import com.tom.core.tileentity.TileEntityResearchTable.ResearchTableType;
 
 public class ResearchTable extends BlockContainerTomsMod {
 	/**0:Base,1:Left,2:Right*/
 	public static final PropertyInteger STATE = PropertyInteger.create("state",0,2);
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+	public static final PropertyEnum<ResearchTableType> TYPE = PropertyEnum.create("type", ResearchTableType.class);
 	public ResearchTable() {
 		super(Material.WOOD);
 	}
@@ -39,7 +46,7 @@ public class ResearchTable extends BlockContainerTomsMod {
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {FACING,STATE});
+		return new BlockStateContainer(this, new IProperty[] {FACING,STATE,TYPE});
 	}
 	/*@Override
 	public IBlockState getStateFromMeta(int meta)
@@ -105,7 +112,6 @@ public class ResearchTable extends BlockContainerTomsMod {
 			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
 			float hitZ) {
 		if(worldIn.isRemote) return true;
-		//TileEntityResearchTable te = (TileEntityResearchTable) worldIn.getTileEntity(pos);
 		int blockState = state.getValue(STATE);
 		EnumFacing facing = state.getValue(FACING);
 		if(blockState == 0){
@@ -116,10 +122,6 @@ public class ResearchTable extends BlockContainerTomsMod {
 					heldItem.splitStack(1);
 					TomsModUtils.setBlockState(worldIn, pos, state.withProperty(STATE, 2));
 					worldIn.setBlockState(offsetPos, this.getDefaultState().withProperty(FACING, facing).withProperty(STATE, 1));
-					//te.isMaster = true;
-					/*for(int i = 0;i<13;i++){
-						System.out.println(i+" "+this.getStateFromMeta(i));
-					}*/
 				}else{
 					TomsModUtils.sendNoSpamTranslate(player, "tomsMod.chat.destObs");
 				}
@@ -131,8 +133,19 @@ public class ResearchTable extends BlockContainerTomsMod {
 				parentState.getBlock().onBlockActivated(worldIn, parentPos, parentState, player, hand, heldItem, side, hitX, hitY, hitZ);
 			}
 		}else if(blockState == 2){
-			//worldIn.setBlockState(pos.offset(EnumFacing.UP, 2), Blocks.stone.getDefaultState());
-			player.openGui(CoreInit.modInstance, GuiIDs.researchTable.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+			if(heldItem != null && heldItem.getItem() == CoreInit.researchTableUpgrade){
+				TileEntityResearchTable te = (TileEntityResearchTable) worldIn.getTileEntity(pos);
+				byte b = te.upgrade(heldItem.getMetadata());
+				if(b == 2){
+					heldItem.stackSize--;
+				}else if(b == 1){
+					player.openGui(CoreInit.modInstance, GuiIDs.researchTable.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+				}else if(b == 3){
+					TomsModUtils.sendNoSpamTranslateWithTag(player, new Style(), heldItem.getUnlocalizedName() + ".name", "tomsMod.chat.upgradeFailed");
+				}
+			}else{
+				player.openGui(CoreInit.modInstance, GuiIDs.researchTable.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+			}
 		}
 		return true;
 	}
@@ -155,21 +168,16 @@ public class ResearchTable extends BlockContainerTomsMod {
 		this.breakBlock(worldIn, pos, state, true);
 	}
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state, boolean first){
+		int blockState = state.getValue(STATE);
+		if(blockState == 2){
+			TileEntityResearchTable te = (TileEntityResearchTable) worldIn.getTileEntity(pos);
+			te.state = state;
+			InventoryHelper.dropInventoryItems(worldIn, pos, te);
+			te.dropUpgrades();
+		}
 		if(first){
 			EnumFacing facing = state.getValue(FACING);
-			int blockState = state.getValue(STATE);
 			if(blockState != 0){
-				/*for(EnumFacing f : EnumFacing.VALUES){
-					if(f.getAxis() == Axis.Y) continue;
-					IBlockState testState = worldIn.getBlockState(pos.offset(f));
-					if(testState != null && testState.getBlock() == this){
-						if(facing == testState.getValue(FACING) && blockState != testState.getValue(STATE)){
-							((ResearchTable)testState.getBlock()).breakBlock(worldIn, pos, testState,false);
-							worldIn.setBlockToAir(pos.offset(f));
-							break;
-						}
-					}
-				}*/
 				EnumFacing f;
 				if(blockState == 1){
 					f = facing.rotateYCCW();
@@ -189,4 +197,11 @@ public class ResearchTable extends BlockContainerTomsMod {
 		}
 		super.breakBlock(worldIn, pos, state);
 	}
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+		TileEntity tile = worldIn.getTileEntity(pos);
+		return tile != null && tile instanceof TileEntityResearchTable ? state.withProperty(TYPE, ((TileEntityResearchTable)tile).getType()) : state.withProperty(TYPE, ResearchTableType.WOODEN);
+	}
+	@Override
+	protected void dropInventory(World worldIn, BlockPos pos, IInventory te) {}
 }

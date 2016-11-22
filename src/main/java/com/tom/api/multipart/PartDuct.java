@@ -2,15 +2,19 @@ package com.tom.api.multipart;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -27,6 +31,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -37,6 +44,7 @@ import com.tom.api.item.MultipartItem;
 import com.tom.api.tileentity.ICable;
 import com.tom.apis.TMLogger;
 import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -53,7 +61,7 @@ import mcmultipart.multipart.PartSlot;
 import mcmultipart.raytrace.PartMOP;
 
 public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod implements ISlottedPart, ITickable, ICable<G>, INormallyOccludingPart {
-	protected final AxisAlignedBB[] BOXES;
+	protected AxisAlignedBB[] BOXES;
 	protected static final AxisAlignedBB rotateFace(AxisAlignedBB box, EnumFacing facing) {
 		switch (facing) {
 		case DOWN:
@@ -74,12 +82,25 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 	protected G grid;
 	/**0:NoC, 1:Normal, 2:DuctPort, 3:Module*/
 	private final int maxIntValueInProperties;
-	private final PropertyInteger UP;
-	private final PropertyInteger DOWN;
-	private final PropertyInteger NORTH;
-	private final PropertyInteger EAST;
-	private final PropertyInteger SOUTH;
-	private final PropertyInteger WEST;
+	public static class PropertyList{
+		public final PropertyInteger UP;
+		public final PropertyInteger DOWN;
+		public final PropertyInteger NORTH;
+		public final PropertyInteger EAST;
+		public final PropertyInteger SOUTH;
+		public final PropertyInteger WEST;
+		public PropertyList(PropertyInteger up, PropertyInteger down, PropertyInteger north, PropertyInteger east,
+				PropertyInteger south, PropertyInteger west) {
+			UP = up;
+			DOWN = down;
+			NORTH = north;
+			EAST = east;
+			SOUTH = south;
+			WEST = west;
+		}
+	}
+	protected final PropertyList propertyList;
+	private static Map<Integer, PropertyList> propertyListMap = new HashMap<Integer, PropertyList>();
 	protected static final String GRID_TAG_NAME = "grid";
 	private static final String MASTER_NBT_NAME = "isMaster";
 	public final ItemStack pick;
@@ -88,32 +109,45 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 	private boolean secondTick = false;
 	protected IGridDevice<G> master;
 	protected final ResourceLocation modelLocation;
-	private final double size;
+	protected double size;
 	private int suction = -1;
 	public PartDuct(ItemStack drop, String modelL, double size, int maxStates) {
 		super();
-		BOXES = new AxisAlignedBB[7];
 		if(drop == null){
 			drop = new ItemStack(Blocks.STONE);
 			TMLogger.bigWarn("Multipart created with null drop.");
 		}
 		this.pick = drop;
+		this.modelLocation = new ResourceLocation(modelL);
+		this.grid = this.constructGrid();
+		this.size = size;
+		updateBox();
+		if(maxStates == -1){
+			maxIntValueInProperties = -1;
+			propertyList = null;
+		}else{
+			maxIntValueInProperties = Math.min(maxStates, 3);
+			if(!propertyListMap.containsKey(maxIntValueInProperties)){
+				PropertyInteger UP = PropertyInteger.create("up",0,maxIntValueInProperties);
+				PropertyInteger DOWN = PropertyInteger.create("down",0,maxIntValueInProperties);
+				PropertyInteger NORTH = PropertyInteger.create("north",0,maxIntValueInProperties);
+				PropertyInteger EAST = PropertyInteger.create("east",0,maxIntValueInProperties);
+				PropertyInteger SOUTH = PropertyInteger.create("south",0,maxIntValueInProperties);
+				PropertyInteger WEST = PropertyInteger.create("west",0,maxIntValueInProperties);
+				propertyListMap.put(maxIntValueInProperties, new PropertyList(UP, DOWN, NORTH, EAST, SOUTH, WEST));
+			}
+			propertyList = propertyListMap.get(maxIntValueInProperties);
+		}
+	}
+	protected void updateBox(){
+		updateBox = true;
+		BOXES = new AxisAlignedBB[7];
 		double start = 0.5 - size;
 		double stop = 0.5 + size;
 		BOXES[6] = new AxisAlignedBB(start, start, start, stop, stop, stop);
 		for (int i = 0; i < 6; i++) {
 			BOXES[i] = rotateFace(new AxisAlignedBB(start, 0, start, stop, start, stop), EnumFacing.getFront(i));
 		}
-		this.modelLocation = new ResourceLocation(modelL);
-		this.grid = this.constructGrid();
-		this.size = size;
-		maxIntValueInProperties = Math.min(maxStates, 3);
-		UP = PropertyInteger.create("up",0,maxIntValueInProperties);
-		DOWN = PropertyInteger.create("down",0,maxIntValueInProperties);
-		NORTH = PropertyInteger.create("north",0,maxIntValueInProperties);
-		EAST = PropertyInteger.create("east",0,maxIntValueInProperties);
-		SOUTH = PropertyInteger.create("south",0,maxIntValueInProperties);
-		WEST = PropertyInteger.create("west",0,maxIntValueInProperties);
 	}
 	public PartDuct(MultipartItem drop, String modelL, double size, int maxStates) {
 		this(new ItemStack(drop),modelL, size, maxStates);
@@ -121,12 +155,16 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 	public PartDuct(MultipartItem drop, String modelL, int maxStates) {
 		this(new ItemStack(drop),modelL, 0.25, maxStates);
 	}
-	private byte connectionCache = 0;
-	private boolean neighborBlockChanged;
+	private boolean neighborBlockChanged, packetQueued, updateBox, updateGrid;
 	protected World worldObj;
 	protected BlockPos pos;
+	private byte connectionCache = 0;
 	private byte invConnectionCache = 0;
 	private byte mConnectionCache = 0;
+	private byte e1ConnectionCache = 0, e2ConnectionCache = 0;
+	public String createStringFromCache(){
+		return connectionCache + "," + invConnectionCache + "," + mConnectionCache + "," + e1ConnectionCache + "," + e2ConnectionCache;
+	}
 	//private boolean requestUpdate;
 	@Override
 	public void update() {
@@ -137,6 +175,7 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			neighborBlockChanged = false;
 		}
 		if(!this.worldObj.isRemote){
+			if(worldObj.getTotalWorldTime() % 40 == 0)neighborBlockChanged = true;
 			if(firstStart){
 				this.firstStart = false;
 				this.secondTick = true;
@@ -155,7 +194,16 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 				this.markDirty();
 			}
 			if(this.master == null && !secondTick){
-				this.constructGrid().forceUpdateGrid(worldObj, this);
+				if(updateGrid){
+					this.constructGrid().forceUpdateGrid(worldObj, this);
+					updateGrid = false;
+				}else{
+					updateGrid = true;
+				}
+			}
+			if(packetQueued){
+				packetQueued = false;
+				sendUpdatePacket(true);
 			}
 		}
 		this.updateEntity();
@@ -172,15 +220,31 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 		byte oldCC = connectionCache;
 		byte oldICC = invConnectionCache;
 		byte oldMCC = mConnectionCache;
+		byte oe1 = e1ConnectionCache;
+		byte oe2 = e2ConnectionCache;
 		connectionCache = buf.readByte();
 		invConnectionCache = buf.readByte();
 		mConnectionCache = buf.readByte();
-		//requestUpdate = true;
-
-		if (this.readFromPacket(buf) || oldCC != connectionCache || oldICC != invConnectionCache || oldMCC != mConnectionCache) {
+		e1ConnectionCache = buf.readByte();
+		e2ConnectionCache = buf.readByte();
+		boolean updateBox = buf.readBoolean();
+		NBTTagCompound tag = ByteBufUtils.readTag(buf);
+		boolean update = this.readFromPacket(tag);
+		if(updateBox){
+			updateBox();
+		}
+		if (update || oldCC != connectionCache || oldICC != invConnectionCache || oldMCC != mConnectionCache || e1ConnectionCache != oe1 || e2ConnectionCache != oe2) {
 			markRenderUpdate();
 		}
 	}
+
+	@Override
+	public void markRenderUpdate(){
+		onMarkRenderUpdate();
+		super.markRenderUpdate();
+	}
+
+	protected void onMarkRenderUpdate() {}
 
 	@Override
 	public void readUpdatePacket(PacketBuffer buf) {
@@ -206,17 +270,25 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 		buf.writeByte(connectionCache);
 		buf.writeByte(invConnectionCache);
 		buf.writeByte(mConnectionCache);
-		this.writeToPacket(buf);
+		buf.writeByte(e1ConnectionCache);
+		buf.writeByte(e2ConnectionCache);
+		buf.writeBoolean(updateBox);
+		NBTTagCompound tag = new NBTTagCompound();
+		this.writeToPacket(tag);
+		ByteBufUtils.writeTag(buf, tag);
+		updateBox = false;
 	}
 	@Override
 	public ItemStack getPickBlock(EntityPlayer player, PartMOP hit) {
+		return getPick();
+	}
+	public ItemStack getPick(){
 		return pick.copy();
 	}
-
 	@Override
 	public List<ItemStack> getDrops() {
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(this.pick.copy());
+		drops.add(getPick());
 		addExtraDrops(drops);
 		return drops;
 	}
@@ -231,24 +303,42 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 
 	@Override
 	public IBlockState getExtendedState(IBlockState state) {
+		if(propertyList == null)throw new IllegalStateException("Missing method definition in " + getClass() + " getExtendedState(net.minecraft.block.state.IBlockState) THIS IS A BUG");
 		return state
-				.withProperty(DOWN, getPropertyValue(EnumFacing.DOWN))
-				.withProperty(UP, getPropertyValue(EnumFacing.UP))
-				.withProperty(NORTH, getPropertyValue(EnumFacing.NORTH))
-				.withProperty(SOUTH, getPropertyValue(EnumFacing.SOUTH))
-				.withProperty(WEST, getPropertyValue(EnumFacing.WEST))
-				.withProperty(EAST, getPropertyValue(EnumFacing.EAST));
+				.withProperty(propertyList.DOWN, getPropertyValue(EnumFacing.DOWN))
+				.withProperty(propertyList.UP, getPropertyValue(EnumFacing.UP))
+				.withProperty(propertyList.NORTH, getPropertyValue(EnumFacing.NORTH))
+				.withProperty(propertyList.SOUTH, getPropertyValue(EnumFacing.SOUTH))
+				.withProperty(propertyList.WEST, getPropertyValue(EnumFacing.WEST))
+				.withProperty(propertyList.EAST, getPropertyValue(EnumFacing.EAST));
 	}
-
 	@Override
 	public BlockStateContainer createBlockState() {
-		return new BlockStateContainer(MCMultiPartMod.multipart,
-				DOWN,
-				UP,
-				NORTH,
-				SOUTH,
-				WEST,
-				EAST);
+		IProperty<?>[] properties = getProperties();
+		IUnlistedProperty<?>[] unlistedProperties = getUnlistedProperties();
+		if(properties == null){
+			properties = new IProperty[]{propertyList.DOWN,
+					propertyList.UP,
+					propertyList.NORTH,
+					propertyList.SOUTH,
+					propertyList.WEST,
+					propertyList.EAST};
+		}
+		if(unlistedProperties != null && unlistedProperties.length > 0)
+			return new ExtendedBlockState(MCMultiPartMod.multipart, properties, unlistedProperties);
+		else
+			return new BlockStateContainer(MCMultiPartMod.multipart, properties);
+	}
+	protected IUnlistedProperty<?>[] getUnlistedProperties(){
+		return null;
+	}
+	protected IProperty<?>[] getProperties(){
+		return new IProperty[]{propertyList.DOWN,
+				propertyList.UP,
+				propertyList.NORTH,
+				propertyList.SOUTH,
+				propertyList.WEST,
+				propertyList.EAST};
 	}
 
 	@Override
@@ -283,7 +373,7 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 	public void addSelectionBoxes(List<AxisAlignedBB> list) {
 		list.add(BOXES[6]);
 		for (EnumFacing f : EnumFacing.VALUES) {
-			if (connects(f) || connectsM(f) || connectsInv(f)) {
+			if (connects(f) || connectsM(f) || connectsInv(f) || connectsE1(f) || connectsE2(f)) {
 				list.add(BOXES[f.ordinal()]);
 			}
 			if(connectsInv(f) && this instanceof ICustomPartBounds){
@@ -298,7 +388,7 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			list.add(BOXES[6]);
 		}
 		for (EnumFacing f : EnumFacing.VALUES) {
-			if (BOXES[f.ordinal()].intersectsWith(mask) && (connects(f) || connectsM(f) || connectsInv(f))) {
+			if (BOXES[f.ordinal()].intersectsWith(mask) && (connects(f) || connectsM(f) || connectsInv(f) || connectsE1(f) || connectsE2(f))) {
 				list.add(BOXES[f.ordinal()]);
 			}
 			if(connectsInv(f) && this instanceof ICustomPartBounds){
@@ -317,7 +407,12 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 	public boolean connectsM(EnumFacing side) {
 		return (mConnectionCache & (1 << side.ordinal())) != 0;
 	}
-
+	public boolean connectsE1(EnumFacing side) {
+		return (e1ConnectionCache & (1 << side.ordinal())) != 0;
+	}
+	public boolean connectsE2(EnumFacing side) {
+		return (e2ConnectionCache & (1 << side.ordinal())) != 0;
+	}
 	/*@Override
 	public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
 		return layer == EnumWorldBlockLayer.CUTOUT;
@@ -339,6 +434,7 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 		if(this.isMaster)grid.importFromNBT(nbt.getCompoundTag(GRID_TAG_NAME));
 		invConnectionCache = nbt.getByte("icc");
 		mConnectionCache = nbt.getByte("mcc");
+		updateBox();
 	}
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -348,6 +444,8 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 		nbt.setBoolean(MASTER_NBT_NAME, isMaster);
 		nbt.setByte("icc", invConnectionCache);
 		nbt.setByte("mcc", mConnectionCache);
+		nbt.setByte("e1c", e1ConnectionCache);
+		nbt.setByte("e2c", e2ConnectionCache);
 		return nbt;
 	}
 	private void updateConnections(EnumFacing side) {
@@ -355,12 +453,14 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			connectionCache &= ~(1 << side.ordinal());
 			invConnectionCache &= ~(1 << side.ordinal());
 			mConnectionCache &= ~(1 << side.ordinal());
+			e1ConnectionCache &= ~(1 << side.ordinal());
+			e2ConnectionCache &= ~(1 << side.ordinal());
 			byte connectionType = internalConnects(side);
 			if (connectionType > 0) {
 				PartDuct<G> pipe = getDuct(getPos2().offset(side), side.getOpposite());
 				if (pipe != null) {
 					byte otherCT = pipe.internalConnects(side.getOpposite());
-					if(otherCT != 1)
+					if(otherCT != 1 && otherCT != 3 && otherCT != 4 && otherCT != 5)
 						return;
 				}
 
@@ -370,6 +470,10 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 					invConnectionCache |= 1 << side.ordinal();
 				else if(connectionType == 3)
 					mConnectionCache |= 1 << side.ordinal();
+				else if(connectionType == 4)
+					e1ConnectionCache |= 1 << side.ordinal();
+				else if(connectionType == 5)
+					e2ConnectionCache |= 1 << side.ordinal();
 			}
 		} else {
 			for (EnumFacing facing : EnumFacing.VALUES) {
@@ -382,6 +486,8 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			byte oc = connectionCache;
 			byte oic = invConnectionCache;
 			byte omc = mConnectionCache;
+			byte oe1 = e1ConnectionCache;
+			byte oe2 = e2ConnectionCache;
 
 			for (EnumFacing dir : EnumFacing.VALUES) {
 				updateConnections(dir);
@@ -390,7 +496,7 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			G grid = this.constructGrid();
 			grid.setMaster(master);
 			grid.forceUpdateGrid(this.getWorld2(), this);
-			if (sendPacket && (connectionCache != oc || invConnectionCache != oic || mConnectionCache != omc)) {
+			if (sendPacket && (connectionCache != oc || invConnectionCache != oic || mConnectionCache != omc || e1ConnectionCache != oe1 || e2ConnectionCache != oe2)) {
 				sendUpdatePacket();
 			}
 		}
@@ -412,19 +518,22 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 		if (!TomsModUtils.occlusionTest(this, BOXES[side.ordinal()])) {
 			return 0;
 		}
-
-		if (getDuct(getPos2().offset(side), side.getOpposite()) != null) {
-			return 1;
+		byte check = checkDuct(getPos2().offset(side), side.getOpposite());
+		if (check != 0) {
+			return check;
 		}
 		if (this instanceof ICustomPartBounds) {
 			if(!TomsModUtils.occlusionTest(this, rotateFace(((ICustomPartBounds)this).getBoxForConnect(), side)))return 0;
 		}
 		TileEntity tile = getNeighbourTile(side);
-		boolean isValid = tile != null ? isValidConnection(side, tile) : false;
-		return (byte) (isValid ? 2 : 0);
+		check = (byte) (tile != null ? isValidConnectionA(side, tile) : 0);
+		return check;
 	}
 
 	public abstract boolean isValidConnection(EnumFacing side, TileEntity tile);
+	public int isValidConnectionA(EnumFacing side, TileEntity tile){
+		return isValidConnection(side, tile) ? 2 : 0;
+	}
 	public abstract void updateEntity();
 
 	@SuppressWarnings("unchecked")
@@ -443,13 +552,49 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 
 		ISlottedPart part = container.getPartInSlot(PartSlot.CENTER);
 		try{
-			if (part instanceof PartDuct<?> && ItemStack.areItemStacksEqual(pick, ((PartDuct<G>)part).pick)) {
+			if (part instanceof PartDuct<?> && canConnect((PartDuct<?>) part, side) != 0) {
 				return (PartDuct<G>) part;
 			} else {
 				return null;
 			}
 		}catch (ClassCastException e){
 			return null;
+		}
+	}
+	public final byte checkDuct(BlockPos blockPos, EnumFacing side) {
+		IMultipartContainer container = MultipartHelper.getPartContainer(getWorld2(), blockPos);
+		if (container == null) {
+			return 0;
+		}
+
+		if (side != null) {
+			ISlottedPart part = container.getPartInSlot(PartSlot.getFaceSlot(side));
+			if (part instanceof IMicroblock.IFaceMicroblock && !((IMicroblock.IFaceMicroblock) part).isFaceHollow()) {
+				return 0;
+			}
+		}
+
+		ISlottedPart part = container.getPartInSlot(PartSlot.CENTER);
+		try{
+			if (part instanceof PartDuct<?>) {
+				return canConnect((PartDuct<?>) part, side);
+			} else {
+				return 0;
+			}
+		}catch (ClassCastException e){
+			return 0;
+		}
+	}
+	@SuppressWarnings("unchecked")
+	protected byte canConnect(PartDuct<?> part, EnumFacing side){
+		try{
+			if (part instanceof PartDuct<?> && ItemStack.areItemStacksEqual(pick, ((PartDuct<G>)part).pick)) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}catch (ClassCastException e){
+			return 0;
 		}
 	}
 	public TileEntity getNeighbourTile(EnumFacing side) {
@@ -502,12 +647,12 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 	}
 	@Override
 	public boolean isConnected(EnumFacing side) {
-		return this.connects(side) || this.connectsInv(side);
+		return this.connects(side) || this.connectsInv(side) || connectsE1(side) || connectsE2(side);
 	}
-	public boolean readFromPacket(ByteBuf buf){
+	public boolean readFromPacket(NBTTagCompound tag){
 		return false;
 	}
-	public void writeToPacket(ByteBuf buf){
+	public void writeToPacket(NBTTagCompound tag){
 
 	}
 	protected void updateFirst(){
@@ -555,8 +700,17 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 		return size;
 	}
 	@Override
-	public boolean onActivated(EntityPlayer player, EnumHand hand,
+	public final boolean onActivated(EntityPlayer player, EnumHand hand,
 			ItemStack stack, PartMOP hit) {
+		if(!player.worldObj.isRemote && player.isSneaking() && CoreInit.isWrench(stack, player)){
+			for (ItemStack stacks : getDrops()) {
+				EntityItem item = new EntityItem(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), stacks);
+				item.setDefaultPickupDelay();
+				player.worldObj.spawnEntityInWorld(item);
+			}
+			getContainer().removePart(this);
+			return true;
+		}
 		Vec3d hitSub = hit.hitVec.subtract(new Vec3d(getPos2()));
 		Vec3d hitPos = new Vec3d(hitSub.xCoord > 0.5 ? hitSub.xCoord-0.1 : hitSub.xCoord+0.1,
 				hitSub.yCoord > 0.5 ? hitSub.yCoord-0.1 : hitSub.yCoord+0.1,
@@ -636,5 +790,8 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 	@Override
 	public World getWorld2(){
 		return getWorld();
+	}
+	public void markForUpdate(){
+		packetQueued = true;
 	}
 }

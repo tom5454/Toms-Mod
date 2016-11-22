@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
 import com.tom.api.network.INBTPacketReceiver;
-import com.tom.api.tileentity.IConfigurable.IConfigurationOption.ConfigurationRedstoneControl.GuiButtonRedstoneMode;
+import com.tom.api.tileentity.IConfigurable.IConfigurationOption.GuiButtonRedstoneMode;
 import com.tom.apis.TomsModUtils;
 import com.tom.defense.tileentity.TileEntityDefenseStation;
 import com.tom.defense.tileentity.TileEntityDefenseStation.DefenseStationConfig;
@@ -113,6 +113,7 @@ public class GuiDefenseStation extends GuiTomsMod implements INBTPacketReceiver 
 		}else if(this.isPointInRegion(27, 104, 65, 12, mouseX, mouseY)){
 			this.drawHoveringText(TomsModUtils.getStringList(te.getMaxEnergyStored()+"F/"+te.getField(0)+"F"), mouseX, mouseY);
 		}
+		buttonRedstone.postDraw(mc, mouseX, mouseY, this);
 	}
 	public class GuiButtonDefenseStationSelection extends GuiButton{
 		private DefenseStationConfig config;

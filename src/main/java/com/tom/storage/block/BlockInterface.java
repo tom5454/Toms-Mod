@@ -40,6 +40,10 @@ public class BlockInterface extends BlockGridDevice {
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if(!worldIn.isRemote && playerIn.isSneaking() && CoreInit.isWrench(heldItem, playerIn)){
+			worldIn.setBlockToAir(pos);
+			return true;
+		}
 		if(!worldIn.isRemote)playerIn.openGui(CoreInit.modInstance, GuiIDs.blockInterface.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}

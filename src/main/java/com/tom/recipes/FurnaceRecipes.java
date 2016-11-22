@@ -2,6 +2,9 @@ package com.tom.recipes;
 
 import static com.tom.api.recipes.RecipeHelper.addSmelting;
 
+import net.minecraft.item.ItemStack;
+
+import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.core.TMResource.Type;
@@ -15,9 +18,9 @@ public class FurnaceRecipes {
 		addSmelting(CraftingMaterial.RAW_SILICON.getStackOreDict(), CraftingMaterial.SILICON.getStackNormal(8), 0.4F);
 		addSmelting(CraftingMaterial.RAW_CICRUIT_BOARD.getStackOreDict(), CraftingMaterial.BASIC_CIRCUIT_PLATE.getStackNormal(), 0.4F);
 		addSmelting(CraftingMaterial.BOTTLE_OF_RUBBER.getStackOreDict(), CraftingMaterial.RUBBER.getStackNormal(), 0.3F);
-		addSmelting(CraftingMaterial.RUBBER.getStackOreDict(), CraftingMaterial.PLASTIC_SHEET.getStackNormal(), 0.3F);
 		addSmelting(CraftingMaterial.BIG_REDSTONE.getStackOreDict(), CraftingMaterial.CHARGED_REDSTONE.getStackNormal(), 0.3F);
 		addSmelting(CraftingMaterial.BIG_GLOWSTONE.getStackOreDict(), CraftingMaterial.CHARGED_GLOWSTONE.getStackNormal(), 0.3F);
 		addSmelting(CraftingMaterial.BIG_ENDER_PEARL.getStackOreDict(), CraftingMaterial.CHARGED_ENDER.getStackNormal(), 0.3F);
+		addSmelting(CraftingMaterial.RAW_CHALK.getStackOreDict(), new ItemStack(CoreInit.chalk), 0.2F);
 	}
 }

@@ -31,6 +31,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import com.tom.api.event.ItemAdvCraftedEvent;
 import com.tom.api.item.ICustomCraftingHandler;
 import com.tom.api.item.ICustomCraftingHandlerAdv;
+import com.tom.api.item.ICustomCraftingHandlerAdv.CraftingErrorException;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.Config;
 import com.tom.core.AutoBackup;
@@ -132,14 +133,19 @@ public class EventHandler {
 			else if(event.crafting.getItem() instanceof ItemBlock && ((ItemBlock)event.crafting.getItem()).block instanceof ICustomCraftingHandlerAdv)
 				((ICustomCraftingHandlerAdv)((ItemBlock)event.crafting.getItem()).block).onCrafingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix);
 		}
-		for(int i = 0;i<event.craftMatrix.getSizeInventory();i++){
-			ItemStack s = event.craftMatrix.getStackInSlot(i);
-			if(s != null){
-				if(s.getItem() instanceof ICustomCraftingHandlerAdv)
-					((ICustomCraftingHandlerAdv)s.getItem()).onUsingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix, s);
-				else if(s.getItem() instanceof ItemBlock && ((ItemBlock)s.getItem()).block instanceof ICustomCraftingHandlerAdv)
-					((ICustomCraftingHandlerAdv)((ItemBlock)s.getItem()).block).onCrafingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix);
+		try{
+			for(int i = 0;i<event.craftMatrix.getSizeInventory();i++){
+				ItemStack s = event.craftMatrix.getStackInSlot(i);
+				if(s != null){
+					if(s.getItem() instanceof ICustomCraftingHandlerAdv)
+						((ICustomCraftingHandlerAdv)s.getItem()).onUsingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix, s);
+					else if(s.getItem() instanceof ItemBlock && ((ItemBlock)s.getItem()).block instanceof ICustomCraftingHandlerAdv)
+						((ICustomCraftingHandlerAdv)((ItemBlock)s.getItem()).block).onUsingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix, s);
+				}
 			}
+		} catch (CraftingErrorException e) {
+			event.setCanceled(true);
+			event.errorMsg = e.getTextComponent();
 		}
 	}
 	private EventHandler() {
@@ -201,7 +207,7 @@ public class EventHandler {
 			teList.update(false);
 			if(Config.enableAutoWorldBackup){
 				if(AutoBackup.tick()){
-					AutoBackup.createBackup();
+					AutoBackup.createBackup(true, true, null);
 				}
 			}
 		}
@@ -229,6 +235,12 @@ public class EventHandler {
 		if(event.getEntityLiving().isServerWorld() && event.getEntityLiving() instanceof EntityPlayer){
 			if(CoreInit.isMapEnabled)NetworkHandler.sendTo(new MessageMinimap((EntityPlayer) event.getEntityLiving()), (EntityPlayerMP) event.getEntityLiving());
 		}
+		/*try{
+			ResearchHandler h = ResearchHandler.getHandlerFromName("Player31");
+			for(int i = 0;i<58;i++){
+				h.markResearchComplete(ResearchHandler.getResearchByID(i));
+			}
+		}catch(Exception e){}*/
 	}
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)

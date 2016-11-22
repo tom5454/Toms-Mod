@@ -188,6 +188,8 @@ IForceDevice, ISecurityStation, ISidedInventory, IGuiTile {
 				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
 			}else if(rsMode == ForceDeviceControlType.LOW_REDSTONE){
 				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) == 0;
+			}else if(rsMode == ForceDeviceControlType.IGNORE){
+				this.active = true;
 			}
 			this.clientEnergy  = MathHelper.floor_double(this.energy.getEnergyStored());
 			TomsModUtils.setBlockStateWithCondition(worldObj, pos, currentState, ForceCapacitor.ACTIVE, this.active && this.energy.getEnergyStored() > 0.1D);

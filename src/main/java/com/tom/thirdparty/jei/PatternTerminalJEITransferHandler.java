@@ -13,9 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+import com.google.common.base.Function;
+
 import com.tom.api.inventory.IJEIAutoFillTerminal;
-import com.tom.apis.Function;
-import com.tom.apis.Function.BiFunction;
+import com.tom.apis.BiFunction;
 import com.tom.storage.tileentity.gui.GuiBlockPatternTerminal;
 import com.tom.storage.tileentity.gui.GuiPatternOptions;
 import com.tom.storage.tileentity.inventory.ContainerBlockPatternTerminal;
@@ -96,7 +97,7 @@ public class PatternTerminalJEITransferHandler implements IRecipeTransferHandler
 				//((IPatternTerminal)container).setRecipe(stacks, output);
 			}
 		}else{
-			return RecipeTransferErrorInternal.INSTANCE;
+			return RecipeTransferErrorInternal.instance;
 		}
 		return null;
 	}

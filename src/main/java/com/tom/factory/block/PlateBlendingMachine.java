@@ -25,7 +25,7 @@ public class PlateBlendingMachine extends BlockMachineBase {
 		return new TileEntityPlateBlendingMachine();
 	}
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if(!worldIn.isRemote)playerIn.openGui(CoreInit.modInstance, GuiIDs.plateBlendingMachine.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;

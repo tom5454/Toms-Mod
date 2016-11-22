@@ -67,7 +67,7 @@ public class PartFluidServo extends PartModule<FluidGrid> {
 		return 1;
 	}
 	@Override
-	public boolean onActivated(EntityPlayer player, EnumHand hand,
+	public boolean onPartActivated(EntityPlayer player, EnumHand hand,
 			ItemStack heldItem, PartMOP hit) {
 		return true;
 	}

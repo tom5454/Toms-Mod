@@ -119,14 +119,14 @@ public class BlockTankAdv extends BlockContainerTomsMod implements ICustomCrafti
 	}
 
 	@Override
-	public void onCrafingAdv(String player, ItemStack crafting, ItemStack second, IInventory craftMatrix) {
+	public void onCrafingAdv(String player, ItemStack crafting, ItemStackAccess second, IInventory craftMatrix) {
 		ItemStack old = craftMatrix.getStackInSlot(4);
 		if(old != null && old.getItem() == Item.getItemFromBlock(StorageInit.tankBasic))
 			crafting.setTagCompound(old.getTagCompound());
 	}
 
 	@Override
-	public void onUsingAdv(String player, ItemStack crafting, ItemStack second, IInventory craftMatrix, ItemStack s) {
+	public void onUsingAdv(String player, ItemStack crafting, ItemStackAccess second, IInventory craftMatrix, ItemStack s) {
 
 	}
 

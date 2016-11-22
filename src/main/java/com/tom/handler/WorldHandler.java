@@ -465,7 +465,7 @@ public class WorldHandler {
 	}
 	public boolean useItem(World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side){
 		ItemStack held = player.getHeldItem(hand);
-		if(held != null && held.getItem() != null && held.getItem().getHarvestLevel(held, "axe") > 0){
+		if(held != null && held.getItem() != null && held.getItem().getHarvestLevel(held, "axe", player, CoreInit.rubberWood.getDefaultState()) > 0){
 			//ItemAxe axe = (ItemAxe) held.getItem(); BlockDoor
 			IBlockState state = world.getBlockState(pos);
 			if(state.getBlock() == CoreInit.rubberWood && canPlayerEdit(player, pos)){
@@ -473,13 +473,22 @@ public class WorldHandler {
 				if(t.isHole() && t.getFacing() == side){
 					world.setBlockState(pos, state.withProperty(BlockRubberWood.TYPE, state.getValue(BlockRubberWood.TYPE).getCut()));
 					if(!player.capabilities.isCreativeMode)held.damageItem(1, player);
-					SoundType st = Blocks.LOG.getSoundType();
+					SoundType st = Blocks.LOG.getSoundType(Blocks.LOG.getDefaultState(), world, BlockPos.ORIGIN, player);
 					//player.playSound(st.getStepSound(), st.volume, st.pitch);
 					worldObj.playSound(null, pos.getX(), pos.getY(), pos.getZ(), st.getPlaceSound(), SoundCategory.BLOCKS, st.volume, st.pitch - 0.2F);
 					player.addExhaustion(0.5F);
 					player.resetCooldown();
 				}
 			}
+			/*}else if(held != null && held.getItem() == Items.BREAD){
+			try{
+				EnumFacing facing = TomsModUtils.getDirectionFacing(player, false);
+				BlockPos pos2 = pos.up(2);
+				StructureBoundingBox box = StructureBoundingBox.getComponentToAddBoundingBox(pos2.getX(),pos2.getY(), pos2.getZ(), 0, 0, 0, 11, 11, 10, facing);
+				new VillageHouseScientist(new Start(), 0, world.rand, box, facing).addComponentParts(world, world.rand, box);
+			}catch(Exception e){
+				e.printStackTrace();
+			}*/
 		}
 		return false;
 	}

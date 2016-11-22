@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -100,7 +101,7 @@ public class TileEntityPump extends TileEntityMachineBase implements ITileFluidH
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote){
-			if(energy.getEnergyStored() > 1){
+			if(energy.getEnergyStored() > 1 && canRun()){
 				if(cooldown < 1){
 					if(fluidBlocks.isEmpty()){
 						checkFluidBlocks(pos.down(lvl));
@@ -202,7 +203,7 @@ public class TileEntityPump extends TileEntityMachineBase implements ITileFluidH
 		}
 	}
 	@Override
-	public boolean canHaveInventory() {
+	public boolean canHaveInventory(EnumFacing f) {
 		return false;
 	}
 
@@ -210,5 +211,19 @@ public class TileEntityPump extends TileEntityMachineBase implements ITileFluidH
 	public List<ITextComponent> getInformation(List<ITextComponent> list) {
 		list.add(new TextComponentTranslation("tomsMod.chat.workingYLevel", pos.down(lvl).getY()));
 		return list;
+	}
+	@Override
+	public ResourceLocation getFront() {
+		return new ResourceLocation("tomsmodfactory:textures/blocks/pumpSide.png");
+	}
+
+	@Override
+	public int[] getOutputSlots() {
+		return null;
+	}
+
+	@Override
+	public int[] getInputSlots() {
+		return null;
 	}
 }

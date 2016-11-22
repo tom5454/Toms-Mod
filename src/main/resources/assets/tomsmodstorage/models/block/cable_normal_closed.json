@@ -1,0 +1,6 @@
+{
+    "parent": "block/cable_closed",
+    "textures":{
+    	"duct": "TEXTURE"
+    }
+}

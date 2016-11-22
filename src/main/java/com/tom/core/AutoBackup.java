@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,8 @@ import net.minecraftforge.fml.common.LoaderState.ModState;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.ZipperUtil;
 
+import com.google.common.base.Stopwatch;
+
 import com.tom.config.Config;
 import com.tom.lib.Configs;
 
@@ -30,37 +33,80 @@ public class AutoBackup extends Thread{
 	public static final Logger log = LogManager.getLogger(Configs.ModName + "] [Backup System");
 	private File in, out, logFile, cfg;
 	private int year, tModCount, aModCount;
-	private static volatile int ticksBeforeStart = 200;
+	private boolean runServerCommands = true;
+	private static volatile int ticksBeforeStart = 250;
+	private static volatile int nextTime = Config.backupSchedule;
+	private static volatile Stopwatch stopwatch = Stopwatch.createUnstarted();
 	private static volatile AutoBackup running;
-	public static void createBackup(){
+	private static volatile AutoBackupCache cached;
+	public static void createBackup(boolean bg, boolean executeServerCmd, String extra){
 		if(isRunning())return;
-		log.info("Starting Backup, Server may lag a bit.");
-		File backupFolder = FMLCommonHandler.instance().getMinecraftServerInstance().getFile("tm_backup");
+		try{
+			log.info("Starting Backup, Server may lag a bit.");
+			AutoBackup b = createBackupIns(createCache(), extra);
+			if(executeServerCmd){
+				FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), "/save-off");
+				FMLCommonHandler.instance().getMinecraftServerInstance().saveAllWorlds(false);
+				FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), createTellraw("\"translate\":\"tomsMod.backupStarted\""));
+				FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(new TextComponentTranslation("tomsMod.backupStarted"));
+			}
+			b.runServerCommands = executeServerCmd;
+			if(bg){
+				running = b;
+				b.start();
+			}else{
+				b.run_p();
+			}
+		}catch(Exception e){
+			log.error("Backup Failed", e);
+		}
+	}
+	protected static AutoBackup createBackupIns(AutoBackupCache c, String extra){
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
 		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-		File backupFolderC = new File(backupFolder, FMLCommonHandler.instance().getMinecraftServerInstance().getFolderName() + File.separator + year);
+		File backupFolderC = new File(c.backupFolder, c.folder + File.separator + year);
 		File backupFolderC_MD = new File(backupFolderC, month + File.separator + day);
 		final AutoBackup b = new AutoBackup();
 		b.logFile = new File(backupFolderC, "backupLog.log");
 		b.year = year;
 		b.setName("Tom's Mod World Backup Thread");
 		b.setDaemon(true);
-		b.out = new File(backupFolderC_MD, String.format("%s-%2$tY%2$tm%2$td-%2$tH%2$tM%2$tS.zip", FMLCommonHandler.instance().getMinecraftServerInstance().getFolderName(), System.currentTimeMillis()));
-		b.in = new File(FMLCommonHandler.instance().getSavesDirectory(), FMLCommonHandler.instance().getMinecraftServerInstance().getFolderName());
-		b.cfg = FMLCommonHandler.instance().getMinecraftServerInstance().getFile("config");
+		String out;
+		if(extra == null){
+			out = String.format("%s-%2$tY%2$tm%2$td-%2$tH%2$tM%2$tS.zip", c.folder, System.currentTimeMillis());
+		}else{
+			out = String.format("%s-%2$tY%2$tm%2$td-%2$tH%2$tM%2$tS", c.folder, System.currentTimeMillis()) + "-" + extra + ".zip";
+		}
+		b.out = new File(backupFolderC_MD, out);
+		b.in = new File(c.saves, c.folder);
+		b.cfg = c.cfg;
 		b.tModCount = Loader.instance().getModList().size();
 		b.aModCount = Loader.instance().getActiveModList().size();
-		FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), "/save-off");
-		FMLCommonHandler.instance().getMinecraftServerInstance().saveAllWorlds(false);
-		FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), createTellraw("\"translate\":\"tomsMod.backupStarted\""));
-		FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(new TextComponentTranslation("tomsMod.backupStarted"));
-		running = b;
-		b.start();
+		return b;
+	}
+	private static AutoBackupCache createCache(){
+		if(cached != null){
+			AutoBackupCache c = cached;
+			cached = null;
+			return c;
+		}
+		AutoBackupCache c = new AutoBackupCache();
+		c.backupFolder = FMLCommonHandler.instance().getMinecraftServerInstance().getFile("tm_backup");
+		c.folder = FMLCommonHandler.instance().getMinecraftServerInstance().getFolderName();
+		c.cfg = FMLCommonHandler.instance().getMinecraftServerInstance().getFile("config");
+		c.saves = FMLCommonHandler.instance().getSavesDirectory();
+		return c;
+	}
+	protected static void createAndStoreCache(){
+		cached = createCache();
 	}
 
 	@Override
 	public void run() {
+		run_p();
+	}
+	protected void run_p(){
 		PrintWriter log = null;
 		File cfgOut = new File(in, "config.zip");
 		File modlistOut = new File(in, "modlist.txt");
@@ -114,7 +160,7 @@ public class AutoBackup extends Thread{
 				List<ModContainer> modlist = Loader.instance().getModList();
 				for(int i = 0;i<modlist.size();i++){
 					ModContainer mc = modlist.get(i);
-					modids.println(mc.getModId() + "{" + mc.getVersion() + "} [" + mc.getName() + "] (" + mc.getSource().getName() + (Loader.instance().getModState(mc) != ModState.DISABLED ? ")" : ") [Disabled]"));
+					modids.println("  " + mc.getModId() + "{" + mc.getVersion() + "} [" + mc.getName() + "] (" + mc.getSource().getName() + (Loader.instance().getModState(mc) != ModState.DISABLED ? ")" : ") [Disabled]"));
 				}
 				IOUtils.closeQuietly(modids);
 			}catch(IOException e){
@@ -131,38 +177,62 @@ public class AutoBackup extends Thread{
 			e.printStackTrace();
 		}
 		if(success){
-			log.println("S " + out.getName());
-			FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), createTellraw("\"translate\":\"tomsMod.backupSuccess\",\"with\":[" + (Config.backupSchedule / 60) + "]"));
-			FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(new TextComponentTranslation("tomsMod.backupSuccess", Config.backupSchedule / 60));
-			ticksBeforeStart = Config.backupSchedule * 20;
+			if(log != null)log.println("S " + out.getName());
+			if(runServerCommands){
+				FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), createTellraw("\"translate\":\"tomsMod.backupSuccess\",\"with\":[" + (Config.backupSchedule / 60) + "]"));
+				FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(new TextComponentTranslation("tomsMod.backupSuccess", Config.backupSchedule / 60));
+			}
+			AutoBackup.log.info("Automatic Backup Success." + (runServerCommands ? " Next backup: " + Config.backupSchedule / 60 + " minutes later." : ""));
+			nextTime = Config.backupSchedule;
+			stopwatch.reset().start();
 		}else{
-			log.println("F " + out.getName());
-			FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), createTellraw("\"translate\":\"tomsMod.backupFailed\",\"with\":[5]"));
-			FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(new TextComponentTranslation("tomsMod.backupFailed", 5));
-			ticksBeforeStart = 5 * 60 * 20;
+			if(log != null)log.println("F " + out.getName());
+			if(runServerCommands){
+				FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), createTellraw("\"translate\":\"tomsMod.backupFailed\",\"with\":[5]"));
+				FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(new TextComponentTranslation("tomsMod.backupFailed", 5));
+			}
+			AutoBackup.log.info("Automatic Backup Failed." + (runServerCommands ? " Retry: 5 minutes later." : ""));
+			nextTime = 5 * 60;
+			stopwatch.reset().start();
 		}
 		IOUtils.closeQuietly(log);
-		FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), "/save-on");
+		if(runServerCommands)FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), "/save-on");
 	}
-
 	public static boolean isRunning(){
 		return running != null && running.isAlive();
 	}
 	private static String createTellraw(String text){
 		return "/tellraw @a {\"text\":\"[\", \"extra\":[{\"text\":\"Tom's Mod Backup\",\"color\":\"dark_purple\"}, {\"text\":\"] \"}, {"+ text + "}]}";
 	}
-	public static void startBackup(String name) throws CommandException{
+	public static void startBackup(String name, boolean bg) throws CommandException{
 		if(isRunning())throw new CommandException("tomsMod.backupAlreadyRunning");
 		FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(FMLCommonHandler.instance().getMinecraftServerInstance(), createTellraw("\"translate\":\"tomsMod.backupStartedBy\",\"with\":[\""+name+"\"]"));
 		FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(new TextComponentTranslation("tomsMod.backupStartedBy", name));
-		createBackup();
+		createBackup(bg, true, null);
 	}
 
 	public static boolean tick() {
-		ticksBeforeStart = Math.max(ticksBeforeStart - 1, 0);
+		if(ticksBeforeStart > 0){
+			ticksBeforeStart = Math.max(ticksBeforeStart - 1, 0);
+			if(ticksBeforeStart < 1)stopwatch.start();
+		}else{
+			long time = stopwatch.elapsed(TimeUnit.SECONDS);
+			if(time >= nextTime){
+				return true;
+			}else{
+				return false;
+			}
+		}
 		return ticksBeforeStart < 1;
 	}
 	public static void resetTimer(){
-		ticksBeforeStart = 200;
+		stopwatch.reset();
+		if(!Config.enableInitialBackup)ticksBeforeStart = 200;
+	}
+	public static class AutoBackupCache {
+		private File saves;
+		private File cfg;
+		private String folder;
+		private File backupFolder;
 	}
 }

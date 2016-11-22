@@ -3,6 +3,7 @@ package com.tom.factory.tileentity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
@@ -62,7 +63,7 @@ public class TileEntityElectricFurnace extends TileEntityMachineBase {
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote){
-			if(energy.extractEnergy(20D, true) == 20D){
+			if(energy.extractEnergy(20D, true) == 20D && canRun()){
 				if(progress > 0){
 					updateProgress();
 				}else if(progress == 0){
@@ -128,5 +129,19 @@ public class TileEntityElectricFurnace extends TileEntityMachineBase {
 	@Override
 	public int getMaxProcessTimeNormal() {
 		return MAX_PROCESS_TIME;
+	}
+	@Override
+	public ResourceLocation getFront() {
+		return new ResourceLocation("tomsmodfactory:textures/blocks/eFurnace.png");
+	}
+
+	@Override
+	public int[] getOutputSlots() {
+		return new int[]{1};
+	}
+
+	@Override
+	public int[] getInputSlots() {
+		return new int[]{0};
 	}
 }

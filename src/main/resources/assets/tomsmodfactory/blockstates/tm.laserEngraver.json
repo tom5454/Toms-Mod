@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "tomsmodfactory:laserEngraver" },
+        "active=false,facing=south": { "model": "tomsmodfactory:laserEngraver", "y": 180 },
+        "active=false,facing=west":  { "model": "tomsmodfactory:laserEngraver", "y": 270 },
+        "active=false,facing=east":  { "model": "tomsmodfactory:laserEngraver", "y": 90 },
+         "active=true,facing=north": { "model": "tomsmodfactory:laserEngraver_on" },
+         "active=true,facing=south": { "model": "tomsmodfactory:laserEngraver_on", "y": 180 },
+         "active=true,facing=west":  { "model": "tomsmodfactory:laserEngraver_on", "y": 270 },
+         "active=true,facing=east":  { "model": "tomsmodfactory:laserEngraver_on", "y": 90 }
+    }
+}

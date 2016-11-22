@@ -10,6 +10,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
 
 import com.tom.api.ITileFluidHandler;
@@ -52,38 +53,6 @@ IEnergyProvider, ITileFluidHandler,ICustomMultimeterInformation {
 	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return energy.getMaxEnergyStored();
 	}
-
-	//	@Override
-	//	public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-	//		return resource != null && resource.getFluid() == FluidRegistry.LAVA ? tank.fill(resource, doFill) : 0;
-	//	}
-	//
-	//	@Override
-	//	public FluidStack drain(EnumFacing from, FluidStack resource,
-	//			boolean doDrain) {
-	//		return null;
-	//	}
-	//
-	//	@Override
-	//	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-	//		return null;
-	//	}
-	//
-	//	@Override
-	//	public boolean canFill(EnumFacing from, Fluid fluid) {
-	//		return fluid == FluidRegistry.LAVA;
-	//	}
-	//
-	//	@Override
-	//	public boolean canDrain(EnumFacing from, Fluid fluid) {
-	//		return false;
-	//	}
-	//
-	//	@Override
-	//	public FluidTankInfo[] getTankInfo(EnumFacing from) {
-	//		return new FluidTankInfo[]{tank.getInfo()};
-	//	}
-
 	@Override
 	public List<ITextComponent> getInformation(List<ITextComponent> list) {
 		if(fuel > 0)list.add(new TextComponentTranslation("tomsMod.chat.burnTime",fuel));
@@ -135,6 +104,6 @@ IEnergyProvider, ITileFluidHandler,ICustomMultimeterInformation {
 
 	@Override
 	public net.minecraftforge.fluids.capability.IFluidHandler getTankOnSide(EnumFacing f) {
-		return tank;
+		return Helper.getFluidHandlerFromTank(tank, true, false, FluidRegistry.LAVA);
 	}
 }

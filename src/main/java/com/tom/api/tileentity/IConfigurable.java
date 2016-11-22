@@ -7,6 +7,7 @@ import mapwriterTm.util.Render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -25,6 +26,9 @@ import com.tom.api.item.ISecurityStationLinkCard;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.network.INBTPacketSender;
 import com.tom.defense.ForceDeviceControlType;
+
+import com.tom.core.tileentity.gui.GuiConfigurator.GuiButtonConfig;
+import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public interface IConfigurable extends INBTPacketReceiver, INBTPacketSender{
 	IConfigurationOption getOption();
@@ -63,6 +67,90 @@ public interface IConfigurable extends INBTPacketReceiver, INBTPacketSender{
 			@Override
 			public boolean isItemValid(ItemStack stack) {
 				return stack != null && stack.getItem() instanceof ISecurityStationLinkCard && ((ISecurityStationLinkCard)stack.getItem()).getStation(stack) != null;
+			}
+		}
+		@SideOnly(Side.CLIENT)
+		public static class GuiButtonSelection extends GuiButton{
+
+			public GuiButtonSelection(int buttonId, int x, int y) {
+				super(buttonId, x, y, 16,16,"");
+			}
+			@Override
+			public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+				this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+				int i = this.getHoverState(this.hovered);
+				if(i == 2){
+					Render.setColourWithAlphaPercent(0xFFFFFF, 20);
+					Render.drawRect(xPosition, yPosition, width, height);
+				}
+			}
+		}
+		@SideOnly(Side.CLIENT)
+		public static class GuiButtonRedstoneMode extends GuiButtonConfig{
+			public ForceDeviceControlType controlType;
+			public GuiButtonRedstoneMode(int buttonId, int x, int y, ForceDeviceControlType type) {
+				super(buttonId, x, y, 20,20,"");
+				this.controlType = type;
+			}
+			@Override
+			public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+				if (this.visible)
+				{
+					mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
+					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+					this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+					int i = this.getHoverState(this.hovered);
+					GlStateManager.enableBlend();
+					GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+					GlStateManager.blendFunc(770, 771);
+					this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
+					this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
+					this.mouseDragged(mc, mouseX, mouseY);
+					mc.getTextureManager().bindTexture(controlType.iconLocation);
+					Render.drawTexturedRect(xPosition+2, yPosition+2, 16, 16);
+				}
+			}
+			@Override
+			public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
+				if (this.visible){
+					if(hovered){
+						gui.drawHoveringTextI(I18n.format(controlType.name), mouseX, mouseY);
+					}
+				}
+			}
+		}
+		@SideOnly(Side.CLIENT)
+		public static class GuiButtonPowerSharing extends GuiButtonConfig{
+			public boolean controlType;
+			public GuiButtonPowerSharing(int buttonId, int x, int y, boolean type) {
+				super(buttonId, x, y, 20,20,"");
+				this.controlType = type;
+			}
+			@Override
+			public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+				if (this.visible)
+				{
+					mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
+					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+					this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+					int i = this.getHoverState(this.hovered);
+					GlStateManager.enableBlend();
+					GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+					GlStateManager.blendFunc(770, 771);
+					this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
+					this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
+					this.mouseDragged(mc, mouseX, mouseY);
+					mc.getTextureManager().bindTexture(GuiTomsMod.LIST_TEXTURE);
+					Render.drawTexturedRect(xPosition+2, yPosition+2, 16, 16, (controlType ? 114 : 98)/256D, 191/256D);
+				}
+			}
+			@Override
+			public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
+				if (this.visible){
+					if(hovered){
+						gui.drawHoveringTextI(I18n.format(controlType ? "tomsmod.gui.powersharingOn" : "tomsmod.gui.powersharingOff"), mouseX, mouseY);
+					}
+				}
 			}
 		}
 		public static final class ConfigurationOptionSide implements IConfigurationOption{
@@ -152,22 +240,6 @@ public interface IConfigurable extends INBTPacketReceiver, INBTPacketSender{
 					Render.drawTexturedRect(xP+34, yP+17, 16, 16);
 				}
 
-			}
-			@SideOnly(Side.CLIENT)
-			public static class GuiButtonSelection extends GuiButton{
-
-				public GuiButtonSelection(int buttonId, int x, int y) {
-					super(buttonId, x, y, 16,16,"");
-				}
-				@Override
-				public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-					this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-					int i = this.getHoverState(this.hovered);
-					if(i == 2){
-						Render.setColourWithAlphaPercent(0xFFFFFF, 20);
-						Render.drawRect(xPosition, yPosition, width, height);
-					}
-				}
 			}
 			@Override
 			public void actionPreformed(Minecraft mc, GuiButton button) {
@@ -282,35 +354,252 @@ public interface IConfigurable extends INBTPacketReceiver, INBTPacketSender{
 			public IInventory getInventory() {
 				return inventory;
 			}
-			@SideOnly(Side.CLIENT)
-			public static class GuiButtonRedstoneMode extends GuiButton{
-				public ForceDeviceControlType controlType;
-				public GuiButtonRedstoneMode(int buttonId, int x, int y, ForceDeviceControlType type) {
-					super(buttonId, x, y, 20,20,"");
-					this.controlType = type;
-				}
-				@Override
-				public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-					if (this.visible)
-					{
-						mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
-						GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-						this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-						int i = this.getHoverState(this.hovered);
-						GlStateManager.enableBlend();
-						GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-						GlStateManager.blendFunc(770, 771);
-						this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
-						this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
-						this.mouseDragged(mc, mouseX, mouseY);
-						mc.getTextureManager().bindTexture(controlType.iconLocation);
-						Render.drawTexturedRect(xPosition+2, yPosition+2, 16, 16);
+			@Override
+			public void update(Minecraft mc, int x, int y) {
+				rsButton.controlType = controlType;
+			}
+		}
+		public static final class ConfigurationRedstoneControlSimple implements IConfigurationOption{
+			private GuiButtonRedstoneMode rsButton;
+			private ForceDeviceControlType controlType;
+			private int lastButtonID = -1;
+			public ConfigurationRedstoneControlSimple(IConfigurable c, ForceDeviceControlType type) {
+				this.controlType = type;
+			}
+			@Override
+			public void renderBackground(Minecraft mc, int x, int y) {
+
+			}
+
+			@Override
+			public int getWidth() {
+				return 40;
+			}
+
+			@Override
+			public int getHeight() {
+				return 20;
+			}
+
+			@Override
+			public void readFromNBTPacket(NBTTagCompound tag) {
+				this.controlType = ForceDeviceControlType.get(tag.getInteger("r"));
+			}
+
+			@Override
+			public void writeModificationNBTPacket(NBTTagCompound tag) {
+				tag.setInteger("r", this.controlType.ordinal());
+			}
+
+			@Override
+			public void renderForeground(Minecraft mc, int x, int y,
+					int mouseX, int mouseY) {
+
+			}
+			@Override
+			public void actionPreformed(Minecraft mc, GuiButton button) {
+				if(button instanceof GuiButtonRedstoneMode){
+					if(button.id > lastButtonID){
+						int id = button.id - (lastButtonID + 1);
+						if(id == 0){
+							this.controlType = ForceDeviceControlType.get(controlType.ordinal()+1);
+						}
 					}
 				}
+			}
+
+			@Override
+			public void init(Minecraft mc, int x, int y, int lastButtonID,
+					List<GuiButton> buttonList) {
+				this.lastButtonID = lastButtonID;
+				rsButton = new GuiButtonRedstoneMode(lastButtonID+1, x+20, y, controlType);
+				buttonList.add(rsButton);
+			}
+
+			@Override
+			public void addSlotsToList(IConfigurable tile, List<Slot> slotList, int x, int y) {
+			}
+
+			@Override
+			public IInventory getInventory() {
+				return null;
 			}
 			@Override
 			public void update(Minecraft mc, int x, int y) {
 				rsButton.controlType = controlType;
+			}
+		}
+		public static final class ConfigurationOptionMachine implements IConfigurationOption{
+			public static final ResourceLocation[] MACHINE_LOC = new ResourceLocation[]{new ResourceLocation("tomsmodfactory:textures/blocks/machineSide.png"), new ResourceLocation("tomsmodfactory:textures/blocks/machineSide.png"), new ResourceLocation("tomsmodfactory:textures/blocks/machineSide.png")};
+			public byte sideConfig;
+			public final ResourceLocation[] sideTexLoc;
+			public final ResourceLocation selectionTexLoc;
+			private int lastButtonID = -1;
+			private GuiButtonSelection buttonUp, buttonDown, buttonNorth, buttonSouth, buttonEast, buttonWest;
+			private GuiButtonRedstoneMode rsButton;
+			private GuiButtonPowerSharing buttonPowerSharing;
+			private ForceDeviceControlType controlType;
+			private boolean powersharing;
+			public ConfigurationOptionMachine(byte sideConfig,
+					ResourceLocation[] sideTexLoc, ResourceLocation front,
+					ResourceLocation selectionType, ForceDeviceControlType type, IConfigurable c) {
+				this.sideConfig = sideConfig;
+				this.sideTexLoc = new ResourceLocation[6];
+				for(int i = 0;i<6;i++){
+					if(i == 0){
+						this.sideTexLoc[i] = sideTexLoc[2];
+					}else if(i == 1){
+						this.sideTexLoc[i] = sideTexLoc[0];
+					}else if(i == 2){
+						this.sideTexLoc[i] = front;
+					}else{
+						this.sideTexLoc[i] = sideTexLoc[1];
+					}
+				}
+				this.selectionTexLoc = selectionType;
+				this.controlType = type;
+			}
+			public ConfigurationOptionMachine(byte sideConfig,
+					ResourceLocation front,
+					ResourceLocation selectionType, ForceDeviceControlType type, IConfigurable c) {
+				this(sideConfig, MACHINE_LOC, front, selectionType, type, c);
+			}
+			public ConfigurationOptionMachine(byte sideConfig,
+					ResourceLocation front,
+					ResourceLocation selectionType, ResourceLocation top, ForceDeviceControlType type, IConfigurable c) {
+				this(sideConfig, putLoc(top), front, selectionType, type, c);
+			}
+			private static ResourceLocation[] putLoc(ResourceLocation t){
+				if(t != null){
+					ResourceLocation[] ret = new ResourceLocation[3];
+					for(int i = 0;i<3;i++){
+						if(i == 2)ret[i] = t;
+						else ret[i] = MACHINE_LOC[i];
+					}
+					return ret;
+				}else
+					return MACHINE_LOC;
+			}
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void renderBackground(Minecraft mc, int xP, int yP) {
+				mc.renderEngine.bindTexture(sideTexLoc[2]);
+				Render.drawTexturedRect(xP+17, yP+17, 16, 16);
+				mc.renderEngine.bindTexture(sideTexLoc[1]);
+				Render.drawTexturedRect(xP+17, yP, 16, 16);
+				mc.renderEngine.bindTexture(sideTexLoc[0]);
+				Render.drawTexturedRect(xP+17, yP+34, 16, 16);
+				mc.renderEngine.bindTexture(sideTexLoc[4]);
+				Render.drawTexturedRect(xP, yP+17, 16, 16);
+				mc.renderEngine.bindTexture(sideTexLoc[5]);
+				Render.drawTexturedRect(xP+34, yP+17, 16, 16);
+				mc.renderEngine.bindTexture(sideTexLoc[3]);
+				Render.drawTexturedRect(xP+34, yP+34, 16, 16);
+			}
+			@Override
+			public int getWidth() {
+				return 50;
+			}
+			@Override
+			public int getHeight() {
+				return 50;
+			}
+			@Override
+			public void readFromNBTPacket(NBTTagCompound tag) {
+				sideConfig = tag.getByte("s");
+				this.controlType = ForceDeviceControlType.get(tag.getInteger("r"));
+				powersharing = tag.getBoolean("p");
+			}
+			@Override
+			public void writeModificationNBTPacket(NBTTagCompound tag) {
+				tag.setByte("s", sideConfig);
+				tag.setInteger("r", this.controlType.ordinal());
+				tag.setBoolean("p", powersharing);
+			}
+			@Override
+			@SideOnly(Side.CLIENT)
+			public void renderForeground(Minecraft mc, int xP, int yP,
+					int mouseX, int mouseY) {
+				if(contains(EnumFacing.DOWN)){
+					mc.renderEngine.bindTexture(selectionTexLoc);
+					Render.drawTexturedRect(xP+17, yP+34, 16, 16);
+				}
+				if(contains(EnumFacing.UP)){
+					mc.renderEngine.bindTexture(selectionTexLoc);
+					Render.drawTexturedRect(xP+17, yP, 16, 16);
+				}
+				if(contains(EnumFacing.NORTH)){
+					mc.renderEngine.bindTexture(selectionTexLoc);
+					Render.drawTexturedRect(xP+17, yP+17, 16, 16);
+				}
+				if(contains(EnumFacing.SOUTH)){
+					mc.renderEngine.bindTexture(selectionTexLoc);
+					Render.drawTexturedRect(xP+34, yP+34, 16, 16);
+				}
+				if(contains(EnumFacing.WEST)){
+					mc.renderEngine.bindTexture(selectionTexLoc);
+					Render.drawTexturedRect(xP, yP+17, 16, 16);
+				}
+				if(contains(EnumFacing.EAST)){
+					mc.renderEngine.bindTexture(selectionTexLoc);
+					Render.drawTexturedRect(xP+34, yP+17, 16, 16);
+				}
+
+			}
+			@Override
+			public void actionPreformed(Minecraft mc, GuiButton button) {
+				if(button instanceof GuiButtonSelection){
+					if(button.id > lastButtonID){
+						int id = button.id - (lastButtonID + 1);
+						EnumFacing side = EnumFacing.VALUES[id % EnumFacing.VALUES.length];
+						boolean c = contains(side);
+						if(c)sideConfig &= ~(1 << side.ordinal());
+						else sideConfig |= 1 << side.ordinal();
+					}
+				}else{
+					int id = button.id;
+					if(id == lastButtonID+7){
+						this.controlType = ForceDeviceControlType.get(controlType.ordinal()+1);
+					}else if(id == lastButtonID+8){
+						this.powersharing = !powersharing;
+					}
+				}
+			}
+			public boolean contains(EnumFacing side) {
+				return (sideConfig & (1 << side.ordinal())) != 0;
+			}
+			@Override
+			public void init(Minecraft mc, int x, int y, int lastButtonID, List<GuiButton> buttonList) {
+				this.lastButtonID = lastButtonID;
+				this.buttonDown = new GuiButtonSelection(lastButtonID+1, x+17, y+34);
+				this.buttonUp = new GuiButtonSelection(lastButtonID+2, x+17, y);
+				this.buttonNorth = new GuiButtonSelection(lastButtonID+3, x+17, y+17);
+				this.buttonSouth = new GuiButtonSelection(lastButtonID+4, x+34, y+34);
+				this.buttonWest = new GuiButtonSelection(lastButtonID+5, x, y+17);
+				this.buttonEast = new GuiButtonSelection(lastButtonID+6, x+34, y+17);
+				this.rsButton = new GuiButtonRedstoneMode(lastButtonID+7, x-4, y-4, controlType);
+				this.buttonPowerSharing = new GuiButtonPowerSharing(lastButtonID+8, x + 34, y - 4, powersharing);
+				buttonList.add(buttonDown);
+				buttonList.add(buttonEast);
+				buttonList.add(buttonNorth);
+				buttonList.add(buttonSouth);
+				buttonList.add(buttonUp);
+				buttonList.add(buttonWest);
+				buttonList.add(rsButton);
+				buttonList.add(buttonPowerSharing);
+			}
+			@Override
+			public void addSlotsToList(IConfigurable tile, List<Slot> slotList, int x, int y) {
+
+			}
+			@Override
+			public IInventory getInventory() {
+				return null;
+			}
+			@Override
+			public void update(Minecraft mc, int x, int y) {
+				rsButton.controlType = controlType;
+				buttonPowerSharing.controlType = powersharing;
 			}
 		}
 	}

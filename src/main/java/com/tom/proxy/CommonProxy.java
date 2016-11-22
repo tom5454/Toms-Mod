@@ -3,6 +3,7 @@ package com.tom.proxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 
+import com.tom.api.block.IMethod;
 import com.tom.core.CoreInit;
 
 public abstract class CommonProxy{//ClientProxy
@@ -31,4 +32,5 @@ public abstract class CommonProxy{//ClientProxy
 	public abstract void serverStart();
 
 	public abstract void construction();
+	public abstract void runMethod(IMethod m);
 }

@@ -1,5 +1,7 @@
 package com.tom.defense.item;
 
+import static com.tom.core.item.Configurator.CONFIGURATOR_USAGE;
+
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
@@ -43,7 +45,6 @@ import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.handler.WrenchHandler;
 
 public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwitch, IConfigurator, IIconRegisterRequired {
-	private static final double CONFIGURATOR_USAGE = 0.1;
 	private static final double TRANSPORTER_USAGE = 500;
 	public ItemMultiTool() {
 		super(10000, 140);
@@ -112,10 +113,6 @@ public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwit
 			float hitX, float hitY, float hitZ) {
 		if(this.isWrench(stack, playerIn)){
 			return WrenchHandler.use(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ, hand) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
-		}else if(this.isConfigurator(stack, playerIn)){
-			if(hand == EnumHand.MAIN_HAND)return ConfiguratorHandler.openConfigurator(stack, playerIn, worldIn, pos) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
-			else
-				TomsModUtils.sendNoSpamTranslateWithTag(playerIn, new Style().setColor(TextFormatting.RED), stack.getUnlocalizedName()+".name", "tomsMod.invalidHandUseMain");
 		}else if(MultiToolType.get(stack.getItemDamage()) == MultiToolType.TRANSPORTER){
 			if(!worldIn.isRemote){
 				IBlockState blockState = worldIn.getBlockState(pos);
@@ -153,6 +150,16 @@ public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwit
 			}
 		}
 		return EnumActionResult.SUCCESS;
+	}
+	@Override
+	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
+			EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+		if(this.isConfigurator(stack, playerIn)){
+			if(hand == EnumHand.MAIN_HAND)return ConfiguratorHandler.openConfigurator(stack, playerIn, worldIn, pos) ? worldIn.isRemote ? EnumActionResult.PASS : EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+			else
+				TomsModUtils.sendNoSpamTranslateWithTag(playerIn, new Style().setColor(TextFormatting.RED), stack.getUnlocalizedName()+".name", "tomsMod.invalidHandUseMain");
+		}
+		return EnumActionResult.PASS;
 	}
 	private void teleportPlayer(EntityPlayer playerIn, BlockPos pos, EnumFacing side, ItemStack stack) {
 		if(this.getEnergyStored(stack) >= TRANSPORTER_USAGE){

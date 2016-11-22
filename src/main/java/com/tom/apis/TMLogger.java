@@ -71,4 +71,7 @@ public class TMLogger {
 		error(extra);
 		catching(t);
 	}
+	public static void error(String msg, Throwable e) {
+		log.error(msg, e);
+	}
 }

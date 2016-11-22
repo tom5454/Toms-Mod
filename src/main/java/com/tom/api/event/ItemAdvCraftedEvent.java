@@ -9,6 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+import com.tom.api.item.ICustomCraftingHandlerAdv.ItemStackAccess;
 import com.tom.core.research.ResearchHandler;
 
 @Cancelable
@@ -17,7 +18,7 @@ public class ItemAdvCraftedEvent extends Event {
 	public final ItemStack crafting;
 	public final String player;
 	public final IInventory craftMatrix;
-	public ItemStack secondStack;
+	public final ItemStackAccess secondStack;
 	public final int timeOld;
 	public int timeNew;
 	public ITextComponent errorMsg;
@@ -27,7 +28,7 @@ public class ItemAdvCraftedEvent extends Event {
 		this.crafting = crafting;
 		this.player = player;
 		this.craftMatrix = craftMatrix;
-		this.secondStack = secondStack;
+		this.secondStack = new ItemStackAccess(secondStack);
 		this.timeNew = this.timeOld = time;
 	}
 	public ResearchHandler getResearchHandler() {
@@ -59,6 +60,6 @@ public class ItemAdvCraftedEvent extends Event {
 		}
 		ItemAdvCraftedEvent evt = new ItemAdvCraftedEvent(crafting, player, inv, secondary, time);
 		boolean c = MinecraftForge.EVENT_BUS.post(evt);
-		return new EventResult(!c, evt.errorMsg, evt.crafting, evt.secondStack, evt.timeNew);
+		return new EventResult(!c, evt.errorMsg, evt.crafting, evt.secondStack.getStack(), evt.timeNew);
 	}
 }

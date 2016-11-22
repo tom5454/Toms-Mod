@@ -20,8 +20,12 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,9 +33,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.item.ISwitch;
 import com.tom.apis.EmptyEntry;
 import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
+import com.tom.defense.ForceDeviceControlType;
 import com.tom.factory.tileentity.TileEntityMachineBase;
 import com.tom.recipes.AdvancedCraftingRecipes;
 
@@ -162,4 +168,28 @@ public abstract class BlockMachineBase extends BlockContainerTomsMod implements 
 
 	@Override
 	public abstract TileEntityMachineBase createNewTileEntity(World worldIn, int meta);
+	@Override
+	public final boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if(!worldIn.isRemote){
+			if(playerIn.isSneaking() && CoreInit.isWrench(heldItem, playerIn)){
+				worldIn.setBlockToAir(pos);
+				return true;
+			}
+			if(heldItem != null && heldItem.getItem() instanceof ISwitch && ((ISwitch)heldItem.getItem()).isSwitch(heldItem, playerIn)){
+				TileEntityMachineBase te = (TileEntityMachineBase) worldIn.getTileEntity(pos);
+				if(te.rs == ForceDeviceControlType.SWITCH){
+					te.active = !te.active;
+					return true;
+				}else{
+					TomsModUtils.sendNoSpamTranslate(playerIn, new Style().setColor(TextFormatting.RED), "tomsMod.chat.mnotSwitchable", new TextComponentTranslation(heldItem.getUnlocalizedName()+".name"));
+				}
+			}
+		}
+		return onBlockActivatedI(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
+	}
+	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
+	}
 }

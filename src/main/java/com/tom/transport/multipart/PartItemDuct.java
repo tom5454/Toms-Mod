@@ -25,8 +25,6 @@ import com.tom.transport.multipart.IInventoryGrid.GridInventory.IItemDuct;
 import com.tom.transport.multipart.IInventoryGrid.GridInventory.InventoryData;
 import com.tom.transport.multipart.IInventoryGrid.GridInventory.TransferingItemStack;
 
-import io.netty.buffer.ByteBuf;
-
 public class PartItemDuct extends PartDuct<IInventoryGrid> implements ICustomPartBounds, IGridUpdateListener, IItemDuct{
 	private final AxisAlignedBB connectionBox;
 	private static final String TAG_NAME = "tag";
@@ -238,14 +236,14 @@ public class PartItemDuct extends PartDuct<IInventoryGrid> implements ICustomPar
 		this.sendUpdatePacket();
 	}
 	@Override
-	public void writeToPacket(ByteBuf buf) {
+	public void writeToPacket(NBTTagCompound tag) {
 		/*buf.writeByte(this.transferingStacks.size());
 		for(TransferingItemStack s : this.transferingStacks){
 			s.writeToPacket(buf);
 		}*/
 	}
 	@Override
-	public boolean readFromPacket(ByteBuf buf) {
+	public boolean readFromPacket(NBTTagCompound tag) {
 		/*byte size = buf.readByte();
 		this.transferingStacks.clear();
 		for(int i = 0;i<size;i++){

@@ -1,0 +1,6 @@
+{
+    "parent": "block/cable_open_c",
+    "textures":{
+    	"duct": "TEXTURE"
+    }
+}

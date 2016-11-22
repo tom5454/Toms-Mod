@@ -19,6 +19,7 @@ import com.tom.api.block.BlockGridDevice;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.tileentity.TileEntityGridDeviceBase;
 import com.tom.apis.TomsModUtils;
+import com.tom.core.CoreInit;
 import com.tom.storage.multipart.StorageNetworkGrid;
 import com.tom.storage.multipart.StorageNetworkGrid.ICraftable;
 import com.tom.storage.tileentity.TileEntityCraftingController;
@@ -55,9 +56,15 @@ public class CraftingController extends BlockGridDevice {
 	{
 		return state.getValue(ACTIVE) ? 1 : 0;
 	}
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if(!worldIn.isRemote && playerIn.isSneaking() && CoreInit.isWrench(heldItem, playerIn)){
+			spawnAsEntity(worldIn, pos, getItem(worldIn, pos, state));
+			worldIn.setBlockToAir(pos);
+			return true;
+		}
 		if(!worldIn.isRemote){
 			TileEntityCraftingController te = (TileEntityCraftingController) worldIn.getTileEntity(pos);
 			if(playerIn.isSneaking())TomsModUtils.sendNoSpam(playerIn, te.cancelCrafting());

@@ -93,12 +93,13 @@ public class RecipeData {
 		this.itemstack2 = itemstack2;
 		this.hasInv = mode;
 	}
-	public RecipeData(IRecipe recipe, int time, List<Research> researchList, ItemStack extra, CraftingLevel level) {
+	public RecipeData(IRecipe recipe, int time, List<Research> researchList, ItemStack extra, CraftingLevel level, int extraD) {
 		this.processTime = time;
 		this.requiredResearches = researchList;
 		this.recipe = recipe;
 		this.itemstack10 = extra;
 		this.level = level;
+		this.energy = extraD;
 	}
 
 	public FluidStack f1;

@@ -1,5 +1,7 @@
 package com.tom.api.energy;
 
+import static com.tom.api.energy.EnergyStorage.regulateValue;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,41 +20,34 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 	public static final EnergyStorage NULL_STORAGE = new EnergyStorage(0);
 
 	public ItemEnergyContainer(int capacity) {
-
 		this(capacity, capacity, capacity);
 	}
 
 	public ItemEnergyContainer(int capacity, double maxTransfer) {
-
 		this(capacity, maxTransfer, maxTransfer);
 	}
 
 	public ItemEnergyContainer(int capacity, double maxReceive, double maxExtract) {
-
 		this.capacity = capacity;
 		this.maxReceive = maxReceive;
 		this.maxExtract = maxExtract;
 	}
 
 	public ItemEnergyContainer setCapacity(int capacity) {
-
 		this.capacity = capacity;
 		return this;
 	}
 
 	public void setMaxTransfer(double maxTransfer) {
-
 		setMaxReceive(maxTransfer);
 		setMaxExtract(maxTransfer);
 	}
 
 	public void setMaxReceive(double maxReceive) {
-
 		this.maxReceive = maxReceive;
 	}
 
 	public void setMaxExtract(double maxExtract) {
-
 		this.maxExtract = maxExtract;
 	}
 
@@ -68,9 +63,9 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 
 		if (!simulate) {
 			energy += energyReceived;
-			container.getTagCompound().setDouble("Energy", energy);
+			container.getTagCompound().setDouble("Energy", regulateValue(energy));
 		}
-		return energyReceived;
+		return regulateValue(energyReceived);
 	}
 
 	@Override
@@ -84,23 +79,21 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 
 		if (!simulate) {
 			energy -= energyExtracted;
-			container.getTagCompound().setDouble("Energy", energy);
+			container.getTagCompound().setDouble("Energy", regulateValue(energy));
 		}
-		return energyExtracted;
+		return regulateValue(energyExtracted);
 	}
 
 	@Override
 	public double getEnergyStored(ItemStack container) {
-
 		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
 			return 0;
 		}
-		return container.getTagCompound().getDouble("Energy");
+		return regulateValue(container.getTagCompound().getDouble("Energy"));
 	}
 
 	@Override
 	public int getMaxEnergyStored(ItemStack container) {
-
 		return capacity;
 	}
 	@Override

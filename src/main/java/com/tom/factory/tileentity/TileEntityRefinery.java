@@ -1,12 +1,7 @@
 package com.tom.factory.tileentity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,8 +12,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,11 +21,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-import com.google.common.base.Predicate;
-
 import com.tom.api.ITileFluidHandler.Helper;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.Checker;
 import com.tom.apis.Checker.CheckerPredicate;
 import com.tom.apis.Checker.RunnableStorage;
 import com.tom.apis.TomsModUtils;
@@ -44,7 +34,6 @@ import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockComponents.ComponentVariants;
 import com.tom.factory.block.BlockRefinery;
 
-import com.tom.core.tileentity.TileEntityHidden;
 import com.tom.core.tileentity.TileEntityHidden.ILinkableCapabilities;
 
 public class TileEntityRefinery extends TileEntityTomsMod implements ILinkableCapabilities, IInventory{
@@ -62,13 +51,6 @@ public class TileEntityRefinery extends TileEntityTomsMod implements ILinkableCa
 		{"     ", " ___ ", " _S_ ", " ___ ", "     "}, //10
 		{"     ", "     ", "  _  ", "     ", "     "}, //11
 	};
-	private static final Predicate<Character> HATCH_PREDICATE = new Predicate<Character>() {
-
-		@Override
-		public boolean apply(Character input) {
-			return input.charValue() == 'H';
-		}
-	};
 	public TileEntityRefinery() {
 		tankIn = new FluidTank(50000);
 		tankOut1 = new FluidTank(20000);
@@ -84,59 +66,8 @@ public class TileEntityRefinery extends TileEntityTomsMod implements ILinkableCa
 	public int clientHeat;
 	public static final int MAX_TEMP = 1500;
 	private ItemStack[] stack = new ItemStack[getSizeInventory()];
-	private static final Map<Character, CheckerPredicate<WorldPos>> materialMap = new HashMap<Character, CheckerPredicate<WorldPos>>();
+	private static final Map<Character, CheckerPredicate<WorldPos>> materialMap = TomsModUtils.createMaterialMap(CONFIG, new ItemStack(FactoryInit.refinery));
 	private RunnableStorage killList = new RunnableStorage(true);
-	private static final CheckerPredicate<WorldPos> AIR = new CheckerPredicate<WorldPos>() {
-
-		@Override
-		public int apply(WorldPos worldPos) {
-			IBlockState input = worldPos.world.getBlockState(worldPos.pos);
-			return input.getMaterial() == Material.AIR ? 2 : 0;
-		}
-	};
-	static{
-		Object[][] o = CONFIG;
-		for(int i = 0;i<o[0].length;i+=2){
-			char c = (Character) o[0][i];
-			Object stateO = o[0][i+1];
-			int m = 0;
-			Block b = null;
-			if(stateO instanceof IBlockState){
-				IBlockState state = (IBlockState) o[0][i+1];
-				b = state.getBlock();
-				m = b.getMetaFromState(state);
-			}else{
-				m = -1;
-				b = (Block) stateO;
-			}
-			final int meta = m;
-			final Block block = b;
-			materialMap.put(c, new CheckerPredicate<WorldPos>(){
-
-				@Override
-				public int apply(WorldPos worldPos) {
-					IBlockState input = worldPos.world.getBlockState(worldPos.pos);
-					if(input.getBlock() == CoreInit.blockHidden){
-						TileEntityHidden te = (TileEntityHidden) worldPos.world.getTileEntity(worldPos.pos);
-						if(worldPos.num1 == 2){
-							te.kill();
-							return 0;
-						}
-						return te.blockEquals(block, meta) ? 1 : 0;
-					}else{
-						if(worldPos.num1 == 1){
-							TileEntityHidden.place(worldPos.world, worldPos.pos, worldPos.pos2, new ItemStack(FactoryInit.refinery), worldPos.num2);
-							return 0;
-						}else{
-							int m = input.getBlock().getMetaFromState(input);
-							return input.getBlock() == block && (m == meta || meta == -1) ? 2 : 0;
-						}
-					}
-				}
-
-			});
-		}
-	}
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing, BlockPos from, int id) {
@@ -161,47 +92,7 @@ public class TileEntityRefinery extends TileEntityTomsMod implements ILinkableCa
 		return FactoryInit.components.getStateFromMeta(variant.ordinal());
 	}
 	private boolean getMultiblock(IBlockState state){
-		return getLayers(worldObj, state.getValue(BlockRefinery.FACING), pos, killList);
-	}
-	private static boolean getLayers(final World world, final EnumFacing facing, final BlockPos pos, RunnableStorage killList){
-		List<Checker> list = new ArrayList<Checker>();
-		final MutableBlockPos corner = new MutableBlockPos(pos);
-		for(int l = 1;l<CONFIG.length;l++){
-			final int m = l - 1;
-			Object[] objA = CONFIG[l];
-			for(int k = 0;k<objA.length;k++){
-				Object o = objA[k];
-				final int n = k;
-				char[] cA = o.toString().toCharArray();
-				for(int i = 0;i<cA.length;i++){
-					final int j = i;
-					final char c = cA[i];
-					if(c == '@'){
-						corner.setPos(pos.offset(facing.rotateY(), -i).offset(facing, -k).offset(EnumFacing.DOWN, -(l-1)));
-						//System.out.println(corner);
-					}else if(c == ' '){
-						list.add(new Checker() {
-
-							@Override
-							public int apply(int doRun) {
-								return AIR.apply(new WorldPos(world, corner.offset(facing.rotateY(), j).offset(facing, n).offset(EnumFacing.UP, m), pos, 0, 0));
-							}
-						});
-					}else{
-						list.add(new Checker() {
-
-							@Override
-							public int apply(int doRun) {
-								CheckerPredicate<WorldPos> predicate = materialMap.get(c);
-								if(predicate == null)predicate = AIR;
-								return predicate.apply(new WorldPos(world, corner.offset(facing.rotateY(), j).offset(facing, n).offset(EnumFacing.UP, m), pos, doRun, HATCH_PREDICATE.apply(c) ? m+1 : 0));
-							}
-						});
-					}
-				}
-			}
-		}
-		return TomsModUtils.checkAll(list, killList);
+		return TomsModUtils.getLayers(CONFIG, materialMap, worldObj, state.getValue(BlockRefinery.FACING), pos, killList);
 	}
 	@Override
 	public void updateEntity(IBlockState state){

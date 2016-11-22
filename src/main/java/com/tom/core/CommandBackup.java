@@ -19,7 +19,7 @@ public class CommandBackup extends CommandBase {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		AutoBackup.startBackup(sender.getName());
+		AutoBackup.startBackup(sender.getName(), true);
 	}
 	@Override
 	public int getRequiredPermissionLevel()

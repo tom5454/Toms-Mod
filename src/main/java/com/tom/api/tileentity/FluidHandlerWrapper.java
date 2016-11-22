@@ -40,5 +40,4 @@ public class FluidHandlerWrapper implements IFluidHandler {
 		IFluidHandler h = this.h.getTankOnSide(f);
 		return h != null ? h.drain(maxDrain, doDrain) : null;
 	}
-
 }

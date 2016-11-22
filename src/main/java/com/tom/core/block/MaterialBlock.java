@@ -15,6 +15,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -37,6 +38,8 @@ public class MaterialBlock extends Block implements IIconRegisterRequired{
 			resourceList.get(i).setBlock(this, i);
 		}
 		itemBlock = new MaterialBlockItemBlock(this);
+		setHardness(5.0F);
+		setResistance(10.0F);
 	}
 	private static final List<TMResource> getListNullCheckWithCap(int cap, TMResource... in){
 		List<TMResource> list = new ArrayList<TMResource>(cap);
@@ -125,5 +128,9 @@ public class MaterialBlock extends Block implements IIconRegisterRequired{
 	public int damageDropped(IBlockState state)
 	{
 		return state.getValue(TYPE);
+	}
+	@Override
+	public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon) {
+		return true;
 	}
 }

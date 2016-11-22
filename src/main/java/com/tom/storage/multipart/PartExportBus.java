@@ -119,7 +119,7 @@ public class PartExportBus extends PartModule<StorageNetworkGrid> implements IGu
 		return PartSlot.getFaceSlot(facing);
 	}
 	@Override
-	public boolean onActivated(EntityPlayer player, EnumHand hand,
+	public boolean onPartActivated(EntityPlayer player, EnumHand hand,
 			ItemStack heldItem, PartMOP hit) {
 		BlockPos pos = getPos2();
 		if(!player.worldObj.isRemote)player.openGui(CoreInit.modInstance, GuiIDs.getMultipartGuiId(facing).ordinal(), getWorld2(), pos.getX(), pos.getY(), pos.getZ());

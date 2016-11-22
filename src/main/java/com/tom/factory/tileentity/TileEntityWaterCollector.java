@@ -17,7 +17,11 @@ import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.apis.TomsModUtils;
 
 public class TileEntityWaterCollector extends TileEntityTomsMod implements ITileFluidHandler {
-	private final FluidTank tank = new FluidTank(1000);
+	private final FluidTank tank;
+	public TileEntityWaterCollector() {
+		tank = new FluidTank(1000);
+		tank.setCanFill(false);
+	}
 	@Override
 	public IFluidHandler getTankOnSide(EnumFacing f) {
 		return f == EnumFacing.UP ? tank : null;
@@ -43,7 +47,7 @@ public class TileEntityWaterCollector extends TileEntityTomsMod implements ITile
 			int water = calcWaterBlocks();
 			if(water > 0){
 				int a = water * rs;
-				tank.fill(new FluidStack(FluidRegistry.WATER, a), true);
+				tank.fillInternal(new FluidStack(FluidRegistry.WATER, a), true);
 			}
 			if(tank.getFluidAmount() > 250){
 				EnumFacing f = EnumFacing.DOWN;

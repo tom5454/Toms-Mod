@@ -100,6 +100,7 @@ public class MultipartTomsMod extends Multipart{
 	{
 		return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && this instanceof IInventory) || (capability == EnergyType.ENERGY_HANDLER_CAPABILITY && this instanceof IEnergyStorageTile) || (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && this instanceof ITileFluidHandler) || super.hasCapability(capability, facing);
 	}
+	@SuppressWarnings("deprecation")
 	@Override
 	public IBlockState getActualState(IBlockState state) {
 		return getExtendedState(state);

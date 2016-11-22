@@ -1,0 +1,34 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "textures": {
+        "0": "TEXTURE"
+    },
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [ 3.999, 12.999, 3.999 ], 
+            "to": [ 12.001, 16.0, 12.001 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 4.0, 0.0, 12.0, 5.0 ], "tintindex": 0 },
+                "east": { "texture": "#0", "uv": [ 4.0, 0.0, 12.0, 5.0 ], "tintindex": 0 },
+                "south": { "texture": "#0", "uv": [ 4.0, 11.0, 12.0, 16.0 ], "tintindex": 0 },
+                "west": { "texture": "#0", "uv": [ 4.0, 11.0, 12.0, 16.0 ], "tintindex": 0 },
+                "up": { "texture": "#0", "uv": [ 4.0, 4.0, 12.0, 12.0 ], "tintindex": 0 },
+                "down": { "texture": "#0", "uv": [ 4.0, 4.0, 12.0, 12.0 ] }
+            }
+        },
+        {
+            "name": "in",
+            "from": [ 4.999, 12.0, 4.999 ], 
+            "to": [ 11.001, 13.0, 11.001 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 5.0, 0.0, 11.0, 5.0 ], "tintindex": 0 },
+                "east": { "texture": "#0", "uv": [ 5.0, 0.0, 11.0, 5.0 ], "tintindex": 0 },
+                "south": { "texture": "#0", "uv": [ 5.0, 11.0, 11.0, 16.0 ], "tintindex": 0 },
+                "west": { "texture": "#0", "uv": [ 5.0, 11.0, 11.0, 16.0 ], "tintindex": 0 },
+                "up": { "texture": "#0", "uv": [ 5.0, 5.0, 11.0, 11.0 ], "tintindex": 0 },
+                "down": { "texture": "#0", "uv": [ 5.0, 5.0, 11.0, 11.0 ], "tintindex": 0 }
+            }
+        }
+    ]
+}

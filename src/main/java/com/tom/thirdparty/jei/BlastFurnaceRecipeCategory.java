@@ -22,7 +22,6 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.plugins.jei.description.ItemDescriptionRecipeCategory;
 
 public class BlastFurnaceRecipeCategory implements IRecipeCategory<BlastFurnaceRecipeJEI> {
 
@@ -137,12 +136,8 @@ public class BlastFurnaceRecipeCategory implements IRecipeCategory<BlastFurnaceR
 				mode = I18n.format("tomsmod.jei.heatRequired", heat);
 			}else
 				mode = I18n.format("tomsmod.jei.normalBlastFurnaceRequired");
-			List<String> textLines = minecraft.fontRendererObj.listFormattedStringToWidth(mode, ItemDescriptionRecipeCategory.recipeWidth);
-			int yPos = 0;
-			for (String descriptionLine : textLines) {
-				minecraft.fontRendererObj.drawString(descriptionLine, -20, yPos, 4210752);
-				yPos += minecraft.fontRendererObj.FONT_HEIGHT + 2;
-			}
+			int yPos = 10;
+			minecraft.fontRendererObj.drawString(mode, -20, yPos, 4210752);
 			minecraft.fontRendererObj.drawString(I18n.format("tomsmod.jei.time", time), -20, 40, 4210752);
 		}
 	}

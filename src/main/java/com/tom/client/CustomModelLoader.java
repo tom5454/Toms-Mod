@@ -1,7 +1,9 @@
 package com.tom.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,25 +19,23 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import com.tom.core.CoreInit;
 
 public class CustomModelLoader implements ICustomModelLoader{
-	//private IResourceManager manager;
+	protected IResourceManager manager;
 	protected static CustomModelLoader instance = new CustomModelLoader();
-	protected static Logger log = LogManager.getLogger("Tom's Mod Model Loader");
-	//private final Set<String> enabledDomains = new HashSet<String>();
-	//private final Map<ResourceLocation, IModel> cache = new HashMap<ResourceLocation, IModel>();
+	public static Logger log = LogManager.getLogger("Tom's Mod Model Loader");
+	private final Map<ResourceLocation, IModel> overrides = new HashMap<ResourceLocation, IModel>();
 	private final List<String> exceptions = new ArrayList<String>();
 	private CustomModelLoader(){}//OBJLoader
 	//private boolean loading = false;
-	/*public void addDomain(String domain)
+	public static void addOverride(ResourceLocation loc, IModel model)
 	{
-		log.info("Adding resource domain: "+domain);
-		enabledDomains.add(domain.toLowerCase());
-		enabledDomains.add(domain.toLowerCase().replace("|", ""));
-	}*/
+		log.info("Adding resource override: "+loc.toString());
+		instance.overrides.put(loc, model);
+	}
 
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
 	{
-		//this.manager = manager;
+		this.manager = manager;
 		//cache.clear();
 	}
 
@@ -46,11 +46,12 @@ public class CustomModelLoader implements ICustomModelLoader{
 		/*boolean isIgnored = CoreInit.ignoredLocations.contains(modelLocation.getResourcePath());
 		return (modelLocation.getResourceDomain().startsWith("tomsmod")) && !isIgnored && VariantLoader.INSTANCE.accepts(modelLocation);*/
 		boolean isIgnored = CoreInit.ignoredLocations.contains(modelLocation.getResourcePath());
-		return (modelLocation.getResourceDomain().startsWith("tomsmod")/* || modelLocation.getResourceDomain().startsWith("tm")*/) && VariantL.accepts(modelLocation) && !isIgnored;
+		return overrides.containsKey(modelLocation) || (modelLocation.getResourceDomain().startsWith("tomsmod")) && VariantL.accepts(modelLocation) && !isIgnored;
 	}
 
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception {
+		if(overrides.containsKey(modelLocation))return overrides.get(modelLocation);
 		//		//loading = true;
 		//		ResourceLocation file = new ResourceLocation(modelLocation.getResourceDomain().replace("|", ""), modelLocation.getResourcePath());
 		//		/*if(file.getResourceDomain().startsWith("tm")){

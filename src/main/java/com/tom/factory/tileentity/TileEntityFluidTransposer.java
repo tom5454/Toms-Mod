@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import net.minecraftforge.fluids.FluidTank;
@@ -95,7 +96,7 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 				stack[1] = decrStackSize(0, 1);
 				TomsModUtils.setBlockStateWithCondition(worldObj, pos, FluidTransposer.ACTIVE, false);
 			}else{
-				if(energy.extractEnergy(20D, true) == 20D){
+				if(energy.extractEnergy(20D, true) == 20D && canRun()){
 					if(progress > 0){
 						updateProgress();
 					}else if(progress == 0){
@@ -166,5 +167,19 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 
 	public void setMode(int mode) {
 		isExtract = mode == 1;
+	}
+	@Override
+	public ResourceLocation getFront() {
+		return new ResourceLocation("tomsmodfactory:textures/blocks/fluidTransposer.png");
+	}
+
+	@Override
+	public int[] getOutputSlots() {
+		return new int[]{2};
+	}
+
+	@Override
+	public int[] getInputSlots() {
+		return new int[]{0};
 	}
 }

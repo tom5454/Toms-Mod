@@ -33,7 +33,7 @@ public class ToolsInit {
 	public static void PreLoad(FMLPreInitializationEvent PreEvent){
 		log.info("Start Pre Initialization");
 		long tM = System.currentTimeMillis();
-		if(Config.enableHardMode){
+		if(Config.enableHardRecipes){
 			log.warn("Hard mode enabled");
 			flintToolMaterial = EnumHelper.addToolMaterial("flintToolMaterial", 1, 150, 1F, 0, 1);
 		}else{

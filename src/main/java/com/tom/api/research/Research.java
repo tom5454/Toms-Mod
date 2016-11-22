@@ -21,6 +21,7 @@ public class Research extends IForgeRegistryEntry.Impl<Research>{
 	private int researchTime = 100;
 	private List<ItemStack> requiredItems = null;
 	private String modname;
+	private double energyRequired = 1;
 	public String prefix = "";
 	public Research(String name, ItemStack icon) {
 		this.name = name;
@@ -47,8 +48,8 @@ public class Research extends IForgeRegistryEntry.Impl<Research>{
 		return TomsModUtils.copyItemStackList(requiredItems);
 	}
 
-	public int getEnergyRequired() {
-		return 0;
+	public double getEnergyRequired() {
+		return energyRequired;
 	}
 
 	public List<Research> getParents() {
@@ -112,5 +113,9 @@ public class Research extends IForgeRegistryEntry.Impl<Research>{
 	}
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+	}
+	public Research setEnergyRequired(double energyRequired) {
+		this.energyRequired = energyRequired;
+		return this;
 	}
 }

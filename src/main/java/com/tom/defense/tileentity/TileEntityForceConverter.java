@@ -97,6 +97,8 @@ IEnergyHandler, IConfigurable {
 				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
 			}else if(rsMode == ForceDeviceControlType.LOW_REDSTONE){
 				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) == 0;
+			}else if(rsMode == ForceDeviceControlType.IGNORE){
+				this.active = true;
 			}
 			if(this.rsMode != ForceDeviceControlType.SWITCH)TomsModUtils.setBlockStateWithCondition(worldObj, pos, state, ForceConverter.ACTIVE, (!this.energy.isFull() && this.energy.hasEnergy()) && this.active);
 			else TomsModUtils.setBlockStateWithCondition(worldObj, pos, state, ForceConverter.ACTIVE, this.active);

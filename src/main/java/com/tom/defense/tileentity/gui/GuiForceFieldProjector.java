@@ -8,7 +8,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiNumberValueBox;
 import com.tom.api.gui.GuiNumberValueBox.GuiButtonNextNum;
-import com.tom.api.tileentity.IConfigurable.IConfigurationOption.ConfigurationRedstoneControl.GuiButtonRedstoneMode;
+import com.tom.api.tileentity.IConfigurable.IConfigurationOption.GuiButtonRedstoneMode;
 import com.tom.apis.TomsModUtils;
 import com.tom.defense.tileentity.TileEntityForceFieldProjector;
 import com.tom.defense.tileentity.inventory.ContainerForceFieldProjector;
@@ -103,5 +103,10 @@ public class GuiForceFieldProjector extends GuiTomsMod {
 	}
 	private boolean isActive(){
 		return te.getField(1) > 0;
+	}
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		buttonRedstone.postDraw(mc, mouseX, mouseY, this);
 	}
 }

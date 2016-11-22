@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 
-import com.tom.apis.Function.BiFunction;
+import com.tom.apis.BiFunction;
 import com.tom.apis.TMLogger;
 import com.tom.core.CoreInit;
 import com.tom.energy.EnergyInit;
@@ -23,11 +23,14 @@ import com.tom.factory.tileentity.gui.GuiCoiler;
 import com.tom.factory.tileentity.gui.GuiCrusher;
 import com.tom.factory.tileentity.gui.GuiElectricFurnace;
 import com.tom.factory.tileentity.gui.GuiIndustrialBlastFurnace;
+import com.tom.factory.tileentity.gui.GuiMixer;
+import com.tom.factory.tileentity.gui.GuiPlasticProcessor;
 import com.tom.factory.tileentity.gui.GuiPlateBlendingMachine;
 import com.tom.factory.tileentity.gui.GuiSolderingStation;
 import com.tom.factory.tileentity.gui.GuiSteamAlloySmelter;
 import com.tom.factory.tileentity.gui.GuiSteamCrusher;
 import com.tom.factory.tileentity.gui.GuiSteamFurnace;
+import com.tom.factory.tileentity.gui.GuiSteamMixer;
 import com.tom.factory.tileentity.gui.GuiSteamPlateBlender;
 import com.tom.factory.tileentity.gui.GuiSteamSolderingStation;
 import com.tom.factory.tileentity.gui.GuiWireMill;
@@ -53,6 +56,8 @@ import com.tom.thirdparty.jei.BlastFurnaceRecipeCategory.BlastFurnaceHandler;
 import com.tom.thirdparty.jei.CoilerRecipeCategory.CoilerHandler;
 import com.tom.thirdparty.jei.CrusherRecipeCategory.CrusherHandler;
 import com.tom.thirdparty.jei.CustomCraftingRecipeCategory.CustomCraftingHandler;
+import com.tom.thirdparty.jei.MixerRecipeCategory.MixerHandler;
+import com.tom.thirdparty.jei.PlasticRecipeCategory.PlasticHandler;
 import com.tom.thirdparty.jei.PlateBlenderRecipeCategory.PlateBlenderHandler;
 import com.tom.thirdparty.jei.WireMillRecipeCategory.WireMillHandler;
 
@@ -136,6 +141,15 @@ public class JEIHandler extends BlankModPlugin{
 		registry.addRecipeCategories(new CoilerRecipeCategory());
 		registry.addRecipeHandlers(new CoilerHandler());
 		registry.addRecipes(CoilerRecipeCategory.get());
+		{
+			MixerRecipeCategory cat = new MixerRecipeCategory();
+			registry.addRecipeCategories(cat);
+			registry.addRecipeHandlers(new MixerHandler());
+			registry.addRecipes(MixerRecipeCategory.get(cat));
+		}
+		registry.addRecipeCategories(new PlasticRecipeCategory());
+		registry.addRecipeHandlers(new PlasticHandler());
+		registry.addRecipes(PlasticRecipeCategory.get());
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, VanillaRecipeCategoryUid.CRAFTING, directTransfer, true);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, JEIConstants.CUSTOM_CRAFTING_ID, directTransfer);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry, VanillaRecipeCategoryUid.SMELTING, directTransfer);
@@ -202,6 +216,12 @@ public class JEIHandler extends BlankModPlugin{
 		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.coilerPlant), JEIConstants.COILER);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerCoiler.class, JEIConstants.COILER, 0, 2, 4, 36);
 		registry.addRecipeClickArea(GuiCoiler.class, 65, 34, 52, 17, JEIConstants.COILER);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.steamMixer), JEIConstants.MIXER);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.mixer), JEIConstants.MIXER);
+		registry.addRecipeClickArea(GuiSteamMixer.class, 65, 15, 52, 17, JEIConstants.MIXER);
+		registry.addRecipeClickArea(GuiMixer.class, 65, 15, 52, 17, JEIConstants.MIXER);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(FactoryInit.plasticProcessor), JEIConstants.PLASTIC);
+		registry.addRecipeClickArea(GuiPlasticProcessor.class, 118, 19, 31, 17, JEIConstants.PLASTIC);
 		TMLogger.info("JEI Handler: Load Complete.");
 	}
 	@Override

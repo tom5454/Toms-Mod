@@ -136,7 +136,7 @@ public class PartFilter extends PartModule<IInventoryGrid> implements IInventory
 		return stack;
 	}
 	@Override
-	public boolean onActivated(EntityPlayer player, EnumHand hand,
+	public boolean onPartActivated(EntityPlayer player, EnumHand hand,
 			ItemStack heldItem, PartMOP hit) {
 		return true;
 	}

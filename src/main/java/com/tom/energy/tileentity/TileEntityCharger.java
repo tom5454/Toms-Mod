@@ -2,6 +2,7 @@ package com.tom.energy.tileentity;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
@@ -12,13 +13,8 @@ import com.tom.factory.tileentity.TileEntityMachineBase;
 import com.tom.energy.block.BlockCharger;
 
 public class TileEntityCharger extends TileEntityMachineBase {
-	private static final int[] SLOT = new int[]{0, 1};
 	public int clientEnergy = 0;
 	private EnergyStorage energy = new EnergyStorage(1000000, 10000);
-	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		return SLOT;
-	}
 
 	@Override
 	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
@@ -62,7 +58,7 @@ public class TileEntityCharger extends TileEntityMachineBase {
 	@Override
 	public void updateEntity() {
 		if(!worldObj.isRemote){
-			if(energy.hasEnergy()){
+			if(energy.hasEnergy() && canRun()){
 				if(stack[0] != null && stack[0].getItem() instanceof IEnergyContainerItem){
 					if(((IEnergyContainerItem) stack[0].getItem()).getEnergyStored(stack[0]) == ((IEnergyContainerItem) stack[0].getItem()).getMaxEnergyStored(stack[0])){
 						TomsModUtils.setBlockStateWithCondition(worldObj, pos, BlockCharger.ACTIVE, false);
@@ -108,5 +104,20 @@ public class TileEntityCharger extends TileEntityMachineBase {
 
 	public int getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
+	}
+
+	@Override
+	public ResourceLocation getFront() {
+		return new ResourceLocation("tomsmodenergy:textures/blocks/charger.png");
+	}
+
+	@Override
+	public int[] getOutputSlots() {
+		return new int[]{1};
+	}
+
+	@Override
+	public int[] getInputSlots() {
+		return new int[]{0};
 	}
 }

@@ -151,5 +151,17 @@ public class CraftingRecipes {//OreDictionary AdvancedCraftingRecipes OreDict Re
 		addRecipe(new ItemStack(FactoryInit.components, 2, ComponentVariants.ENGINEERING_BLOCK.ordinal()), new Object[]{"SAS","-B-","SAS",'S',TMResource.STEEL.getStackName(Type.PLATE), 'A', TMResource.ALUMINUM.getStackName(Type.PLATE), 'B', TMResource.BRONZE.getStackName(Type.PLATE), '-', CraftingMaterial.STEEL_PIPE.getStack()});
 		addRecipe(new ItemStack(FactoryInit.components, 1, ComponentVariants.OUTPUT_HATCH.ordinal()), new Object[]{"S-S","BPC", 'S',TMResource.STEEL.getStackName(Type.PLATE), '-', CraftingMaterial.STEEL_PIPE.getStack(), 'B', Items.BUCKET, 'C', "chest", 'P', "blockPiston"});
 		addRecipe(new ItemStack(FactoryInit.components, 1, ComponentVariants.REFINERY_HEATER.ordinal()), new Object[]{"S-S", "A A", "SLS", 'S',TMResource.STEEL.getStackName(Type.PLATE), '-', CraftingMaterial.STEEL_PIPE.getStack(), 'A', TMResource.ALUMINUM.getStackName(Type.PLATE), 'L', Items.LAVA_BUCKET});
+		addRecipe(CoreInit.circuitDrawingPen.getDamaged(), new Object[]{"  F", "NS ", "RN ", 'F', Items.FEATHER, 'S', Items.STICK, 'R', Items.REDSTONE, 'N', "nuggetIron"});
+		addRecipe(CraftingMaterial.BLUEPRINT_PAPER.getStackNormal(4), new Object[]{"PBP", "PBP", "PPP", 'B', "dyeBlue", 'P', Items.PAPER, 'B', "dyeWhite"});
+		addRecipe(CraftingMaterial.BIG_BLUEPRINT_PAPER.getStackNormal(), new Object[]{"PPP", "PPP", "PPP", 'P', CraftingMaterial.BLUEPRINT_PAPER.getStack()});
+		addRecipe(new ItemStack(CoreInit.acidResistantInkBottle), new Object[]{"IRI", "IBI", "IRI", 'I', "dyeBlack", 'R', Items.REDSTONE, 'B', Items.GLASS_BOTTLE});
+		addShapelessRecipe(new ItemStack(CoreInit.circuitDrawingPen), new Object[]{CoreInit.acidResistantInkBottle, CoreInit.circuitDrawingPen.getDamaged()});
+		addRecipe(CraftingMaterial.RAW_CHALK.getStackNormal(), new Object[]{" BB", "BCB", "CB ", 'C', Items.CLAY_BALL, 'B', "dyeWhite"});
+		addRecipe(CraftingMaterial.TIN_CAN.getStackNormal(2), new Object[]{" T ", "T T", " T ", 'T', TMResource.TIN.getStackName(Type.PLATE)});
+		addShapelessRecipe(CraftingMaterial.PHOTOACTIVE_BASIC_CIRCUIT_PLATE.getStackNormal(3), new Object[]{CraftingMaterial.BASIC_CIRCUIT_PLATE.getStack(), CraftingMaterial.BASIC_CIRCUIT_PLATE.getStack(), CraftingMaterial.BASIC_CIRCUIT_PLATE.getStack(), CoreInit.photoactiveMaterialCan});
+		addShapelessRecipe(CraftingMaterial.PHOTOACTIVE_ADVANCED_CIRCUIT_PLATE.getStackNormal(), new Object[]{CraftingMaterial.ADVANCED_CIRCUIT_PLATE.getStack(), CoreInit.photoactiveMaterialCan});
+		addRecipe(new ItemStack(CoreInit.hardenedGlassPane, 16), new Object[]{"GGG", "GGG", 'G', "glassHardened"});
+		addShapelessRecipe(new ItemStack(CoreInit.photoactiveMaterialCan), new Object[]{CraftingMaterial.PHOTOACTIVE_CAN.getStack()});
+		StorageInit.cable.loadRecipes();
 	}
 }

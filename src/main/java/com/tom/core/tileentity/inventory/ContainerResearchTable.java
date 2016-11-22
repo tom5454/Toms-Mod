@@ -50,19 +50,14 @@ public class ContainerResearchTable extends ContainerTomsMod {
 	 * 17:Paper
 	 * */
 	private TileEntityResearchTable te;
-	//private int lastInkLevel = 0;
-	//private boolean firstLoad = true;
-	//private int lastResearchProgerss  = 0;
-	//private int lastTotalResearchProgerss  = 0;
-	//private int lastCraftingProgress  = 0;
-	//private int lastTotalCraftingProgerss  = 0;
-	private int field_178152_f = -1;
-	private int field_178154_h = -1;
-	private int field_178155_i = -1;
-	private int field_178153_g = -1;
-	private int field_178156_j = -1;
-	private int field_178157_k = -2;
-	private int field_178158_l = -1;
+	private int lastTotalCraftingTime = -1;
+	private int lastInk = -1;
+	private int lastCraftingTime = -1;
+	private int lastResearchProgress = -1;
+	private int lastTotalResearchProgress = -1;
+	private int lastResearch = -2;
+	private int lastCraftingError = -1;
+	private int lastCraftAll = -1;
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
 		boolean ret = this.te.isUseableByPlayer(player);
@@ -78,61 +73,55 @@ public class ContainerResearchTable extends ContainerTomsMod {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		//boolean sendData = false;
-		/*if(this.firstLoad){
-        	sendData = true;
-        	this.firstLoad = false;
-        }*/
-		//sendData = sendData || lastInkLevel != te.getField(0) || lastCraftingProgress != te.getField(1) || lastTotalCraftingProgerss != te.getField(2) || lastResearchProgerss != te.getField(3) || lastTotalResearchProgerss != te.getField(4);
-		int field_0 = ResearchHandler.getId(te.currentResearch);
-		int field_1 = te.craftingError;
+		int researchID = ResearchHandler.getId(te.currentResearch);
+		int craftingError = te.craftingError;
+		int craftAll = te.craftAll ? 1 : 0;
 		for (int i = 0; i < this.listeners.size(); ++i)
 		{
 			IContainerListener icrafting = this.listeners.get(i);
 			MessageProgress msg = new MessageProgress(icrafting);
 
-			if (this.field_178152_f != this.te.getField(2))
+			if (this.lastTotalCraftingTime != this.te.getField(2))
 			{
-				//icrafting.sendProgressBarUpdate(this, 2, this.te.getField(2));
 				msg.add(2, this.te.getField(2));
 			}
 
-			if (this.field_178154_h != this.te.getField(0))
+			if (this.lastInk != this.te.getField(0))
 			{
 				icrafting.sendProgressBarUpdate(this, 0, this.te.getField(0));
 			}
 
-			if (this.field_178155_i != this.te.getField(1))
+			if (this.lastCraftingTime != this.te.getField(1))
 			{
-				//icrafting.sendProgressBarUpdate(this, 1, this.te.getField(1));
 				msg.add(1, this.te.getField(1));
 			}
 
-			if (this.field_178153_g != this.te.getField(3))
+			if (this.lastResearchProgress != this.te.getField(3))
 			{
-				//icrafting.sendProgressBarUpdate(this, 3, this.te.getField(3));
 				msg.add(3, this.te.getField(3));
 			}
-			if (this.field_178156_j != this.te.getField(4))
+			if (this.lastTotalResearchProgress != this.te.getField(4))
 			{
-				//icrafting.sendProgressBarUpdate(this, 4, this.te.getField(4));
 				msg.add(4, this.te.getField(4));
 			}
 
-			if(this.field_178157_k != field_0)
-				icrafting.sendProgressBarUpdate(this, 5, field_0);
-			if(this.field_178158_l != field_1)
-				icrafting.sendProgressBarUpdate(this, 6, field_1);
+			if(this.lastResearch != researchID){
+				icrafting.sendProgressBarUpdate(this, 5, researchID);
+				icrafting.sendProgressBarUpdate(this, 51, ResearchHandler.isCompleted(te.getResearchHanler(), te.currentResearch) ? 1 : 0);
+			}
+			if(this.lastCraftingError != craftingError)
+				icrafting.sendProgressBarUpdate(this, 6, craftingError);
+			if(this.lastCraftAll != craftAll)
+				icrafting.sendProgressBarUpdate(this, 7, craftAll);
 			msg.send();
 		}
-
-		this.field_178152_f = this.te.getField(2);
-		this.field_178154_h = this.te.getField(0);
-		this.field_178155_i = this.te.getField(1);
-		this.field_178153_g = this.te.getField(3);
-		this.field_178156_j = this.te.getField(4);
-		this.field_178157_k = field_0;
-		this.field_178158_l = field_1;
+		this.lastTotalCraftingTime = this.te.getField(2);
+		this.lastInk = this.te.getField(0);
+		this.lastCraftingTime = this.te.getField(1);
+		this.lastResearchProgress = this.te.getField(3);
+		this.lastTotalResearchProgress = this.te.getField(4);
+		this.lastResearch = researchID;
+		this.lastCraftingError = craftingError;
 	}
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -140,8 +129,12 @@ public class ContainerResearchTable extends ContainerTomsMod {
 	{
 		if(id == 5){
 			this.te.currentResearch = ResearchHandler.getResearchByID(data);
+		}else if(id == 51){
+			this.te.completed = data == 1;
 		}else if(id == 6){
 			this.te.craftingError = data;
+		}else if(id == 7){
+			this.te.craftAll = data == 1;
 		}else this.te.setField(id, data);
 	}
 }

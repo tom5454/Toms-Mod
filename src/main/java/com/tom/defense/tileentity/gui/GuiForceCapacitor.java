@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
-import com.tom.api.tileentity.IConfigurable.IConfigurationOption.ConfigurationRedstoneControl.GuiButtonRedstoneMode;
+import com.tom.api.tileentity.IConfigurable.IConfigurationOption.GuiButtonRedstoneMode;
 import com.tom.defense.tileentity.TileEntityForceCapacitor;
 import com.tom.defense.tileentity.inventory.ContainerForceCapacitor;
 
@@ -60,5 +60,10 @@ public class GuiForceCapacitor extends GuiTomsMod {
 		if(button.id == 0){
 			this.sendButtonUpdate(0, te, te.rsMode.ordinal()+1);
 		}
+	}
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		buttonRedstone.postDraw(mc, mouseX, mouseY, this);
 	}
 }

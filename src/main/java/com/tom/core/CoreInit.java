@@ -34,6 +34,9 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.ForgeVersion.CheckResult;
 import net.minecraftforge.common.ForgeVersion.Status;
@@ -57,9 +60,12 @@ import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -74,7 +80,8 @@ import com.tom.api.block.IMultiBlockInstance;
 import com.tom.api.block.IRegisterRequired;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.item.IWrench;
-import com.tom.api.item.ItemCraftingTool;
+import com.tom.api.item.ItemDamagableCrafting;
+import com.tom.api.item.ItemDamagableCrafting.ItemDamagableCraftingNormal;
 import com.tom.api.item.MultipartItem;
 import com.tom.api.tileentity.MultiblockPartList;
 import com.tom.apis.EmptyEntry;
@@ -87,6 +94,7 @@ import com.tom.core.TMResource.Type;
 import com.tom.core.fluid.FluidList;
 import com.tom.core.research.ResearchHandler;
 import com.tom.core.research.ResearchLoader;
+import com.tom.core.transformers.Transformers;
 import com.tom.defense.DefenseInit;
 import com.tom.energy.EnergyInit;
 import com.tom.handler.AchievementHandler;
@@ -112,6 +120,7 @@ import com.tom.worldgen.WorldGen.OreGenEntry;
 
 import com.tom.core.block.Antenna;
 import com.tom.core.block.AntennaController;
+import com.tom.core.block.BlockAcid;
 import com.tom.core.block.BlockHardenedGlass;
 import com.tom.core.block.BlockHidden;
 import com.tom.core.block.BlockOil;
@@ -126,6 +135,7 @@ import com.tom.core.block.ControllerBox;
 import com.tom.core.block.EnderMemory;
 import com.tom.core.block.EnderPlayerSensor;
 import com.tom.core.block.GPU;
+import com.tom.core.block.HardenedGlassPane;
 import com.tom.core.block.HolotapeReader;
 import com.tom.core.block.HolotapeWriter;
 import com.tom.core.block.ItemProxy;
@@ -151,8 +161,10 @@ import com.tom.core.item.Hammer;
 import com.tom.core.item.Holotape;
 import com.tom.core.item.ItemBattery;
 import com.tom.core.item.ItemBigNoteBook;
+import com.tom.core.item.ItemCircuitDrawingPen;
 import com.tom.core.item.ItemEntityTracker;
 import com.tom.core.item.ItemMGlass;
+import com.tom.core.item.ItemResearchTableUpgrade;
 import com.tom.core.item.ItemTreeTap;
 import com.tom.core.item.ItemWrench;
 import com.tom.core.item.LinkedChipset;
@@ -237,7 +249,7 @@ public final class CoreInit{
 	public static Fluid steam;
 	public static Fluid nuclearWaste;
 	public static Fluid oil, fuel, lpg, kerosene;
-	public static Fluid sulfuricAcid, sulfurDioxide, sulfurTrioxide, chlorine, hydrogenChlorine, creosoteOil;
+	public static Fluid sulfuricAcid, hydrogenChlorine, creosoteOil, photoactiveLiquid;
 	//Items
 	//public static Item ItemRawCircuit, ItemElectronicParts, ItemCircuitBasic, ItemCircuitAdvanced, ItemAdvancedElectronicParts;
 	public static Item memoryCard, TabletHouse, Battery, Display, linkedChipset, connectionModem, trProcessor, connectionBoxModem;
@@ -253,15 +265,17 @@ public final class CoreInit{
 	private static ResourceItem cable;
 	private static ResourceItem gem;
 	private static ResourceItem coil;
-	private static ResourceItem crushedOre, crushedOreN, crushedOreE, shard, clump;
+	private static ResourceItem crushedOre, crushedOreN, crushedOreE;
+	//private static ResourceItem shard, clump;
 	private static ResourceItem researchPod;
 	protected static CraftingItem craftingMaterial;
-	public static ItemCraftingTool hammer, mortarAndPestle, wireCutters;
+	public static ItemDamagableCrafting hammer, mortarAndPestle, wireCutters, chalk, acidResistantInkBottle, photoactiveMaterialCan;
 	private static MaterialBlock materialBlock1, materialBlock2;
 	private static MaterialSlab materialSlab1;
 	public static Item emptyWireCoil;
 	public static Item itemPump, uraniumRod, dUraniumRod, uraniumRodEmpty;
-	public static Item rsDoor, wrench, bigNoteBook, noteBook, magnifyingGlass, configurator, treeTap;
+	public static Item rsDoor, wrench, bigNoteBook, noteBook, magnifyingGlass, configurator, treeTap, researchTableUpgrade;
+	public static ItemCircuitDrawingPen circuitDrawingPen;
 	//Multiparts
 	//Blocks
 	public static Block GPU, Monitor;
@@ -274,7 +288,9 @@ public final class CoreInit{
 	public static Block oreBlueMetal, oreTin, oreNickel, oreTitanium, oreCopper, oreUranium, oreRedDiamond, oreLithium, oreCyanite, orePlatinum, oreQuartz, oreSilver, oreLead, oreZinc, oreChrome, oreSulfur, oreMercury, oreBauxite, oreSkyQuartz, oreWolfram;
 	//public static Block EnderMinningWell, ExtendedEnderMinningWell;
 	public static Block ItemProxy, EnderPlayerSensor, CommandExecutor, Camera, researchTable, rubberWood, rubberLeaves, rubberSapling;
-	public static Block skyStone, blockTreetap, blockHidden, steelFence;
+	public static Block skyStone, blockTreetap, blockHidden, steelFence, hardenedGlassPane;
+
+	public static VillagerProfession professionScientist;
 
 	private static boolean hadPreInit = false;
 
@@ -349,11 +365,16 @@ public final class CoreInit{
 		}
 		configurator = new Configurator().setCreativeTab(tabTomsModWeaponsAndTools).setMaxStackSize(1).setUnlocalizedName("tm.configurator");
 		hammer = new Hammer().setUnlocalizedName("tm.hammer");
-		shard = new ResourceItem(Type.SHARD);
-		clump = new ResourceItem(Type.CLUMP);
+		//shard = new ResourceItem(Type.SHARD);
+		//clump = new ResourceItem(Type.CLUMP);
 		mortarAndPestle = new MortarAndPestle().setUnlocalizedName("tm.mortarAndPestle");
 		wireCutters = new WireCutters().setUnlocalizedName("tm.wireCutters");
 		treeTap = new ItemTreeTap().setCreativeTab(tabTomsModBlocks).setUnlocalizedName("tm.itemTreeTap").setMaxStackSize(4);
+		circuitDrawingPen = new ItemCircuitDrawingPen().setUnlocalizedName("tm.pen");
+		chalk = new ItemDamagableCraftingNormal(8).setUnlocalizedName("tm.chalk");
+		acidResistantInkBottle = new ItemDamagableCraftingNormal(Config.enableHardRecipes ? 16 : 32, new ItemStack(Items.GLASS_BOTTLE)).setUnlocalizedName("tm.acidRInkBottle");
+		photoactiveMaterialCan = new ItemDamagableCraftingNormal(Config.enableHardRecipes ? 8 : 16, CraftingMaterial.TIN_CAN.getStackNormal()).setUnlocalizedName("tm.photoactiveCan");
+		researchTableUpgrade = new ItemResearchTableUpgrade().setUnlocalizedName("tm.researchTableUpgrade").setCreativeTab(tabTomsModItems).setMaxStackSize(1);
 		//dirtyDust = new ResourceItem(Type.DIRTY_DUST);
 		/**Blocks*/
 		MachineFrameBasic = new Block(Material.IRON).setHardness(2F).setResistance(10F).setUnlocalizedName("MachineFrameBasic").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:BasicMachineFrame")*/;
@@ -385,6 +406,7 @@ public final class CoreInit{
 		blockHidden = new BlockHidden().setUnlocalizedName("tm.hidden");
 		hardenedGlass = new BlockHardenedGlass().setUnlocalizedName("tm.hardenedGlass").setCreativeTab(tabTomsModBlocks).setHardness(2.5F).setResistance(15.5F);
 		steelFence = new BlockFence(Material.IRON, MapColor.GRAY).setUnlocalizedName("tm.steelFence").setCreativeTab(tabTomsModBlocks).setHardness(1.5F).setResistance(20);
+		hardenedGlassPane = new HardenedGlassPane().setCreativeTab(tabTomsModBlocks).setUnlocalizedName("tm.hardenedGlassPane").setHardness(1.25F).setResistance(9.5F);
 		/**Ores*/
 		oreBlueMetal =  new BlockOre(60, OVERWORLD, 5, TMResource.BLUE_METAL).setUnlocalizedName("oreBlueMetal");
 		oreCopper =     new BlockOre(70, OVERWORLD, 9, TMResource.COPPER).setUnlocalizedName("oreCopper");
@@ -419,15 +441,16 @@ public final class CoreInit{
 		nuclearWaste = new Fluid("tmNuclearWaste".toLowerCase(),new ResourceLocation("tomsmodcore:blocks/tmnuclearwaste_still"),new ResourceLocation("tomsmodcore:blocks/tmnuclearwaste_flow")).setLuminosity(7).setTemperature(400).setViscosity(600);
 		oil = new Fluid("oil", new ResourceLocation("tomsmodcore:blocks/oil_still"),new ResourceLocation("tomsmodcore:blocks/oil_flow")).setViscosity(5000).setDensity(5000);
 		sulfuricAcid = new Fluid("tmSulfuricAcid".toLowerCase(), new ResourceLocation("tomsmodcore:blocks/sulfurAcid_still"),new ResourceLocation("tomsmodcore:blocks/sulfurAcid_flow"));
-		sulfurDioxide = new Fluid("tmSulfurDioxide".toLowerCase(), new ResourceLocation("tomsmodcore:blocks/sulfurDioxide_still"),new ResourceLocation("tomsmodcore:blocks/sulfurDioxide_flow")).setGaseous(true).setDensity(-500).setViscosity(500);
+		/*sulfurDioxide = new Fluid("tmSulfurDioxide".toLowerCase(), new ResourceLocation("tomsmodcore:blocks/sulfurDioxide_still"),new ResourceLocation("tomsmodcore:blocks/sulfurDioxide_flow")).setGaseous(true).setDensity(-500).setViscosity(500);
 		sulfurTrioxide = new Fluid("tmSulfurTrioxide".toLowerCase(), new ResourceLocation("tomsmodcore:blocks/sulfurTrioxide_still"),new ResourceLocation("tomsmodcore:blocks/sulfurTrioxide_flow")).setGaseous(true).setDensity(-500).setViscosity(500);
-		chlorine = new Fluid("chlorine", new ResourceLocation("tomsmodcore:blocks/chlorine_still"),new ResourceLocation("tomsmodcore:blocks/chlorine_flow")).setGaseous(true).setDensity(-600).setViscosity(400);
+		chlorine = new Fluid("chlorine", new ResourceLocation("tomsmodcore:blocks/chlorine_still"),new ResourceLocation("tomsmodcore:blocks/chlorine_flow")).setGaseous(true).setDensity(-600).setViscosity(400);*/
 		hydrogenChlorine = new Fluid("hydrogenChlorine".toLowerCase(), new ResourceLocation("tomsmodcore:blocks/Hchlorine_still"),new ResourceLocation("tomsmodcore:blocks/Hchlorine_flow")).setGaseous(true).setDensity(-500).setViscosity(500);
 		creosoteOil = new Fluid("creosote", new ResourceLocation("tomsmodcore:blocks/creosote_still"),new ResourceLocation("tomsmodcore:blocks/creosote_flow"));
 		Oxygen = new Fluid("oxygen", new ResourceLocation("tomsmodcore:blocks/oxygen_still"),new ResourceLocation("tomsmodcore:blocks/oxygen_flow")).setGaseous(true);
 		fuel = new Fluid("fuel", new ResourceLocation("tomsmodcore:blocks/fuel_still"),new ResourceLocation("tomsmodcore:blocks/fuel_flow"));
 		lpg = new Fluid("lpg", new ResourceLocation("tomsmodcore:blocks/lpg_still"),new ResourceLocation("tomsmodcore:blocks/lpg_flow"));
 		kerosene = new Fluid("kerosene", new ResourceLocation("tomsmodcore:blocks/kerosene_still"),new ResourceLocation("tomsmodcore:blocks/kerosene_flow"));
+		photoactiveLiquid = new Fluid("photoactiveLiquid", new ResourceLocation("tomsmodcore:blocks/photoactiveLiquid_still"),new ResourceLocation("tomsmodcore:blocks/photoactiveLiquid_flow"));
 		/**Fluid Registry*/
 		fluids.add(plasma);
 		//fluids.add(ePlasma);
@@ -441,15 +464,16 @@ public final class CoreInit{
 		fluids.add(nuclearWaste);
 		fluids.add(oil);
 		fluids.add(sulfuricAcid);
-		fluids.add(sulfurDioxide);
+		/*fluids.add(sulfurDioxide);
 		fluids.add(sulfurTrioxide);
-		fluids.add(chlorine);
+		fluids.add(chlorine);*/
 		fluids.add(hydrogenChlorine);
 		fluids.add(creosoteOil);
 		fluids.add(Oxygen);
 		fluids.add(fuel);
 		fluids.add(lpg);
 		fluids.add(kerosene);
+		fluids.add(photoactiveLiquid);
 		/**Registry*/
 		/**Items*/
 		addItemToGameRegistry(plate, plate.getUnlocalizedName().substring(5));
@@ -465,8 +489,8 @@ public final class CoreInit{
 		addItemToGameRegistry(crushedOreE, crushedOreE.getUnlocalizedName().substring(5));
 		addItemToGameRegistry(researchPod, researchPod.getUnlocalizedName().substring(5));
 		addItemToGameRegistry(craftingMaterial, craftingMaterial.getUnlocalizedName().substring(5));
-		addItemToGameRegistry(shard, shard.getUnlocalizedName().substring(5));
-		addItemToGameRegistry(clump, clump.getUnlocalizedName().substring(5));
+		//addItemToGameRegistry(shard, shard.getUnlocalizedName().substring(5));
+		//addItemToGameRegistry(clump, clump.getUnlocalizedName().substring(5));
 		//addItemToGameRegistry(dirtyDust, dirtyDust.getUnlocalizedName().substring(5));
 		registerItem(itemPump, itemPump.getUnlocalizedName().substring(5));
 		registerItem(uraniumRod, uraniumRod.getUnlocalizedName().substring(5));
@@ -490,6 +514,11 @@ public final class CoreInit{
 		registerItem(mortarAndPestle, mortarAndPestle.getUnlocalizedName().substring(5));
 		addItemToGameRegistry(wireCutters, wireCutters.getUnlocalizedName().substring(5));
 		registerItem(treeTap, treeTap.getUnlocalizedName().substring(5));
+		registerItem(circuitDrawingPen, circuitDrawingPen.getUnlocalizedName().substring(5));
+		registerItem(chalk, chalk.getUnlocalizedName().substring(5));
+		registerItem(acidResistantInkBottle, acidResistantInkBottle.getUnlocalizedName().substring(5));
+		registerItem(photoactiveMaterialCan, photoactiveMaterialCan.getUnlocalizedName().substring(5));
+		registerItem(researchTableUpgrade, researchTableUpgrade.getUnlocalizedName().substring(5));
 		/**Blocks*/
 		registerBlock(MachineFrameBasic, MachineFrameBasic.getUnlocalizedName().substring(5));
 		registerBlock(MachineFrameSteel, MachineFrameSteel.getUnlocalizedName().substring(5));
@@ -531,6 +560,7 @@ public final class CoreInit{
 		addOnlyBlockToGameRegisty(blockHidden, blockHidden.getUnlocalizedName().substring(5));
 		registerBlock(hardenedGlass, hardenedGlass.getUnlocalizedName().substring(5));
 		registerBlock(steelFence, steelFence.getUnlocalizedName().substring(5));
+		registerBlock(hardenedGlassPane, hardenedGlassPane.getUnlocalizedName().substring(5));
 		/**TileEntities*/
 		GameRegistry.registerTileEntity(TileEntityItemProxy.class, Configs.Modid + "ItemProxy");
 		GameRegistry.registerTileEntity(TileEntityRSDoor.class, Configs.Modid + "rsDoor");
@@ -644,7 +674,7 @@ public final class CoreInit{
 				log.warn("Adventure items disabled");
 			}
 			if(Config.enableCommandExecutor){
-				CommandExecutor = new CommandExecutor().setUnlocalizedName("CommandExecutor").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:command_block")*/.setBlockUnbreakable().setResistance(18000000F).setHardness(-1F);
+				CommandExecutor = new CommandExecutor().setUnlocalizedName("CommandExecutor").setCreativeTab(tabTomsModBlocks)/*.setBlockTextureName("minecraft:command_block")*/.setBlockUnbreakable().setResistance(18000000F);
 				registerBlock(CommandExecutor, CommandExecutor.getUnlocalizedName().substring(5));
 				GameRegistry.registerTileEntity(TileEntityCommandExecutor.class, Configs.Modid + "CommandExecutor");
 			}
@@ -676,13 +706,19 @@ public final class CoreInit{
 		GlobalFields.MBFrames.add(MultiblockPartList.Casing);
 		GlobalFields.MBFrames.add(MultiblockPartList.EnergyCellCasing);
 		WorldGen.init();
-		TMResource.loadFluids(false);
+		//TMResource.loadFluids(false);
 		GameRegistry.registerFuelHandler(FuelHandler.INSTANCE);
 		//registerEntity(EntityCamera.class, Configs.Modid+":Camera",false);
 		//FMLCommonHandler.instance().bus().register(new Config());
 		proxy.registerKeyBindings();
 		FMLInterModComms.sendMessage("Waila", "register", "com.tom.thirdparty.waila.Waila.onWailaCall");
-		CraftingMaterial.init();
+		ForgeChunkManager.setForcedChunkLoadingCallback(modInstance, new LoadingCallback() {
+
+			@Override
+			public void ticketsLoaded(List<Ticket> tickets, World world) {
+
+			}
+		});
 		/*if(isMapEnabled){
 		}*/
 		isPreInit = false;
@@ -713,15 +749,9 @@ public final class CoreInit{
 			registerRender(craftingMaterial, t.ordinal(),"tomsmodcore:resources/crafting/"+t.getName());
 		}
 		if(isMapEnabled){
-			if(Config.advEntityTrackerTexture){
-				registerRender(entityTracker, 0, "tomsmodcore:radarOff");
-				registerRender(entityTracker, 1, "tomsmodcore:radarActive");
-				registerRender(entityTracker, 2, "tomsmodcore:radarJammed");
-			}else{
-				registerRender(entityTracker, 0, "tomsmodcore:radarLowOff");
-				registerRender(entityTracker, 1, "tomsmodcore:radarLowActive");
-				registerRender(entityTracker, 2, "tomsmodcore:radarLowJammed");
-			}
+			registerRender(entityTracker, 0, "tomsmodcore:radarOff");
+			registerRender(entityTracker, 1, "tomsmodcore:radarActive");
+			registerRender(entityTracker, 2, "tomsmodcore:radarJammed");
 		}
 		List<ItemStack> stackList = new ArrayList<ItemStack>();
 		TMResource.addHammersToList(stackList, hammer);
@@ -777,17 +807,17 @@ public final class CoreInit{
 		nuclearWaste = FluidRegistry.getFluid("tmnuclearwaste");
 		oil = FluidRegistry.getFluid("oil");
 
-		sulfurDioxide = FluidRegistry.getFluid("tmsulfurdioxide");
+		//sulfurDioxide = FluidRegistry.getFluid("tmsulfurdioxide");
 		sulfuricAcid = FluidRegistry.getFluid("tmsulfuricacid");
-		sulfurTrioxide = FluidRegistry.getFluid("tmsulfurtrioxide");
+		//sulfurTrioxide = FluidRegistry.getFluid("tmsulfurtrioxide");
 		hydrogenChlorine = FluidRegistry.getFluid("hydrogenchlorine");
-		chlorine = FluidRegistry.getFluid("chlorine");
+		//chlorine = FluidRegistry.getFluid("chlorine");
 		creosoteOil = FluidRegistry.getFluid("creosote");
 		Oxygen = FluidRegistry.getFluid("oxygen");
 		fuel = FluidRegistry.getFluid("fuel");
 		lpg = FluidRegistry.getFluid("lpg");
 		kerosene = FluidRegistry.getFluid("kerosene");
-		TMResource.loadFluids(true);
+		//TMResource.loadFluids(true);
 		if(Config.enableGrassDrops){
 			log.info("Adding Grass Drops...");
 			MinecraftForge.addGrassSeed(new ItemStack(Items.FLINT), 15);
@@ -805,6 +835,7 @@ public final class CoreInit{
 			ignoredLocations.add(e.getKey().getKey());
 		}
 		ProgressManager.pop(bar);
+		CraftingMaterial.init();
 		/*log.info("Registering Transparent Blocks");
 		GlobalFields.glassBlocks.put(Blocks.GLASS,0.5F);
 		GlobalFields.glassBlocks.put(Blocks.STAINED_GLASS,0.4F);
@@ -861,6 +892,7 @@ public final class CoreInit{
 		TMResource.NETHER_QUARTZ.storageBlock = new EmptyEntry<Block, Integer>(Blocks.QUARTZ_BLOCK, 0);
 		TMResource.OBSIDIAN.storageBlock = new EmptyEntry<Block, Integer>(Blocks.OBSIDIAN, 0);
 		TMResource.REDSTONE.storageBlock = new EmptyEntry<Block, Integer>(Blocks.REDSTONE_BLOCK, 0);
+		VillageInit.init();
 		log.info("Loading Recipes");
 		CraftingRecipes.init();
 		FurnaceRecipes.init();
@@ -914,10 +946,17 @@ public final class CoreInit{
 		log.info("Post Initialization took in "+time+" milliseconds");
 	}
 	@EventHandler
+	public static void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+		TomsModUtils.setServer(event.getServer());
+		if(Config.enableAutoWorldBackup && Config.enableInitialBackup){
+			AutoBackup.createBackup(false, true, "Start");
+		}
+	}
+	@EventHandler
 	public static void onServerStart(FMLServerStartingEvent event) {
 		log.info("Server Start");
 		proxy.serverStart();
-		TomsModUtils.setServer(event.getServer());
+		Transformers.injectNewFillCmd(event.getServer());
 		if(isMapEnabled){
 			event.registerServerCommand(new CommandWaypoint(false));
 			event.registerServerCommand(new CommandWaypoint(true));
@@ -1038,19 +1077,30 @@ public final class CoreInit{
 		PlayerHandler.cleanup();
 		if(isMapEnabled)Minimap.close();
 		WorldHandler.stopServer();
+		if(Config.enableAutoWorldBackup && Config.enableServerExitBackup)AutoBackup.createAndStoreCache();
 		TomsModUtils.setServer(null);
 		log.info("Server Stopped");
+	}
+	@EventHandler
+	public static void onServerStopped(FMLServerStoppedEvent event) {
+		if(Config.enableAutoWorldBackup && Config.enableServerExitBackup){
+			AutoBackup.createBackup(false, false, "Stop");
+		}
 	}
 	private static void initializeFluidBlocksAndBuckets(){
 		log.info("Loading Fluids...");
 		for(Fluid fluid : fluids) {
 			if(!FluidRegistry.isFluidRegistered(fluid.getName())){
 				FluidRegistry.registerFluid(fluid);
-				if(fluid.getName().equals("oil") && fluid.getBlock() == null){
-					Block blockOil = new BlockOil();
-					//fluid.setBlock(oilBlock);
-					registerBlock(blockOil, blockOil.getUnlocalizedName().substring(5));
-				}
+			}
+			if(fluid.getName().equals("oil") && fluid.getBlock() == null){
+				Block blockOil = new BlockOil();
+				//fluid.setBlock(oilBlock);
+				addOnlyBlockToGameRegisty(blockOil, blockOil.getUnlocalizedName().substring(5));
+			}else if(fluid.getName().equals("tmSulfuricAcid".toLowerCase()) && fluid.getBlock() == null){
+				Block blockOil = new BlockAcid();
+				//fluid.setBlock(oilBlock);
+				addOnlyBlockToGameRegisty(blockOil, blockOil.getUnlocalizedName().substring(5));
 			}
 			fluid = FluidRegistry.getFluid(fluid.getName());
 			//Block fluidBlock = fluid.getBlock();

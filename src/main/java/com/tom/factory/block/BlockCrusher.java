@@ -25,7 +25,7 @@ public class BlockCrusher extends BlockMachineBase {
 	}
 
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if(!worldIn.isRemote)playerIn.openGui(CoreInit.modInstance, GuiIDs.crusher.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;

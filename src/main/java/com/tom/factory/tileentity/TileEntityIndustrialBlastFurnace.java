@@ -5,6 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
@@ -22,10 +23,6 @@ public class TileEntityIndustrialBlastFurnace extends TileEntityMachineBase {
 	private EnergyStorage energy = new EnergyStorage(10000, 100);
 	public int clientEnergy;
 	public int maxProgress = 0;
-	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		return new int[]{0,1,2};
-	}
 
 	@Override
 	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
@@ -71,7 +68,7 @@ public class TileEntityIndustrialBlastFurnace extends TileEntityMachineBase {
 		if(!worldObj.isRemote){
 			clientEnergy = MathHelper.floor_double(energy.getEnergyStored());
 			int heat = checkIfMerged(state);
-			if(energy.getEnergyStored() > 20 && heat > 0){
+			if(energy.getEnergyStored() > 20 && heat > 0 && canRun()){
 				if(progress > 0){
 					energy.extractEnergy(5, false);
 					progress = Math.max(progress - MathHelper.floor_double(10 * (getMaxProcessTimeNormal() / TYPE_MULTIPLIER_SPEED[getType()])), 0);
@@ -157,5 +154,19 @@ public class TileEntityIndustrialBlastFurnace extends TileEntityMachineBase {
 
 	public int getClientEnergyStored() {
 		return clientEnergy;
+	}
+	@Override
+	public ResourceLocation getFront() {
+		return new ResourceLocation("tomsmodfactory:textures/blocks/ibfFront.png");
+	}
+
+	@Override
+	public int[] getOutputSlots() {
+		return new int[]{2};
+	}
+
+	@Override
+	public int[] getInputSlots() {
+		return new int[]{0, 1};
 	}
 }

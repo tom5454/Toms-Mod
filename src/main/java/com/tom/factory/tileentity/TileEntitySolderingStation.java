@@ -3,6 +3,7 @@ package com.tom.factory.tileentity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import net.minecraftforge.oredict.OreDictionary;
@@ -106,7 +107,7 @@ public class TileEntitySolderingStation extends TileEntityMachineBase {
 		if(!worldObj.isRemote){
 			clientEnergy = MathHelper.floor_double(energy.getEnergyStored());
 			if(this.craftingErrorShowTimer > 0)if(this.craftingErrorShowTimer-- == 1 && (craftingError == 2 || craftingError == 3))craftingError = 0;
-			if(energy.getEnergyStored() > 20){
+			if(energy.getEnergyStored() > 20 && canRun()){
 				if(solderingAlloyLevel > 0){
 					if(progress > 0){
 						updateProgress();
@@ -200,5 +201,19 @@ public class TileEntitySolderingStation extends TileEntityMachineBase {
 		progress = Math.max(0, progress - p);
 		energy.extractEnergy(1.2D * p, false);
 		solderingAlloyLevel -= p;
+	}
+	@Override
+	public ResourceLocation getFront() {
+		return new ResourceLocation("tomsmodfactory:textures/blocks/solderingStation.png");
+	}
+
+	@Override
+	public int[] getOutputSlots() {
+		return new int[]{9};
+	}
+
+	@Override
+	public int[] getInputSlots() {
+		return new int[]{11};
 	}
 }
