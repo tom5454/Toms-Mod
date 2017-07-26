@@ -21,10 +21,10 @@ public class BlockWaterCollector extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityWaterCollector();
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
-	{
+	public BlockRenderLayer getBlockLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}
 }

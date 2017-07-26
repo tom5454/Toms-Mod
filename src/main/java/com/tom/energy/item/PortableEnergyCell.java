@@ -19,22 +19,24 @@ import com.tom.api.energy.ItemEnergyContainer;
 import com.tom.energy.EnergyInit;
 
 public class PortableEnergyCell extends ItemEnergyContainer {
-	public PortableEnergyCell(){
-		super(10000000,65536);
+	public PortableEnergyCell() {
+		super(10000000, 65536);
 	}
+
 	@Override
 	public void onUpdate(ItemStack is, World world, Entity entity, int par4, boolean par5) {
-		if(entity instanceof EntityPlayer){
+		if (entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) entity;
 			InventoryPlayer inv = player.inventory;
-			for(int i = 0;i<inv.getSizeInventory();i++){
+			for (int i = 0;i < inv.getSizeInventory();i++) {
 				ItemStack itemStack = inv.getStackInSlot(i);
-				if(itemStack != null && itemStack.getItem() instanceof IEnergyContainerItem && itemStack.getItem() != EnergyInit.portableEnergyCell && itemStack.getItem() != EnergyInit.portableSolarPanel){
+				if (itemStack != null && itemStack.getItem() instanceof IEnergyContainerItem && itemStack.getItem() != EnergyInit.portableEnergyCell && itemStack.getItem() != EnergyInit.portableSolarPanel) {
 					IEnergyContainerItem item = (IEnergyContainerItem) itemStack.getItem();
-					if(is.getTagCompound() == null) is.setTagCompound(new NBTTagCompound());
+					if (is.getTagCompound() == null)
+						is.setTagCompound(new NBTTagCompound());
 					double energy = is.getTagCompound().hasKey("Energy") ? is.getTagCompound().getDouble("Energy") : 0;
 					double receive = item.receiveEnergy(itemStack, Math.min(2048, energy), true);
-					if(receive > 0){
+					if (receive > 0) {
 						item.receiveEnergy(itemStack, receive, false);
 						energy = energy - receive;
 						is.getTagCompound().setDouble("Energy", energy);
@@ -43,16 +45,16 @@ public class PortableEnergyCell extends ItemEnergyContainer {
 			}
 		}
 	}
+
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced)
-	{
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced) {
 		super.addInformation(itemStack, player, list, isAdvanced);
 		double energy = this.getEnergyStored(itemStack);
 		double per = energy / 100000;
-		//System.out.println(per);
-		int p = MathHelper.floor_double(per);
-		list.add(I18n.format("tomsMod.tooltip.charge") + ": "+this.getMaxEnergyStored(itemStack)+"/"+energy+" "+p/10D+"%");
+		// System.out.println(per);
+		int p = MathHelper.floor(per);
+		list.add(I18n.format("tomsMod.tooltip.charge") + ": " + this.getMaxEnergyStored(itemStack) + "/" + energy + " " + p / 10D + "%");
 	}
 }

@@ -4,8 +4,7 @@ import mapwriterTm.config.Config;
 
 import net.minecraft.block.state.IBlockState;
 
-public class ChunkRender
-{
+public class ChunkRender {
 
 	public static final byte FLAG_UNPROCESSED = 0;
 	public static final byte FLAG_NON_OPAQUE = 1;
@@ -24,36 +23,29 @@ public class ChunkRender
 	// the block column that created the pixel.
 	// height values of 0 and 255 are ignored as these are used as the clear
 	// values for pixels.
-	public static double getHeightShading(int height, int heightW, int heightN)
-	{
+	public static double getHeightShading(int height, int heightW, int heightN) {
 		int samples = 0;
 		int heightDiff = 0;
 
-		if ((heightW > 0) && (heightW < 255))
-		{
+		if ((heightW > 0) && (heightW < 255)) {
 			heightDiff += height - heightW;
 			samples++;
 		}
 
-		if ((heightN > 0) && (heightN < 255))
-		{
+		if ((heightN > 0) && (heightN < 255)) {
 			heightDiff += height - heightN;
 			samples++;
 		}
 
 		double heightDiffFactor = 0.0;
-		if (samples > 0)
-		{
+		if (samples > 0) {
 			heightDiffFactor = (double) heightDiff / ((double) samples);
 		}
 
 		// emphasize small differences in height, but as the difference in
 		// height increases,
 		// don't increase so much
-		if (Config.moreRealisticMap)
-		{
-			return Math.atan(heightDiffFactor) * 0.3;
-		}
+		if (Config.moreRealisticMap) { return Math.atan(heightDiffFactor) * 0.3; }
 
 		return (heightDiffFactor >= 0.0) ? Math.pow(heightDiffFactor * (1 / 255.0), brightenExponent) * brightenAmplitude : -Math.pow(-(heightDiffFactor * (1 / 255.0)), darkenExponent) * darkenAmplitude;
 	}
@@ -83,29 +75,25 @@ public class ChunkRender
 	// note that the "front to back" alpha blending algorithm is used
 	// rather than the more common "back to front".
 	//
-	public static int getColumnColour(BlockColours bc, IChunk chunk, int x, int y, int z, int heightW, int heightN)
-	{
+	public static int getColumnColour(BlockColours bc, IChunk chunk, int x, int y, int z, int heightW, int heightN) {
 		double a = 1.0;
 		double r = 0.0;
 		double g = 0.0;
 		double b = 0.0;
-		for (; y > 0; y--)
-		{
+		for (;y > 0;y--) {
 			IBlockState blockState = chunk.getBlockState(x, y, z);
 			int c1 = bc.getColour(blockState);
 			int alpha = (c1 >> 24) & 0xff;
 
 			// this is the color that gets returned for air, so set aplha to 0
 			// so the game continues to the next block in the colum
-			if (c1 == -8650628)
-			{
+			if (c1 == -8650628) {
 				alpha = 0;
 			}
 
 			// no need to process block if it is transparent
-			if (alpha > 0)
-			{
-				
+			if (alpha > 0) {
+
 				byte biome = chunk.getBiome(x, z);
 				int c2 = bc.getBiomeColour(blockState, biome);
 
@@ -127,8 +115,7 @@ public class ChunkRender
 				a = a * (1.0 - c1A);
 			}
 			// break when an opaque block is encountered
-			if (alpha == 255)
-			{
+			if (alpha == 255) {
 				break;
 			}
 		}
@@ -156,50 +143,39 @@ public class ChunkRender
 		return ((y & 0xff) << 24) | ((((int) (r * 255.0)) & 0xff) << 16) | ((((int) (g * 255.0)) & 0xff) << 8) | ((((int) (b * 255.0)) & 0xff));
 	}
 
-	static int getPixelHeightN(int[] pixels, int offset, int scanSize)
-	{
+	static int getPixelHeightN(int[] pixels, int offset, int scanSize) {
 		return (offset >= scanSize) ? ((pixels[offset - scanSize] >> 24) & 0xff) : -1;
 	}
 
-	static int getPixelHeightW(int[] pixels, int offset, int scanSize)
-	{
+	static int getPixelHeightW(int[] pixels, int offset, int scanSize) {
 		return ((offset & (scanSize - 1)) >= 1) ? ((pixels[offset - 1] >> 24) & 0xff) : -1;
 	}
 
-	public static void renderSurface(BlockColours bc, IChunk chunk, int[] pixels, int offset, int scanSize, boolean dimensionHasCeiling)
-	{
+	public static void renderSurface(BlockColours bc, IChunk chunk, int[] pixels, int offset, int scanSize, boolean dimensionHasCeiling) {
 		int chunkMaxY = chunk.getMaxY();
-		for (int z = 0; z < MwChunk.SIZE; z++)
-		{
-			for (int x = 0; x < MwChunk.SIZE; x++)
-			{
+		for (int z = 0;z < MwChunk.SIZE;z++) {
+			for (int x = 0;x < MwChunk.SIZE;x++) {
 				// for the nether dimension search for the first non-opaque
 				// block below the ceiling.
 				// cannot use y = chunkMaxY as the nether sometimes spawns
 				// mushrooms above the ceiling height. this fixes the
 				// rectangular grey areas (ceiling bedrock) on the nether map.
 				int y;
-				if (dimensionHasCeiling)
-				{
-					for (y = 127; y >= 0; y--)
-					{
+				if (dimensionHasCeiling) {
+					for (y = 127;y >= 0;y--) {
 						IBlockState blockState = chunk.getBlockState(x, y, z);
 						int color = bc.getColour(blockState);
 						int alpha = (color >> 24) & 0xff;
 
-						if (color == -8650628)
-						{
+						if (color == -8650628) {
 							alpha = 0;
 						}
 
-						if (alpha != 0xff)
-						{
+						if (alpha != 0xff) {
 							break;
 						}
 					}
-				}
-				else
-				{
+				} else {
 					y = chunkMaxY - 1;
 				}
 
@@ -209,18 +185,14 @@ public class ChunkRender
 		}
 	}
 
-	public static void renderUnderground(BlockColours bc, IChunk chunk, int[] pixels, int offset, int scanSize, int startY, byte[] mask)
-	{
+	public static void renderUnderground(BlockColours bc, IChunk chunk, int[] pixels, int offset, int scanSize, int startY, byte[] mask) {
 		startY = Math.min(Math.max(0, startY), 255);
-		for (int z = 0; z < MwChunk.SIZE; z++)
-		{
-			for (int x = 0; x < MwChunk.SIZE; x++)
-			{
+		for (int z = 0;z < MwChunk.SIZE;z++) {
+			for (int x = 0;x < MwChunk.SIZE;x++) {
 
 				// only process columns where the mask bit is set.
 				// process all columns if mask is null.
-				if ((mask != null) && ((mask[(z * 16) + x]) != FLAG_NON_OPAQUE))
-				{
+				if ((mask != null) && ((mask[(z * 16) + x]) != FLAG_NON_OPAQUE)) {
 					continue;
 				}
 
@@ -228,23 +200,19 @@ public class ChunkRender
 				// block searching
 				// towards the sky from startY
 				int lastNonTransparentY = startY;
-				for (int y = startY; y < chunk.getMaxY(); y++)
-				{
+				for (int y = startY;y < chunk.getMaxY();y++) {
 					IBlockState blockState = chunk.getBlockState(x, y, z);
 					int color = bc.getColour(blockState);
 					int alpha = (color >> 24) & 0xff;
 
-					if (color == -8650628)
-					{
+					if (color == -8650628) {
 						alpha = 0;
 					}
 
-					if (alpha == 0xff)
-					{
+					if (alpha == 0xff) {
 						break;
 					}
-					if (alpha > 0)
-					{
+					if (alpha > 0) {
 						lastNonTransparentY = y;
 					}
 				}

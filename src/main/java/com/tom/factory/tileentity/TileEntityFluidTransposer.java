@@ -24,9 +24,10 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 	private FluidTank tank = new FluidTank(10000);
 	private boolean isExtract = false;
 	public int clientEnergy;
+
 	@Override
 	public int[] getSlotsForFace(EnumFacing side) {
-		return new int[]{0,2};
+		return new int[]{0, 2};
 	}
 
 	@Override
@@ -73,6 +74,7 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 	public IFluidHandler getTankOnSide(EnumFacing f) {
 		return tank;
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
@@ -81,66 +83,31 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 		compound.setBoolean("mode", isExtract);
 		return compound;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		tank.readFromNBT(compound.getCompoundTag("tank"));
 		progress = compound.getInteger("progress");
 		isExtract = compound.getBoolean("mode");
+		// tank.fill(new FluidStack(FluidRegistry.WATER, 5000), true);
 	}
+
 	@Override
 	public void updateEntity(IBlockState state) {
-		if(!worldObj.isRemote){
-			clientEnergy = MathHelper.ceiling_double_int(energy.getEnergyStored());
-			if(stack[1] == null){
-				stack[1] = decrStackSize(0, 1);
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, FluidTransposer.ACTIVE, false);
-			}else{
-				if(energy.extractEnergy(20D, true) == 20D && canRun()){
-					if(progress > 0){
-						updateProgress();
-					}else if(progress == 0){
-						ItemStackChecker s = MachineCraftingHandler.getFluidTransposerOutput(stack[1], tank, isExtract);
-						if(s != null){
-							if(stack[2] != null){
-								if(TomsModUtils.areItemStacksEqual(stack[2], s.getStack(), true, true, false) && stack[2].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
-									stack[2].stackSize += s.getStack().stackSize;
-									progress = -1;
-									decrStackSize(1, 1);
-									if(isExtract)tank.fill(s.getExtraF(), true);
-									else tank.drain(s.getExtra(), true);
-								}
-							}else{
-								progress = -1;
-								stack[2] = s.getStack();
-								decrStackSize(1, 1);
-								if(isExtract)tank.fill(s.getExtraF(), true);
-								else tank.drain(s.getExtra(), true);
-							}
-						}else{
-							progress = -1;
-						}
-					}else{
-						ItemStackChecker s = MachineCraftingHandler.getFluidTransposerOutput(stack[1], tank, isExtract);
-						if(s != null){
-							if(stack[2] != null){
-								if(TomsModUtils.areItemStacksEqual(stack[2], s.getStack(), true, true, false) && stack[2].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
-									progress = getMaxProgress();
-								}
-							}else{
-								progress = getMaxProgress();
-							}
-						}
-						TomsModUtils.setBlockStateWithCondition(worldObj, pos, FluidTransposer.ACTIVE, progress > 0);
-					}
-				}else{
-					TomsModUtils.setBlockStateWithCondition(worldObj, pos, FluidTransposer.ACTIVE, false);
-				}
+		if (!world.isRemote) {
+			clientEnergy = MathHelper.ceil(energy.getEnergyStored());
+			if (inv.getStackInSlot(1).isEmpty()) {
+				inv.setInventorySlotContents(1, decrStackSize(0, 1));
+				TomsModUtils.setBlockStateWithCondition(world, pos, FluidTransposer.ACTIVE, false);
+			} else {
+				super.updateEntity(state);
 			}
 		}
 	}
 
-	private void updateProgress(){
+	@Override
+	public void updateProgress() {
 		int upgradeC = getSpeedUpgradeCount();
 		int p = upgradeC + 1 + (upgradeC / 2);
 		progress = Math.max(0, progress - p);
@@ -157,10 +124,11 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 
 	@Override
 	public void buttonPressed(EntityPlayer player, int id, int extra) {
-		if(id == 0){
+		if (id == 0) {
 			isExtract = extra == 1;
 		}
 	}
+
 	public boolean getMode() {
 		return isExtract;
 	}
@@ -168,6 +136,7 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 	public void setMode(int mode) {
 		isExtract = mode == 1;
 	}
+
 	@Override
 	public ResourceLocation getFront() {
 		return new ResourceLocation("tomsmodfactory:textures/blocks/fluidTransposer.png");
@@ -181,5 +150,26 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 	@Override
 	public int[] getInputSlots() {
 		return new int[]{0};
+	}
+
+	@Override
+	public void checkItems() {
+		ItemStackChecker s = MachineCraftingHandler.getFluidTransposerOutput(inv.getStackInSlot(1), tank, isExtract);
+		if (s != null) {
+			checkItems(s, 2, getMaxProgress(), 1, -1, () -> {
+				if (!isExtract)
+					tank.drain(s.getExtra(), true);
+			});
+			setOut(0, s);
+		}
+	}
+
+	@Override
+	public void finish() {
+		ItemStackChecker s = getOutput(0);
+		addItemsAndSetProgress(s, 2, 1, -1, () -> {
+			if (isExtract)
+				tank.fill(s.getExtraF(), true);
+		});
 	}
 }

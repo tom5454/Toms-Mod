@@ -2,14 +2,8 @@ package mapwriterTm.config;
 
 import mapwriterTm.util.Reference;
 
-public class Config
-{
-	public static final String[] backgroundModeStringArray =
-		{
-				"mw.config.backgroundTextureMode.none",
-				"mw.config.backgroundTextureMode.static",
-				"mw.config.backgroundTextureMode.panning"
-		};
+public class Config {
+	public static final String[] backgroundModeStringArray = {"mw.config.backgroundTextureMode.none", "mw.config.backgroundTextureMode.static", "mw.config.backgroundTextureMode.panning"};
 
 	// configuration options
 	public static boolean linearTextureScalingDef = true;
@@ -50,8 +44,8 @@ public class Config
 	public static String backgroundTextureMode = backgroundTextureModeDef;
 	public static boolean moreRealisticMapDef = false;
 	public static boolean moreRealisticMap = moreRealisticMapDef;
-	//public static boolean newMarkerDialogDef = true;
-	//public static boolean newMarkerDialog = newMarkerDialogDef;
+	// public static boolean newMarkerDialogDef = true;
+	// public static boolean newMarkerDialog = newMarkerDialogDef;
 	public static boolean drawMarkersInWorldDef = true;
 	public static boolean drawMarkersInWorld = drawMarkersInWorldDef;
 	public static boolean drawMarkersNameInWorldDef = true;
@@ -67,8 +61,8 @@ public class Config
 	public static int fullScreenZoomLevelDef = 0;
 	public static int fullScreenZoomLevel = fullScreenZoomLevelDef;
 
-	public static largeMapModeConfig largeMap = new largeMapModeConfig(Reference.catLargeMapConfig);
-	public static smallMapModeConfig smallMap = new smallMapModeConfig(Reference.catSmallMapConfig);
+	public static LargeMapModeConfig largeMap = new LargeMapModeConfig(Reference.catLargeMapConfig);
+	public static SmallMapModeConfig smallMap = new SmallMapModeConfig(Reference.catSmallMapConfig);
 	public static MapModeConfig fullScreenMap = new MapModeConfig(Reference.catFullMapConfig);
 
 	public static boolean reloadColours = Boolean.parseBoolean(System.getProperty("fml.skipFirstTextureLoad", "true"));

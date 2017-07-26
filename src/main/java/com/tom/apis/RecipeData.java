@@ -13,7 +13,7 @@ import com.tom.api.research.Research;
 import com.tom.recipes.handler.AdvancedCraftingHandler.CraftingLevel;
 
 public class RecipeData {
-	public RecipeData(FluidStack f1, FluidStack f2, FluidStack f3, FluidStack f4, int energy,int inputAmount){
+	public RecipeData(FluidStack f1, FluidStack f2, FluidStack f3, FluidStack f4, int energy, int inputAmount) {
 		this.f1 = f1;
 		this.f2 = f2;
 		this.f3 = f3;
@@ -22,12 +22,14 @@ public class RecipeData {
 		this.inputAmount = inputAmount;
 		this.processTime = 1;
 	}
-	public RecipeData(Block block2, Block output){
+
+	public RecipeData(Block block2, Block output) {
 		this.output = output;
 		this.block2 = block2;
 		this.processTime = 1;
 	}
-	public RecipeData(Block block2, Block output, Item invItem1){
+
+	public RecipeData(Block block2, Block output, Item invItem1) {
 		this.output = output;
 		this.block2 = block2;
 		this.invItem1 = invItem1;
@@ -41,18 +43,21 @@ public class RecipeData {
 		this.inputAmount = amount;
 		this.processTime = 1;
 	}
+
 	public RecipeData(FluidStack f, int energy, int amount, int processTime) {
 		this.f1 = f;
 		this.energy = energy;
 		this.inputAmount = amount;
 		this.processTime = processTime;
 	}
+
 	public RecipeData(ItemStack i, int energy, int amount, int processTime) {
 		this.itemstack1 = i;
 		this.energy = energy;
 		this.inputAmount = amount;
 		this.processTime = processTime;
 	}
+
 	public RecipeData(ItemStack is, int time, ItemStack[] isIn, List<Research> researchList, boolean shaped, ItemStack isExtra, CraftingLevel level) {
 		this.processTime = time;
 		this.requiredResearches = researchList;
@@ -87,12 +92,14 @@ public class RecipeData {
 		this.itemstack1 = itemstack1;
 		this.itemstack2 = itemstack2;
 	}
+
 	public RecipeData(ItemStack itemstack0, ItemStack itemstack1, ItemStack itemstack2, boolean mode) {
 		this.itemstack0 = itemstack0;
 		this.itemstack1 = itemstack1;
 		this.itemstack2 = itemstack2;
 		this.hasInv = mode;
 	}
+
 	public RecipeData(IRecipe recipe, int time, List<Research> researchList, ItemStack extra, CraftingLevel level, int extraD) {
 		this.processTime = time;
 		this.requiredResearches = researchList;
@@ -100,6 +107,14 @@ public class RecipeData {
 		this.itemstack10 = extra;
 		this.level = level;
 		this.energy = extraD;
+	}
+
+	public RecipeData(FluidStack f1, FluidStack f2, int energy, int inputAmount) {
+		this.f1 = f1;
+		this.f2 = f2;
+		this.energy = energy;
+		this.inputAmount = inputAmount;
+		this.processTime = 1;
 	}
 
 	public FluidStack f1;

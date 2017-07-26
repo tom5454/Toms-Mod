@@ -1,16 +1,19 @@
 package com.tom.transport.item;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
-import com.tom.api.item.ModuleItem;
+import com.tom.api.multipart.BlockModuleBase;
 import com.tom.api.multipart.PartModule;
 import com.tom.transport.multipart.PartFluidServo;
 
-public class FluidServo extends ModuleItem {
+public class FluidServo extends BlockModuleBase {
 
-	@Override
-	public PartModule<?> createPart(EnumFacing side) {
-		return new PartFluidServo(side);
+	public FluidServo() {
+		super(0.25, 0.25, 1);
 	}
 
+	@Override
+	public PartModule<?> createNewTileEntity(World worldIn, int meta) {
+		return new PartFluidServo();
+	}
 }

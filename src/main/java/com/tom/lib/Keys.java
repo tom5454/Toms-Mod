@@ -12,6 +12,8 @@ public class Keys {
 	public static KeyBinding INTERACT;
 	public static KeyBinding MENU;
 	public static KeyBinding CONFIG;
+	public static KeyBinding PROFILE, SHOW_TETXURE_MAP;
+
 	public static boolean isPressed(KeyBinding key) {
 		return key != null ? key.isPressed() : false;
 	}

@@ -4,13 +4,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import com.tom.storage.multipart.StorageNetworkGrid.CellLight;
-import com.tom.storage.multipart.StorageNetworkGrid.IStorageData;
+import com.tom.api.inventory.IStorageInventory;
+import com.tom.storage.handler.StorageNetworkGrid;
+import com.tom.storage.item.ItemStorageCell;
 
 public interface IStorageCell {
-	IStorageData getData(ItemStack stack, World world, BlockPos pos, int priority);
-	CellLight getLightState(ItemStack stack, World world, BlockPos pos);
-	double getPowerDrain(ItemStack stack, World world, BlockPos pos);
-	int getBootTime(ItemStack stack, World world, BlockPos pos);
-	boolean isValid(ItemStack stack);
+	IStorageInventory getData(ItemStack stack, World world, BlockPos pos, int priority, StorageNetworkGrid grid);
+
+	ItemStorageCell.CellLight getLightState(IStorageInventory data);
+
+	double getPowerDrain(ItemStack stack, World world, BlockPos pos, StorageNetworkGrid grid);
+
+	int getBootTime(ItemStack stack, World world, BlockPos pos, StorageNetworkGrid grid);
+
+	boolean isValid(ItemStack stack, StorageNetworkGrid grid);
 }

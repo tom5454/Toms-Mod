@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodfactory:ablastFurnace", "y": 180 },
+        "facing=south,state=0": { "model": "tomsmodfactory:ablastFurnace"},
+         "facing=west,state=0": { "model": "tomsmodfactory:ablastFurnace", "y": 90 },
+         "facing=east,state=0": { "model": "tomsmodfactory:ablastFurnace", "y": 270 },
+           "facing=up,state=0": { "model": "tomsmodfactory:ablastFurnace", "x": 90 },
+         "facing=down,state=0": { "model": "tomsmodfactory:ablastFurnace", "x": 270 },
+        "facing=north,state=1": { "model": "tomsmodfactory:ablastFurnaceInactive", "y": 180 },
+        "facing=south,state=1": { "model": "tomsmodfactory:ablastFurnaceInactive"},
+         "facing=west,state=1": { "model": "tomsmodfactory:ablastFurnaceInactive", "y": 90 },
+         "facing=east,state=1": { "model": "tomsmodfactory:ablastFurnaceInactive", "y": 270 },
+           "facing=up,state=1": { "model": "tomsmodfactory:ablastFurnaceInactive", "x": 90 },
+         "facing=down,state=1": { "model": "tomsmodfactory:ablastFurnaceInactive", "x": 270 },
+        "facing=north,state=2": { "model": "tomsmodfactory:ablastFurnaceActive", "y": 180 },
+        "facing=south,state=2": { "model": "tomsmodfactory:ablastFurnaceActive"},
+         "facing=west,state=2": { "model": "tomsmodfactory:ablastFurnaceActive", "y": 90 },
+         "facing=east,state=2": { "model": "tomsmodfactory:ablastFurnaceActive", "y": 270 },
+           "facing=up,state=2": { "model": "tomsmodfactory:ablastFurnaceActive", "x": 90 },
+         "facing=down,state=2": { "model": "tomsmodfactory:ablastFurnaceActive", "x": 270 }
+    }
+}

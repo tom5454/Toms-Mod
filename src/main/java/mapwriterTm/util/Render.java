@@ -17,18 +17,15 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
  * Tesselator class)
  */
 
-public class Render
-{
+public class Render {
 	public static double zDepth = 0.0D;
 	public static final double circleSteps = 30.0;
 
-	public static void setColourWithAlphaPercent(int colour, int alphaPercent)
-	{
+	public static void setColourWithAlphaPercent(int colour, int alphaPercent) {
 		setColour(((((alphaPercent * 0xff) / 100) & 0xff) << 24) | (colour & 0xffffff));
 	}
 
-	public static void setColour(int colour)
-	{
+	public static void setColour(int colour) {
 
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -36,13 +33,11 @@ public class Render
 		GlStateManager.disableBlend();
 	}
 
-	public static void resetColour()
-	{
+	public static void resetColour() {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
-	public static int multiplyColours(int c1, int c2)
-	{
+	public static int multiplyColours(int c1, int c2) {
 		float c1A = (c1 >> 24) & 0xff;
 		float c1R = (c1 >> 16) & 0xff;
 		float c1G = (c1 >> 8) & 0xff;
@@ -58,8 +53,7 @@ public class Render
 		return (a << 24) | (r << 16) | (g << 8) | b;
 	}
 
-	public static int getAverageOfPixelQuad(int[] pixels, int offset, int scanSize)
-	{
+	public static int getAverageOfPixelQuad(int[] pixels, int offset, int scanSize) {
 		int p00 = pixels[offset];
 		int p01 = pixels[offset + 1];
 		int p10 = pixels[offset + scanSize];
@@ -75,15 +69,13 @@ public class Render
 		return 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
 	}
 
-	public static int getAverageColourOfArray(int[] pixels)
-	{
+	public static int getAverageColourOfArray(int[] pixels) {
 		int count = 0;
 		double totalA = 0.0;
 		double totalR = 0.0;
 		double totalG = 0.0;
 		double totalB = 0.0;
-		for (int pixel : pixels)
-		{
+		for (int pixel : pixels) {
 			double a = (pixel >> 24) & 0xff;
 			double r = (pixel >> 16) & 0xff;
 			double g = (pixel >> 8) & 0xff;
@@ -105,8 +97,7 @@ public class Render
 		return ((((int) (totalA)) & 0xff) << 24) | ((((int) (totalR)) & 0xff) << 16) | ((((int) (totalG)) & 0xff) << 8) | ((((int) (totalB)) & 0xff));
 	}
 
-	public static int adjustPixelBrightness(int colour, int brightness)
-	{
+	public static int adjustPixelBrightness(int colour, int brightness) {
 		int r = ((colour >> 16) & 0xff);
 		int g = ((colour >> 8) & 0xff);
 		int b = ((colour >> 0) & 0xff);
@@ -116,23 +107,19 @@ public class Render
 		return (colour & 0xff000000) | (r << 16) | (g << 8) | (b);
 	}
 
-	public static int getTextureWidth()
-	{
+	public static int getTextureWidth() {
 		return GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
 	}
 
-	public static int getTextureHeight()
-	{
+	public static int getTextureHeight() {
 		return GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
 	}
 
-	public static int getBoundTextureId()
-	{
+	public static int getBoundTextureId() {
 		return GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 	}
 
-	public static void printBoundTextureInfo(int texture)
-	{
+	public static void printBoundTextureInfo(int texture) {
 		int w = getTextureWidth();
 		int h = getTextureHeight();
 		int depth = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL12.GL_TEXTURE_DEPTH);
@@ -140,8 +127,7 @@ public class Render
 		Logging.log("texture %d parameters: width=%d, height=%d, depth=%d, format=%08x", texture, w, h, depth, format);
 	}
 
-	public static int getMaxTextureSize()
-	{
+	public static int getMaxTextureSize() {
 		return GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
 	}
 
@@ -155,29 +141,26 @@ public class Render
 	 */
 
 	// draw rectangle with texture stretched to fill the shape
-	public static void drawTexturedRect(double x, double y, double w, double h)
-	{
+	public static void drawTexturedRect(double x, double y, double w, double h) {
 		drawTexturedRect(x, y, w, h, 0.0D, 0.0D, 1.0D, 1.0D);
 	}
 
 	// draw rectangle with texture stretched to fill the shape with UV
-	public static void drawTexturedRect(double x, double y, double w, double h, double u, double v)
-	{
-		drawTexturedRect(x, y, w, h, u, v, u+(w/256D), v+(h/256D));
+	public static void drawTexturedRect(double x, double y, double w, double h, double u, double v) {
+		drawTexturedRect(x, y, w, h, u, v, u + (w / 256D), v + (h / 256D));
 	}
 
 	// draw rectangle with texture UV coordinates specified (so only part of the
 	// texture fills the rectangle).
-	public static void drawTexturedRect(double x, double y, double w, double h, double u1, double v1, double u2, double v2)
-	{
-		try
-		{
+	public static void drawTexturedRect(double x, double y, double w, double h, double u1, double v1, double u2, double v2) {
+		try {
 			GlStateManager.enableTexture2D();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer vertexbuffer = tessellator.getBuffer();
-			vertexbuffer.begin(GL11.GL_QUADS , DefaultVertexFormats.POSITION_TEX );;
+			vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			;
 			vertexbuffer.pos(x + w, y, zDepth).tex(u2, v1).endVertex();
 			vertexbuffer.pos(x, y, zDepth).tex(u1, v1).endVertex();
 			vertexbuffer.pos(x, y + h, zDepth).tex(u1, v2).endVertex();
@@ -185,15 +168,12 @@ public class Render
 			// renderer.finishDrawing();
 			tessellator.draw();
 			GlStateManager.disableBlend();
-		}
-		catch (NullPointerException e)
-		{
+		} catch (NullPointerException e) {
 			Logging.log("MwRender.drawTexturedRect: null pointer exception");
 		}
 	}
 
-	public static void drawArrow(double x, double y, double angle, double length)
-	{
+	public static void drawArrow(double x, double y, double angle, double length) {
 		// angle the back corners will be drawn at relative to the pointing
 		// angle
 		double arrowBackAngle = 0.75D * Math.PI;
@@ -213,8 +193,7 @@ public class Render
 		GlStateManager.disableBlend();
 	}
 
-	public static void drawTriangle(double x1, double y1, double x2, double y2, double x3, double y3)
-	{
+	public static void drawTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -230,8 +209,7 @@ public class Render
 		GlStateManager.disableBlend();
 	}
 
-	public static void drawRect(double x, double y, double w, double h)
-	{
+	public static void drawRect(double x, double y, double w, double h) {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -248,8 +226,7 @@ public class Render
 		GlStateManager.disableBlend();
 	}
 
-	public static void drawCircle(double x, double y, double r)
-	{
+	public static void drawCircle(double x, double y, double r) {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -261,8 +238,7 @@ public class Render
 		// ascending
 		double end = Math.PI * 2.0;
 		double incr = end / circleSteps;
-		for (double theta = -incr; theta < end; theta += incr)
-		{
+		for (double theta = -incr;theta < end;theta += incr) {
 			vertexbuffer.pos(x + (r * Math.cos(-theta)), y + (r * Math.sin(-theta)), zDepth).endVertex();
 		}
 		// renderer.finishDrawing();
@@ -271,8 +247,7 @@ public class Render
 		GlStateManager.disableBlend();
 	}
 
-	public static void drawCircleBorder(double x, double y, double r, double width)
-	{
+	public static void drawCircleBorder(double x, double y, double r, double width) {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -284,8 +259,7 @@ public class Render
 		double end = Math.PI * 2.0;
 		double incr = end / circleSteps;
 		double r2 = r + width;
-		for (double theta = -incr; theta < end; theta += incr)
-		{
+		for (double theta = -incr;theta < end;theta += incr) {
 			vertexbuffer.pos(x + (r * Math.cos(-theta)), y + (r * Math.sin(-theta)), zDepth).endVertex();
 			vertexbuffer.pos(x + (r2 * Math.cos(-theta)), y + (r2 * Math.sin(-theta)), zDepth).endVertex();
 		}
@@ -295,8 +269,7 @@ public class Render
 		GlStateManager.disableBlend();
 	}
 
-	public static void drawRectBorder(double x, double y, double w, double h, double bw)
-	{
+	public static void drawRectBorder(double x, double y, double w, double h, double bw) {
 		// top border
 		Render.drawRect(x - bw, y - bw, w + bw + bw, bw);
 		// bottom border
@@ -307,27 +280,24 @@ public class Render
 		Render.drawRect(x + w, y, bw, h);
 	}
 
-	public static void drawString(int x, int y, int colour, String formatString, Object... args)
-	{
+	public static void drawString(int x, int y, int colour, String formatString, Object... args) {
 		Minecraft mc = Minecraft.getMinecraft();
 		// mc.renderEngine.resetBoundTexture();
-		FontRenderer fr = mc.fontRendererObj;
+		FontRenderer fr = mc.fontRenderer;
 		String s = String.format(formatString, args);
 		fr.drawStringWithShadow(s, x, y, colour);
 	}
 
-	public static void drawCentredString(int x, int y, int colour, String formatString, Object... args)
-	{
+	public static void drawCentredString(int x, int y, int colour, String formatString, Object... args) {
 		Minecraft mc = Minecraft.getMinecraft();
 		// mc.renderEngine.resetBoundTexture();
-		FontRenderer fr = mc.fontRendererObj;
+		FontRenderer fr = mc.fontRenderer;
 		String s = String.format(formatString, args);
 		int w = fr.getStringWidth(s);
 		fr.drawStringWithShadow(s, x - (w / 2), y, colour);
 	}
 
-	public static void setCircularStencil(double x, double y, double r)
-	{
+	public static void setCircularStencil(double x, double y, double r) {
 		GlStateManager.enableDepth();
 		// disable drawing to the color buffer.
 		// circle will only be drawn to depth buffer.
@@ -369,8 +339,7 @@ public class Render
 		GlStateManager.depthFunc(GL11.GL_GREATER);
 	}
 
-	public static void disableStencil()
-	{
+	public static void disableStencil() {
 		GlStateManager.depthMask(true);
 		GlStateManager.depthFunc(GL11.GL_LEQUAL);
 		GlStateManager.disableDepth();

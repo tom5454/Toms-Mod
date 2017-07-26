@@ -9,8 +9,6 @@ import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.item.IExtruderModule;
-import com.tom.apis.TomsModUtils;
-import com.tom.factory.block.BlockWireMill;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
@@ -18,6 +16,7 @@ public class TileEntityWireMill extends TileEntityMachineBase {
 	private EnergyStorage energy = new EnergyStorage(20000, 100);
 	private static final int MAX_PROCESS_TIME = 350;
 	public int clientEnergy = 0;
+
 	@Override
 	public int getSizeInventory() {
 		return 4;
@@ -47,82 +46,47 @@ public class TileEntityWireMill extends TileEntityMachineBase {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		this.progress = compound.getInteger("progress");
-		//this.maxProgress = compound.getInteger("maxProgress");
+		// this.maxProgress = compound.getInteger("maxProgress");
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setInteger("progress", progress);
-		//compound.setInteger("mayProgress", maxProgress);
+		// compound.setInteger("mayProgress", maxProgress);
 		return compound;
-	}
-	@Override
-	public void updateEntity() {
-		if(!worldObj.isRemote){
-			if(energy.extractEnergy(30D, true) == 30D && canRun()){
-				if(progress > 0){
-					updateProgress();
-				}else if(progress == 0){
-					ItemStackChecker s = MachineCraftingHandler.getWireMillOutput(stack[0], getBlendingLevel());
-					if(s != null){
-						if(stack[1] != null){
-							if(TomsModUtils.areItemStacksEqual(stack[1], s.getStack(), true, true, false) && stack[1].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
-								stack[1].stackSize += s.getStack().stackSize;
-								progress = -1;
-								decrStackSize(0, s.getExtra());
-							}
-						}else{
-							progress = -1;
-							stack[1] = s.getStack();
-							decrStackSize(0, s.getExtra());
-						}
-					}else{
-						progress = -1;
-					}
-				}else{
-					ItemStackChecker s = MachineCraftingHandler.getWireMillOutput(stack[0], getBlendingLevel());
-					if(s != null){
-						if(stack[1] != null){
-							if(TomsModUtils.areItemStacksEqual(stack[1], s.getStack(), true, true, false) && stack[1].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
-								progress = getMaxProgress();
-							}
-						}else{
-							progress = getMaxProgress();
-						}
-					}
-					TomsModUtils.setBlockStateWithCondition(worldObj, pos, BlockWireMill.ACTIVE, progress > 0);
-				}
-			}else{
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, BlockWireMill.ACTIVE, false);
-			}
-		}
 	}
 
 	public int getClientEnergyStored() {
-		return MathHelper.ceiling_double_int(energy.getEnergyStored());
+		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
 	public int getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
-	private void updateProgress(){
+
+	@Override
+	public void updateProgress() {
 		int upgradeC = getSpeedUpgradeCount();
 		IExtruderModule m = getBlendingModule();
-		int speed = m != null ? m.getSpeed(stack[3], worldObj, pos) + 1 : 1;
+		int speed = m != null ? m.getSpeed(inv.getStackInSlot(3), world, pos) + 1 : 1;
 		int p = upgradeC + (upgradeC / 2) + speed;
 		progress = Math.max(0, progress - p);
 		energy.extractEnergy(1 * p, false);
 	}
-	private int getBlendingLevel(){
+
+	private int getBlendingLevel() {
 		int lvl = getBlendingModuleLevel();
 		return lvl <= 0 ? 0 : (lvl == 1 ? 2 : (lvl == 2 ? 4 : 5));
 	}
-	private int getBlendingModuleLevel(){
+
+	private int getBlendingModuleLevel() {
 		IExtruderModule m = getBlendingModule();
-		return m != null ? m.getLevel(stack[3], worldObj, pos) : 0;
+		return m != null ? m.getLevel(inv.getStackInSlot(3), world, pos) : 0;
 	}
-	private IExtruderModule getBlendingModule(){
-		return stack[3] != null && stack[3].getItem() instanceof IExtruderModule ? (IExtruderModule) stack[3].getItem() : null;
+
+	private IExtruderModule getBlendingModule() {
+		return inv.getStackInSlot(3) != null && inv.getStackInSlot(3).getItem() instanceof IExtruderModule ? (IExtruderModule) inv.getStackInSlot(3).getItem() : null;
 	}
 
 	@Override
@@ -134,22 +98,22 @@ public class TileEntityWireMill extends TileEntityMachineBase {
 	public int getUpgradeSlot() {
 		return 2;
 	}
+
 	@Override
 	public void writeToStackNBT(NBTTagCompound tag) {
 		super.writeToStackNBT(tag);
 		NBTTagList list = tag.getTagList("inventory", 10);
-		if(stack[3] != null){
-			NBTTagCompound t = new NBTTagCompound();
-			stack[3].writeToNBT(t);
-			t.setByte("Slot", (byte) 3);
-			list.appendTag(t);
-		}
+		NBTTagCompound t = new NBTTagCompound();
+		inv.getStackInSlot(3).writeToNBT(t);
+		t.setByte("Slot", (byte) 3);
+		list.appendTag(t);
 	}
 
 	@Override
 	public int getMaxProcessTimeNormal() {
 		return MAX_PROCESS_TIME;
 	}
+
 	@Override
 	public ResourceLocation getFront() {
 		return new ResourceLocation("tomsmodfactory:textures/blocks/wiremillFront.png");
@@ -163,5 +127,18 @@ public class TileEntityWireMill extends TileEntityMachineBase {
 	@Override
 	public int[] getInputSlots() {
 		return new int[]{0};
+	}
+
+	@Override
+	public void checkItems() {
+		ItemStackChecker s = MachineCraftingHandler.getWireMillOutput(inv.getStackInSlot(0), getBlendingLevel());
+		checkItems(s, 1, getMaxProgress(), 0, -1);
+		setOut(0, s);
+	}
+
+	@Override
+	public void finish() {
+		ItemStackChecker s = getOutput(0);
+		addItemsAndSetProgress(s, 1, 0, -1);
 	}
 }

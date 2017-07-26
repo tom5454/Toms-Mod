@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all":"blocks/mbFluidOut","particle": "blocks/mbFluidOut"
+        "all":"tomsmodfactory:blocks/mbFluidOut"
     }
 }

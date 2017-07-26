@@ -2,7 +2,6 @@ package com.tom.core.item;
 
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -24,34 +23,35 @@ import com.tom.core.block.BlockTreeTap;
 
 public class ItemTreeTap extends Item {
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		IBlockState state = worldIn.getBlockState(pos);
-		if(state != null && state.getBlock() == CoreInit.rubberWood){
+		ItemStack stack = playerIn.getHeldItem(hand);
+		if (state != null && state.getBlock() == CoreInit.rubberWood) {
 			WoodType t = state.getValue(BlockRubberWood.TYPE);
-			if(facing != t.getFacing()){
+			if (facing != t.getFacing()) {
 				TomsModUtils.sendNoSpamTranslate(playerIn, TextFormatting.RED, "tomsMod.chat.treeTapFailWrongSide");
 				return EnumActionResult.FAIL;
-			}else{
-				if(t.isHole()){
+			} else {
+				if (t.isHole()) {
 					TomsModUtils.sendNoSpamTranslate(playerIn, TextFormatting.RED, "tomsMod.chat.treeTapFailNotOpened");
 					return EnumActionResult.FAIL;
-				}else if(t.isCutHole()){
+				} else if (t.isCutHole()) {
 					IBlockState stateF = worldIn.getBlockState(pos.offset(facing));
-					if(stateF.getBlock().isReplaceable(worldIn, pos.offset(facing))){
-						if (stack.stackSize != 0 && playerIn.canPlayerEdit(pos.offset(facing), facing, stack) && worldIn.canBlockBePlaced(CoreInit.blockTreetap, pos.offset(facing), false, facing, (Entity)null, stack)){
+					if (stateF.getBlock().isReplaceable(worldIn, pos.offset(facing))) {
+						if (stack.getCount() != 0 && playerIn.canPlayerEdit(pos.offset(facing), facing, stack)) {
 							worldIn.setBlockState(pos.offset(facing), CoreInit.blockTreetap.getDefaultState().withProperty(BlockTreeTap.FACING, facing).withProperty(BlockTreeTap.STATE, 0), 3);
 							SoundType soundtype = Blocks.PLANKS.getSoundType(Blocks.PLANKS.getDefaultState(), worldIn, BlockPos.ORIGIN, playerIn);
 							worldIn.playSound(playerIn, pos.offset(facing), soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-							--stack.stackSize;
+							stack.shrink(1);
 							return EnumActionResult.SUCCESS;
-						}else
+						} else
 							return EnumActionResult.FAIL;
-					}else
+					} else
 						return EnumActionResult.PASS;
-				}else return EnumActionResult.FAIL;
+				} else
+					return EnumActionResult.FAIL;
 			}
-		}else
+		} else
 			return EnumActionResult.PASS;
 	}
 }

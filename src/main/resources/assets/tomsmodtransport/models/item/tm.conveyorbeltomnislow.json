@@ -1,0 +1,6 @@
+{
+        "parent": "tomsmodtransport:block/conveyorBeltItem",
+        "textures":{
+        	"top": "tomsmodtransport:blocks/conveyorTopslow"
+        }
+}

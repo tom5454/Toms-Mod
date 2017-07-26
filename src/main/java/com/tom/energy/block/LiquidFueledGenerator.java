@@ -16,10 +16,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fluids.FluidUtil;
-
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.apis.TomsModUtils;
 
 import com.tom.energy.tileentity.TileEntityLiquidFueledGenerator;
 
@@ -33,13 +32,12 @@ public class LiquidFueledGenerator extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityLiquidFueledGenerator();
 	}
+
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		boolean ret = FluidUtil.getFluidHandler(heldItem) != null;
-		FluidUtil.interactWithFluidHandler(heldItem, ((ITileFluidHandler) worldIn.getTileEntity(pos)).getTankOnSide(side), playerIn);
-		return ret;
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		return TomsModUtils.interactWithFluidHandler(((ITileFluidHandler) worldIn.getTileEntity(pos)).getTankOnSide(side), playerIn, hand);
 	}
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntityLiquidFueledGenerator te = (TileEntityLiquidFueledGenerator) worldIn.getTileEntity(pos);
@@ -52,9 +50,9 @@ public class LiquidFueledGenerator extends BlockContainerTomsMod {
 		spawnAsEntity(worldIn, pos, s);
 		super.breakBlock(worldIn, pos, state);
 	}
+
 	@Override
-	public int quantityDropped(Random random)
-	{
+	public int quantityDropped(Random random) {
 		return 0;
 	}
 
@@ -62,10 +60,11 @@ public class LiquidFueledGenerator extends BlockContainerTomsMod {
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return null;
 	}
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
-		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("stored")){
+		if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("stored")) {
 			tooltip.add(I18n.format("tomsMod.tooltip.itemsStored"));
 		}
 	}

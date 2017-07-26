@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "tomsmodcore:oreBauxite"}
+        "type=0": { "model": "tomsmodcore:oreBauxite"},
+        "type=1": { "model": "tomsmodcore:oreBauxitenether"}
     }
 }

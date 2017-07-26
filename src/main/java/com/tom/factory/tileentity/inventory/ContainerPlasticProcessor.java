@@ -19,10 +19,11 @@ import com.tom.network.messages.MessageProgress;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
-public class ContainerPlasticProcessor extends ContainerTomsMod implements IFluidContainer{
+public class ContainerPlasticProcessor extends ContainerTomsMod implements IFluidContainer {
 	private TileEntityPlasticProcessor te;
 	private FluidStack water, kerosene, lpg, creosote;
 	private int energy, lastProgress;
+
 	public ContainerPlasticProcessor(InventoryPlayer playerInv, TileEntityPlasticProcessor te) {
 		this.te = te;
 		addSlotToContainer(new Slot(te, 0, 118, 44));
@@ -31,17 +32,24 @@ public class ContainerPlasticProcessor extends ContainerTomsMod implements IFlui
 		addSlotToContainer(new SlotSpeedUpgrade(te, 3, 152, 74, 4));
 		addPlayerSlots(playerInv, 8, 94);
 	}
+
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return te.isUseableByPlayer(playerIn);
+		return te.isUsableByPlayer(playerIn);
 	}
+
 	@Override
 	public void syncFluid(int id, FluidStack stack) {
-		if(id == 0)te.getTankWater().setFluid(stack);
-		else if(id == 1)te.getTankKerosene().setFluid(stack);
-		else if(id == 2)te.getTankLPG().setFluid(stack);
-		else if(id == 3)te.getTankCreosote().setFluid(stack);
+		if (id == 0)
+			te.getTankWater().setFluid(stack);
+		else if (id == 1)
+			te.getTankKerosene().setFluid(stack);
+		else if (id == 2)
+			te.getTankLPG().setFluid(stack);
+		else if (id == 3)
+			te.getTankCreosote().setFluid(stack);
 	}
+
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
@@ -50,18 +58,28 @@ public class ContainerPlasticProcessor extends ContainerTomsMod implements IFlui
 		FluidStack kerosene = te.getTankKerosene().getFluid();
 		FluidStack lpg = te.getTankLPG().getFluid();
 		FluidStack creosote = te.getTankCreosote().getFluid();
-		if(water != null)water = water.copy();
-		if(kerosene != null)kerosene = kerosene.copy();
-		if(lpg != null)lpg = lpg.copy();
-		if(creosote != null)creosote = creosote.copy();
-		for(IContainerListener crafter : listeners){
+		if (water != null)
+			water = water.copy();
+		if (kerosene != null)
+			kerosene = kerosene.copy();
+		if (lpg != null)
+			lpg = lpg.copy();
+		if (creosote != null)
+			creosote = creosote.copy();
+		for (IContainerListener crafter : listeners) {
 			MessageProgress msg = new MessageProgress(crafter);
-			if(this.energy != energy)msg.add(0, energy);
-			if(!TomsModUtils.areFluidStacksEqual(water, this.water))MessageFluidStackSync.sendTo(crafter, 0, water);
-			if(!TomsModUtils.areFluidStacksEqual(kerosene, this.kerosene))MessageFluidStackSync.sendTo(crafter, 1, kerosene);
-			if(this.lastProgress != te.getField(0))crafter.sendProgressBarUpdate(this, 1, te.getField(0));
-			if(!TomsModUtils.areFluidStacksEqual(lpg, this.lpg))MessageFluidStackSync.sendTo(crafter, 2, lpg);
-			if(!TomsModUtils.areFluidStacksEqual(creosote, this.creosote))MessageFluidStackSync.sendTo(crafter, 3, creosote);
+			if (this.energy != energy)
+				msg.add(0, energy);
+			if (!TomsModUtils.areFluidStacksEqual(water, this.water))
+				MessageFluidStackSync.sendTo(crafter, 0, water);
+			if (!TomsModUtils.areFluidStacksEqual(kerosene, this.kerosene))
+				MessageFluidStackSync.sendTo(crafter, 1, kerosene);
+			if (this.lastProgress != te.getField(0))
+				crafter.sendWindowProperty(this, 1, te.getField(0));
+			if (!TomsModUtils.areFluidStacksEqual(lpg, this.lpg))
+				MessageFluidStackSync.sendTo(crafter, 2, lpg);
+			if (!TomsModUtils.areFluidStacksEqual(creosote, this.creosote))
+				MessageFluidStackSync.sendTo(crafter, 3, creosote);
 			msg.send();
 		}
 		this.energy = energy;
@@ -71,13 +89,13 @@ public class ContainerPlasticProcessor extends ContainerTomsMod implements IFlui
 		this.creosote = creosote;
 		this.lastProgress = te.getField(0);
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int data)
-	{
-		if(id == 0){
+	public void updateProgressBar(int id, int data) {
+		if (id == 0) {
 			te.clientEnergy = data;
-		}else if(id == 1)
+		} else if (id == 1)
 			te.setField(0, data);
 	}
 }

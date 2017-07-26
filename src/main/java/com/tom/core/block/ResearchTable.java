@@ -31,10 +31,11 @@ import com.tom.core.tileentity.TileEntityResearchTable;
 import com.tom.core.tileentity.TileEntityResearchTable.ResearchTableType;
 
 public class ResearchTable extends BlockContainerTomsMod {
-	/**0:Base,1:Left,2:Right*/
-	public static final PropertyInteger STATE = PropertyInteger.create("state",0,2);
+	/** 0:Base,1:Left,2:Right */
+	public static final PropertyInteger STATE = PropertyInteger.create("state", 0, 2);
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyEnum<ResearchTableType> TYPE = PropertyEnum.create("type", ResearchTableType.class);
+
 	public ResearchTable() {
 		super(Material.WOOD);
 	}
@@ -43,40 +44,40 @@ public class ResearchTable extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityResearchTable();
 	}
+
 	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {FACING,STATE,TYPE});
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{FACING, STATE, TYPE});
 	}
+
 	/*@Override
 	public IBlockState getStateFromMeta(int meta)
-    {
-        EnumFacing enumfacing = EnumFacing.getHorizontal(meta % 4).rotateY();
-
-        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
-            enumfacing = EnumFacing.NORTH;
-        }
-        //System.out.println(enumfacing);
-        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(STATE, (meta-1) / 4);
-    }
-
-    @Override
+	{
+	    EnumFacing enumfacing = EnumFacing.getHorizontal(meta % 4).rotateY();
+	
+	    if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+	    {
+	        enumfacing = EnumFacing.NORTH;
+	    }
+	    //System.out.println(enumfacing);
+	    return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(STATE, (meta-1) / 4);
+	}
+	
+	@Override
 	public int getMetaFromState(IBlockState state)
-    {//System.out.println("getMeta");
-    	EnumFacing enumfacing = state.getValue(FACING);
-    	if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
-            enumfacing = EnumFacing.NORTH;
-        }
-        return (enumfacing.getHorizontalIndex()+1) * (state.getValue(STATE)+1);
-    }*/
+	{//System.out.println("getMeta");
+		EnumFacing enumfacing = state.getValue(FACING);
+		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+	    {
+	        enumfacing = EnumFacing.NORTH;
+	    }
+	    return (enumfacing.getHorizontalIndex()+1) * (state.getValue(STATE)+1);
+	}*/
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		boolean formed = (meta & 8) > 0;
 		boolean isRight = (meta & 4) > 0;
 		return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(STATE, formed ? isRight ? 2 : 1 : 0);
@@ -86,122 +87,127 @@ public class ResearchTable extends BlockContainerTomsMod {
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{
+	public int getMetaFromState(IBlockState state) {
 		boolean formed = state.getValue(STATE) > 0;
 		boolean isRight = state.getValue(STATE) == 2;
 		int i = 0;
 		i = i | state.getValue(FACING).getHorizontalIndex();
 
-		if (formed)
-		{
+		if (formed) {
 			i |= 8;
 		}
 
-		if (isRight)
-		{
+		if (isRight) {
 			i |= 4;
 		}
 
 		return i;
 	}
+
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(worldIn.isRemote) return true;
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack heldItem = player.getHeldItem(hand);
+		if (worldIn.isRemote)
+			return true;
 		int blockState = state.getValue(STATE);
 		EnumFacing facing = state.getValue(FACING);
-		if(blockState == 0){
-			if(heldItem != null && heldItem.getItem() == Item.getItemFromBlock(this)){
+		if (blockState == 0) {
+			if (heldItem != null && heldItem.getItem() == Item.getItemFromBlock(this)) {
 				BlockPos offsetPos = pos.offset(facing.rotateY());
 				IBlockState offsetBlockState = worldIn.getBlockState(offsetPos);
-				if(offsetBlockState == null || offsetBlockState.getBlock() == null || offsetBlockState.getBlock().getMaterial(offsetBlockState) == Material.AIR){
-					heldItem.splitStack(1);
+				if (offsetBlockState == null || offsetBlockState.getBlock() == null || offsetBlockState.getBlock().getMaterial(offsetBlockState) == Material.AIR) {
+					if (!player.capabilities.isCreativeMode)
+						heldItem.splitStack(1);
 					TomsModUtils.setBlockState(worldIn, pos, state.withProperty(STATE, 2));
 					worldIn.setBlockState(offsetPos, this.getDefaultState().withProperty(FACING, facing).withProperty(STATE, 1));
-				}else{
+				} else {
 					TomsModUtils.sendNoSpamTranslate(player, "tomsMod.chat.destObs");
 				}
 			}
-		}else if(blockState == 1){
+		} else if (blockState == 1) {
 			BlockPos parentPos = pos.offset(facing.rotateYCCW());
 			IBlockState parentState = worldIn.getBlockState(parentPos);
-			if(parentState != null && parentState.getBlock() == this){
-				parentState.getBlock().onBlockActivated(worldIn, parentPos, parentState, player, hand, heldItem, side, hitX, hitY, hitZ);
+			if (parentState != null && parentState.getBlock() == this) {
+				parentState.getBlock().onBlockActivated(worldIn, parentPos, parentState, player, hand, side, hitX, hitY, hitZ);
 			}
-		}else if(blockState == 2){
-			if(heldItem != null && heldItem.getItem() == CoreInit.researchTableUpgrade){
+		} else if (blockState == 2) {
+			if (heldItem != null && heldItem.getItem() == CoreInit.researchTableUpgrade) {
 				TileEntityResearchTable te = (TileEntityResearchTable) worldIn.getTileEntity(pos);
 				byte b = te.upgrade(heldItem.getMetadata());
-				if(b == 2){
-					heldItem.stackSize--;
-				}else if(b == 1){
+				if (b == 2) {
+					if (!player.capabilities.isCreativeMode)
+						heldItem.splitStack(1);
+				} else if (b == 1) {
 					player.openGui(CoreInit.modInstance, GuiIDs.researchTable.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-				}else if(b == 3){
+				} else if (b == 3) {
 					TomsModUtils.sendNoSpamTranslateWithTag(player, new Style(), heldItem.getUnlocalizedName() + ".name", "tomsMod.chat.upgradeFailed");
 				}
-			}else{
+			} else {
 				player.openGui(CoreInit.modInstance, GuiIDs.researchTable.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 			}
 		}
 		return true;
 	}
+
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos,
-			EnumFacing facing, float hitX, float hitY, float hitZ, int meta,
-			EntityLivingBase placer) {
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
 		return this.getDefaultState().withProperty(FACING, TomsModUtils.getDirectionFacing(placer, false).getOpposite()).withProperty(STATE, 0);
 	}
+
 	@Override
 	public boolean isOpaqueCube(IBlockState s) {
 		return false;
 	}
+
 	@Override
 	public boolean isFullCube(IBlockState s) {
 		return false;
 	}
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		this.breakBlock(worldIn, pos, state, true);
 	}
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state, boolean first){
+
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state, boolean first) {
 		int blockState = state.getValue(STATE);
-		if(blockState == 2){
+		if (blockState == 2) {
 			TileEntityResearchTable te = (TileEntityResearchTable) worldIn.getTileEntity(pos);
 			te.state = state;
 			InventoryHelper.dropInventoryItems(worldIn, pos, te);
 			te.dropUpgrades();
 		}
-		if(first){
+		if (first) {
 			EnumFacing facing = state.getValue(FACING);
-			if(blockState != 0){
+			if (blockState != 0) {
 				EnumFacing f;
-				if(blockState == 1){
+				if (blockState == 1) {
 					f = facing.rotateYCCW();
-				}else{
+				} else {
 					f = facing.rotateY();
 				}
 				IBlockState testState = worldIn.getBlockState(pos.offset(f));
-				if(testState != null && testState.getBlock() == this){
-					if(facing == testState.getValue(FACING) && blockState != testState.getValue(STATE)){
-						((ResearchTable)testState.getBlock()).breakBlock(worldIn, pos, testState,false);
+				if (testState != null && testState.getBlock() == this) {
+					if (facing == testState.getValue(FACING) && blockState != testState.getValue(STATE)) {
+						((ResearchTable) testState.getBlock()).breakBlock(worldIn, pos, testState, false);
 						worldIn.setBlockToAir(pos.offset(f));
-						EntityItem drop2 = new EntityItem(worldIn, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5,new ItemStack(CoreInit.researchTable));
-						worldIn.spawnEntityInWorld(drop2);
+						EntityItem drop2 = new EntityItem(worldIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(CoreInit.researchTable));
+						worldIn.spawnEntity(drop2);
 					}
 				}
 			}
 		}
 		super.breakBlock(worldIn, pos, state);
 	}
+
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
 		TileEntity tile = worldIn.getTileEntity(pos);
-		return tile != null && tile instanceof TileEntityResearchTable ? state.withProperty(TYPE, ((TileEntityResearchTable)tile).getType()) : state.withProperty(TYPE, ResearchTableType.WOODEN);
+		return tile != null && tile instanceof TileEntityResearchTable ? state.withProperty(TYPE, ((TileEntityResearchTable) tile).getType()) : state.withProperty(TYPE, ResearchTableType.WOODEN);
 	}
+
 	@Override
-	protected void dropInventory(World worldIn, BlockPos pos, IInventory te) {}
+	protected void dropInventory(World worldIn, BlockPos pos, IInventory te) {
+	}
 }

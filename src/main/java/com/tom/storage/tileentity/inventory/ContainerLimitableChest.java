@@ -17,6 +17,7 @@ public class ContainerLimitableChest extends ContainerTomsMod {
 	private static final int numRows = 3;
 	private TileEntityLimitableChest te;
 	private int selectedLast = -1;
+
 	public ContainerLimitableChest(InventoryPlayer inventory, TileEntityLimitableChest tileEntity) {
 		this.te = tileEntity;
 		/*int x = 8;
@@ -52,11 +53,9 @@ public class ContainerLimitableChest extends ContainerTomsMod {
 		addSlotToContainer(new Slot(te,25,x,y));
 		//addSlotToContainer(new Slot(te,26,x,y+18));
 		addSlotToContainer(new Slot(te,6,x,y+36));*/
-		for (int j = 0; j < numRows; ++j)
-		{
-			for (int k = 0; k < 9; ++k)
-			{
-				if(!(j == 2 && k == 8))
+		for (int j = 0;j < numRows;++j) {
+			for (int k = 0;k < 9;++k) {
+				if (!(j == 2 && k == 8))
 					this.addSlotToContainer(new Slot(te, k + j * 9, 8 + k * 18, 18 + j * 18));
 			}
 		}
@@ -66,61 +65,51 @@ public class ContainerLimitableChest extends ContainerTomsMod {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		boolean ret = this.te.isUseableByPlayer(player);
+		boolean ret = this.te.isUsableByPlayer(player);
 		return ret;
 	}
+
 	/**
 	 * Take a stack from the specified inventory slot.
 	 */
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
-	{
-		ItemStack itemstack = null;
+	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(index);
 
-		if (slot != null && slot.getHasStack())
-		{
+		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			if (index < numRows * 9)
-			{
-				if (!this.mergeItemStack(itemstack1, numRows * 9, this.inventorySlots.size(), true))
-				{
-					return null;
-				}
-			}
-			else if (!this.mergeItemStack(itemstack1, 0, numRows * 9, false))
-			{
-				return null;
-			}
+			if (index < numRows * 9) {
+				if (!this.mergeItemStack(itemstack1, numRows * 9, this.inventorySlots.size(), true)) { return ItemStack.EMPTY; }
+			} else if (!this.mergeItemStack(itemstack1, 0, numRows * 9, false)) { return ItemStack.EMPTY; }
 
-			if (itemstack1.stackSize == 0)
-			{
-				slot.putStack((ItemStack)null);
-			}
-			else
-			{
+			if (itemstack1.isEmpty()) {
+				slot.putStack(ItemStack.EMPTY);
+			} else {
 				slot.onSlotChanged();
 			}
 		}
 
 		return itemstack;
 	}
+
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		if(te.getField(0) != selectedLast){
-			for(IContainerListener crafter : listeners) {
-				crafter.sendProgressBarUpdate(this, 0, te.getField(0));
+		if (te.getField(0) != selectedLast) {
+			for (IContainerListener crafter : listeners) {
+				crafter.sendWindowProperty(this, 0, te.getField(0));
 			}
 			this.selectedLast = te.getField(0);
 		}
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int id, int data) {
-		if(id == 0){
+		if (id == 0) {
 			te.setField(0, data);
 		}
 	}

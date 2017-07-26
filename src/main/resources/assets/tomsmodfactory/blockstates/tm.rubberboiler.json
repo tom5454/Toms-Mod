@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "active=false,facing=north": { "model": "tomsmodfactory:rubberboiler" },
+        "active=false,facing=south": { "model": "tomsmodfactory:rubberboiler", "y": 180 },
+        "active=false,facing=west":  { "model": "tomsmodfactory:rubberboiler", "y": 270 },
+        "active=false,facing=east":  { "model": "tomsmodfactory:rubberboiler", "y": 90 },
+         "active=true,facing=north": { "model": "tomsmodfactory:rubberboiler" },
+         "active=true,facing=south": { "model": "tomsmodfactory:rubberboiler", "y": 180 },
+         "active=true,facing=west":  { "model": "tomsmodfactory:rubberboiler", "y": 270 },
+         "active=true,facing=east":  { "model": "tomsmodfactory:rubberboiler", "y": 90 }
+    }
+}

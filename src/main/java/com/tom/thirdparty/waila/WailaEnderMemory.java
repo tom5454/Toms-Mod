@@ -17,44 +17,36 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 
-public class WailaEnderMemory implements IWailaDataProvider{
+public class WailaEnderMemory implements IWailaDataProvider {
 
 	@Override
-	public ItemStack getWailaStack(IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+	public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return null;
 	}
 
 	@Override
-	public List<String> getWailaHead(ItemStack itemStack,
-			List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+	public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
 
 	@Override
-	public List<String> getWailaBody(ItemStack itemStack,
-			List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		NBTTagCompound tag = accessor.getNBTData();
 		String playerName = tag.getString("player");
-		if(!playerName.equals("")){
+		if (!playerName.equals("")) {
 			currenttip.add(I18n.format("tomsMod.waila.playerName") + " " + TextFormatting.YELLOW + playerName);
 		}
 		return currenttip;
 	}
 
 	@Override
-	public List<String> getWailaTail(ItemStack itemStack,
-			List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+	public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
 
 	@Override
-	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te,
-			NBTTagCompound tag, World world, BlockPos pos) {
-		TileEntityEnderMemory tile = (TileEntityEnderMemory)te;
+	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
+		TileEntityEnderMemory tile = (TileEntityEnderMemory) te;
 		tag.setString("player", tile.playerName);
 		return tag;
 	}

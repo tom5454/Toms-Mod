@@ -22,6 +22,7 @@ public class ContainerCoiler extends ContainerTomsMod {
 	private TileEntityCoilerPlant te;
 	private int lastEnergy, lastProgress;
 	private int lastMaxProgress;
+
 	public ContainerCoiler(InventoryPlayer playerInv, TileEntityCoilerPlant te) {
 		this.te = te;
 		addSlotToContainer(new Slot(te, 0, 44, 35));
@@ -30,42 +31,49 @@ public class ContainerCoiler extends ContainerTomsMod {
 		addSlotToContainer(new SlotEmptyCoil(te, 3, 44, 54));
 		addPlayerSlots(playerInv, 8, 84);
 	}
+
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return te.isUseableByPlayer(playerIn);
+		return te.isUsableByPlayer(playerIn);
 	}
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-		return null;
-	}
+
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		for(IContainerListener crafter : listeners){
+		for (IContainerListener crafter : listeners) {
 			MessageProgress msg = new MessageProgress(crafter);
-			if(lastEnergy != te.getClientEnergyStored())msg.add(0, te.getClientEnergyStored());
-			//crafter.sendProgressBarUpdate(this, 0, te.getClientEnergyStored());
-			if(lastProgress != te.getField(0))crafter.sendProgressBarUpdate(this, 1, te.getField(0));
-			if(lastMaxProgress != te.getField(1))crafter.sendProgressBarUpdate(this, 2, te.getField(1));
+			if (lastEnergy != te.getClientEnergyStored())
+				msg.add(0, te.getClientEnergyStored());
+			// crafter.sendProgressBarUpdate(this, 0,
+			// te.getClientEnergyStored());
+			if (lastProgress != te.getField(0))
+				crafter.sendWindowProperty(this, 1, te.getField(0));
+			if (lastMaxProgress != te.getField(1))
+				crafter.sendWindowProperty(this, 2, te.getField(1));
 			msg.send();
 		}
 		lastEnergy = te.getClientEnergyStored();
 		lastProgress = te.getField(0);
 		lastMaxProgress = te.getField(1);
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int data)
-	{
-		if(id == 0)te.clientEnergy = data;
-		else if(id == 1)te.setField(0, data);
-		else if(id == 2)te.setField(1, data);
+	public void updateProgressBar(int id, int data) {
+		if (id == 0)
+			te.clientEnergy = data;
+		else if (id == 1)
+			te.setField(0, data);
+		else if (id == 2)
+			te.setField(1, data);
 	}
+
 	public static class SlotEmptyCoil extends Slot {
 
 		public SlotEmptyCoil(IInventory inventoryIn, int index, int xPosition, int yPosition) {
 			super(inventoryIn, index, xPosition, yPosition);
 		}
+
 		@Override
 		public boolean isItemValid(ItemStack stack) {
 			return stack != null && stack.getItem() == CoreInit.emptyWireCoil;

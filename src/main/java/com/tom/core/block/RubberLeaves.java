@@ -32,6 +32,7 @@ public class RubberLeaves extends BlockLeaves {
 	public EnumType getWoodType(int meta) {
 		return null;
 	}
+
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, CHECK_DECAY, DECAYABLE);
@@ -41,41 +42,44 @@ public class RubberLeaves extends BlockLeaves {
 	public int getMetaFromState(IBlockState state) {
 		return (state.getValue(CHECK_DECAY) ? 1 : 0) + (state.getValue(DECAYABLE) ? 2 : 0);
 	}
+
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(CHECK_DECAY, meta == 1 || meta == 3).withProperty(DECAYABLE, meta > 1);
 	}
+
 	public RubberLeaves() {
 		this.setDefaultState(this.blockState.getBaseState().withProperty(CHECK_DECAY, Boolean.valueOf(true)).withProperty(DECAYABLE, Boolean.valueOf(true)));
 	}
+
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return Item.getItemFromBlock(CoreInit.rubberSapling);
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-	{
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
 		leavesFancy = Minecraft.getMinecraft().gameSettings.fancyGraphics;
 		return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 	}
+
 	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 * Used to determine ambient occlusion and culling when rebuilding chunks
+	 * for render
 	 */
 	@Override
-	public boolean isOpaqueCube(IBlockState state)
-	{
-		try{
+	public boolean isOpaqueCube(IBlockState state) {
+		try {
 			return !Minecraft.getMinecraft().gameSettings.fancyGraphics;
-		}catch(Throwable e){
+		} catch (Throwable e) {
 			return true;
 		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
-	{
+	public BlockRenderLayer getBlockLayer() {
 		return Minecraft.getMinecraft().gameSettings.fancyGraphics ? BlockRenderLayer.CUTOUT_MIPPED : BlockRenderLayer.SOLID;
 	}
 }

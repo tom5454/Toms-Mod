@@ -18,19 +18,21 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityMonitor extends TileEntityMonitorBase implements IPeripheral{
+public class TileEntityMonitor extends TileEntityMonitorBase implements IPeripheral {
 	private int posX = 0;
 	private int posY = 0;
 	private int posZ = 0;
+
 	public TileEntityMonitor() {
 		super(16);
 	}
+
 	public int color;
 	public String pName = "tm_basicMonitor";
-	private List<IComputerAccess> computers = new ArrayList<IComputerAccess>();
-	public String[] methods = {"fill","filledRectangle","rectangle","listMethods","setSize","getSize","sync","clear","addText","addTexture"};
-
+	private List<IComputerAccess> computers = new ArrayList<>();
+	public String[] methods = {"fill", "filledRectangle", "rectangle", "listMethods", "setSize", "getSize", "sync", "clear", "addText", "addTexture"};
 
 	@Override
 	public String getType() {
@@ -43,60 +45,59 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] a) throws LuaException,
-	InterruptedException {
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
 		Object[] ret = new Object[1];
 		ret[0] = false;
-		if (method == 0){
+		if (method == 0) {
 			int color;
-			if (a.length == 0){
+			if (a.length == 0) {
 				color = 0x000000;
-			}else if ((a[0] instanceof Double) && (a.length > 0)){
-				color = MathHelper.floor_double((Double) a[0]);
-			}else{
+			} else if ((a[0] instanceof Double) && (a.length > 0)) {
+				color = MathHelper.floor((Double) a[0]);
+			} else {
 				throw new LuaException("Bad argument #1 (expected number)");
 			}
-			if(color >= 0){
-				for(int i = 0;i<sizeX;i++){
-					for(int j = 0;j<sizeY;j++){
+			if (color >= 0) {
+				for (int i = 0;i < sizeX;i++) {
+					for (int j = 0;j < sizeY;j++) {
 						this.screen[i][j] = color;
 					}
 				}
 				ret[0] = true;
-			}else{
-				throw new LuaException("Bad Argument #1, (too small number ("+color+") minimum value is 0 )");
+			} else {
+				throw new LuaException("Bad Argument #1, (too small number (" + color + ") minimum value is 0 )");
 			}
-		}else if(method == 1){
+		} else if (method == 1) {
 			int color;
-			if (a.length < 4){
+			if (a.length < 4) {
 				throw new LuaException("Too few arguments (expected x,y,width,height,[color])");
-			} else if((a.length >= 4) && !(a[0] instanceof Double)){
+			} else if ((a.length >= 4) && !(a[0] instanceof Double)) {
 				throw new LuaException("Bad argument #1 (expected Number)");
-			} else if((a.length >= 4) && !(a[1] instanceof Double)){
+			} else if ((a.length >= 4) && !(a[1] instanceof Double)) {
 				throw new LuaException("Bad argument #2 (expected Number)");
-			} else if((a.length >= 4) && !(a[2] instanceof Double)){
+			} else if ((a.length >= 4) && !(a[2] instanceof Double)) {
 				throw new LuaException("Bad argument #3 (expected Number)");
-			} else if((a.length >= 4) && !(a[3] instanceof Double)){
+			} else if ((a.length >= 4) && !(a[3] instanceof Double)) {
 				throw new LuaException("Bad argument #4 (expected Number)");
-			} else if((a.length >= 5) && !(a[4] instanceof Double)){
+			} else if ((a.length >= 5) && !(a[4] instanceof Double)) {
 				throw new LuaException("Bad argument #5 (expected Number)");
 			} else {
-				if (a.length < 5){
+				if (a.length < 5) {
 					color = 0x000000;
-				}else{
-					color = MathHelper.floor_double((Double) a[4]);
+				} else {
+					color = MathHelper.floor((Double) a[4]);
 				}
-				if(color < 0) throw new LuaException("Bad Argument #5, (too small number ("+color+") minimum value is 0 )");
-				int xStart = MathHelper.floor_double((Double) a[0]) - 1;
-				int yStart = MathHelper.floor_double((Double) a[1]) - 1;
-				int xStop = xStart + MathHelper.floor_double((Double) a[2]);
-				int yStop = yStart + MathHelper.floor_double((Double) a[3]);
-				if (xStart < sizeX+1 && yStart < sizeY+1 && xStart >= 0 && yStart >= 0){
+				if (color < 0)
+					throw new LuaException("Bad Argument #5, (too small number (" + color + ") minimum value is 0 )");
+				int xStart = MathHelper.floor((Double) a[0]) - 1;
+				int yStart = MathHelper.floor((Double) a[1]) - 1;
+				int xStop = xStart + MathHelper.floor((Double) a[2]);
+				int yStop = yStart + MathHelper.floor((Double) a[3]);
+				if (xStart < sizeX + 1 && yStart < sizeY + 1 && xStart >= 0 && yStart >= 0) {
 					xStop = xStop > sizeX ? sizeX : xStop;
 					yStop = yStop > sizeY ? sizeY : yStop;
-					for (int i = xStart; i < xStop;i++){
-						for (int y = yStart;y < yStop;y++){
+					for (int i = xStart;i < xStop;i++) {
+						for (int y = yStart;y < yStop;y++) {
 							this.screen[y][i] = color;
 						}
 					}
@@ -105,37 +106,38 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 					throw new LuaException("Out of boundary");
 				}
 			}
-		}else if(method == 2){
+		} else if (method == 2) {
 			int color;
-			if (a.length < 4){
+			if (a.length < 4) {
 				throw new LuaException("Too few arguments (expected x,y,width,height,[color])");
-			} else if((a.length >= 4) && !(a[0] instanceof Double)){
+			} else if ((a.length >= 4) && !(a[0] instanceof Double)) {
 				throw new LuaException("Bad argument #1 (expected Number)");
-			} else if((a.length >= 4) && !(a[1] instanceof Double)){
+			} else if ((a.length >= 4) && !(a[1] instanceof Double)) {
 				throw new LuaException("Bad argument #2 (expected Number)");
-			} else if((a.length >= 4) && !(a[2] instanceof Double)){
+			} else if ((a.length >= 4) && !(a[2] instanceof Double)) {
 				throw new LuaException("Bad argument #3 (expected Number)");
-			} else if((a.length >= 4) && !(a[3] instanceof Double)){
+			} else if ((a.length >= 4) && !(a[3] instanceof Double)) {
 				throw new LuaException("Bad argument #4 (expected Number)");
-			} else if((a.length >= 5) && !(a[4] instanceof Double)){
+			} else if ((a.length >= 5) && !(a[4] instanceof Double)) {
 				throw new LuaException("Bad argument #5 (expected Number)");
 			} else {
-				if (a.length < 5){
+				if (a.length < 5) {
 					color = 0x000000;
-				}else{
-					color = MathHelper.floor_double((Double) a[4]);
+				} else {
+					color = MathHelper.floor((Double) a[4]);
 				}
-				if(color < 0) throw new LuaException("Bad Argument #5, (too small number ("+color+") minimum value is 0 )");
-				int xStart = MathHelper.floor_double((Double) a[0]) - 1;
-				int yStart = MathHelper.floor_double((Double) a[1]) - 1;
-				int xStop = xStart + MathHelper.floor_double((Double) a[2]);
-				int yStop = yStart + MathHelper.floor_double((Double) a[3]);
-				if (xStart < sizeX+1 && yStart < sizeY+1 && xStart >= 0 && yStart >= 0){
+				if (color < 0)
+					throw new LuaException("Bad Argument #5, (too small number (" + color + ") minimum value is 0 )");
+				int xStart = MathHelper.floor((Double) a[0]) - 1;
+				int yStart = MathHelper.floor((Double) a[1]) - 1;
+				int xStop = xStart + MathHelper.floor((Double) a[2]);
+				int yStop = yStart + MathHelper.floor((Double) a[3]);
+				if (xStart < sizeX + 1 && yStart < sizeY + 1 && xStart >= 0 && yStart >= 0) {
 					xStop = xStop > sizeX ? sizeX : xStop;
 					yStop = yStop > sizeY ? sizeY : yStop;
-					for (int i = xStart; i < xStop;i++){
-						for (int y = yStart;y < yStop;y++){
-							this.screen[i][y] = (i == xStart || i == xStop-1) ? color : ((y == yStart || y == yStop-1) ? color : this.screen[i][y]);
+					for (int i = xStart;i < xStop;i++) {
+						for (int y = yStart;y < yStop;y++) {
+							this.screen[i][y] = (i == xStart || i == xStop - 1) ? color : ((y == yStart || y == yStop - 1) ? color : this.screen[i][y]);
 						}
 					}
 					ret[0] = true;
@@ -143,56 +145,58 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 					throw new LuaException("Out of boundary");
 				}
 			}
-		}else if(method == 3){
+		} else if (method == 3) {
 			Object[] o = new Object[methods.length];
-			for(int i = 0;i<o.length;i++){
+			for (int i = 0;i < o.length;i++) {
 				o[i] = methods[i];
 			}
 			return o;
-		}else if(method == 4){
-			int s = MathHelper.floor_double((Double) a[0]);
-			if(s < 1) throw new LuaException("Bad Argument #1, (too small number ("+s+") minimum value is 1 )");
-			if(s > Configs.monitorSize) throw new LuaException("Bad Argument #1, (too big number ("+s+") maximum value is "+Configs.monitorSize+" )");
+		} else if (method == 4) {
+			int s = MathHelper.floor((Double) a[0]);
+			if (s < 1)
+				throw new LuaException("Bad Argument #1, (too small number (" + s + ") minimum value is 1 )");
+			if (s > Configs.monitorSize)
+				throw new LuaException("Bad Argument #1, (too big number (" + s + ") maximum value is " + Configs.monitorSize + " )");
 			this.screen = new int[s][s];
 			this.sizeX = s;
 			this.sizeY = s;
 			ret[0] = true;
-		}else if(method == 5){
+		} else if (method == 5) {
 			return new Object[]{this.sizeX, this.sizeY};
-		}else if(method == 6){
+		} else if (method == 6) {
 			this.markDirty();
 			markBlockForUpdate(pos);
 			ret[0] = true;
-		}else if(method == 7){
+		} else if (method == 7) {
 			this.textList.clear();
 			this.textureList.clear();
 			ret[0] = true;
-		}else if(method == 8){
-			if(a.length > 2 && a[0] instanceof Double && a[1] instanceof Double){
-				int x = MathHelper.floor_double((Double) a[0]);
-				int y = MathHelper.floor_double((Double) a[1]);
-				int c = a.length > 3 && a[3] instanceof Double ? MathHelper.floor_double((Double) a[3]) : 0xFFFFFF;
+		} else if (method == 8) {
+			if (a.length > 2 && a[0] instanceof Double && a[1] instanceof Double) {
+				int x = MathHelper.floor((Double) a[0]);
+				int y = MathHelper.floor((Double) a[1]);
+				int c = a.length > 3 && a[3] instanceof Double ? MathHelper.floor((Double) a[3]) : 0xFFFFFF;
 				String s = a[2].toString();
-				LuaText t = new LuaText(x,y,c,s,0,1);
+				LuaText t = new LuaText(x, y, c, s, 0, 1);
 				this.textList.add(t);
-				return new Object[]{true,t};
-			}else{
+				return new Object[]{true, t};
+			} else {
 				throw new LuaException("Invalid Arguments, excepted (number,number,String,[number])");
 			}
-		}else if(method == 9){
-			if(a.length > 2 && a[0] instanceof Double && a[1] instanceof Double){
-				int x = MathHelper.floor_double((Double) a[0]);
-				int y = MathHelper.floor_double((Double) a[1]);
-				int c = a.length > 3 && a[3] instanceof Double ? MathHelper.floor_double((Double) a[3]) : 0xFFFFFFFF;
+		} else if (method == 9) {
+			if (a.length > 2 && a[0] instanceof Double && a[1] instanceof Double) {
+				int x = MathHelper.floor((Double) a[0]);
+				int y = MathHelper.floor((Double) a[1]);
+				int c = a.length > 3 && a[3] instanceof Double ? MathHelper.floor((Double) a[3]) : 0xFFFFFFFF;
 				String s = a[2].toString();
-				LuaTexture t = new LuaTexture(x,y,c,s,0,false,1,1);
+				LuaTexture t = new LuaTexture(x, y, c, s, 0, false, 1, 1);
 				this.textureList.add(t);
-				return new Object[]{true,t};
-			}else{
+				return new Object[]{true, t};
+			} else {
 				throw new LuaException("Invalid Arguments, excepted (number,number,String,[number])");
 			}
 		}
-		//screenS = this.read(this.getRow(xCoord, yCoord, zCoord));
+		// screenS = this.read(this.getRow(xCoord, yCoord, zCoord));
 		/*if (method == 0){
 			if (arguments.length == 0){
 				arguments[0] = false;
@@ -290,7 +294,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 				}
 			}
 		}else if (method == 3){
-
+		
 		}
 		if ((Boolean) ret[0]){
 			//this.write(screenS, this.getRow(xCoord, yCoord, zCoord));
@@ -314,6 +318,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 	public boolean equals(IPeripheral other) {
 		return false;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
@@ -321,7 +326,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		this.posX = tag.getInteger("posX");
 		this.posY = tag.getInteger("posY");
 		this.posZ = tag.getInteger("posZ");
-		//screen[0] = tag.getIntArray("s");
+		// screen[0] = tag.getIntArray("s");
 		/*width = tag.getInteger("width");
 		height = tag.getInteger("height");
 		this.properties[0] = color;
@@ -337,7 +342,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		tag.setInteger("posX", this.posX);
 		tag.setInteger("posY", this.posY);
 		tag.setInteger("posZ", this.posZ);
-		//tag.setIntArray("s", this.screen[0]);
+		// tag.setIntArray("s", this.screen[0]);
 		/*tag.setInteger("width", width);
 		tag.setInteger("height", height);*/
 		return tag;
@@ -361,7 +366,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		//}
 		return TomsMathHelper.toInt(table);
 	}
-
+	
 	/*public void writeToPacket(ByteBuf buf){
 		buf.writeInt(this.color);
 		int[][] current = TomsMathHelper.compressInt(this.read(this.getRow(xCoord, yCoord, zCoord)));
@@ -371,7 +376,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		}
 		//System.out.println("write to packet");
 	}
-
+	
 	public void readFromPacket(ByteBuf buf){
 		this.color = buf.readInt();
 		int[][] current = {};
@@ -382,7 +387,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		screenS = TomsMathHelper.decompressInt(current);
 	}*/
 
-	public int getColor(){
+	public int getColor() {
 		return this.color;
 	}
 
@@ -390,19 +395,19 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		//System.out.println("update");
 		this.register(xCoord, yCoord, zCoord);
 	}
-
+	
 	public void setMeta(int meta){
 		this.blockMetadata = meta;
 	}
-
+	
 	public void setColor(int color) {
 		this.color = color;
 	}
-
+	
 	/*public void onBlockPlaced(World world, int x, int y, int z){
 		this.register(x, y, z);
 	}
-
+	
 	private void register(int x, int y, int z){
 		int[] list = TomsMathHelper.find(screen, x, y, z, color);
 		boolean found = list[0] == 1;
@@ -423,11 +428,11 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 			screen[last] = current;
 		}
 	}
-
+	
 	private void write(int[][] table, int pos){
 		screen[pos][1] = table;
 	}
-
+	
 	private boolean[] read(int pos, int line){
 		boolean[] ret = new boolean[15];
 		for(int part = 0;part<16;part++){
@@ -440,12 +445,12 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		}
 		return ret;
 	}
-
+	
 	private int getRow(int x, int y, int z){
 		int[] list = TomsMathHelper.find(screen, x, y, z, color);
 		return list[1];
 	}
-
+	
 	private boolean[] fill(boolean mode){
 		boolean[] current = new boolean[15];
 		for(int i=0;i<current.length;i++){
@@ -453,41 +458,43 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		}
 		return current;
 	}
-
+	
 	private int[][] read(int pos){
 		return screen[pos][1];
 	}
-
+	
 	public int[][] getScreen(){
 		return screenS;
 	}
-
+	
 	public int[] getProperties() {
 		return this.properties;
 	}*/
-	public boolean onBlockActivated(boolean onServer, EnumFacing side, float x, float y, float z, EntityPlayer player){
-		//System.out.println("onBlockActivated");
-		if(onServer && side.ordinal() == this.direction){
-			TileEntity tile = worldObj.getTileEntity(new BlockPos(posX, posY, posZ));
-			if(tile != null && tile instanceof TileEntityGPU){
-				if(this.direction > 1){
+	public boolean onBlockActivated(boolean onServer, EnumFacing side, float x, float y, float z, EntityPlayer player) {
+		// System.out.println("onBlockActivated");
+		if (onServer && side.ordinal() == this.direction) {
+			TileEntity tile = world.getTileEntity(new BlockPos(posX, posY, posZ));
+			if (tile != null && tile instanceof TileEntityGPU) {
+				if (this.direction > 1) {
 					float yPos = 1F - y;
 					float xPos = x == this.THICKNESS ? z : x;
-					if(this.direction % 2 == 1)xPos = 1F - xPos;
-					int xP = MathHelper.floor_float(xPos*this.sizeX);
-					int yP = MathHelper.floor_float(yPos*this.sizeY);
+					if (this.direction % 2 == 1)
+						xPos = 1F - xPos;
+					int xP = MathHelper.floor(xPos * this.sizeX);
+					int yP = MathHelper.floor(yPos * this.sizeY);
 					int xCoord = pos.getX();
 					int yCoord = pos.getY();
 					int zCoord = pos.getZ();
-					((TileEntityGPU)tile).monitorClick(xCoord, yCoord, zCoord, xP, yP);
-				}else{
+					((TileEntityGPU) tile).monitorClick(xCoord, yCoord, zCoord, xP, yP);
+				} else {
 
 				}
 			}
-			//System.out.println("m: " + x + " " + y + " " + z);
+			// System.out.println("m: " + x + " " + y + " " + z);
 		}
 		return side.ordinal() == this.direction;
 	}
+
 	@Override
 	public TileEntityMonitorBase connect(int x, int y, int z) {
 		this.posX = x;

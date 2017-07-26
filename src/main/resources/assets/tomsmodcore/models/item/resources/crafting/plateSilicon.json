@@ -1,6 +1,6 @@
 {
-        "parent": "item/generated",
-    "textures":{
-        "layer0": "tomsmodcore:items/plateSilicon"
-    }
+  "parent": "tomsmodcore:item/platesbase",
+  "textures": {
+    "block": "tomsmodcore:blocks/resources/blocksilicon"
+  }
 }

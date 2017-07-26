@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all":"blocks/mbf","particle": "blocks/mbNoC"
+        "all":"tomsmodfactory:blocks/mbf"
     }
 }

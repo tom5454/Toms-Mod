@@ -40,7 +40,7 @@ public class FusionController extends BlockContainerTomsMod {
 		super(arg0);
 	}
 
-	public FusionController(){
+	public FusionController() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
@@ -63,23 +63,23 @@ public class FusionController extends BlockContainerTomsMod {
 			Block direction2 = world.getBlock(x - 1, y, z);
 			Block direction3 = world.getBlock(x + 1, y, z);
 			byte byte0 = 3;
-
+	
 			if (direction.func_149730_j() && !direction.func_149730_j()) {
 				byte0 = 3;
 			}
-
+	
 			if (direction1.func_149730_j() && !direction1.func_149730_j()) {
 				byte0 = 2;
 			}
-
+	
 			if (direction2.func_149730_j() && !direction2.func_149730_j()) {
 				byte0 = 5;
 			}
-
+	
 			if (direction3.func_149730_j() && !direction3.func_149730_j()) {
 				byte0 = 4;
 			}
-
+	
 			world.setBlockMetadataWithNotify(x, y, z, byte0, 2);
 		}
 	}
@@ -88,15 +88,15 @@ public class FusionController extends BlockContainerTomsMod {
 		if(direction == 0){
 			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
 		}
-
+	
 		if(direction == 1){
 			world.setBlockMetadataWithNotify(x, y, z, 5, 2);
 		}
-
+	
 		if(direction == 2){
 			world.setBlockMetadataWithNotify(x, y, z, 3, 2);
 		}
-
+	
 		if(direction == 3){
 			world.setBlockMetadataWithNotify(x, y, z, 4, 2);
 		}
@@ -123,26 +123,29 @@ public class FusionController extends BlockContainerTomsMod {
 
 	@SuppressWarnings("unused")
 	private int getSide(IBlockAccess world, int x, int y, int z) {
-		Block block1 = world.getBlockState(new BlockPos(x+1,y,z)).getBlock();
-		Block block2 = world.getBlockState(new BlockPos(x-1,y,z)).getBlock();
-		Block block3 = world.getBlockState(new BlockPos(x,y,z+1)).getBlock();
-		boolean b1 = block1 == EnergyInit.FusionCore,
-				b2 = block2 == EnergyInit.FusionCore,
+		Block block1 = world.getBlockState(new BlockPos(x + 1, y, z)).getBlock();
+		Block block2 = world.getBlockState(new BlockPos(x - 1, y, z)).getBlock();
+		Block block3 = world.getBlockState(new BlockPos(x, y, z + 1)).getBlock();
+		boolean b1 = block1 == EnergyInit.FusionCore, b2 = block2 == EnergyInit.FusionCore,
 				b3 = block3 == EnergyInit.FusionCore;
 		return b1 ? 4 : (b2 ? 5 : (b3 ? 2 : 3));
 	}
+
 	@Override
 	public boolean hasComparatorInputOverride(IBlockState s) {
 		return true;
 	}
+
 	@Override
 	public int getComparatorInputOverride(IBlockState s, World world, BlockPos pos) {
-		return ((TileEntityFusionController)world.getTileEntity(pos)).getComparatorOutput();
+		return ((TileEntityFusionController) world.getTileEntity(pos)).getComparatorOutput();
 	}
+
 	@Override
-	public boolean canConnectRedstone(IBlockState s, IBlockAccess world, BlockPos pos, EnumFacing f){
+	public boolean canConnectRedstone(IBlockState s, IBlockAccess world, BlockPos pos, EnumFacing f) {
 		return true;
 	}
+
 	/*public void onNeighborBlockChange(World world, int x, int y, int z, Block l){
 		if (Block.getIdFromBlock(l) > 0 && l.canProvidePower() && world.isBlockIndirectlyGettingPowered(x, y, z)){
 			((TileEntityFusionController)world.getTileEntity(x, y, z)).redstone();
@@ -151,25 +154,26 @@ public class FusionController extends BlockContainerTomsMod {
 		}
 	}*/
 	@Override
-	public boolean canDropFromExplosion(Explosion e){
+	public boolean canDropFromExplosion(Explosion e) {
 		return false;
 	}
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState state, EntityLivingBase entity, ItemStack itemstack){
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack itemstack) {
 		EnumFacing f = TomsModUtils.getDirectionFacing(entity, false);
 		world.setBlockState(pos, state.withProperty(FACING, f).withProperty(STATE, 0), 2);
 	}
+
 	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {FACING,STATE});
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{FACING, STATE});
 	}
+
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		boolean formed = (meta & 8) > 0;
 		boolean isRight = (meta & 4) > 0;
 		return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(STATE, formed ? isRight ? 2 : 1 : 0);
@@ -179,20 +183,17 @@ public class FusionController extends BlockContainerTomsMod {
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{
+	public int getMetaFromState(IBlockState state) {
 		boolean formed = state.getValue(STATE) > 0;
 		boolean isRight = state.getValue(STATE) == 2;
 		int i = 0;
 		i = i | state.getValue(FACING).getHorizontalIndex();
 
-		if (formed)
-		{
+		if (formed) {
 			i |= 8;
 		}
 
-		if (isRight)
-		{
+		if (isRight) {
 			i |= 4;
 		}
 

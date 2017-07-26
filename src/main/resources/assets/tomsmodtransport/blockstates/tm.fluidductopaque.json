@@ -1,0 +1,143 @@
+{
+
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "duct": "tomsmodtransport:blocks/fluidDuctO",
+      "particle": "tomsmodtransport:blocks/fluidDuctO",
+      "ductC":"tomsmodtransport:blocks/fluidDuctC",
+      "ductCe":"tomsmodtransport:blocks/fluidServo"
+    },
+    "uvlock": false,
+    "model": "tomsmodcore:null"
+  },
+   "variants": {
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {
+        "model": "duct_item",
+		"transform": "forge:default-block"
+      }
+    ],
+    "down": {
+      "0": {
+        "submodel": {
+          "down": {
+            "model": "duct_closed",
+            "x": 180
+          }
+        }
+      },
+      "1": {
+        "submodel": {
+          "down": {
+            "model": "duct_open",
+            "x": 180
+          }
+        }
+      },
+      "2": {
+        "submodel": {
+          "down": {
+            "model": "duct_connection",
+            "x": 180
+          }
+        }
+      }
+    },
+      
+    "up": {
+      "0": {
+        "submodel": {
+          "up": {
+            "model": "duct_closed"
+          }
+        }
+      },
+      "1": {
+        "submodel": {
+          "up": {
+            "model": "duct_open"
+          }
+        }
+      },
+      "2": {
+        "submodel": {
+          "up": {
+            "model": "duct_connection"
+          }
+        }
+      }
+    },
+    "north": {
+      "0": {
+        "submodel": {
+          "north": { "model": "duct_closed", "x": 90 }
+        }
+      },
+      "1": {
+        "submodel": {
+          "north": { "model": "duct_open", "x": 90 }
+        }
+      },
+      "2": {
+        "submodel": {
+          "north": { "model": "duct_connection", "x": 90 }
+        }
+      }
+    },
+    "south": {
+      "0": {
+        "submodel": {
+          "south": { "model": "duct_closed", "x": 90, "y": 180 }
+        }
+      },
+      "1": {
+        "submodel": {
+          "south": { "model": "duct_open", "x": 90, "y": 180 }
+        }
+      },
+      "2": {
+        "submodel": {
+          "south": { "model": "duct_connection", "x": 90, "y": 180 }
+        }
+      }
+    },
+    "west": {
+      "0": {
+        "submodel": {
+          "west": { "model": "duct_closed", "x": 90, "y": 270 }
+        }
+      },
+      "1": {
+        "submodel": {
+          "west": { "model": "duct_open", "x": 90, "y": 270 }
+        }
+      },
+      "2": {
+        "submodel": {
+          "west": { "model": "duct_connection", "x": 90, "y": 270 }
+        }
+      }
+    },
+    "east": {
+      "0": {
+        "submodel": {
+          "east": { "model": "duct_closed", "x": 90, "y": 90 }
+        }
+      },
+      "1": {
+        "submodel": {
+          "east": { "model": "duct_open", "x": 90, "y": 90 }
+        }
+      },
+      "2": {
+        "submodel": {
+          "east": { "model": "duct_connection", "x": 90, "y": 90 }
+        }
+      }
+    }
+  }
+}

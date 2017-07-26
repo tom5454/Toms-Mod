@@ -1,0 +1,34 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "textures": {
+        "0": "tomsmodcore:blocks/resources/blocksteel",
+        "particle": "tomsmodcore:blocks/resources/blocksteel"
+    },
+    "parent": "block/block",
+        "display": {
+        "gui": {
+            "rotation": [ 30, 135, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.625, 0.625, 0.625 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "elements": [
+        {
+            "from": [ 1.0, 0.0, 1.0 ], 
+            "to": [ 15.0, 15.0, 15.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 1.0, 0.0, 15.0, 16.0 ] },
+                "east": { "texture": "#0", "uv": [ 1.0, 0.0, 15.0, 16.0 ] },
+                "south": { "texture": "#0", "uv": [ 1.0, 0.0, 15.0, 16.0 ] },
+                "west": { "texture": "#0", "uv": [ 1.0, 0.0, 15.0, 16.0 ] },
+                "up": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "down": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        }
+    ]
+}

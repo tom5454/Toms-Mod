@@ -8,8 +8,7 @@ import mapwriterTm.map.MapView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 
-public class MapMode
-{
+public class MapMode {
 	private int sw = 320;
 	private int sh = 240;
 	private double screenScalingFactor = 1.0;
@@ -39,16 +38,13 @@ public class MapMode
 
 	public MapModeConfig config;
 
-	public MapMode(MapModeConfig config)
-	{
+	public MapMode(MapModeConfig config) {
 		this.config = config;
 		this.updateMargin();
 	}
 
-	public void setScreenRes(int dw, int dh, int sw, int sh, double scaling)
-	{
-		if ((sw != this.sw) || (sh != this.sh) || (scaling != this.screenScalingFactor))
-		{
+	public void setScreenRes(int dw, int dh, int sw, int sh, double scaling) {
+		if ((sw != this.sw) || (sh != this.sh) || (scaling != this.screenScalingFactor)) {
 			this.sw = sw;
 			this.sh = sh;
 			this.screenScalingFactor = scaling;
@@ -56,19 +52,14 @@ public class MapMode
 		}
 	}
 
-	public void setScreenRes()
-	{
+	public void setScreenRes() {
 		Minecraft mc = Minecraft.getMinecraft();
 		ScaledResolution sRes = new ScaledResolution(mc);
 		this.setScreenRes(mc.displayWidth, mc.displayHeight, sRes.getScaledWidth(), sRes.getScaledHeight(), sRes.getScaleFactor());
 	}
 
-	public void updateMargin()
-	{
-		if (this.widthPercent != this.config.widthPercent
-				|| this.heightPercent != this.config.heightPercent || this.xPos != this.config.xPos
-				|| this.yPos != this.config.yPos)
-		{
+	public void updateMargin() {
+		if (this.widthPercent != this.config.widthPercent || this.heightPercent != this.config.heightPercent || this.xPos != this.config.xPos || this.yPos != this.config.yPos) {
 			this.widthPercent = this.config.widthPercent;
 			this.heightPercent = this.config.heightPercent;
 			this.xPos = this.config.xPos;
@@ -78,15 +69,13 @@ public class MapMode
 		}
 	}
 
-	private void update()
-	{
+	private void update() {
 		double x, y;
 
 		this.w = (int) ((double) this.sw * (this.widthPercent / 100.0));
 		this.h = (int) ((double) this.sh * (this.heightPercent / 100.0));
 
-		if (this.config.circular)
-		{
+		if (this.config.circular) {
 			this.w = this.h;
 		}
 
@@ -111,8 +100,7 @@ public class MapMode
 		this.textY = (this.h >> 1) + 4;
 	}
 
-	public Point screenXYtoBlockXZ(MapView mapView, int sx, int sy)
-	{
+	public Point screenXYtoBlockXZ(MapView mapView, int sx, int sy) {
 		double withinMapX = ((double) (sx - this.xTranslation)) / ((double) this.w);
 		double withinMapY = ((double) (sy - this.yTranslation)) / ((double) this.h);
 		int bx = (int) Math.floor((mapView.getX() + (withinMapX * mapView.getWidth())));
@@ -120,57 +108,45 @@ public class MapMode
 		return new Point(bx, bz);
 	}
 
-	public Point.Double blockXZtoScreenXY(MapView mapView, double bX, double bZ)
-	{
+	public Point.Double blockXZtoScreenXY(MapView mapView, double bX, double bZ) {
 		double xNorm = (bX - mapView.getX()) / mapView.getWidth();
 		double zNorm = (bZ - mapView.getZ()) / mapView.getHeight();
 		return new Point.Double(this.w * xNorm, this.h * zNorm);
 	}
 
-	public Point.Double getClampedScreenXY(MapView mapView, double bX, double bZ)
-	{
+	public Point.Double getClampedScreenXY(MapView mapView, double bX, double bZ) {
 		double xRel = (bX - mapView.getX()) / mapView.getWidth();
 		double zRel = (bZ - mapView.getZ()) / mapView.getHeight();
 		double limit = 0.49;
 
-		if (!this.config.circular)
-		{
-			if (xRel < -limit)
-			{
+		if (!this.config.circular) {
+			if (xRel < -limit) {
 				zRel = (-limit * zRel) / xRel;
 				xRel = -limit;
 			}
-			if (xRel > limit)
-			{
+			if (xRel > limit) {
 				zRel = (limit * zRel) / xRel;
 				xRel = limit;
 			}
-			if (zRel < -limit)
-			{
+			if (zRel < -limit) {
 				xRel = (-limit * xRel) / zRel;
 				zRel = -limit;
 			}
-			if (zRel > limit)
-			{
+			if (zRel > limit) {
 				xRel = (limit * xRel) / zRel;
 				zRel = limit;
 			}
-			if (xRel < -limit)
-			{
+			if (xRel < -limit) {
 				zRel = (-limit * zRel) / xRel;
 				xRel = -limit;
 			}
-			if (xRel > limit)
-			{
+			if (xRel > limit) {
 				zRel = (limit * zRel) / xRel;
 				xRel = limit;
 			}
-		}
-		else
-		{
+		} else {
 			double dSq = (xRel * xRel) + (zRel * zRel);
-			if (dSq > (limit * limit))
-			{
+			if (dSq > (limit * limit)) {
 				double a = Math.atan2(zRel, xRel);
 				xRel = limit * Math.cos(a);
 				zRel = limit * Math.sin(a);
@@ -182,43 +158,35 @@ public class MapMode
 		return new Point.Double(this.w * xRel, this.h * zRel);
 	}
 
-	public boolean posWithin(int mouseX, int mouseY)
-	{
+	public boolean posWithin(int mouseX, int mouseY) {
 		mouseXOffset = mouseX - this.xTranslation;
 		mouseYOffset = mouseY - this.yTranslation;
 		return this.isMouseYWithinSlotBounds(mouseY) && this.isMouseXWithinSlotBounds(mouseX);
 	}
 
-	private boolean isMouseYWithinSlotBounds(int mouseY)
-	{
+	private boolean isMouseYWithinSlotBounds(int mouseY) {
 		return (mouseY >= this.yTranslation + this.y) && (mouseY <= this.yTranslation - this.y);
 	}
 
-	private boolean isMouseXWithinSlotBounds(int mouseX)
-	{
+	private boolean isMouseXWithinSlotBounds(int mouseX) {
 		return (mouseX >= this.xTranslation + this.x) && (mouseX <= this.xTranslation - this.x);
 	}
 
-	public Point.Double getNewPosPoint(double mouseX, double mouseY)
-	{
+	public Point.Double getNewPosPoint(double mouseX, double mouseY) {
 		int newX = (int) (mouseX - mouseXOffset);
 		int newY = (int) (mouseY - mouseYOffset);
 
-		if (newX + this.x < 0)
-		{
+		if (newX + this.x < 0) {
 			newX = -this.x;
 		}
-		if (newX - this.x > this.sw)
-		{
+		if (newX - this.x > this.sw) {
 			newX = this.sw - -this.x;
 		}
 
-		if (newY + this.y < 0)
-		{
+		if (newY + this.y < 0) {
 			newY = -this.y;
 		}
-		if (newY - this.y > this.sh)
-		{
+		if (newY - this.y > this.sh) {
 			newY = this.sh - -this.y;
 		}
 

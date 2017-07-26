@@ -19,7 +19,7 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.utils.WailaExceptionHandler;
 
-public class WailaTank implements IWailaDataProvider{
+public class WailaTank implements IWailaDataProvider {
 
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
@@ -27,19 +27,18 @@ public class WailaTank implements IWailaDataProvider{
 	}
 
 	@Override
-	public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
-		if(Waila.hasMultimeter(accessor, config)){
+	public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		if (WailaHandler.hasMultimeter(accessor, config)) {
 			try {
 				FluidStack fluid = FluidStack.loadFluidStackFromNBT(accessor.getNBTData().getCompoundTag("fluid"));
 				String name = currenttip.get(0);
-				try{
+				try {
 					name += String.format(" < %s >", fluid.getFluid().getLocalizedName(fluid));
-				} catch (NullPointerException f){
+				} catch (NullPointerException f) {
 					name += " " + I18n.format("tomsMod.waila.empty");
 				}
 				currenttip.set(0, name);
-			} catch (Exception e){
+			} catch (Exception e) {
 				currenttip = WailaExceptionHandler.handleErr(e, accessor.getTileEntity().getClass().getName(), currenttip);
 			}
 		}
@@ -47,34 +46,32 @@ public class WailaTank implements IWailaDataProvider{
 	}
 
 	@Override
-	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
-		if(Waila.hasMultimeter(accessor, config)){
+	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		if (WailaHandler.hasMultimeter(accessor, config)) {
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(accessor.getNBTData().getCompoundTag("fluid"));
-			if(fluid != null){
-				currenttip.add(I18n.format("tomsMod.waila.fluidStored", accessor.getNBTData().getInteger("c"), fluid.amount));
-			}else{
+			if (fluid != null) {
+				currenttip.add(I18n.format("tomsMod.waila.fluidStored", fluid.amount, accessor.getNBTData().getInteger("c")));
+			} else {
 				currenttip.add(I18n.format("tomsMod.waila.empty"));
 				currenttip.add(I18n.format("tomsMod.waila.capacity", accessor.getNBTData().getInteger("c")));
 			}
-		}else{
+		} else {
 			currenttip.add(I18n.format("tomsMod.waila.capacity", accessor.getNBTData().getInteger("c")));
 		}
 		return currenttip;
 	}
 
 	@Override
-	public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+	public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
 
 	@Override
-	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world,
-			BlockPos pos) {
+	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, BlockPos pos) {
 		TMTank te = (TMTank) tile;
 		NBTTagCompound t = new NBTTagCompound();
-		if(te.getStack() != null)te.getStack().writeToNBT(t);
+		if (te.getStack() != null)
+			te.getStack().writeToNBT(t);
 		tag.setTag("fluid", t);
 		tag.setInteger("c", te.getCapacity());
 		return tag;

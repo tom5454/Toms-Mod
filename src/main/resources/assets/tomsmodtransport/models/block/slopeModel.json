@@ -2,10 +2,11 @@
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "textures": {
         "0": "tomsmodcore:blocks/GrayD",
+        "particle": "tomsmodcore:blocks/GrayD",
         "1": "tomsmodtransport:blocks/conveyorBottom",
         "2": "tomsmodtransport:blocks/conveyorWarn",
-        "3": "tomsmodtransport:blocks/conveyorTop",
-        "4": "tomsmodtransport:blocks/conveyorSlopeSide"
+        "4": "tomsmodtransport:blocks/conveyorSlopeSide",
+        "5": "tomsmodtransport:blocks/conveyorSlopeSide2"
     },
     "parent": "block/block",
         "display": {
@@ -103,43 +104,11 @@
             }
         },
         {
-            "name": "belt",
-            "from": [ 1.0999999940395355, 12.200000010430813, -6.9000000059604645 ], 
-            "to": [ 14.899999991059303, 12.800000004470348, 16.100000008940697 ], 
-            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": 45.0 },
-            "faces": {
-                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 13.799999997019768, 0.5999999940395355 ] },
-                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 16.00000000447033, 1.0 ] },
-                "south": { "texture": "#3", "uv": [ 1.1, 8.0, 14.799999997019768, 8.699999994039535 ] },
-                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
-                "up": { "texture": "#3", "uv": [ 1.0, 0.0, 15.0, 16.0 ] },
-                "down": { "texture": "#0", "uv": [ 0.0, 0.0, 15.0, 16.0 ] }
-            }
-        },
-        {
-            "name": "belt2",
-            "from": [ 1.1000000014901161, 21.0, 0.0 ], 
-            "to": [ 14.899999998509884, 22.0, 1.0 ], 
-            "faces": {
-                "north": { "texture": "#3", "uv": [ 1.0, 6.1, 14.799999997019768, 7.1 ], "rotation": 180 },
-                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
-                "south": { "texture": "#3", "uv": [ 1.0, 0.0, 14.999999997019767, 1.0 ] },
-                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
-                "up": { "texture": "#3", "uv": [ 1.0, 7.0, 14.799999997019768, 8.0 ] },
-                "down": { "texture": "#0", "uv": [ 0.0, 0.0, 13.799999997019768, 1.0 ] }
-            }
-        },
-        {
             "name": "side1",
             "from": [ 0.0, 5.0, 1.0 ], 
             "to": [ 0.0, 21.0, 16.0 ], 
             "faces": {
-                "north": { "texture": "#-1", "uv": [ 0.0, 0.0, 0.0, 16.0 ] },
-                "east": { "texture": "#4", "uv": [ 0.0, 0.0, 15.0, 16.0 ] },
-                "south": { "texture": "#-1", "uv": [ 0.0, 0.0, 0.0, 16.0 ] },
-                "west": { "texture": "#4", "uv": [ 0.0, 0.0, 15.0, 16.0 ], "rotation": 90 },
-                "up": { "texture": "#-1", "uv": [ 0.0, 0.0, -1.0, 7.0 ] },
-                "down": { "texture": "#-1", "uv": [ 0.0, 0.0, 0.0, 15.0 ] }
+                "west": { "texture": "#5", "uv": [ 0.0, 0.0, 15.0, 16.0 ], "rotation": 90 }
             }
         },
         {
@@ -147,12 +116,7 @@
             "from": [ 16.0, 5.0, 1.0 ], 
             "to": [ 16.0, 21.0, 16.0 ], 
             "faces": {
-                "north": { "texture": "#-1", "uv": [ 0.0, 0.0, 0.0, 16.0 ] },
-                "east": { "texture": "#4", "uv": [ 0.0, 0.0, 15.0, 16.0 ] },
-                "south": { "texture": "#-1", "uv": [ 0.0, 0.0, 0.0, 16.0 ] },
-                "west": { "texture": "#4", "uv": [ 0.0, 0.0, 15.0, 16.0 ], "rotation": 90 },
-                "up": { "texture": "#-1", "uv": [ 0.0, 0.0, 0.0, 15.0 ] },
-                "down": { "texture": "#-1", "uv": [ 0.0, 0.0, 0.0, 15.0 ] }
+                "east": { "texture": "#4", "uv": [ 0.0, 0.0, 15.0, 16.0 ] }
             }
         }
     ]

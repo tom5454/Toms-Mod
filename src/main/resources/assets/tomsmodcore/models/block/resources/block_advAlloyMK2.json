@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "tomsmodcore:blocks/resources/blockadvAlloy"
+        "all": "tomsmodcore:blocks/resources/blockadvAlloymk2"
     }
 }

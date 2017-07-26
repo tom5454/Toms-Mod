@@ -20,6 +20,7 @@ import com.tom.core.CoreInit;
 public class TileEntityLVTurbine extends TileEntityTomsMod implements ITileFluidHandler, IEnergyProvider {
 	private EnergyStorage energy = new EnergyStorage(10000, 100);
 	private FluidTank tank = new FluidTank(5000);
+
 	@Override
 	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
 		return type == LV;
@@ -49,12 +50,14 @@ public class TileEntityLVTurbine extends TileEntityTomsMod implements ITileFluid
 	public IFluidHandler getTankOnSide(EnumFacing f) {
 		return Helper.getFluidHandlerFromTank(tank, CoreInit.steam, true, false);
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		energy.readFromNBT(compound);
 		tank.readFromNBT(compound.getCompoundTag("tank"));
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
@@ -62,22 +65,24 @@ public class TileEntityLVTurbine extends TileEntityTomsMod implements ITileFluid
 		compound.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
 		return compound;
 	}
+
 	@Override
 	public void updateEntity() {
-		if(!worldObj.isRemote){
-			if(tank.getFluidAmount() > 1000 && worldObj.isBlockIndirectlyGettingPowered(pos) > 0){
+		if (!world.isRemote) {
+			if (tank.getFluidAmount() > 1000 && world.isBlockIndirectlyGettingPowered(pos) > 0) {
 				tank.drainInternal(40, true);
 				energy.receiveEnergy(20, false);
 			}
-			if(this.energy.getEnergyStored() > 0){
-				for(EnumFacing f : EnumFacing.VALUES){
-					//	TileEntity receiver = worldObj.getTileEntity(pos.offset(f));
-					//if(receiver instanceof IEnergyReceiver) {
-					//System.out.println("send");
+			if (this.energy.getEnergyStored() > 0) {
+				for (EnumFacing f : EnumFacing.VALUES) {
+					// TileEntity receiver =
+					// worldObj.getTileEntity(pos.offset(f));
+					// if(receiver instanceof IEnergyReceiver) {
+					// System.out.println("send");
 					EnumFacing fOut = f.getOpposite();
-					//IEnergyReceiver recv = (IEnergyReceiver)receiver;
-					LV.pushEnergyTo(worldObj, pos, fOut, energy, false);
-					//}
+					// IEnergyReceiver recv = (IEnergyReceiver)receiver;
+					LV.pushEnergyTo(world, pos, fOut, energy, false);
+					// }
 				}
 			}
 		}

@@ -15,13 +15,15 @@ import com.tom.core.tileentity.TileEntityAntennaController;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class AntennaController extends BlockContainerTomsMod implements IPeripheralProvider{
+public class AntennaController extends BlockContainerTomsMod implements IPeripheralProvider {
 
 	protected AntennaController(Material p_i45386_1_) {
 		super(p_i45386_1_);
 	}
-	public AntennaController(){
+
+	public AntennaController() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
@@ -31,11 +33,12 @@ public class AntennaController extends BlockContainerTomsMod implements IPeriphe
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityAntennaController();
 	}
+
 	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing f) {
 		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityAntennaController ? (IPeripheral)te : null;
+		return te instanceof TileEntityAntennaController ? (IPeripheral) te : null;
 	}
 
 }

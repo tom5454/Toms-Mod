@@ -1,5 +1,36 @@
 Changelog:
 
+2.1.0_ALPHA for Minecraft 1.11.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported. This version may not be compatible with 1.10.2 worlds.
+
+    Update to Minecraft 1.11.2
+    Fixed autocrafting bugs
+    New recipes
+    New 3D models for some items
+    New textures
+    Removed Lithium, Quartz, Tin Hammer
+    Added Brass
+    Added Storage Network Controller
+    Added Channel System to the storage system(not like AE2, read wiki)
+    Added Force Capacitor Powersharing
+    Removed Force Duct
+    Added Flint, Copper, Bronze & Steel tools
+    Added: Vanila tools can be disabled in the config
+    Moved Tom's Auto Backup System to a separate mod
+    Added Server Sided Profiler
+    Changed Rubber Processing
+    Added Multipart Terminals
+    Changed Energy System, removed Laser energy system and added Laser Energy Transport
+    Added Nether & End Ores
+    Fixed FluidDuct & Fluid Servo access side issues
+    Added FluidDuct Opaque
+    Added Multiblock Build Guide
+    Removed Coolant Tower, changed Electrolyzer, Centifuge & Fusion Pre Heater
+    Added Colored Terminal
+    Storage Cells now use bytes instead of slots.
+    Few other bug & TPS fixes
+
 2.0.16_ALPHA for Minecraft 1.10.2
 
 WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported.

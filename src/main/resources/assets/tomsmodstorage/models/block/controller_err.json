@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodstorage:blocks/controllerTopErr",
+        "down": "tomsmodstorage:blocks/controllerBottomErr",
+        "north": "tomsmodstorage:blocks/controllerSideErr",
+        "east":  "tomsmodstorage:blocks/controllerSideErr",
+        "south": "tomsmodstorage:blocks/controllerSideErr",
+        "west":  "tomsmodstorage:blocks/controllerSideErr",
+        "particle": "tomsmodstorage:blocks/controllerTop"
+    }
+}

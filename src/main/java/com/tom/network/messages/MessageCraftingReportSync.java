@@ -13,18 +13,18 @@ import com.tom.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;
 
-public class MessageCraftingReportSync extends MessageBase<MessageCraftingReportSync>{
+public class MessageCraftingReportSync extends MessageBase<MessageCraftingReportSync> {
 	public MessageCraftingReportSync() {
 	}
-	private NBTTagCompound main;
-	private int opertaions;
-	private int memory;
-	private int time;
+
+	private NBTTagCompound main, extra;
+	private long opertaions;
+	private long memory;
+	private long time;
 	private short[] cpus;
 	private int missingLength, recipesLength, stacksLenght;
 
-	public MessageCraftingReportSync(NBTTagCompound main, int opertaions, int memory, int time, short[] cpus,
-			int missingLength, int recipesLength, int stacksLenght) {
+	public MessageCraftingReportSync(NBTTagCompound main, long opertaions, long memory, long time, short[] cpus, int missingLength, int recipesLength, int stacksLenght, NBTTagCompound extra) {
 		this.main = main;
 		this.opertaions = opertaions;
 		this.memory = memory;
@@ -33,37 +33,40 @@ public class MessageCraftingReportSync extends MessageBase<MessageCraftingReport
 		this.missingLength = missingLength;
 		this.recipesLength = recipesLength;
 		this.stacksLenght = stacksLenght;
+		this.extra = extra;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		memory = buf.readInt();
-		opertaions = buf.readInt();
-		time = buf.readInt();
+		memory = buf.readLong();
+		opertaions = buf.readLong();
+		time = buf.readLong();
 		int length = buf.readShort();
 		cpus = new short[length];
-		for(int i = 0;i<length;i++){
+		for (int i = 0;i < length;i++) {
 			cpus[i] = buf.readShort();
 		}
 		missingLength = buf.readInt();
 		recipesLength = buf.readInt();
 		stacksLenght = buf.readInt();
 		main = ByteBufUtils.readTag(buf);
+		extra = ByteBufUtils.readTag(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(memory);
-		buf.writeInt(opertaions);
-		buf.writeInt(time);
+		buf.writeLong(memory);
+		buf.writeLong(opertaions);
+		buf.writeLong(time);
 		buf.writeShort(cpus.length);
-		for(int i = 0;i<cpus.length;i++){
+		for (int i = 0;i < cpus.length;i++) {
 			buf.writeShort(cpus[i]);
 		}
 		buf.writeInt(missingLength);
 		buf.writeInt(recipesLength);
 		buf.writeInt(stacksLenght);
 		ByteBufUtils.writeTag(buf, main);
+		ByteBufUtils.writeTag(buf, extra);
 	}
 
 	@Override
@@ -74,17 +77,19 @@ public class MessageCraftingReportSync extends MessageBase<MessageCraftingReport
 		tag.setInteger("sls", message.stacksLenght);
 		tag.setInteger("rls", message.recipesLength);
 		NBTTagCompound m = new NBTTagCompound();
-		m.setInteger("t", message.time);
+		m.setLong("t", message.time);
 		m.setTag("m", message.main);
-		m.setInteger("o", message.opertaions);
-		m.setInteger("s", message.memory);
+		m.setLong("o", message.opertaions);
+		m.setLong("s", message.memory);
 		NBTTagList list = new NBTTagList();
-		for(short s : message.cpus){
+		for (short s : message.cpus) {
 			list.appendTag(new NBTTagInt(s));
 		}
 		m.setTag("p", list);
 		tag.setTag("m", m);
+		tag.setTag("e", message.extra);
 		tag.setBoolean("r", true);
+		tag.setBoolean("s", true);
 		if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
 			Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 				@Override
@@ -99,8 +104,8 @@ public class MessageCraftingReportSync extends MessageBase<MessageCraftingReport
 
 	private void handleClient(NBTTagCompound tag) {
 		Minecraft mc = Minecraft.getMinecraft();
-		if(mc.currentScreen instanceof INBTPacketReceiver){
-			((INBTPacketReceiver)mc.currentScreen).receiveNBTPacket(tag);
+		if (mc.currentScreen instanceof INBTPacketReceiver) {
+			((INBTPacketReceiver) mc.currentScreen).receiveNBTPacket(tag);
 		}
 	}
 
@@ -108,7 +113,8 @@ public class MessageCraftingReportSync extends MessageBase<MessageCraftingReport
 	public void handleServerSide(MessageCraftingReportSync message, EntityPlayer player) {
 
 	}
-	public static enum MessageType{
+
+	public static enum MessageType {
 		MAIN, NORMAL, MISSING, RECIPE
 	}
 }

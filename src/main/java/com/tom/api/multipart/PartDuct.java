@@ -1,68 +1,37 @@
 package com.tom.api.multipart;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.grid.IGrid;
 import com.tom.api.grid.IGridDevice;
-import com.tom.api.item.ModuleItem;
-import com.tom.api.item.MultipartItem;
 import com.tom.api.tileentity.ICable;
-import com.tom.apis.TMLogger;
+import com.tom.apis.Ticker;
 import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
+import com.tom.handler.WorldHandler;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import mcmultipart.MCMultiPartMod;
-import mcmultipart.client.multipart.AdvancedParticleManager;
-import mcmultipart.microblock.IMicroblock;
-import mcmultipart.multipart.IMultipart;
-import mcmultipart.multipart.IMultipartContainer;
-import mcmultipart.multipart.INormallyOccludingPart;
-import mcmultipart.multipart.ISlottedPart;
-import mcmultipart.multipart.MultipartHelper;
-import mcmultipart.multipart.MultipartRegistry;
-import mcmultipart.multipart.PartSlot;
-import mcmultipart.raytrace.PartMOP;
+import mcmultipart.api.container.IMultipartContainer;
+import mcmultipart.api.container.IPartInfo;
+import mcmultipart.api.multipart.MultipartHelper;
+import mcmultipart.api.slot.EnumCenterSlot;
+import mcmultipart.util.MCMPWorldWrapper;
 
-public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod implements ISlottedPart, ITickable, ICable<G>, INormallyOccludingPart {
-	protected AxisAlignedBB[] BOXES;
-	protected static final AxisAlignedBB rotateFace(AxisAlignedBB box, EnumFacing facing) {
+public abstract class PartDuct<G extends IGrid<?, G>> extends MultipartTomsMod implements ICable<G>, Ticker {
+	public AxisAlignedBB[] BOXES;
+
+	public static final AxisAlignedBB rotateFace(AxisAlignedBB box, EnumFacing facing) {
 		switch (facing) {
 		case DOWN:
 		default:
@@ -79,158 +48,57 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			return new AxisAlignedBB(1 - box.maxY, box.minZ, box.minX, 1 - box.minY, box.maxZ, box.maxX);
 		}
 	}
+
 	protected G grid;
-	/**0:NoC, 1:Normal, 2:DuctPort, 3:Module*/
-	private final int maxIntValueInProperties;
-	public static class PropertyList{
-		public final PropertyInteger UP;
-		public final PropertyInteger DOWN;
-		public final PropertyInteger NORTH;
-		public final PropertyInteger EAST;
-		public final PropertyInteger SOUTH;
-		public final PropertyInteger WEST;
-		public PropertyList(PropertyInteger up, PropertyInteger down, PropertyInteger north, PropertyInteger east,
-				PropertyInteger south, PropertyInteger west) {
-			UP = up;
-			DOWN = down;
-			NORTH = north;
-			EAST = east;
-			SOUTH = south;
-			WEST = west;
-		}
-	}
-	protected final PropertyList propertyList;
-	private static Map<Integer, PropertyList> propertyListMap = new HashMap<Integer, PropertyList>();
-	protected static final String GRID_TAG_NAME = "grid";
-	private static final String MASTER_NBT_NAME = "isMaster";
-	public final ItemStack pick;
 	private boolean isMaster = false;
-	private boolean firstStart = true;
 	private boolean secondTick = false;
 	protected IGridDevice<G> master;
-	protected final ResourceLocation modelLocation;
-	protected double size;
+	protected double size = 0.1;
 	private int suction = -1;
-	public PartDuct(ItemStack drop, String modelL, double size, int maxStates) {
-		super();
-		if(drop == null){
-			drop = new ItemStack(Blocks.STONE);
-			TMLogger.bigWarn("Multipart created with null drop.");
-		}
-		this.pick = drop;
-		this.modelLocation = new ResourceLocation(modelL);
-		this.grid = this.constructGrid();
-		this.size = size;
-		updateBox();
-		if(maxStates == -1){
-			maxIntValueInProperties = -1;
-			propertyList = null;
-		}else{
-			maxIntValueInProperties = Math.min(maxStates, 3);
-			if(!propertyListMap.containsKey(maxIntValueInProperties)){
-				PropertyInteger UP = PropertyInteger.create("up",0,maxIntValueInProperties);
-				PropertyInteger DOWN = PropertyInteger.create("down",0,maxIntValueInProperties);
-				PropertyInteger NORTH = PropertyInteger.create("north",0,maxIntValueInProperties);
-				PropertyInteger EAST = PropertyInteger.create("east",0,maxIntValueInProperties);
-				PropertyInteger SOUTH = PropertyInteger.create("south",0,maxIntValueInProperties);
-				PropertyInteger WEST = PropertyInteger.create("west",0,maxIntValueInProperties);
-				propertyListMap.put(maxIntValueInProperties, new PropertyList(UP, DOWN, NORTH, EAST, SOUTH, WEST));
-			}
-			propertyList = propertyListMap.get(maxIntValueInProperties);
-		}
-	}
-	protected void updateBox(){
-		updateBox = true;
+
+	protected void updateBox() {
 		BOXES = new AxisAlignedBB[7];
 		double start = 0.5 - size;
 		double stop = 0.5 + size;
 		BOXES[6] = new AxisAlignedBB(start, start, start, stop, stop, stop);
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0;i < 6;i++) {
 			BOXES[i] = rotateFace(new AxisAlignedBB(start, 0, start, stop, start, stop), EnumFacing.getFront(i));
 		}
 	}
-	public PartDuct(MultipartItem drop, String modelL, double size, int maxStates) {
-		this(new ItemStack(drop),modelL, size, maxStates);
-	}
-	public PartDuct(MultipartItem drop, String modelL, int maxStates) {
-		this(new ItemStack(drop),modelL, 0.25, maxStates);
-	}
-	private boolean neighborBlockChanged, packetQueued, updateBox, updateGrid;
-	protected World worldObj;
-	protected BlockPos pos;
+
 	private byte connectionCache = 0;
 	private byte invConnectionCache = 0;
 	private byte mConnectionCache = 0;
 	private byte e1ConnectionCache = 0, e2ConnectionCache = 0;
-	public String createStringFromCache(){
-		return connectionCache + "," + invConnectionCache + "," + mConnectionCache + "," + e1ConnectionCache + "," + e2ConnectionCache;
+	private NBTTagCompound last;
+	private final String type;
+
+	public PartDuct(String type, double size) {
+		this.type = type;
+		this.size = size;
+		updateBox();
+		grid = constructGrid();
 	}
-	//private boolean requestUpdate;
-	@Override
-	public void update() {
-		this.worldObj = this.getWorld2();
-		this.pos = this.getPos2();
-		if (neighborBlockChanged) {
-			updateNeighborInfo(true);
-			neighborBlockChanged = false;
-		}
-		if(!this.worldObj.isRemote){
-			if(worldObj.getTotalWorldTime() % 40 == 0)neighborBlockChanged = true;
-			if(firstStart){
-				this.firstStart = false;
-				this.secondTick = true;
-				if(this.isMaster){
-					grid.setMaster(this);
-					grid.forceUpdateGrid(worldObj, this);
-				}
-				this.sendUpdatePacket(true);
-			}
-			if(secondTick){
-				this.secondTick = false;
-				if(master == null){
-					grid.reloadGrid(worldObj, this);
-				}
-				this.sendUpdatePacket(true);
-				this.markDirty();
-			}
-			if(this.master == null && !secondTick){
-				if(updateGrid){
-					this.constructGrid().forceUpdateGrid(worldObj, this);
-					updateGrid = false;
-				}else{
-					updateGrid = true;
-				}
-			}
-			if(packetQueued){
-				packetQueued = false;
-				sendUpdatePacket(true);
-			}
-		}
-		this.updateEntity();
-		if(this.isMaster){
-			grid.updateGrid(getWorld2(), this);
-		}
+
+	public String createStringFromCache() {
+		return connectionCache + "," + invConnectionCache + "," + mConnectionCache + "," + e1ConnectionCache + "," + e2ConnectionCache;
 	}
 
 	@Override
-	public EnumSet<PartSlot> getSlotMask() {
-		return EnumSet.of(PartSlot.CENTER);
-	}
-	public void handlePacket(ByteBuf buf) {
+	public final void readFromPacket(NBTTagCompound buf) {
+		double sizeOld = size;
 		byte oldCC = connectionCache;
 		byte oldICC = invConnectionCache;
 		byte oldMCC = mConnectionCache;
 		byte oe1 = e1ConnectionCache;
 		byte oe2 = e2ConnectionCache;
-		connectionCache = buf.readByte();
-		invConnectionCache = buf.readByte();
-		mConnectionCache = buf.readByte();
-		e1ConnectionCache = buf.readByte();
-		e2ConnectionCache = buf.readByte();
-		boolean updateBox = buf.readBoolean();
-		NBTTagCompound tag = ByteBufUtils.readTag(buf);
-		boolean update = this.readFromPacket(tag);
-		if(updateBox){
+		connectionCache = buf.getByte("cc");
+		invConnectionCache = buf.getByte("icc");
+		mConnectionCache = buf.getByte("mcc");
+		e1ConnectionCache = buf.getByte("e1cc");
+		e2ConnectionCache = buf.getByte("e2cc");
+		boolean update = this.readFromPacketI(buf.getCompoundTag("tag"));
+		if (sizeOld != size) {
 			updateBox();
 		}
 		if (update || oldCC != connectionCache || oldICC != invConnectionCache || oldMCC != mConnectionCache || e1ConnectionCache != oe1 || e2ConnectionCache != oe2) {
@@ -239,208 +107,64 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 	}
 
 	@Override
-	public void markRenderUpdate(){
+	public final void markRenderUpdate() {
 		onMarkRenderUpdate();
 		super.markRenderUpdate();
 	}
 
-	protected void onMarkRenderUpdate() {}
-
-	@Override
-	public void readUpdatePacket(PacketBuffer buf) {
-		super.readUpdatePacket(buf);
-
-		if (!Minecraft.getMinecraft().isCallingFromMinecraftThread()) {
-			final ByteBuf buf2 = Unpooled.copiedBuffer(buf);
-
-			Minecraft.getMinecraft().addScheduledTask(new Runnable() {
-				@Override
-				public void run() {
-					handlePacket(buf2);
-				}
-			});
-		} else {
-			handlePacket(buf);
-		}
+	protected void onMarkRenderUpdate() {
 	}
 
 	@Override
-	public void writeUpdatePacket(PacketBuffer buf) {
-		super.writeUpdatePacket(buf);
-		buf.writeByte(connectionCache);
-		buf.writeByte(invConnectionCache);
-		buf.writeByte(mConnectionCache);
-		buf.writeByte(e1ConnectionCache);
-		buf.writeByte(e2ConnectionCache);
-		buf.writeBoolean(updateBox);
+	public final void writeToPacket(NBTTagCompound buf) {
+		buf.setByte("cc", connectionCache);
+		buf.setByte("icc", invConnectionCache);
+		buf.setByte("mcc", mConnectionCache);
+		buf.setByte("e1cc", e1ConnectionCache);
+		buf.setByte("e2cc", e2ConnectionCache);
 		NBTTagCompound tag = new NBTTagCompound();
-		this.writeToPacket(tag);
-		ByteBufUtils.writeTag(buf, tag);
-		updateBox = false;
-	}
-	@Override
-	public ItemStack getPickBlock(EntityPlayer player, PartMOP hit) {
-		return getPick();
-	}
-	public ItemStack getPick(){
-		return pick.copy();
-	}
-	@Override
-	public List<ItemStack> getDrops() {
-		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(getPick());
-		addExtraDrops(drops);
-		return drops;
-	}
-	@Override
-	public float getHardness(PartMOP hit) {
-		return 0.3F;
-	}
-	@Override
-	public Material getMaterial() {
-		return Material.GLASS;
+		this.writeToPacketI(tag);
+		buf.setTag("tag", tag);
 	}
 
-	@Override
-	public IBlockState getExtendedState(IBlockState state) {
-		if(propertyList == null)throw new IllegalStateException("Missing method definition in " + getClass() + " getExtendedState(net.minecraft.block.state.IBlockState) THIS IS A BUG");
-		return state
-				.withProperty(propertyList.DOWN, getPropertyValue(EnumFacing.DOWN))
-				.withProperty(propertyList.UP, getPropertyValue(EnumFacing.UP))
-				.withProperty(propertyList.NORTH, getPropertyValue(EnumFacing.NORTH))
-				.withProperty(propertyList.SOUTH, getPropertyValue(EnumFacing.SOUTH))
-				.withProperty(propertyList.WEST, getPropertyValue(EnumFacing.WEST))
-				.withProperty(propertyList.EAST, getPropertyValue(EnumFacing.EAST));
-	}
-	@Override
-	public BlockStateContainer createBlockState() {
-		IProperty<?>[] properties = getProperties();
-		IUnlistedProperty<?>[] unlistedProperties = getUnlistedProperties();
-		if(properties == null){
-			properties = new IProperty[]{propertyList.DOWN,
-					propertyList.UP,
-					propertyList.NORTH,
-					propertyList.SOUTH,
-					propertyList.WEST,
-					propertyList.EAST};
-		}
-		if(unlistedProperties != null && unlistedProperties.length > 0)
-			return new ExtendedBlockState(MCMultiPartMod.multipart, properties, unlistedProperties);
-		else
-			return new BlockStateContainer(MCMultiPartMod.multipart, properties);
-	}
-	protected IUnlistedProperty<?>[] getUnlistedProperties(){
-		return null;
-	}
-	protected IProperty<?>[] getProperties(){
-		return new IProperty[]{propertyList.DOWN,
-				propertyList.UP,
-				propertyList.NORTH,
-				propertyList.SOUTH,
-				propertyList.WEST,
-				propertyList.EAST};
-	}
-
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		List<AxisAlignedBB> list = new ArrayList<AxisAlignedBB>();
-		addSelectionBoxes(list);
-		return list.get(0);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean addDestroyEffects(AdvancedParticleManager advancedEffectRenderer) {
-		advancedEffectRenderer.addBlockDestroyEffects(getPos2(),
-				Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(getExtendedState(MultipartRegistry.getDefaultState(this).getBaseState())));
-		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean addHitEffects(PartMOP partMOP, AdvancedParticleManager advancedEffectRenderer) {
-		return true;
-	}
-
-	@Override
-	public void addOcclusionBoxes(List<AxisAlignedBB> list) {
-		double start = 0.5 - size;
-		double stop = 0.5 + size;
-		list.add(new AxisAlignedBB(start, start, start, stop, stop, stop));
-	}
-
-	@Override
-	public void addSelectionBoxes(List<AxisAlignedBB> list) {
-		list.add(BOXES[6]);
-		for (EnumFacing f : EnumFacing.VALUES) {
-			if (connects(f) || connectsM(f) || connectsInv(f) || connectsE1(f) || connectsE2(f)) {
-				list.add(BOXES[f.ordinal()]);
-			}
-			if(connectsInv(f) && this instanceof ICustomPartBounds){
-				list.add(rotateFace(((ICustomPartBounds)this).getBoxForConnect(), f));
-			}
-		}
-	}
-
-	@Override
-	public void addCollisionBoxes(AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity) {
-		if (BOXES[6].intersectsWith(mask)) {
-			list.add(BOXES[6]);
-		}
-		for (EnumFacing f : EnumFacing.VALUES) {
-			if (BOXES[f.ordinal()].intersectsWith(mask) && (connects(f) || connectsM(f) || connectsInv(f) || connectsE1(f) || connectsE2(f))) {
-				list.add(BOXES[f.ordinal()]);
-			}
-			if(connectsInv(f) && this instanceof ICustomPartBounds){
-				AxisAlignedBB b = rotateFace(((ICustomPartBounds)this).getBoxForConnect(), f);
-				if(b.intersectsWith(mask))list.add(b);
-			}
-		}
-	}
-
-	public boolean connects(EnumFacing side) {
+	public final boolean connects(EnumFacing side) {
 		return (connectionCache & (1 << side.ordinal())) != 0;
 	}
-	public boolean connectsInv(EnumFacing side) {
+
+	public final boolean connectsInv(EnumFacing side) {
 		return (invConnectionCache & (1 << side.ordinal())) != 0;
 	}
-	public boolean connectsM(EnumFacing side) {
+
+	public final boolean connectsM(EnumFacing side) {
 		return (mConnectionCache & (1 << side.ordinal())) != 0;
 	}
-	public boolean connectsE1(EnumFacing side) {
+
+	public final boolean connectsE1(EnumFacing side) {
 		return (e1ConnectionCache & (1 << side.ordinal())) != 0;
 	}
-	public boolean connectsE2(EnumFacing side) {
+
+	public final boolean connectsE2(EnumFacing side) {
 		return (e2ConnectionCache & (1 << side.ordinal())) != 0;
 	}
-	/*@Override
-	public boolean canRenderInLayer(EnumWorldBlockLayer layer) {
-		return layer == EnumWorldBlockLayer.CUTOUT;
-	}*/
-	@Override
-	public boolean canRenderInLayer(BlockRenderLayer layer) {
-		return layer == BlockRenderLayer.CUTOUT;
-	}
-	@Override
-	public ResourceLocation getModelPath() {
-		//return this.modelLocation;
-		return getType();
-	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		connectionCache = nbt.getByte("cc");
 		isMaster = nbt.getBoolean(MASTER_NBT_NAME);
-		if(this.isMaster)grid.importFromNBT(nbt.getCompoundTag(GRID_TAG_NAME));
+		if (this.isMaster)
+			grid.importFromNBT(nbt.getCompoundTag(GRID_TAG_NAME));
 		invConnectionCache = nbt.getByte("icc");
 		mConnectionCache = nbt.getByte("mcc");
 		updateBox();
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		nbt.setByte("cc", connectionCache);
-		if(this.isMaster)nbt.setTag(GRID_TAG_NAME, grid.exportToNBT());
+		if (this.isMaster)
+			nbt.setTag(GRID_TAG_NAME, grid.exportToNBT());
 		nbt.setBoolean(MASTER_NBT_NAME, isMaster);
 		nbt.setByte("icc", invConnectionCache);
 		nbt.setByte("mcc", mConnectionCache);
@@ -448,6 +172,7 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 		nbt.setByte("e2c", e2ConnectionCache);
 		return nbt;
 	}
+
 	private void updateConnections(EnumFacing side) {
 		if (side != null) {
 			connectionCache &= ~(1 << side.ordinal());
@@ -457,22 +182,23 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			e2ConnectionCache &= ~(1 << side.ordinal());
 			byte connectionType = internalConnects(side);
 			if (connectionType > 0) {
-				PartDuct<G> pipe = getDuct(getPos2().offset(side), side.getOpposite());
-				if (pipe != null) {
-					byte otherCT = pipe.internalConnects(side.getOpposite());
-					if(otherCT != 1 && otherCT != 3 && otherCT != 4 && otherCT != 5)
-						return;
+				if (connectionType != 3) {
+					PartDuct<G> pipe = getDuct(getPos2().offset(side), side.getOpposite());
+					if (pipe != null) {
+						byte otherCT = pipe.internalConnects(side.getOpposite());
+						if (otherCT != 1 && otherCT != 3 && otherCT != 4 && otherCT != 5)
+							return;
+					}
 				}
-
-				if(connectionType == 1)
+				if (connectionType == 1)
 					connectionCache |= 1 << side.ordinal();
-				else if(connectionType == 2)
+				else if (connectionType == 2)
 					invConnectionCache |= 1 << side.ordinal();
-				else if(connectionType == 3)
+				else if (connectionType == 3)
 					mConnectionCache |= 1 << side.ordinal();
-				else if(connectionType == 4)
+				else if (connectionType == 4)
 					e1ConnectionCache |= 1 << side.ordinal();
-				else if(connectionType == 5)
+				else if (connectionType == 5)
 					e2ConnectionCache |= 1 << side.ordinal();
 			}
 		} else {
@@ -481,6 +207,7 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			}
 		}
 	}
+
 	private void updateNeighborInfo(boolean sendPacket) {
 		if (!getWorld2().isRemote) {
 			byte oc = connectionCache;
@@ -488,139 +215,179 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			byte omc = mConnectionCache;
 			byte oe1 = e1ConnectionCache;
 			byte oe2 = e2ConnectionCache;
-
+			world.profiler.startSection("updateConnections");
 			for (EnumFacing dir : EnumFacing.VALUES) {
 				updateConnections(dir);
 			}
-			if(master != null) master.updateState();
-			G grid = this.constructGrid();
-			grid.setMaster(master);
-			grid.forceUpdateGrid(this.getWorld2(), this);
+			world.profiler.endSection();
+			world.profiler.startSection("forceUpdateGrid");
+			if (master != null && master != this && master.isValid())
+				master.updateState();
+			else {
+				if (master == null) {
+					grid.invalidateAll();
+					G grid = this.constructGrid();
+					grid.setMaster(master);
+					grid.forceUpdateGrid(this.getWorld2(), this);
+				} else {
+					grid.forceUpdateGrid(this.getWorld2(), this);
+				}
+			}
+			world.profiler.endSection();
 			if (sendPacket && (connectionCache != oc || invConnectionCache != oic || mConnectionCache != omc || e1ConnectionCache != oe1 || e2ConnectionCache != oe2)) {
 				sendUpdatePacket();
 			}
 		}
 	}
+
 	private byte internalConnects(EnumFacing side) {
-		ISlottedPart part = getContainer().getPartInSlot(PartSlot.getFaceSlot(side));
-		if (part instanceof IMicroblock.IFaceMicroblock) {
-			if (!((IMicroblock.IFaceMicroblock) part).isFaceHollow()) {
-				return 0;
-			}
-		}
 		PartModule<G> m = this.getModule(side);
-		if(m != null && this.isModuleValid(side, m)){
-			return 3;
-		}
-		if(TomsModUtils.getModule(getWorld2(), getPos2(), side) != null){
-			return 0;
-		}
-		if (!TomsModUtils.occlusionTest(this, BOXES[side.ordinal()])) {
-			return 0;
-		}
+		Optional<IMultipartContainer> container = MultipartHelper.getContainer(getWorld2(), pos);
+		if (m != null && this.isModuleValid(side, m)) { return 3; }
+		if (TomsModUtils.getModule(getWorld2(), getPos2(), side) != null) { return 0; }
 		byte check = checkDuct(getPos2().offset(side), side.getOpposite());
-		if (check != 0) {
-			return check;
-		}
-		if (this instanceof ICustomPartBounds) {
-			if(!TomsModUtils.occlusionTest(this, rotateFace(((ICustomPartBounds)this).getBoxForConnect(), side)))return 0;
+		if (check > 0) { return check; }
+		if (container.isPresent() && !TomsModUtils.occlusionTest(container.get(), this, BOXES[side.ordinal()])) { return 0; }
+		if (container.isPresent() && this instanceof ICustomPartBounds) {
+			if (!TomsModUtils.occlusionTest(container.get(), this, rotateFace(((ICustomPartBounds) this).getBoxForConnect(), side)))
+				return 0;
 		}
 		TileEntity tile = getNeighbourTile(side);
-		check = (byte) (tile != null ? isValidConnectionA(side, tile) : 0);
+		check = (byte) (tile != null && !(tile instanceof PartDuct || tile instanceof IModule) ? isValidConnectionA(side, tile) : 0);
 		return check;
 	}
 
 	public abstract boolean isValidConnection(EnumFacing side, TileEntity tile);
-	public int isValidConnectionA(EnumFacing side, TileEntity tile){
+
+	public int isValidConnectionA(EnumFacing side, TileEntity tile) {
 		return isValidConnection(side, tile) ? 2 : 0;
 	}
-	public abstract void updateEntity();
 
 	@SuppressWarnings("unchecked")
 	public final PartDuct<G> getDuct(BlockPos blockPos, EnumFacing side) {
-		IMultipartContainer container = MultipartHelper.getPartContainer(getWorld2(), blockPos);
-		if (container == null) {
-			return null;
-		}
-
-		if (side != null) {
-			ISlottedPart part = container.getPartInSlot(PartSlot.getFaceSlot(side));
-			if (part instanceof IMicroblock.IFaceMicroblock && !((IMicroblock.IFaceMicroblock) part).isFaceHollow()) {
-				return null;
+		try {
+			Optional<IMultipartContainer> container = MultipartHelper.getContainer(getWorld2(), blockPos);
+			if (!container.isPresent()) {
+				TileEntity te = world.getTileEntity(blockPos);
+				return te instanceof PartDuct<?> ? (PartDuct<G>) te : null;
 			}
-		}
-
-		ISlottedPart part = container.getPartInSlot(PartSlot.CENTER);
-		try{
-			if (part instanceof PartDuct<?> && canConnect((PartDuct<?>) part, side) != 0) {
-				return (PartDuct<G>) part;
+			Optional<IPartInfo> part = container.get().get(EnumCenterSlot.CENTER);
+			if (part.isPresent() && part.get().getTile() instanceof PartDuct<?> && TomsModUtils.occlusionTest(container.get(), this, ((PartDuct<G>) part.get().getTile()).BOXES[side.getOpposite().ordinal()]) && canConnect((PartDuct<?>) part.get().getTile(), side) != 0) {
+				return (PartDuct<G>) part.get().getTile();
 			} else {
 				return null;
 			}
-		}catch (ClassCastException e){
+		} catch (ClassCastException e) {
 			return null;
 		}
 	}
-	public final byte checkDuct(BlockPos blockPos, EnumFacing side) {
-		IMultipartContainer container = MultipartHelper.getPartContainer(getWorld2(), blockPos);
-		if (container == null) {
-			return 0;
-		}
 
-		if (side != null) {
-			ISlottedPart part = container.getPartInSlot(PartSlot.getFaceSlot(side));
-			if (part instanceof IMicroblock.IFaceMicroblock && !((IMicroblock.IFaceMicroblock) part).isFaceHollow()) {
-				return 0;
-			}
-		}
-
-		ISlottedPart part = container.getPartInSlot(PartSlot.CENTER);
-		try{
-			if (part instanceof PartDuct<?>) {
-				return canConnect((PartDuct<?>) part, side);
-			} else {
-				return 0;
-			}
-		}catch (ClassCastException e){
-			return 0;
-		}
-	}
 	@SuppressWarnings("unchecked")
-	protected byte canConnect(PartDuct<?> part, EnumFacing side){
-		try{
-			if (part instanceof PartDuct<?> && ItemStack.areItemStacksEqual(pick, ((PartDuct<G>)part).pick)) {
+	public final byte checkDuct(BlockPos blockPos, EnumFacing side) {
+		Optional<IMultipartContainer> container = MultipartHelper.getContainer(getWorld2(), blockPos);
+		if (!container.isPresent()) {
+			TileEntity te = world.getTileEntity(blockPos);
+			return te instanceof PartDuct<?> ? canConnect((PartDuct<?>) te, side) : 0;
+		}
+
+		Optional<IPartInfo> part = container.get().get(EnumCenterSlot.CENTER);
+		try {
+			if (part.isPresent() && part.get().getTile() instanceof PartDuct<?>) {
+				if (TomsModUtils.occlusionTest(container.get(), this, ((PartDuct<G>) part.get().getTile()).BOXES[side.ordinal()])) {
+					byte c = canConnect((PartDuct<?>) part.get().getTile(), side);
+					if (c != 0) {
+						return c;
+					} else
+						return 0;
+				} else
+					return -1;
+			} else {
+				return 0;
+			}
+		} catch (ClassCastException e) {
+			return 0;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected byte canConnect(PartDuct<?> part, EnumFacing side) {
+		try {
+			if (part instanceof PartDuct<?> && type.equals(((PartDuct<G>) part).type)) {
 				return 1;
 			} else {
 				return 0;
 			}
-		}catch (ClassCastException e){
+		} catch (ClassCastException e) {
 			return 0;
 		}
 	}
+
 	public TileEntity getNeighbourTile(EnumFacing side) {
 		return side != null ? getWorld2().getTileEntity(getPos2().offset(side)) : null;
 	}
-	@Override
-	public void onAdded() {
-		updateNeighborInfo(false);
-		scheduleRenderUpdate();
-	}
+
 	protected void scheduleRenderUpdate() {
 		getWorld2().markBlockRangeForRenderUpdate(getPos2(), getPos2());
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	public void onNeighborBlockChange(Block block) {
-		neighborBlockChanged = true;
+	public void onNeighborTileChange(boolean force) {
+		if (force) {
+			WorldHandler.queueTask(world.provider.getDimension(), () -> {
+				grid.invalidateAll();
+				WorldHandler.queueTask(world.provider.getDimension(), () -> {
+					WorldHandler.queueTask(world.provider.getDimension(), () -> {
+						for (EnumFacing f : EnumFacing.VALUES) {
+							BlockPos blockPos = pos.offset(f);
+							Optional<IMultipartContainer> container = MultipartHelper.getContainer(getWorld2(), blockPos);
+							if (!container.isPresent()) {
+								TileEntity te = world.getTileEntity(blockPos);
+								if (te instanceof IGridDevice<?>) {
+									IGridDevice<?> d = (IGridDevice<?>) te;
+									if (d.getGrid().getClass() == grid.getClass()) {
+										d.invalidateGrid();
+									}
+								}
+								continue;
+							}
+
+							Optional<IPartInfo> part = container.get().get(EnumCenterSlot.CENTER);
+							try {
+								if (part.isPresent() && part.get().getTile() instanceof PartDuct<?> && ((PartDuct) part.get().getTile()).getGrid().getClass() == grid.getClass()) {
+									((PartDuct) part.get().getTile()).invalidateGrid();
+								}
+							} catch (ClassCastException e) {
+							}
+						}
+					});
+				});
+			});
+		} else
+			updateNeighborInfo(true);
 	}
+
 	@Override
-	public void onPartChanged(IMultipart part) {
-		neighborBlockChanged = true;
+	public void onLoad() {
+		WorldHandler.queueTask(world.provider.getDimension(), () -> {
+			if (this.isMaster) {
+				grid.setMaster(this);
+				grid.forceUpdateGrid(world, this);
+			}
+			this.sendUpdatePacket();
+			secondTick = true;
+			WorldHandler.queueTask(world.provider.getDimension(), () -> {
+				if (master == null) {
+					grid.reloadGrid(world, this);
+				}
+				updateNeighborInfo(true);
+				this.sendUpdatePacket();
+				this.markDirty();
+				secondTick = false;
+			});
+		});
 	}
-	@Override
-	public void onLoaded() {
-		neighborBlockChanged = true;
-	}
+
 	@Override
 	public boolean isMaster() {
 		return isMaster;
@@ -629,77 +396,107 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 	@Override
 	public void setMaster(IGridDevice<G> master, int size) {
 		this.master = master;
-		//boolean wasMaster = isMaster;
+		// boolean wasMaster = isMaster;
 		isMaster = master == this;
+		if (isMaster) {
+			WorldHandler.queueTask(world.provider.getDimension(), () -> {
+				if (isMaster && !world.isRemote && useServerTickHandler())
+					WorldHandler.addTicker(world.provider.getDimension(), this);
+			});
+		}
+		grid.invalidate();
 		this.grid = master.getGrid();
 		/*if(isMaster) {
-        	grid.reloadGrid(getWorld(), this);
-        }*/
+			grid.reloadGrid(getWorld(), this);
+		}*/
 	}
+
 	@Override
 	public G getGrid() {
 		return grid;
 	}
+
 	@Override
 	public IGridDevice<G> getMaster() {
 		grid.forceUpdateGrid(getWorld2(), this);
 		return master;
 	}
+
 	@Override
 	public boolean isConnected(EnumFacing side) {
 		return this.connects(side) || this.connectsInv(side) || connectsE1(side) || connectsE2(side);
 	}
-	public boolean readFromPacket(NBTTagCompound tag){
+
+	public boolean readFromPacketI(NBTTagCompound tag) {
 		return false;
 	}
-	public void writeToPacket(NBTTagCompound tag){
+
+	public void writeToPacketI(NBTTagCompound tag) {
 
 	}
-	protected void updateFirst(){
+
+	protected void updateFirst() {
 
 	}
+
 	@Override
-	public final boolean isValidConnection(EnumFacing side){
-		return TomsModUtils.occlusionTest(this, BOXES[side.ordinal()]);
-		//return false;
+	public final boolean isValidConnection(EnumFacing side) {
+		return TomsModUtils.occlusionTest(MultipartHelper.getContainer(getWorld2(), pos).orElse(null), this, BOXES[side.ordinal()]);
+		// return false;
 	}
+
 	@Override
-	public void invalidateGrid(){
+	public void invalidateGrid() {
 		this.master = null;
+		WorldHandler.queueTask(world.provider.getDimension(), () -> {
+			if (this.master == null && !secondTick)
+				WorldHandler.queueTask(world.provider.getDimension(), () -> {
+					if (this.master == null && !secondTick)
+						this.constructGrid().forceUpdateGrid(world, this);
+				});
+		});
 		this.isMaster = false;
+		last = grid.exportToNBT();
+		this.grid.invalidate();
 		this.grid = this.constructGrid();
 	}
+
 	public abstract G constructGrid();
-	public final List<PartModule<G>> getModules(){
-		List<PartModule<G>> modules = new ArrayList<PartModule<G>>();
-		for(EnumFacing f : EnumFacing.VALUES){
+
+	public final List<PartModule<G>> getModules() {
+		List<PartModule<G>> modules = new ArrayList<>();
+		for (EnumFacing f : EnumFacing.VALUES) {
 			PartModule<G> p = this.getModule(f);
-			if(p != null){
+			if (p != null) {
 				modules.add(p);
 			}
 		}
 		return modules;
 	}
+
 	@SuppressWarnings("unchecked")
-	public final PartModule<G> getModule(EnumFacing pos){
-		try{
+	public final PartModule<G> getModule(EnumFacing pos) {
+		try {
 			PartModule<G> m = (PartModule<G>) TomsModUtils.getModule(getWorld2(), getPos2(), pos);
-			if(m != null && m.grid.getClass() == this.grid.getClass()){
-				return m;
-			}
-		}catch(Exception e){
+			if (m != null && m.grid.getClass() == this.grid.getClass()) { return m; }
+		} catch (Exception e) {
 			return null;
 		}
 		return null;
 	}
-	public void addExtraDrops(List<ItemStack> list){}
+
+	public void addExtraDrops(List<ItemStack> list) {
+	}
 
 	public abstract int getPropertyValue(EnumFacing side);
-	//return this.connectsM(side) ? 3 : (this.connectsInv(side) ? 2 : (this.connects(side) ? 1 : 0));
-	public double getSize(){
+
+	// return this.connectsM(side) ? 3 : (this.connectsInv(side) ? 2 :
+	// (this.connects(side) ? 1 : 0));
+	public double getSize() {
 		return size;
 	}
-	@Override
+
+	/*@Override
 	public final boolean onActivated(EntityPlayer player, EnumHand hand,
 			ItemStack stack, PartMOP hit) {
 		if(!player.worldObj.isRemote && player.isSneaking() && CoreInit.isWrench(stack, player)){
@@ -715,7 +512,7 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 		Vec3d hitPos = new Vec3d(hitSub.xCoord > 0.5 ? hitSub.xCoord-0.1 : hitSub.xCoord+0.1,
 				hitSub.yCoord > 0.5 ? hitSub.yCoord-0.1 : hitSub.yCoord+0.1,
 						hitSub.zCoord > 0.5 ? hitSub.zCoord-0.1 : hitSub.zCoord+0.1);
-		List<AxisAlignedBB> boxList = new ArrayList<AxisAlignedBB>();
+		List<AxisAlignedBB> boxList = new ArrayList<>();
 		this.addSelectionBoxes(boxList);
 		AxisAlignedBB currentBox = null;
 		for(AxisAlignedBB b : boxList){
@@ -757,41 +554,112 @@ public abstract class PartDuct<G extends IGrid<?,G>> extends MultipartTomsMod im
 			return false;
 		}
 		return false;
-	}
+	}*/
 	@Override
-	public void setSuctionValue(int suction){
+	public void setSuctionValue(int suction) {
 		this.suction = suction;
 	}
+
 	@Override
-	public int getSuctionValue(){
+	public int getSuctionValue() {
 		return this.suction;
 	}
+
 	@Override
-	public void updateState(){
-		this.neighborBlockChanged = true;
+	public void updateState() {
+		updateNeighborInfo(true);
 	}
+
 	@Override
-	public void setGrid(G newGrid){
+	public void setGrid(G newGrid) {
+		this.grid.invalidate();
 		this.grid = newGrid;
 	}
-	public boolean isModuleValid(EnumFacing pos, PartModule<G> module){
+
+	public boolean isModuleValid(EnumFacing pos, PartModule<G> module) {
 		return true;
 	}
-	public AxisAlignedBB getBoxForSide(EnumFacing side){
+
+	public AxisAlignedBB getBoxForSide(EnumFacing side) {
 		return BOXES[side.ordinal()];
 	}
-	public boolean onConnectionBoxClicked(EnumFacing dir, EntityPlayer player, ItemStack stack, EnumHand hand){
+
+	public boolean onConnectionBoxClicked(EnumFacing dir, EntityPlayer player, ItemStack stack, EnumHand hand) {
 		return false;
 	}
+
 	@Override
-	public BlockPos getPos2(){
+	public BlockPos getPos2() {
 		return getPos();
 	}
+
 	@Override
-	public World getWorld2(){
-		return getWorld();
+	public World getWorld2() {
+		World world = getWorld();
+		return world instanceof MCMPWorldWrapper ? ((MCMPWorldWrapper) world).getActualWorld() : world;
 	}
-	public void markForUpdate(){
-		packetQueued = true;
+
+	public void markForUpdate() {
+		sendUpdatePacket();
+	}
+
+	@Override
+	public boolean isValid() {
+		return getWorld() != null && getPos() != null;
+	}
+
+	@Override
+	public NBTTagCompound getGridData() {
+		return last;
+	}
+
+	@Override
+	public void setWorld(World worldIn) {
+		super.setWorld(worldIn);
+		this.world = this.getWorld2();
+		this.pos = this.getPos2();
+	}
+
+	@Override
+	public void setPartInfo(IPartInfo info) {
+		super.setPartInfo(info);
+		this.world = this.getWorld2();
+		this.pos = this.getPos2();
+	}
+
+	@Override
+	public void updateTicker() {
+		if (this.isMaster) {
+			grid.updateGrid(getWorld2(), this);
+		}
+	}
+
+	@Override
+	public boolean isTickerValid() {
+		return isMaster && !world.isRemote && useServerTickHandler();
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		WorldHandler.removeTicker(world.provider.getDimension(), this);
+	}
+
+	@Override
+	public void validate() {
+		super.validate();
+		WorldHandler.queueTask(world.provider.getDimension(), () -> {
+			if (isMaster && !world.isRemote && useServerTickHandler())
+				WorldHandler.addTicker(world.provider.getDimension(), this);
+		});
+	}
+
+	protected boolean useServerTickHandler() {
+		return !(this instanceof ITickable);
+	}
+
+	@Override
+	public void onPartLoad() {
+		super.onPartLoad();
 	}
 }

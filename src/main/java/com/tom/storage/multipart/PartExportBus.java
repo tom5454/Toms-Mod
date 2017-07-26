@@ -7,30 +7,21 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+
 import com.tom.api.multipart.IGuiMultipart;
-import com.tom.api.multipart.PartModule;
-import com.tom.core.CoreInit;
-import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.storage.StorageInit;
+import com.tom.apis.TomsModUtils;
 import com.tom.storage.tileentity.gui.GuiExportBus;
 import com.tom.storage.tileentity.inventory.ContainerExportBus;
 
-import mcmultipart.multipart.PartSlot;
-import mcmultipart.raytrace.PartMOP;
+import mcmultipart.api.slot.EnumFaceSlot;
+import mcmultipart.api.slot.IPartSlot;
 
-public class PartExportBus extends PartModule<StorageNetworkGrid> implements IGuiMultipart{
-	public PartExportBus() {
-		this(EnumFacing.NORTH);
-	}
-	public PartExportBus(EnumFacing face) {
-		super(StorageInit.exportBus, 0.25, 0.25, face, "tomsmodstorage:tm.exportBus", 2);
-	}
+public class PartExportBus extends PartChannelModule implements IGuiMultipart {
 	private boolean checkNBT = true;
 	private boolean checkMeta = true;
 	private boolean checkMod = false;
@@ -38,65 +29,57 @@ public class PartExportBus extends PartModule<StorageNetworkGrid> implements IGu
 	private int transferCooldown = 1;
 	public InventoryBasic filterInv = new InventoryBasic("", false, 9);
 	public InventoryBasic upgradeInv = new InventoryBasic("", false, 1);
-	private ItemStack stuckStack = null;
-	@Override
-	public void onGridReload() {
-
-	}
+	public ItemStack stuckStack = ItemStack.EMPTY;
 
 	@Override
-	public void onGridPostReload() {
-
-	}
-
-	@Override
-	public StorageNetworkGrid constructGrid() {
-		return new StorageNetworkGrid();
-	}
-
-	@Override
-	public void updateEntity() {
-		if(!worldObj.isRemote){
-			grid.drainEnergy(0.5D);
-			int upgradeCount = getSpeedUpgradeCount();
-			if(transferCooldown == 0){
-				if(stuckStack != null){
-					stuckStack = grid.pushStack(stuckStack);
-					transferCooldown = 10;
-				}else{
-					BlockPos pos = getPos2().offset(facing);
-					IInventory inv = TileEntityHopper.getInventoryAtPosition(worldObj, pos.getX(), pos.getY(), pos.getZ());
-					if(inv != null){
-						for(int i = 0;i<filterInv.getSizeInventory();i++){
-							ItemStack valid = filterInv.getStackInSlot(i);
-							if(valid != null){
-								valid = valid.copy();
-								valid.stackSize = Math.min(getMaxPacketSize(), valid.getMaxStackSize());
-								ItemStack pulledStack = grid.pullStack(valid, checkMeta, checkNBT, checkMod);
-								if(pulledStack != null){
-									pulledStack = TileEntityHopper.putStackInInventoryAllSlots(inv, pulledStack, facing.getOpposite());
-									if(pulledStack != null){
-										pulledStack = grid.pushStack(pulledStack);
-										if(pulledStack != null){
-											stuckStack = pulledStack;
+	public void updateEntityI() {
+		// world.profiler.startSection("partexportbus");
+		if (!world.isRemote) {
+			if (isActiveForUpdate()) {
+				int upgradeCount = getSpeedUpgradeCount();
+				if (transferCooldown == 0) {
+					if (!stuckStack.isEmpty()) {
+						BlockPos pos = getPos2().offset(getFacing());
+						IInventory inv = TileEntityHopper.getInventoryAtPosition(world, pos.getX(), pos.getY(), pos.getZ());
+						if (inv != null) {
+							stuckStack = TileEntityHopper.putStackInInventoryAllSlots(inv, inv, stuckStack, getFacing().getOpposite());
+						}
+						stuckStack = grid.pushStack(stuckStack);
+						transferCooldown = 10;
+					} else {
+						BlockPos pos = getPos2().offset(getFacing());
+						IItemHandler inv = TomsModUtils.getItemHandler(world, pos, getFacing().getOpposite(), true);
+						if (inv != null) {
+							for (int i = 0;i < filterInv.getSizeInventory();i++) {
+								ItemStack valid = filterInv.getStackInSlot(i);
+								if (!valid.isEmpty()) {
+									valid = valid.copy();
+									valid.setCount(Math.min(getMaxPacketSize(), valid.getMaxStackSize()));
+									ItemStack pulledStack = grid.pullStack(valid, checkMeta, checkNBT, checkMod);
+									if (!pulledStack.isEmpty()) {
+										pulledStack = ItemHandlerHelper.insertItemStacked(inv, pulledStack, false);
+										if (!pulledStack.isEmpty()) {
+											pulledStack = grid.pushStack(pulledStack);
+											if (!pulledStack.isEmpty()) {
+												stuckStack = pulledStack;
+											}
 										}
+										transferCooldown = upgradeCount > 3 ? (upgradeCount > 5 ? 2 : 5) : 16;
+										break;
 									}
-									transferCooldown = upgradeCount > 3 ? (upgradeCount > 5 ? 2 : 5) : 16;
-									break;
 								}
 							}
+							if (transferCooldown == 0)
+								transferCooldown = upgradeCount > 4 ? 24 : 60;
 						}
-						if(transferCooldown == 0)transferCooldown = upgradeCount > 4 ? 24 : 60;
 					}
-				}
-			}else if(transferCooldown > 0)transferCooldown--;
-			else transferCooldown = 1;
+				} else if (transferCooldown > 0)
+					transferCooldown--;
+				else
+					transferCooldown = 1;
+			}
 		}
-	}
-
-	@Override
-	public int getState() {
-		return grid.isPowered() ? 2 : 0;
+		// world.profiler.endSection();
 	}
 
 	@Override
@@ -114,24 +97,15 @@ public class PartExportBus extends PartModule<StorageNetworkGrid> implements IGu
 
 	}
 
-	@Override
-	public PartSlot getPosition() {
-		return PartSlot.getFaceSlot(facing);
-	}
-	@Override
-	public boolean onPartActivated(EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, PartMOP hit) {
-		BlockPos pos = getPos2();
-		if(!player.worldObj.isRemote)player.openGui(CoreInit.modInstance, GuiIDs.getMultipartGuiId(facing).ordinal(), getWorld2(), pos.getX(), pos.getY(), pos.getZ());
-		return true;
-	}
-	private int getMaxPacketSize(){
+	private int getMaxPacketSize() {
 		int stackSize = getSpeedUpgradeCount();
 		return stackSize == 0 ? 1 : (stackSize == 1 ? 2 : (stackSize == 2 ? 4 : (stackSize == 3 ? 8 : (stackSize == 4 ? 16 : (stackSize == 5 ? 24 : (stackSize == 6 ? 32 : (stackSize == 7 ? 48 : 64)))))));
 	}
-	private int getSpeedUpgradeCount(){
-		return upgradeInv.getStackInSlot(0) != null ? upgradeInv.getStackInSlot(0).stackSize : 0;
+
+	private int getSpeedUpgradeCount() {
+		return !upgradeInv.getStackInSlot(0).isEmpty() ? upgradeInv.getStackInSlot(0).getCount() : 0;
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
@@ -139,34 +113,13 @@ public class PartExportBus extends PartModule<StorageNetworkGrid> implements IGu
 		tag.setBoolean("checkMeta", checkMeta);
 		tag.setBoolean("checkNBT", checkNBT);
 		tag.setBoolean("checkMod", checkMod);
-		NBTTagList list = new NBTTagList();
-		for (int i = 0; i < filterInv.getSizeInventory(); ++i)
-		{
-			if (filterInv.getStackInSlot(i) != null)
-			{
-				NBTTagCompound nbttagcompound = new NBTTagCompound();
-				nbttagcompound.setByte("Slot", (byte)i);
-				filterInv.getStackInSlot(i).writeToNBT(nbttagcompound);
-				list.appendTag(nbttagcompound);
-			}
-		}
-		tag.setTag("itemList", list);
-		list = new NBTTagList();
-		for (int i = 0; i < upgradeInv.getSizeInventory(); ++i)
-		{
-			if (upgradeInv.getStackInSlot(i) != null)
-			{
-				NBTTagCompound nbttagcompound = new NBTTagCompound();
-				nbttagcompound.setByte("Slot", (byte)i);
-				upgradeInv.getStackInSlot(i).writeToNBT(nbttagcompound);
-				list.appendTag(nbttagcompound);
-			}
-		}
-		tag.setTag("upgradeList", list);
+		tag.setTag("itemList", TomsModUtils.saveAllItems(filterInv));
+		tag.setTag("upgradeList", TomsModUtils.saveAllItems(upgradeInv));
 		tag.setInteger("cooldown", this.transferCooldown);
 		nbt.setTag(TAG_NBT_NAME, tag);
 		return nbt;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -174,41 +127,36 @@ public class PartExportBus extends PartModule<StorageNetworkGrid> implements IGu
 		this.checkMeta = tag.getBoolean("checkMeta");
 		this.checkNBT = tag.getBoolean("checkNBT");
 		this.checkMod = tag.getBoolean("checkMod");
-		NBTTagList list = tag.getTagList("itemList", 10);
-		filterInv.clear();
-		for (int i = 0; i < list.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
-			int j = nbttagcompound.getByte("Slot") & 255;
-
-			if (j >= 0 && j < filterInv.getSizeInventory())
-			{
-				filterInv.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound));
-			}
-		}
-		list = tag.getTagList("upgradeList", 10);
-		upgradeInv.clear();
-		for (int i = 0; i < list.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
-			int j = nbttagcompound.getByte("Slot") & 255;
-
-			if (j >= 0 && j < upgradeInv.getSizeInventory())
-			{
-				upgradeInv.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound));
-			}
-		}
+		TomsModUtils.loadAllItems(tag.getTagList("itemList", 10), filterInv);
+		TomsModUtils.loadAllItems(tag.getTagList("upgradeList", 10), upgradeInv);
 		this.transferCooldown = tag.getInteger("cooldown");
 	}
+
 	@Override
 	public void addExtraDrops(List<ItemStack> list) {
-		if(stuckStack != null){
+		if (!stuckStack.isEmpty()) {
 			list.add(stuckStack);
-			stuckStack = null;
+			stuckStack = ItemStack.EMPTY;
 		}
-		for(int i = 0;i<upgradeInv.getSizeInventory();i++){
+		for (int i = 0;i < upgradeInv.getSizeInventory();i++) {
 			ItemStack stack = upgradeInv.removeStackFromSlot(i);
-			if(stack != null)list.add(stack);
+			if (!stack.isEmpty())
+				list.add(stack);
 		}
+	}
+
+	@Override
+	public double getPowerDrained() {
+		return 0.5;
+	}
+
+	@Override
+	public int getPriority() {
+		return 1;
+	}
+
+	@Override
+	public IPartSlot getPosition() {
+		return EnumFaceSlot.fromFace(getFacing());
 	}
 }

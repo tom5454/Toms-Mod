@@ -26,10 +26,11 @@ public class BlockCharger extends BlockMachineBase {
 	public TileEntityMachineBase createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityCharger();
 	}
+
 	@Override
-	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if(!worldIn.isRemote)playerIn.openGui(CoreInit.modInstance, GuiIDs.charger.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!worldIn.isRemote)
+			playerIn.openGui(CoreInit.modInstance, GuiIDs.charger.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 }

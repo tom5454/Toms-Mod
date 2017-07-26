@@ -17,72 +17,97 @@ import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.grid.GridEnergyStorage;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.storage.multipart.StorageNetworkGrid;
+import com.tom.config.Config;
+import com.tom.storage.block.EnergyAcceptor;
+import com.tom.storage.handler.StorageNetworkGrid;
+import com.tom.storage.handler.StorageNetworkGrid.IChannelLoadListener;
 
-public class TileEntityEnergyAcceptor extends
-TileEntityGridDeviceBase<StorageNetworkGrid> implements IEnergyReceiver, ICustomMultimeterInformation {
+public class TileEntityEnergyAcceptor extends TileEntityGridDeviceBase<StorageNetworkGrid> implements IEnergyReceiver, ICustomMultimeterInformation, IChannelLoadListener {
 	private GridEnergyStorage energy = new GridEnergyStorage(100, 0);
-	private EnergyStorage hvEnergy = new EnergyStorage(20000, 10000);
+	private EnergyStorage inEnergy = new EnergyStorage(20000, 10000);
+
 	@Override
 	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
-		return type == EnergyType.HV;
+		return type == getType();
 	}
 
 	@Override
 	public List<EnergyType> getValidEnergyTypes() {
-		return EnergyType.HV.getList();
+		return getType().getList();
 	}
 
 	@Override
-	public double receiveEnergy(EnumFacing from, EnergyType type,
-			double maxReceive, boolean simulate) {
-		return canConnectEnergy(from, type) ? hvEnergy.receiveEnergy(maxReceive, simulate) : 0;
+	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive, boolean simulate) {
+		return canConnectEnergy(from, type) ? inEnergy.receiveEnergy(maxReceive, simulate) : 0;
 	}
 
 	@Override
 	public double getEnergyStored(EnumFacing from, EnergyType type) {
-		return hvEnergy.getEnergyStored();
+		return inEnergy.getEnergyStored();
 	}
 
 	@Override
 	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
-		return hvEnergy.getMaxEnergyStored();
+		return inEnergy.getMaxEnergyStored();
 	}
 
 	@Override
 	public StorageNetworkGrid constructGrid() {
 		return new StorageNetworkGrid();
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		energy.writeToNBT(compound);
 		NBTTagCompound hvTag = new NBTTagCompound();
-		hvEnergy.writeToNBT(hvTag);
-		compound.setTag("hv", hvTag);
+		inEnergy.writeToNBT(hvTag);
+		compound.setTag("in", hvTag);
 		return compound;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		energy.readFromNBT(compound);
-		hvEnergy.readFromNBT(compound.getCompoundTag("hv"));
+		inEnergy.readFromNBT(compound.getCompoundTag("in"));
 	}
+
 	@Override
 	public void updateEntity(IBlockState currentState) {
-		if(!worldObj.isRemote){
+		if (!world.isRemote) {
+			EnergyType type = currentState.getValue(EnergyAcceptor.ENERGY_TYPE);
 			grid.getData().addEnergyStorage(energy);
-			double rec = grid.getData().receiveEnergy(hvEnergy.extractEnergy(10000, true) * 2, true) / 2;
-			if(rec > 0){
-				grid.getData().receiveEnergy(hvEnergy.extractEnergy(rec, false) * 2, false);
+			double rec = type.convertFrom(EnergyType.HV, grid.getData().receiveEnergy(EnergyType.HV.convertFrom(type, inEnergy.extractEnergy(10000, true)) * Config.storageSystemUsage, true) / Config.storageSystemUsage);
+			if (rec > 0) {
+				grid.getData().receiveEnergy(EnergyType.HV.convertFrom(type, inEnergy.extractEnergy(rec, false)) * Config.storageSystemUsage, false);
 			}
 		}
 	}
 
 	@Override
 	public List<ITextComponent> getInformation(List<ITextComponent> list) {
-		//if(!worldObj.isRemote)grid.getData().receiveEnergy(1, false);
-		list.add(new TextComponentTranslation("tomsMod.chat.energyStored",new TextComponentString("Unit").setStyle(new Style().setColor(TextFormatting.DARK_PURPLE)), grid.getData().getEnergyStored(), grid.getData().getMaxEnergyStored()));
+		// if(!worldObj.isRemote)grid.getData().receiveEnergy(1, false);
+		list.add(new TextComponentTranslation("tomsMod.chat.energyStored", new TextComponentString("Unit").setStyle(new Style().setColor(TextFormatting.DARK_PURPLE)), grid.getData().getEnergyStored(), grid.getData().getMaxEnergyStored()));
 		return list;
+	}
+
+	@Override
+	public void onGridReload() {
+
+	}
+
+	@Override
+	public void onGridPostReload() {
+
+	}
+
+	@Override
+	public void onPartsUpdate() {
+		grid.getData().addEnergyStorage(energy);
+	}
+
+	public EnergyType getType() {
+		return world.getBlockState(pos).getValue(EnergyAcceptor.ENERGY_TYPE);
 	}
 }

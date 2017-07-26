@@ -7,17 +7,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
-import com.tom.factory.block.PlateBlendingMachine;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
 public class TileEntityCoilerPlant extends TileEntityMachineBase {
 	private EnergyStorage energy = new EnergyStorage(20000, 100);
 	private static final int MAX_PROCESS_TIME = 400;
-	//private int maxProgress = 1;
+	// private int maxProgress = 1;
 	public int clientEnergy = 0;
+
 	@Override
 	public int getSizeInventory() {
 		return 4;
@@ -47,71 +46,27 @@ public class TileEntityCoilerPlant extends TileEntityMachineBase {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		this.progress = compound.getInteger("progress");
-		//this.maxProgress = compound.getInteger("maxProgress");
+		// this.maxProgress = compound.getInteger("maxProgress");
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setInteger("progress", progress);
-		//compound.setInteger("mayProgress", maxProgress);
+		// compound.setInteger("mayProgress", maxProgress);
 		return compound;
-	}
-	@Override
-	public void updateEntity() {
-		if(!worldObj.isRemote){
-			if(energy.extractEnergy(30D, true) == 30D && canRun()){
-				if(progress > 0){
-					updateProgress();
-				}else if(progress == 0){
-					ItemStackChecker s = MachineCraftingHandler.getCoilerOutput(stack[0]);
-					if(s != null && stack[3] != null && stack[3].getItem() == CoreInit.emptyWireCoil){
-						if(stack[1] != null){
-							if(TomsModUtils.areItemStacksEqual(stack[1], s.getStack(), true, true, false) && stack[1].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
-								if(stack[3].stackSize >= s.getStack().stackSize){
-									stack[1].stackSize += s.getStack().stackSize;
-									progress = -1;
-									decrStackSize(0, s.getExtra());
-									decrStackSize(3, s.getStack().stackSize);
-								}
-							}
-						}else{
-							if(stack[3].stackSize >= s.getStack().stackSize){
-								progress = -1;
-								stack[1] = s.getStack();
-								decrStackSize(0, s.getExtra());
-								decrStackSize(3, s.getStack().stackSize);
-							}
-						}
-					}else{
-						progress = -1;
-					}
-				}else{
-					ItemStackChecker s = MachineCraftingHandler.getCoilerOutput(stack[0]);
-					if(s != null && stack[3] != null && stack[3].getItem() == CoreInit.emptyWireCoil){
-						if(stack[1] != null){
-							if(TomsModUtils.areItemStacksEqual(stack[1], s.getStack(), true, true, false) && stack[1].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
-								progress = getMaxProgress();
-							}
-						}else{
-							progress = getMaxProgress();
-						}
-					}
-					TomsModUtils.setBlockStateWithCondition(worldObj, pos, PlateBlendingMachine.ACTIVE, progress > 0);
-				}
-			}else{
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, PlateBlendingMachine.ACTIVE, false);
-			}
-		}
 	}
 
 	public int getClientEnergyStored() {
-		return MathHelper.ceiling_double_int(energy.getEnergyStored());
+		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
 	public int getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
-	private void updateProgress(){
+
+	@Override
+	public void updateProgress() {
 		int upgradeC = getSpeedUpgradeCount();
 		int p = upgradeC + (upgradeC / 2) + 1;
 		progress = Math.max(0, progress - p);
@@ -132,6 +87,7 @@ public class TileEntityCoilerPlant extends TileEntityMachineBase {
 	public int getMaxProcessTimeNormal() {
 		return MAX_PROCESS_TIME;
 	}
+
 	@Override
 	public ResourceLocation getFront() {
 		return new ResourceLocation("tomsmodfactory:textures/blocks/coilerFront.png");
@@ -145,5 +101,24 @@ public class TileEntityCoilerPlant extends TileEntityMachineBase {
 	@Override
 	public int[] getInputSlots() {
 		return new int[]{0, 3};
+	}
+
+	@Override
+	public void checkItems() {
+		ItemStackChecker s = MachineCraftingHandler.getCoilerOutput(inv.getStackInSlot(0));
+		if (s != null && !inv.getStackInSlot(3).isEmpty() && inv.getStackInSlot(3).getItem() == CoreInit.emptyWireCoil) {
+			checkItems(s, 1, getMaxProgress(), 0, 3);
+			setOut(0, s);
+		}
+	}
+
+	@Override
+	public void finish() {
+		ItemStackChecker s = getOutput(0);
+		if (s != null && !inv.getStackInSlot(3).isEmpty() && inv.getStackInSlot(3).getItem() == CoreInit.emptyWireCoil) {
+			addItemsAndSetProgress(s, 1, 0, 3);
+		} else {
+			progress = -1;
+		}
 	}
 }

@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "tomsmodcore:items/resources/platenetherQuartz"
-    }
+  "parent": "tomsmodcore:item/platesbase",
+  "textures": {
+    "block": "blocks/quartz_block_bottom"
+  }
 }

@@ -18,6 +18,7 @@ public class Jammer extends BlockContainerTomsMod {
 	@SideOnly(Side.CLIENT)
 	private IIcon off;*/
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
+
 	public Jammer() {
 		super(Material.IRON);
 		this.setHardness(2F);
@@ -28,11 +29,12 @@ public class Jammer extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityJammer();
 	}
+
 	/*@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconregister){
 		this.blockIcon = iconregister.registerIcon("minecraft:tm/Antenna2");
-    	this.online = iconregister.registerIcon("minecraft:tm/jammerOn");
-    	this.off = iconregister.registerIcon("minecraft:tm/jammerOff");
+		this.online = iconregister.registerIcon("minecraft:tm/jammerOn");
+		this.off = iconregister.registerIcon("minecraft:tm/jammerOff");
 	}
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
 		 if(side > 1){
@@ -42,16 +44,15 @@ public class Jammer extends BlockContainerTomsMod {
 		 }else return this.blockIcon;
 	}*/
 	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {ACTIVE});
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{ACTIVE});
 	}
+
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(ACTIVE, meta == 1);
 	}
 
@@ -59,8 +60,7 @@ public class Jammer extends BlockContainerTomsMod {
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{//System.out.println("getMeta");
+	public int getMetaFromState(IBlockState state) {// System.out.println("getMeta");
 		return state.getValue(ACTIVE) ? 1 : 0;
 	}
 }

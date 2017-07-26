@@ -14,28 +14,32 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class BlockContainerTomsMod extends BlockContainer implements ICustomItemBlock{
+public abstract class BlockContainerTomsMod extends BlockContainer implements ICustomItemBlock {
 	public BlockContainerTomsMod(Material material, MapColor mapColor) {
 		super(material, mapColor);
 		this.setHardness(5);
 		this.setResistance(10);
 	}
+
 	public BlockContainerTomsMod(Material material) {
 		this(material, material.getMaterialMapColor());
 		this.setHardness(5);
 		this.setResistance(10);
 	}
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
 		int t = getRenderType();
-		return (t == -1 ? EnumBlockRenderType.INVISIBLE : (t == 1 ? EnumBlockRenderType.LIQUID : (t == 2 ? EnumBlockRenderType.ENTITYBLOCK_ANIMATED : (t == 3 ? EnumBlockRenderType.MODEL  : EnumBlockRenderType.INVISIBLE))));
+		return (t == -1 ? EnumBlockRenderType.INVISIBLE : (t == 1 ? EnumBlockRenderType.LIQUID : (t == 2 ? EnumBlockRenderType.ENTITYBLOCK_ANIMATED : (t == 3 ? EnumBlockRenderType.MODEL : EnumBlockRenderType.INVISIBLE))));
 	}
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntity te = worldIn.getTileEntity(pos);
-		if(te != null){
-			if(te instanceof IInventory){
-				//InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) te);
+		if (te != null) {
+			if (te instanceof IInventory) {
+				// InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)
+				// te);
 				dropInventory(worldIn, pos, (IInventory) te);
 			}
 			/*if(te instanceof IFluidHandler){
@@ -45,11 +49,12 @@ public abstract class BlockContainerTomsMod extends BlockContainer implements IC
 		}
 		super.breakBlock(worldIn, pos, state);
 	}
-	public int getRenderType(){
+
+	public int getRenderType() {
 		return 3;
 	}
-	protected AxisAlignedBB setBlockBounds(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, EnumFacing dir)
-	{
+
+	protected AxisAlignedBB setBlockBounds(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, EnumFacing dir) {
 		switch (dir) {
 		case DOWN:
 			return new AxisAlignedBB(minX, 1.0F - maxZ, minY, maxX, 1.0F - minZ, maxY);
@@ -65,6 +70,7 @@ public abstract class BlockContainerTomsMod extends BlockContainer implements IC
 			return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
 		}
 	}
+
 	/*protected void spillFluids(IFluidHandler f, World world, BlockPos pos){
 		FluidTankInfo[] info = f.getTankInfo(EnumFacing.DOWN);
 		if(info != null && info.length > 0){
@@ -75,11 +81,12 @@ public abstract class BlockContainerTomsMod extends BlockContainer implements IC
 			}
 		}
 	}*/
-	protected void dropInventory(World worldIn, BlockPos pos, IInventory te){
+	protected void dropInventory(World worldIn, BlockPos pos, IInventory te) {
 		InventoryHelper.dropInventoryItems(worldIn, pos, te);
 	}
+
 	@Override
-	public ItemBlock createItemBlock(){
+	public ItemBlock createItemBlock() {
 		return new ItemBlock(this);
 	}
 }

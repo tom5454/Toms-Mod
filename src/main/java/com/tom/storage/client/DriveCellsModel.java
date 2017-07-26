@@ -5,6 +5,8 @@
 // - ZeuX
 package com.tom.storage.client;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -18,9 +20,8 @@ import com.tom.lib.Configs;
 import com.tom.model.IBaseModel;
 import com.tom.storage.tileentity.TileEntityDrive;
 
-public class DriveCellsModel extends ModelBase implements IBaseModel
-{
-	//fields
+public class DriveCellsModel extends ModelBase implements IBaseModel {
+	// fields
 	ModelRenderer base1;
 	ModelRenderer base2;
 	ModelRenderer base3;
@@ -73,8 +74,7 @@ public class DriveCellsModel extends ModelBase implements IBaseModel
 	ModelRenderer baseBooting10;
 	ModelRenderer[][] rendererArray;
 
-	public DriveCellsModel()
-	{
+	public DriveCellsModel() {
 		textureWidth = 32;
 		textureHeight = 32;
 
@@ -378,58 +378,21 @@ public class DriveCellsModel extends ModelBase implements IBaseModel
 		baseBooting10.setTextureSize(32, 32);
 		baseBooting10.mirror = true;
 		setRotation(baseBooting10, 0F, 0F, 0F);
-		ModelRenderer[] full = new ModelRenderer[]{baseFull5,
-				baseFull10,
-				baseFull4,
-				baseFull9,
-				baseFull3,
-				baseFull8,
-				baseFull2,
-				baseFull7,
-				baseFull1,
-				baseFull6};
-		ModelRenderer[] typesFull = new ModelRenderer[]{baseTypesFull5,
-				baseTypesFull10,
-				baseTypesFull4,
-				baseTypesFull9,
-				baseTypesFull3,
-				baseTypesFull8,
-				baseTypesFull2,
-				baseTypesFull7,
-				baseTypesFull1,
-				baseTypesFull6};
-		ModelRenderer[] booting = new ModelRenderer[]{baseBooting5,
-				baseBooting10,
-				baseBooting4,
-				baseBooting9,
-				baseBooting3,
-				baseBooting8,
-				baseBooting2,
-				baseBooting7,
-				baseBooting1,
-				baseBooting6};
-		ModelRenderer[] green = new ModelRenderer[]{baseOn5,
-				baseOn10,
-				baseOn4,
-				baseOn9,
-				baseOn3,
-				baseOn8,
-				baseOn2,
-				baseOn7,
-				baseOn1,
-				baseOn6};
+		ModelRenderer[] full = new ModelRenderer[]{baseFull5, baseFull10, baseFull4, baseFull9, baseFull3, baseFull8, baseFull2, baseFull7, baseFull1, baseFull6};
+		ModelRenderer[] typesFull = new ModelRenderer[]{baseTypesFull5, baseTypesFull10, baseTypesFull4, baseTypesFull9, baseTypesFull3, baseTypesFull8, baseTypesFull2, baseTypesFull7, baseTypesFull1, baseTypesFull6};
+		ModelRenderer[] booting = new ModelRenderer[]{baseBooting5, baseBooting10, baseBooting4, baseBooting9, baseBooting3, baseBooting8, baseBooting2, baseBooting7, baseBooting1, baseBooting6};
+		ModelRenderer[] green = new ModelRenderer[]{baseOn5, baseOn10, baseOn4, baseOn9, baseOn3, baseOn8, baseOn2, baseOn7, baseOn1, baseOn6};
 		/*for(int i = 0;i<10;i++){
-    	  full[i].setTextureOffset(0, 3);
-    	  typesFull[i].setTextureOffset(0, 9);
-    	  booting[i].setTextureOffset(0, 12);
-    	  green[i].setTextureOffset(0, 6);
-      }*/
-      rendererArray = new ModelRenderer[][]{new ModelRenderer[10],{base5, base10, base4, base9, base3, base8, base2, base7, base1, base6},green,typesFull,full,booting};
+		  full[i].setTextureOffset(0, 3);
+		  typesFull[i].setTextureOffset(0, 9);
+		  booting[i].setTextureOffset(0, 12);
+		  green[i].setTextureOffset(0, 6);
+		}*/
+		rendererArray = new ModelRenderer[][]{new ModelRenderer[10], {base5, base10, base4, base9, base3, base8, base2, base7, base1, base6}, green, typesFull, full, booting};
 	}
 
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-	{
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		base1.render(f5);
@@ -444,23 +407,20 @@ public class DriveCellsModel extends ModelBase implements IBaseModel
 		base10.render(f5);
 	}
 
-	private void setRotation(ModelRenderer model, float x, float y, float z)
-	{
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
 	}
 
 	@Override
-	public void setRotationAngles(float p_78087_1_, float p_78087_2_,
-			float p_78087_3_, float p_78087_4_, float p_78087_5_,
-			float p_78087_6_, Entity entityIn) {
-		super.setRotationAngles(p_78087_1_, p_78087_2_, p_78087_3_, p_78087_4_,
-				p_78087_5_, p_78087_6_, entityIn);
+	public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity entityIn) {
+		super.setRotationAngles(p_78087_1_, p_78087_2_, p_78087_3_, p_78087_4_, p_78087_5_, p_78087_6_, entityIn);
 	}
 
 	@Override
 	public void renderStatic(float size, TileEntity tile) {
+		GL11.glTranslated(0, 0, -1 / 32D);
 		TileEntityDrive te = (TileEntityDrive) tile;
 		int slot1 = te.getDriveColor(0);
 		int slot2 = te.getDriveColor(1);
@@ -473,13 +433,13 @@ public class DriveCellsModel extends ModelBase implements IBaseModel
 		int slot9 = te.getDriveColor(8);
 		int slot10 = te.getDriveColor(9);
 		int[] slots = new int[]{slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9, slot10};
-		for(int i = 0;i<10;i++){
+		for (int i = 0;i < 10;i++) {
 			int slot = slots[i];
 			ModelRenderer r = rendererArray[slot][i];
 			/*switch(slot){
-		  case 0:
+			case 0:
 			  continue;
-		  case 1:
+			case 1:
 			  GL11.glPushMatrix();
 			  GL11.glScalef(1.0F, -1F, -1F);
 			  float scale = 1F / 16F;
@@ -496,54 +456,55 @@ public class DriveCellsModel extends ModelBase implements IBaseModel
 			  drawTexturedModalRect(MathHelper.floor_double(r.rotationPointX), MathHelper.floor_double(r.rotationPointY), 0, 5, 5, 2);
 			  GL11.glPopMatrix();
 			  break;
-		  case 2:
+			case 2:
 			  GL11.glPushMatrix();
 			  //drawTexturedModalRect(MathHelper.floor_double(r.rotationPointX), MathHelper.floor_double(r.rotationPointY), 0, 7, 5, 2);
 			  GL11.glPopMatrix();
 			  break;
-		  case 3:
+			case 3:
 			  GL11.glPushMatrix();
 			  //drawTexturedModalRect(MathHelper.floor_double(r.rotationPointX), MathHelper.floor_double(r.rotationPointY), 0, 3, 5, 2);
 			  GL11.glPopMatrix();
 			  break;
-		  case 4:
+			case 4:
 			  GL11.glPushMatrix();
 			  //drawTexturedModalRect(MathHelper.floor_double(r.rotationPointX), MathHelper.floor_double(r.rotationPointY), 0, 9, 5, 2);
 			  GL11.glPopMatrix();
 			  break;
-		  }*/
-			if(r != null)r.render(size);
+			}*/
+			if (r != null)
+				r.render(size);
 		}
 		/*if(slot1 != 0){
 		  base5.render(size);
-	  }
-	  if(slot2 != 0){
+		}
+		if(slot2 != 0){
 		  base4.render(size);
-	  }
-	  if(slot3 != 0){
+		}
+		if(slot3 != 0){
 		  base3.render(size);
-	  }
-	  if(slot4 != 0){
+		}
+		if(slot4 != 0){
 		  base2.render(size);
-	  }
-	  if(slot5 != 0){
+		}
+		if(slot5 != 0){
 		  base1.render(size);
-	  }
-	  if(slot6 != 0){
+		}
+		if(slot6 != 0){
 		  base10.render(size);
-	  }
-	  if(slot7 != 0){
+		}
+		if(slot7 != 0){
 		  base9.render(size);
-	  }
-	  if(slot8 != 0){
+		}
+		if(slot8 != 0){
 		  base8.render(size);
-	  }
-	  if(slot9 != 0){
+		}
+		if(slot9 != 0){
 		  base7.render(size);
-	  }
-	  if(slot10 != 0){
+		}
+		if(slot10 != 0){
 		  base6.render(size);
-	  }*/
+		}*/
 	}
 
 	@Override
@@ -560,18 +521,19 @@ public class DriveCellsModel extends ModelBase implements IBaseModel
 	public boolean rotateModelBasedOnBlockMeta() {
 		return true;
 	}
+
 	/**
-	 * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
+	 * Draws a textured rectangle at the stored z-value. Args: x, y, u, v,
+	 * width, height
 	 */
-	public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height)
-	{
+	public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
 		float f = 0.00390625F;
 		float f1 = 0.00390625F;
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer worldrenderer = tessellator.getBuffer();
 		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		double zLevel = 0;
-		worldrenderer.pos(x + 0, y + height, zLevel ).tex((textureX + 0) * f, (textureY + height) * f1).endVertex();
+		worldrenderer.pos(x + 0, y + height, zLevel).tex((textureX + 0) * f, (textureY + height) * f1).endVertex();
 		worldrenderer.pos(x + width, y + height, zLevel).tex((textureX + width) * f, (textureY + height) * f1).endVertex();
 		worldrenderer.pos(x + width, y + 0, zLevel).tex((textureX + width) * f, (textureY + 0) * f1).endVertex();
 		worldrenderer.pos(x + 0, y + 0, zLevel).tex((textureX + 0) * f, (textureY + 0) * f1).endVertex();

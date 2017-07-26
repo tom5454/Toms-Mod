@@ -18,34 +18,30 @@ public class ElectricalMagCard extends Item implements IMagCard {
 	public boolean isCodeEqual(ItemStack is, World world, String[] code, EntityPlayer player) {
 		InventoryPlayer inv = player.inventory;
 		NBTTagCompound modemTag = null;
-		for(int i = 0;i<inv.getSizeInventory();i++){
+		for (int i = 0;i < inv.getSizeInventory();i++) {
 			ItemStack c = inv.getStackInSlot(i);
-			if(c != null && c.getItem() == CoreInit.connectionModem){
+			if (c != null && c.getItem() == CoreInit.connectionModem) {
 				modemTag = c.getTagCompound();
 				break;
 			}
 		}
-		if(modemTag != null){
+		if (modemTag != null) {
 			int t = modemTag.hasKey("tierMagCard") ? modemTag.getInteger("tierMagCard") : 0;
-			if(modemTag.hasKey("magCodeList")){
+			if (modemTag.hasKey("magCodeList")) {
 				NBTTagList list = (NBTTagList) modemTag.getTag("magCodeList");
-				for(int i = 0;i<list.tagCount();i++){
+				for (int i = 0;i < list.tagCount();i++) {
 					String cCode = list.getStringTagAt(i);
-					for(String c : code){
-						if(cCode.equals(c)){
-							return true;
-						}
+					for (String c : code) {
+						if (cCode.equals(c)) { return true; }
 					}
 				}
 			}
-			if(t > 0){
-				//int numOfChars = t % 2;
+			if (t > 0) {
+				// int numOfChars = t % 2;
 				/*int numOfNums = t % 2;
 				int numOfEvens = t % 2 == 1 ? t : (t - 1) % 2;*/
-				for(String c : code){
-					if(c.length() <= t){
-						return true;
-					}
+				for (String c : code) {
+					if (c.length() <= t) { return true; }
 				}
 			}
 		}
@@ -61,18 +57,18 @@ public class ElectricalMagCard extends Item implements IMagCard {
 	public String[] getCodes(ItemStack is, World world, EntityPlayer player) {
 		InventoryPlayer inv = player.inventory;
 		NBTTagCompound modemTag = null;
-		for(int i = 0;i<inv.getSizeInventory();i++){
+		for (int i = 0;i < inv.getSizeInventory();i++) {
 			ItemStack c = inv.getStackInSlot(i);
-			if(c != null && c.getItem() == CoreInit.connectionModem){
+			if (c != null && c.getItem() == CoreInit.connectionModem) {
 				modemTag = c.getTagCompound();
 				break;
 			}
 		}
-		if(modemTag != null){
-			if(modemTag.hasKey("magCodeList")){
+		if (modemTag != null) {
+			if (modemTag.hasKey("magCodeList")) {
 				NBTTagList list = (NBTTagList) modemTag.getTag("magCodeList");
 				String[] ret = new String[list.tagCount()];
-				for(int i = 0;i<list.tagCount();i++){
+				for (int i = 0;i < list.tagCount();i++) {
 					ret[i] = list.getStringTagAt(i);
 				}
 				return ret;
@@ -86,20 +82,21 @@ public class ElectricalMagCard extends Item implements IMagCard {
 		InventoryPlayer inv = player.inventory;
 		NBTTagCompound modemTag = null;
 		ItemStack modemStack = null;
-		for(int i = 0;i<inv.getSizeInventory();i++){
+		for (int i = 0;i < inv.getSizeInventory();i++) {
 			ItemStack c = inv.getStackInSlot(i);
-			if(c != null && c.getItem() == CoreInit.connectionModem){
+			if (c != null && c.getItem() == CoreInit.connectionModem) {
 				modemTag = c.getTagCompound();
 				modemStack = c;
 				break;
 			}
 		}
-		if(modemTag == null && modemStack != null) modemTag = new NBTTagCompound();
-		if(modemTag.hasKey("magCodeList")){
+		if (modemTag == null && modemStack != null)
+			modemTag = new NBTTagCompound();
+		if (modemTag.hasKey("magCodeList")) {
 			NBTTagList list = (NBTTagList) modemTag.getTag("magCodeList");
 			list.appendTag(new NBTTagString(code));
 			modemTag.setTag("magCodeList", list);
-		}else{
+		} else {
 			NBTTagList list = new NBTTagList();
 			list.appendTag(new NBTTagString(code));
 			modemTag.setTag("magCodeList", list);

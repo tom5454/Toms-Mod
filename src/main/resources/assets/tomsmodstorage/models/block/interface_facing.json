@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodstorage:blocks/interface_c",
+        "down": "tomsmodstorage:blocks/interface",
+        "north": "tomsmodstorage:blocks/interface_a",
+        "east":  "tomsmodstorage:blocks/interface_a",
+        "south": "tomsmodstorage:blocks/interface_a",
+        "west":  "tomsmodstorage:blocks/interface_a",
+        "particle": "tomsmodstorage:blocks/interface"
+    }
+}

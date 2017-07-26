@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "tomsmodcore:oreRedDiamond"}
+        "type=0": { "model": "tomsmodcore:oreRedDiamond"},
+        "type=1": { "model": "tomsmodcore:oreRedDiamondnether"}
     }
 }

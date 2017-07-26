@@ -1,21 +1,10 @@
 package com.tom.storage.client;
 
-/*import static com.tom.storage.multipart.PartStorageNetworkCable.CHANNEL;
-import static com.tom.storage.multipart.PartStorageNetworkCable.COLOR;
-import static com.tom.storage.multipart.PartStorageNetworkCable.DOWN;
-import static com.tom.storage.multipart.PartStorageNetworkCable.EAST;
-import static com.tom.storage.multipart.PartStorageNetworkCable.NORTH;
-import static com.tom.storage.multipart.PartStorageNetworkCable.SOUTH;
-import static com.tom.storage.multipart.PartStorageNetworkCable.TYPE;
-import static com.tom.storage.multipart.PartStorageNetworkCable.UP;
-import static com.tom.storage.multipart.PartStorageNetworkCable.WEST;*/
-import static com.tom.storage.multipart.PartStorageNetworkCable.DATA;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,27 +35,32 @@ import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
 import com.tom.client.CustomModelLoader;
-import com.tom.storage.item.StorageNetworkCable.CableColor;
-import com.tom.storage.item.StorageNetworkCable.CableType;
+import com.tom.storage.StorageInit;
 import com.tom.storage.multipart.PartStorageNetworkCable.CableData;
+import com.tom.storage.multipart.block.StorageNetworkCable;
 //import com.tom.storage.multipart.PartStorageNetworkCable.UnlistedPropertyInt;
+import com.tom.storage.multipart.block.StorageNetworkCable.CableColor;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 
 public class CableModel implements IModel {
 	protected final List<ResourceLocation> textures;
 	public static CableBakedModel bakedModel;
 	private static final Axis[] axisValues = Axis.values();
+
 	public CableModel() {
-		textures = new ArrayList<ResourceLocation>();
-		for(int t = 0;t<CableType.VALUES.length;t++){
-			for(int c = 0;c<CableColor.VALUES.length;c++){
-				String texture = "cable_" + (CableType.VALUES[t] == CableType.NORMAL ? CableColor.VALUES[c].getName() : CableType.VALUES[t].getName() + "_" + CableColor.VALUES[c].getName());
+		textures = new ArrayList<>();
+		for (int t = 0;t < StorageNetworkCable.CableType.VALUES.length;t++) {
+			for (int c = 0;c < CableColor.VALUES.length;c++) {
+				String texture = "cable_" + (StorageNetworkCable.CableType.VALUES[t] == StorageNetworkCable.CableType.NORMAL ? CableColor.VALUES[c].getName() : StorageNetworkCable.CableType.VALUES[t].getName() + "_" + CableColor.VALUES[c].getName());
 				textures.add(new ResourceLocation("tomsmodstorage:blocks/cable/" + texture));
 			}
 		}
-		for(int i = 0;i<=9;i++){
+		for (int i = 0;i <= 10;i++) {
 			textures.add(new ResourceLocation("tomsmodstorage", "blocks/cable/cable_channel_" + i));
 		}
 	}
+
 	@Override
 	public Collection<ResourceLocation> getDependencies() {
 		return Collections.emptyList();
@@ -78,20 +72,19 @@ public class CableModel implements IModel {
 	}
 
 	@Override
-	public IBakedModel bake(IModelState state, VertexFormat format,
-			Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 		CustomModelLoader.log.info("Baking Cable Model...");
 		CableBakedModel.Builder builder = new CableBakedModel.Builder(bakedTextureGetter.apply(new ResourceLocation("tomsmodstorage:blocks/cable/cable_fluix")));
 		ResourceLocation locInvC = new ResourceLocation("tomsmodstorage:block/cable_c");
 		ResourceLocation locChInvC = new ResourceLocation("tomsmodstorage:block/cable_c_ch");
 		IModel modelInvC = getModel(locInvC);
 		IModel modelInvCCh = getModel(locChInvC);
-		for(int t = 0;t<CableType.VALUES.length;t++){
-			CableType type = CableType.VALUES[t];
+		for (int t = 0;t < StorageNetworkCable.CableType.VALUES.length;t++) {
+			StorageNetworkCable.CableType type = StorageNetworkCable.CableType.VALUES[t];
 			String name = type.getName();
-			boolean hasChannels = type == CableType.DENSE || type == CableType.SMART;
-			boolean adv = type != CableType.NORMAL;
-			boolean isDense = type == CableType.DENSE;
+			boolean hasChannels = type == StorageNetworkCable.CableType.DENSE || type == StorageNetworkCable.CableType.SMART;
+			boolean adv = type != StorageNetworkCable.CableType.NORMAL;
+			boolean isDense = type == StorageNetworkCable.CableType.DENSE;
 			ResourceLocation locC = new ResourceLocation("tomsmodstorage:block/cable_" + name + "_closed");
 			ResourceLocation locO = new ResourceLocation("tomsmodstorage:block/cable_" + name + "_open");
 			ResourceLocation locOS = new ResourceLocation("tomsmodstorage:block/cable_" + name + "_open_smart");
@@ -112,53 +105,57 @@ public class CableModel implements IModel {
 			IModel modelSC = isDense ? getModel(locOS) : null;
 			IModel modelSCCh = isDense ? getModel(locChOS) : null;
 			IModel modelC = isDense ? getModel(locOCC) : null;
-			for(int c = 0;c<CableColor.VALUES.length;c++){
+			for (int c = 0;c < CableColor.VALUES.length;c++) {
 				CableColor color = CableColor.VALUES[c];
 				TextureInjector injector = new TextureInjector(bakedTextureGetter, type, color);
-				TextureInjector injectorS = new TextureInjector(bakedTextureGetter, CableType.SMART, color);
-				if(type == CableType.NORMAL)injectorS.setTexture2(new ResourceLocation("tomsmodstorage:blocks/cable/cable_" + color.getName()));
-				else if(type == CableType.DENSE)injectorS.setTexture2(new ResourceLocation("tomsmodstorage:blocks/cable/cable_dense_" + color.getName()));
-				TextureInjector injectorC = new TextureInjector(bakedTextureGetter, CableType.COVERED, color);
-				if(type == CableType.NORMAL)injectorC.setTexture2(new ResourceLocation("tomsmodstorage:blocks/cable/cable_" + color.getName()));
-				else if(type == CableType.DENSE)injectorC.setTexture2(new ResourceLocation("tomsmodstorage:blocks/cable/cable_dense_" + color.getName()));
-				for(int j = 0;j<EnumFacing.VALUES.length;j++){
+				TextureInjector injectorS = new TextureInjector(bakedTextureGetter, StorageNetworkCable.CableType.SMART, color);
+				if (type == StorageNetworkCable.CableType.NORMAL)
+					injectorS.setTexture2(new ResourceLocation("tomsmodstorage:blocks/cable/cable_" + color.getName()));
+				else if (type == StorageNetworkCable.CableType.DENSE)
+					injectorS.setTexture2(new ResourceLocation("tomsmodstorage:blocks/cable/cable_dense_" + color.getName()));
+				TextureInjector injectorC = new TextureInjector(bakedTextureGetter, StorageNetworkCable.CableType.COVERED, color);
+				if (type == StorageNetworkCable.CableType.NORMAL)
+					injectorC.setTexture2(new ResourceLocation("tomsmodstorage:blocks/cable/cable_" + color.getName()));
+				else if (type == StorageNetworkCable.CableType.DENSE)
+					injectorC.setTexture2(new ResourceLocation("tomsmodstorage:blocks/cable/cable_dense_" + color.getName()));
+				for (int j = 0;j < EnumFacing.VALUES.length;j++) {
 					TRSRTransformation transformation = new TRSRTransformation(getMatrix(EnumFacing.VALUES[j]));
 					builder.clearQuickAccess();
 					builder.putModel(type, color, EnumFacing.VALUES[j], 0, -1, modelClosed.bake(transformation, format, injector));
 					builder.putModel(type, color, EnumFacing.VALUES[j], 1, -1, modelOpen.bake(transformation, format, injector));
 					builder.putModel(type, color, EnumFacing.VALUES[j], 2, -1, modelOpenC.bake(transformation, format, injector));
-					if(type == CableType.NORMAL){
+					if (type == StorageNetworkCable.CableType.NORMAL) {
 						builder.putModel(type, color, EnumFacing.VALUES[j], 3, -1, modelInvC.bake(transformation, format, injectorC));
 						builder.putModel(type, color, EnumFacing.VALUES[j], 4, -1, modelInvC.bake(transformation, format, injectorS));
-					}else if(isDense){
+					} else if (isDense) {
 						builder.putModel(type, color, EnumFacing.VALUES[j], 3, -1, modelC.bake(transformation, format, injectorC));
 						builder.putModel(type, color, EnumFacing.VALUES[j], 4, -1, modelSC.bake(transformation, format, injector));
-					}else{
+					} else {
 						builder.putModel(type, color, EnumFacing.VALUES[j], 3, -1, 1);
 					}
-					for(int i = 0;i<=9;i++){
-						if(i < 9 || type == CableType.DENSE){
+					for (int i = 0;i <= 10;i++) {
+						if (i < 9 || type == StorageNetworkCable.CableType.DENSE || i == 10) {
 							builder.clearQuickAccess();
 							TextureInjector injectorChannel = new TextureInjector(bakedTextureGetter, type, i);
-							if(hasChannels){
+							if (hasChannels) {
 								builder.putModel(type, color, EnumFacing.VALUES[j], 1, i, new TintedBakedModel(modelOpenCh.bake(transformation, format, injectorChannel), color));
 								builder.putModel(type, color, EnumFacing.VALUES[j], 2, i, new TintedBakedModel(modelOpenCCh.bake(transformation, format, injectorChannel), color));
 							}
-							if(type == CableType.NORMAL){
+							if (type == StorageNetworkCable.CableType.NORMAL) {
 								builder.putModel(type, color, EnumFacing.VALUES[j], 4, i, new TintedBakedModel(modelInvCCh.bake(transformation, format, injectorChannel), color));
-							}else if(isDense){
+							} else if (isDense) {
 								builder.putModel(type, color, EnumFacing.VALUES[j], 4, i, new TintedBakedModel(modelSCCh.bake(transformation, format, injectorChannel), color));
 							}
 						}
 					}
 				}
-				if(adv){
-					for(int j = 0;j<axisValues.length;j++){
+				if (adv) {
+					for (int j = 0;j < axisValues.length;j++) {
 						TRSRTransformation transformation = new TRSRTransformation(getMatrix(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axisValues[j])));
 						builder.putModelOverride(type, color, -1, axisValues[j], modelS.bake(transformation, format, injector));
-						if(hasChannels){
-							for(int i = 0;i<=9;i++){
-								if(i < 9 || type == CableType.DENSE){
+						if (hasChannels) {
+							for (int i = 0;i <= 10;i++) {
+								if (i < 9 || type == StorageNetworkCable.CableType.DENSE || i == 10) {
 									TextureInjector injectorChannel = new TextureInjector(bakedTextureGetter, type, i);
 									builder.putModelOverride(type, color, i, axisValues[j], new TintedBakedModel(modelSCh.bake(transformation, format, injectorChannel), color));
 								}
@@ -173,71 +170,88 @@ public class CableModel implements IModel {
 		CustomModelLoader.log.info("Cable Model Baking Complete.");
 		return ret;
 	}
+
 	private static IModel getModel(ResourceLocation loc) {
 		return ModelProcessingHelper.uvlock(ModelLoaderRegistry.getModelOrLogError(loc, "Couldn't load " + loc.toString() + " for tomsmodstorage:tm.cable"), true);
 	}
-	private static Matrix4f getMatrix(EnumFacing facing){
-		switch(facing){
-		case DOWN: return ModelRotation.X180_Y0.getMatrix();
-		case UP: return ModelRotation.X0_Y0.getMatrix();
-		case NORTH: return ModelRotation.X90_Y0.getMatrix();
-		case SOUTH: return ModelRotation.X90_Y180.getMatrix();
-		case WEST: return ModelRotation.X90_Y270.getMatrix();
-		case EAST: return ModelRotation.X90_Y90.getMatrix();
-		default: return new Matrix4f();
+
+	private static Matrix4f getMatrix(EnumFacing facing) {
+		switch (facing) {
+		case DOWN:
+			return ModelRotation.X180_Y0.getMatrix();
+		case UP:
+			return ModelRotation.X0_Y0.getMatrix();
+		case NORTH:
+			return ModelRotation.X90_Y0.getMatrix();
+		case SOUTH:
+			return ModelRotation.X90_Y180.getMatrix();
+		case WEST:
+			return ModelRotation.X90_Y270.getMatrix();
+		case EAST:
+			return ModelRotation.X90_Y90.getMatrix();
+		default:
+			return new Matrix4f();
 		}
 	}
+
 	@Override
 	public IModelState getDefaultState() {
 		return TRSRTransformation.identity();
 	}
-	public static class TextureInjector implements Function<ResourceLocation, TextureAtlasSprite>{
+
+	public static class TextureInjector implements Function<ResourceLocation, TextureAtlasSprite> {
 		private final Function<ResourceLocation, TextureAtlasSprite> func;
 		private final ResourceLocation texture;
 		private ResourceLocation texture2;
-		public TextureInjector(Function<ResourceLocation, TextureAtlasSprite> func, CableType type, CableColor color) {
+
+		public TextureInjector(Function<ResourceLocation, TextureAtlasSprite> func, StorageNetworkCable.CableType type, CableColor color) {
 			this.func = func;
 			String texture = "tomsmodstorage:blocks/cable/cable_";
-			if(type == CableType.NORMAL){
+			if (type == StorageNetworkCable.CableType.NORMAL) {
 				texture = texture + color.getName();
-			}else if(type == CableType.DENSE){
-				texture = texture + CableType.SMART.getName() + "_" + color.getName();
-			}else{
+			} else if (type == StorageNetworkCable.CableType.DENSE) {
+				texture = texture + StorageNetworkCable.CableType.SMART.getName() + "_" + color.getName();
+			} else {
 				texture = texture + type.getName() + "_" + color.getName();
 			}
 			this.texture = new ResourceLocation(texture);
-			if(type == CableType.DENSE){
+			if (type == StorageNetworkCable.CableType.DENSE) {
 				texture2 = new ResourceLocation("tomsmodstorage", "blocks/cable/cable_" + type.getName() + "_" + color.getName());
-			}else if(type == CableType.SMART){
-				texture2 = new ResourceLocation("tomsmodstorage", "blocks/cable/cable_" + CableType.COVERED.getName() + "_" + color.getName());
+			} else if (type == StorageNetworkCable.CableType.SMART) {
+				texture2 = new ResourceLocation("tomsmodstorage", "blocks/cable/cable_" + StorageNetworkCable.CableType.COVERED.getName() + "_" + color.getName());
 			}
 		}
-		public TextureInjector(Function<ResourceLocation, TextureAtlasSprite> func, CableType type, int channel) {
+
+		public TextureInjector(Function<ResourceLocation, TextureAtlasSprite> func, StorageNetworkCable.CableType type, int channel) {
 			this.func = func;
 			this.texture = new ResourceLocation("tomsmodstorage", "blocks/cable/cable_channel_" + channel);
 		}
+
 		public TextureInjector setTexture2(ResourceLocation texture2) {
 			this.texture2 = texture2;
 			return this;
 		}
+
 		@Override
 		public TextureAtlasSprite apply(ResourceLocation input) {
-			if(input.getResourcePath().equals("TEXTURE")){
+			if (input.getResourcePath().equalsIgnoreCase("TEXTURE")) {
 				return func.apply(texture);
-			}else if(input.getResourcePath().equals("TEXTURE2")){
-				if(texture2 == null)texture2 = new ResourceLocation("blocks/stone");
+			} else if (input.getResourcePath().equalsIgnoreCase("TEXTURE2")) {
+				if (texture2 == null)
+					texture2 = new ResourceLocation("blocks/stone");
 				return func.apply(texture2);
-			}
+			} else if (input.getResourcePath().equalsIgnoreCase("missingno")) { return func.apply(texture); }
 			return func.apply(input);
 		}
 	}
+
 	/*public static class BlockStateChecker implements Predicate<IBlockState>{
 		private final CableType type;
 		private final CableColor color;
 		private final EnumFacing facing;
 		private final int state;
 		private final int channel;
-
+	
 		public BlockStateChecker(CableType type, CableColor color, EnumFacing facing, int state, int channel) {
 			this.type = type;
 			this.color = color;
@@ -245,7 +259,7 @@ public class CableModel implements IModel {
 			this.state = state;
 			this.channel = channel;
 		}
-
+	
 		@Override
 		public boolean apply(IBlockState input) {
 			IExtendedBlockState s = (IExtendedBlockState) input;
@@ -254,11 +268,11 @@ public class CableModel implements IModel {
 	}
 	public static class BlockStateCheckerAxis implements Predicate<IBlockState>{
 		private final Axis axis;
-
+	
 		public BlockStateCheckerAxis(Axis axis) {
 			this.axis = axis;
 		}
-
+	
 		@Override
 		public boolean apply(IBlockState input) {
 			IExtendedBlockState s = (IExtendedBlockState) input;
@@ -290,11 +304,12 @@ public class CableModel implements IModel {
 			return DOWN;
 		}
 	}*/
-	public static class TintedBakedQuad extends BakedQuad{
+	public static class TintedBakedQuad extends BakedQuad {
 
 		public TintedBakedQuad(BakedQuad quad, int tint) {
 			super(tint(quad.getVertexData(), tint), 1, quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(), quad.getFormat());
 		}
+
 		private static int[] tint(int[] vertexData, int tint) {
 			int[] vd = new int[vertexData.length];
 			System.arraycopy(vertexData, 0, vd, 0, vertexData.length);
@@ -305,7 +320,8 @@ public class CableModel implements IModel {
 			return vd;
 		}
 	}
-	public static class TintedBakedModel implements IBakedModel{
+
+	public static class TintedBakedModel implements IBakedModel {
 		private List<BakedQuad> stateToQuads;
 		private final IBakedModel model;
 		private final int tint;
@@ -318,11 +334,12 @@ public class CableModel implements IModel {
 
 		@Override
 		public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-			if(side != null)return Collections.emptyList();
-			if(stateToQuads == null){
+			if (side != null)
+				return Collections.emptyList();
+			if (stateToQuads == null) {
 				List<BakedQuad> quads = model.getQuads(state, side, rand);
-				List<BakedQuad> quadsOut = new ArrayList<BakedQuad>();
-				for(int i = 0;i<quads.size();i++){
+				List<BakedQuad> quadsOut = new ArrayList<>();
+				for (int i = 0;i < quads.size();i++) {
 					quadsOut.add(new TintedBakedQuad(quads.get(i), tint));
 				}
 				stateToQuads = quadsOut;
@@ -361,17 +378,19 @@ public class CableModel implements IModel {
 			return model.getOverrides();
 		}
 	}
+
 	public static class CableBakedModel implements IBakedModel {
-		private final Map<CableType, Map<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>> model;
-		private final Map<CableType, Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>>> axisOverrides;
+		private final Map<StorageNetworkCable.CableType, Map<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>> model;
+		private final Map<StorageNetworkCable.CableType, Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>>> axisOverrides;
 		protected final boolean ambientOcclusion;
 		protected final boolean gui3D;
 		protected final TextureAtlasSprite particleTexture;
 		protected final ItemCameraTransforms cameraTransforms;
 		protected final ItemOverrideList overrides;
+		protected final List<BakedQuad> baseModel;
 
 		@SuppressWarnings("deprecation")
-		public CableBakedModel(IBakedModel ibakedmodel, Map<CableType, Map<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>> model, TextureAtlasSprite particleTexture, Map<CableType, Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>>> modelO) {
+		public CableBakedModel(IBakedModel ibakedmodel, Map<StorageNetworkCable.CableType, Map<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>> model, TextureAtlasSprite particleTexture, Map<StorageNetworkCable.CableType, Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>>> modelO, List<BakedQuad> baseModel) {
 			this.ambientOcclusion = ibakedmodel.isAmbientOcclusion();
 			this.gui3D = ibakedmodel.isGui3d();
 			this.particleTexture = particleTexture;
@@ -379,151 +398,157 @@ public class CableModel implements IModel {
 			this.overrides = ibakedmodel.getOverrides();
 			this.model = model;
 			this.axisOverrides = modelO;
+			this.baseModel = baseModel;
 		}
 
 		public static class Builder {
-			private final Map<CableType, Map<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>> model = Maps.<CableType, Map<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>>newLinkedHashMap();
-			private final Map<CableType, Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>>> modelO = Maps.<CableType, Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>>>newLinkedHashMap();
-			private final List<IBakedModel> last = new ArrayList<IBakedModel>();
+			private final Map<StorageNetworkCable.CableType, Map<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>> model = Maps.<StorageNetworkCable.CableType, Map<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>>newEnumMap(StorageNetworkCable.CableType.class);
+			private final Map<StorageNetworkCable.CableType, Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>>> modelO = Maps.<StorageNetworkCable.CableType, Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>>>newEnumMap(StorageNetworkCable.CableType.class);
+			private final List<IBakedModel> last = new ArrayList<>();
+			private List<BakedQuad> baseModel = new ArrayList<>();
 			private final TextureAtlasSprite particleTexture;
 			private IBakedModel first;
+
 			public Builder(TextureAtlasSprite particleTexture) {
 				this.particleTexture = particleTexture;
 			}
-			public void putModelOverride(CableType type, CableColor color, int channel, Axis axis, IBakedModel bake) {
-				if(!modelO.containsKey(type)){
-					modelO.put(type, new HashMap<CableColor, Map<Integer, Map<Axis, IBakedModel>>>());
+
+			public void putModelOverride(StorageNetworkCable.CableType type, CableColor color, int channel, Axis axis, IBakedModel bake) {
+				if (!modelO.containsKey(type)) {
+					modelO.put(type, new EnumMap<CableColor, Map<Integer, Map<Axis, IBakedModel>>>(CableColor.class));
 				}
 				Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>> map = modelO.get(type);
-				if(!map.containsKey(color)){
-					map.put(color, new HashMap<Integer, Map<Axis, IBakedModel>>());
+				if (!map.containsKey(color)) {
+					map.put(color, new Int2ObjectArrayMap<Map<Axis, IBakedModel>>());
 				}
 				Map<Integer, Map<Axis, IBakedModel>> m = map.get(color);
-				if(!m.containsKey(channel)){
-					m.put(channel, new HashMap<Axis, IBakedModel>());
+				if (!m.containsKey(channel)) {
+					m.put(channel, new EnumMap<Axis, IBakedModel>(Axis.class));
 				}
 				m.get(channel).put(axis, bake);
 			}
-			public void clearQuickAccess(){
+
+			public void clearQuickAccess() {
 				last.clear();
 			}
 
-			public void putModel(CableType type, CableColor color, EnumFacing side, int state, int channel, IBakedModel bake) {
-				if(!model.containsKey(type)){
-					model.put(type, new HashMap<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>());
+			public void putModel(StorageNetworkCable.CableType type, CableColor color, EnumFacing side, int state, int channel, IBakedModel bake) {
+				if (!model.containsKey(type)) {
+					model.put(type, new EnumMap<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>>(CableColor.class));
 				}
 				Map<CableColor, Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>> map = model.get(type);
-				if(!map.containsKey(color)){
-					map.put(color, new HashMap<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>());
+				if (!map.containsKey(color)) {
+					map.put(color, new EnumMap<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>>(EnumFacing.class));
 				}
 				Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>> m = map.get(color);
-				if(!m.containsKey(side)){
-					m.put(side, new HashMap<Integer, Map<Integer, IBakedModel>>());
+				if (!m.containsKey(side)) {
+					m.put(side, new Int2ObjectArrayMap<Map<Integer, IBakedModel>>());
 				}
 				Map<Integer, Map<Integer, IBakedModel>> stateMap = m.get(side);
-				if(!stateMap.containsKey(state)){
-					stateMap.put(state, new HashMap<Integer, IBakedModel>());
+				if (!stateMap.containsKey(state)) {
+					stateMap.put(state, new Int2ObjectArrayMap<IBakedModel>());
 				}
 				stateMap.get(state).put(channel, bake);
 				last.add(bake);
-				if(first == null)first = bake;
+				if (first == null)
+					first = bake;
+				if (type == StorageNetworkCable.CableType.NORMAL && color == CableColor.FLUIX && state == 0 && channel == 0) {
+					baseModel.addAll(bake.getQuads(StorageInit.cable.getDefaultState(), null, 0));
+				}
 			}
 
-			public void putModel(CableType type, CableColor color, EnumFacing side, int state, int channel, int lastId) {
+			public void putModel(StorageNetworkCable.CableType type, CableColor color, EnumFacing side, int state, int channel, int lastId) {
 				putModel(type, color, side, state, channel, last.get(lastId));
 			}
 
 			public CableBakedModel makeModel() {
-				return new CableBakedModel(first, model, particleTexture, modelO);
+				return new CableBakedModel(first, model, particleTexture, modelO, baseModel);
 			}
 		}
 
 		@Override
-		public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand){
-			if(side != null)return Collections.emptyList();
+		public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+			if (side != null)
+				return Collections.emptyList();
 			IExtendedBlockState s = (IExtendedBlockState) state;
-			CableData data = s.getValue(DATA);
-			if(data.isValid() && data.getModel() != null){
-				return data.getModel();
-			}
-			List<BakedQuad> quads = new ArrayList<BakedQuad>();
-			CableType t = data.getType();
+			CableData data = s.getValue(StorageNetworkCable.DATA);
+			if (data == null) { return baseModel; }
+			if (data.isValid() && data.getModel() != null) { return data.getModel(); }
+			List<BakedQuad> quads = new ArrayList<>();
+			StorageNetworkCable.CableType t = data.getType();
 			CableColor c = data.getColor();
 			Map<EnumFacing, Map<Integer, Map<Integer, IBakedModel>>> m = model.get(t).get(c);
 			Map<CableColor, Map<Integer, Map<Axis, IBakedModel>>> am = axisOverrides.get(t);
 			Axis a = null;
 			Map<Integer, Map<Axis, IBakedModel>> axisMap = null;
-			if(am != null){
+			if (am != null) {
 				axisMap = am.get(c);
 			}
 			boolean setAxis = false, invalid = false;
-			if(axisMap != null){
-				for(int j = 0;j<axisValues.length;j++){
+			if (axisMap != null) {
+				for (int j = 0;j < axisValues.length;j++) {
 					Axis axis = axisValues[j];
 					int cS1 = data.getValue(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, axis));
 					int cS2 = data.getValue(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, axis));
-					if(cS1 == 1 && cS2 == 1){
-						if(!setAxis){
+					if (cS1 == 1 && cS2 == 1) {
+						if (!setAxis) {
 							a = axis;
 							setAxis = true;
-						}else{
+						} else {
 							a = null;
 						}
-					}else if(cS1 != 0 || cS2 != 0){
+					} else if (cS1 != 0 || cS2 != 0) {
 						invalid = true;
 						break;
 					}
 				}
 			}
-			if(!invalid && a != null && axisMap != null){
+			if (!invalid && a != null && axisMap != null) {
 				quads.addAll(axisMap.get(-1).get(a).getQuads(state, side, rand));
 				Map<Axis, IBakedModel> ch = axisMap.get(data.getChannel(EnumFacing.getFacingFromAxis(AxisDirection.POSITIVE, a)));
-				if(ch != null)quads.addAll(ch.get(a).getQuads(state, side, rand));
-			}else{
-				for(int j = 0;j<EnumFacing.VALUES.length;j++){
+				if (ch != null)
+					quads.addAll(ch.get(a).getQuads(state, side, rand));
+			} else {
+				for (int j = 0;j < EnumFacing.VALUES.length;j++) {
 					EnumFacing f = EnumFacing.VALUES[j];
 					int cS = data.getValue(f);
 					quads.addAll(m.get(f).get(cS).get(-1).getQuads(state, side, rand));
 					IBakedModel ch = m.get(f).get(cS).get(data.getChannel(f));
-					if(ch != null)quads.addAll(ch.getQuads(state, side, rand));
+					if (ch != null)
+						quads.addAll(ch.getQuads(state, side, rand));
 				}
 			}
 			data.setModel(quads);
 			return quads;
 		}
+
 		@Override
-		public boolean isAmbientOcclusion()
-		{
+		public boolean isAmbientOcclusion() {
 			return this.ambientOcclusion;
 		}
 
 		@Override
-		public boolean isGui3d()
-		{
+		public boolean isGui3d() {
 			return this.gui3D;
 		}
 
 		@Override
-		public boolean isBuiltInRenderer()
-		{
+		public boolean isBuiltInRenderer() {
 			return false;
 		}
 
 		@Override
-		public TextureAtlasSprite getParticleTexture()
-		{
+		public TextureAtlasSprite getParticleTexture() {
 			return this.particleTexture;
 		}
 
 		@Override
-		public ItemCameraTransforms getItemCameraTransforms()
-		{
+		public ItemCameraTransforms getItemCameraTransforms() {
 			return this.cameraTransforms;
 		}
 
 		@Override
-		public ItemOverrideList getOverrides()
-		{
+		public ItemOverrideList getOverrides() {
 			return this.overrides;
 		}
 	}

@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "tomsmodcore:items/resources/platelapis"
-    }
+  "parent": "tomsmodcore:item/platesbase",
+  "textures": {
+    "block": "blocks/lapis_block"
+  }
 }

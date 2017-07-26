@@ -1,12 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "up": "blocks/mbFuelRod",
+        "up": "tomsmodfactory:blocks/mbFuelRod",
         "down": "tomsmodcore:blocks/Gray",
         "north": "tomsmodcore:blocks/Gray",
         "east": "tomsmodcore:blocks/Gray",
         "south": "tomsmodcore:blocks/Gray",
         "west": "tomsmodcore:blocks/Gray",
-        "particle": "blocks/mbFuelRod"
+        "particle": "tomsmodfactory:blocks/mbFuelRod"
     }
 }

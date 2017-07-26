@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
+    "parent": "tomsmodcore:item/cablebase",
     "textures": {
-        "layer0": "tomsmodcore:items/resources/cablelithium"
+        "wire": "tomsmodcore:items/resources/wirelithium"
     }
 }

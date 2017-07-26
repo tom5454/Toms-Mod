@@ -15,49 +15,53 @@ import com.tom.api.tileentity.ISecurityStation;
 import com.tom.apis.TomsModUtils;
 
 public class WrenchHandler {
-	public static boolean use(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c, EnumHand hand){
+	public static boolean use(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c, EnumHand hand) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof ISecuredTileEntity){
+		if (tile instanceof ISecuredTileEntity) {
 			boolean canAccess = true;
 			BlockPos securityStationPos = ((ISecuredTileEntity) tile).getSecurityStationPos();
-			if(securityStationPos != null){
+			if (securityStationPos != null) {
 				TileEntity tileentity = world.getTileEntity(securityStationPos);
-				if(tileentity instanceof ISecurityStation){
+				if (tileentity instanceof ISecurityStation) {
 					ISecurityStation te = (ISecurityStation) tileentity;
 					canAccess = te.canPlayerAccess(AccessType.CONFIGURATION, player);
 				}
 			}
-			if(canAccess){
-				if(player.isSneaking()){
+			if (canAccess) {
+				if (player.isSneaking()) {
 					return useSneak(itemStack, player, world, pos, side, a, b, c, hand);
-				}else{
-					//if(false){
-					//return useCrafting(itemStack, player, world, pos, side, a, b, c);
-					//}else{
+				} else {
+					// if(false){
+					// return useCrafting(itemStack, player, world, pos, side,
+					// a, b, c);
+					// }else{
 					return useNormal(itemStack, player, world, pos, side, a, b, c);
-					//}
+					// }
 				}
-			}else{
+			} else {
 				TomsModUtils.sendAccessDeniedMessageTo(player, "tomsMod.chat.fieldSecurity");
 				return false;
 			}
-		}else{
-			if(player.isSneaking()){
+		} else {
+			if (player.isSneaking()) {
 				return useSneak(itemStack, player, world, pos, side, a, b, c, hand);
-			}else{
-				//if(false){
-				//return useCrafting(itemStack, player, world, pos, side, a, b, c);
-				//}else{
+			} else {
+				// if(false){
+				// return useCrafting(itemStack, player, world, pos, side, a, b,
+				// c);
+				// }else{
 				return useNormal(itemStack, player, world, pos, side, a, b, c);
-				//}
+				// }
 			}
 		}
 	}
-	private static boolean useSneak(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c, EnumHand hand){
+
+	private static boolean useSneak(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c, EnumHand hand) {
 		IBlockState bl = world.getBlockState(pos);
-		return bl.getBlock().onBlockActivated(world, pos, bl, player, hand, itemStack, side, a, b, c);
+		return bl.getBlock().onBlockActivated(world, pos, bl, player, hand, side, a, b, c);
 	}
-	private static boolean useNormal(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c){
+
+	private static boolean useNormal(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c) {
 		return false;
 	}
 	/*private static boolean useCrafting(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c){

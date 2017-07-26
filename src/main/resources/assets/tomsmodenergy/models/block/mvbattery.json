@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodfactory:blocks/machineside",
+        "down": "tomsmodfactory:blocks/machineside",
+        "north": "tomsmodfactory:blocks/machineside",
+        "east": "tomsmodfactory:blocks/machineside",
+        "south": "tomsmodenergy:blocks/mvbatboxfront",
+        "west": "tomsmodfactory:blocks/machineside",
+        "particle": "tomsmodfactory:blocks/machineside"
+    }
+}

@@ -27,11 +27,12 @@ import com.tom.core.tileentity.TileEntityHolotapeReader;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class HolotapeReader extends BlockContainerTomsMod implements
-IPeripheralProvider {
+public class HolotapeReader extends BlockContainerTomsMod implements IPeripheralProvider {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyInteger STATE = PropertyInteger.create("state", 0, 2);
+
 	/*@SideOnly(Side.CLIENT)
 	protected IIcon side;
 	@SideOnly(Side.CLIENT)
@@ -43,6 +44,7 @@ IPeripheralProvider {
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
+
 	/*public void registerBlockIcons(IIconRegister i){
 		this.blockIcon = i.registerIcon("minecraft:tm/holoReader");
 		this.side = i.registerIcon("minecraft:tm/holoDeviceSide");
@@ -62,34 +64,33 @@ IPeripheralProvider {
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityHolotapeReader();
 	}
+
 	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityHolotapeReader ? (IPeripheral)te : null;
+		return te instanceof TileEntityHolotapeReader ? (IPeripheral) te : null;
 	}
+
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack heldItem = player.getHeldItem(hand);
 		TileEntityHolotapeReader te = (TileEntityHolotapeReader) world.getTileEntity(pos);
-		if(heldItem != null && heldItem.getItem() == CoreInit.holotape){
-			if(!te.hasH){
-				if(!world.isRemote){
+		if (!heldItem.isEmpty() && heldItem.getItem() == CoreInit.holotape) {
+			if (!te.hasH) {
+				if (!world.isRemote) {
 					ItemStack t = heldItem.splitStack(1);
-					te.holotape = t;
+					te.holotape.setInventorySlotContents(0, t);
 					te.markBlockForUpdate(pos);
 				}
 				return true;
 			}
-		}else{
-			if(te.hasH){
-				if(!world.isRemote){
-					ItemStack holotape = te.holotape;
-					te.holotape = null;
-					EntityItem itemEntity = new EntityItem(world, pos.getX(),pos.getY(),pos.getZ(), holotape);
-					world.spawnEntityInWorld(itemEntity);
+		} else {
+			if (te.hasH) {
+				if (!world.isRemote) {
+					ItemStack holotape = te.holotape.removeStackFromSlot(0);
+					EntityItem itemEntity = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), holotape);
+					world.spawnEntity(itemEntity);
 					te.markBlockForUpdate(pos);
 				}
 				return true;
@@ -97,29 +98,34 @@ IPeripheralProvider {
 		}
 		return false;
 	}
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState bs, EntityLivingBase entity, ItemStack itemstack){
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState bs, EntityLivingBase entity, ItemStack itemstack) {
 		EnumFacing f = TomsModUtils.getDirectionFacing(entity, false);
 		world.setBlockState(pos, bs.withProperty(FACING, f).withProperty(STATE, 0), 2);
 		TileEntity te = world.getTileEntity(pos);
 		TileEntityHolotapeReader te2 = (TileEntityHolotapeReader) te;
 		int d = f.ordinal();
-		if (d == 5) te2.direction = 4;
-		else if(d == 4) te2.direction = 5;
-		else if (d == 3) te2.direction = 2;
-		else if(d == 2) te2.direction = 3;
+		if (d == 5)
+			te2.direction = 4;
+		else if (d == 4)
+			te2.direction = 5;
+		else if (d == 3)
+			te2.direction = 2;
+		else if (d == 2)
+			te2.direction = 3;
 	}
+
 	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {FACING,STATE});
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{FACING, STATE});
 	}
+
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		boolean formed = (meta & 8) > 0;
 		boolean isRight = (meta & 4) > 0;
 		return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(STATE, formed ? isRight ? 2 : 1 : 0);
@@ -129,20 +135,17 @@ IPeripheralProvider {
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{
+	public int getMetaFromState(IBlockState state) {
 		boolean formed = state.getValue(STATE) > 0;
 		boolean isRight = state.getValue(STATE) == 2;
 		int i = 0;
 		i = i | state.getValue(FACING).getHorizontalIndex();
 
-		if (formed)
-		{
+		if (formed) {
 			i |= 8;
 		}
 
-		if (isRight)
-		{
+		if (isRight) {
 			i |= 4;
 		}
 

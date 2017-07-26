@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "type=0": { "model": "tomsmodcore:oreironnether"},
+        "type=1": { "model": "tomsmodcore:oregoldnether"},
+        "type=2": { "model": "tomsmodcore:orelapisnether"},
+        "type=3": { "model": "tomsmodcore:oreredstonenether"},
+        "type=4": { "model": "tomsmodcore:orediamondnether"}
+    }
+}

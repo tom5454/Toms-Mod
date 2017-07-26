@@ -1,23 +1,21 @@
 package com.tom.api.tileentity;
 
+import java.io.IOException;
 import java.util.List;
-
-import mapwriterTm.util.Render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,717 +23,116 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.tom.api.item.ISecurityStationLinkCard;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.network.INBTPacketSender;
-import com.tom.defense.ForceDeviceControlType;
 
-import com.tom.core.tileentity.gui.GuiConfigurator.GuiButtonConfig;
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public interface IConfigurable extends INBTPacketReceiver, INBTPacketSender{
+public interface IConfigurable extends INBTPacketReceiver, INBTPacketSender {
 	IConfigurationOption getOption();
-	boolean canConfigure(EntityPlayer player, ItemStack stack);
-	BlockPos getPos2();
-	BlockPos getSecurityStationPos();
-	void setCardStack(ItemStack stack);
-	ItemStack getCardStack();
-	public static interface IConfigurationOption{
-		@SideOnly(Side.CLIENT)
-		void renderBackground(Minecraft mc, int x, int y);
-		int getWidth();
-		int getHeight();
-		void readFromNBTPacket(NBTTagCompound tag);
-		void writeModificationNBTPacket(NBTTagCompound tag);
-		@SideOnly(Side.CLIENT)
-		void renderForeground(Minecraft mc, int x, int y, int mouseX, int mouseY);
-		@SideOnly(Side.CLIENT)
-		void actionPreformed(Minecraft mc, GuiButton button);
-		@SideOnly(Side.CLIENT)
-		void init(Minecraft mc, int x, int y, int lastButtonID, List<GuiButton> buttonList);
-		void addSlotsToList(IConfigurable tile, List<Slot> slotList, int x, int y);
-		ResourceLocation securitySlotLocation = new ResourceLocation("tomsmod:textures/gui/slotSecurity.png");
-		IInventory getInventory();
-		void update(Minecraft mc, int x, int y);
-		public static class SlotSecurityCard extends Slot{
 
-			public SlotSecurityCard(IInventory inventoryIn, int index,
-					int xPosition, int yPosition) {
+	boolean canConfigure(EntityPlayer player, ItemStack stack);
+
+	BlockPos getPos2();
+
+	String getConfigName();
+
+	default BlockPos getSecurityStationPos() {
+		ItemStack securityCardStack = getCardStack();
+		return !securityCardStack.isEmpty() && securityCardStack.getItem() instanceof ISecurityStationLinkCard ? ((ISecurityStationLinkCard) securityCardStack.getItem()).getStation(securityCardStack) : null;
+	}
+
+	void setCardStack(ItemStack stack);
+
+	ItemStack getCardStack();
+
+	default ItemStack getStack() {
+		return new ItemStack(Blocks.BARRIER);
+	}
+
+	public static interface IConfigurationOption {
+		@SideOnly(Side.CLIENT)
+		default void renderBackground(Minecraft mc, int x, int y) {
+		}
+
+		int getWidth();
+
+		int getHeight();
+
+		void readFromNBTPacket(NBTTagCompound tag);
+
+		void writeModificationNBTPacket(NBTTagCompound tag);
+
+		@SideOnly(Side.CLIENT)
+		default void renderForeground(Minecraft mc, int x, int y, int mouseX, int mouseY) {
+		}
+
+		@SideOnly(Side.CLIENT)
+		default void actionPreformed(Minecraft mc, GuiButton button) {
+		}
+
+		@SideOnly(Side.CLIENT)
+		default void init(Minecraft mc, int x, int y, int lastButtonID, List<GuiButton> buttonList, List<GuiLabel> labelList) {
+		}
+
+		default void addSlotsToList(IConfigurable tile, List<Slot> slotList, int x, int y) {
+		}
+
+		ResourceLocation securitySlotLocation = new ResourceLocation("tomsmod:textures/gui/slotSecurity.png");
+		ResourceLocation powerlinkSlotLocation = new ResourceLocation("tomsmod:textures/gui/slotpowerlink.png");
+
+		IInventory getInventory();
+
+		default void update(Minecraft mc, int x, int y) {
+		}
+
+		@SideOnly(Side.CLIENT)
+		default void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		}
+
+		@SideOnly(Side.CLIENT)
+		default void keyTyped(char typedChar, int keyCode) throws IOException {
+		}
+
+		default boolean drawBackground() {
+			return true;
+		}
+
+		public static class SlotSecurityCard extends Slot {
+
+			public SlotSecurityCard(IInventory inventoryIn, int index, int xPosition, int yPosition) {
 				super(inventoryIn, index, xPosition, yPosition);
 			}
+
 			@Override
 			public int getSlotStackLimit() {
 				return 1;
 			}
+
 			@Override
 			public boolean isItemValid(ItemStack stack) {
-				return stack != null && stack.getItem() instanceof ISecurityStationLinkCard && ((ISecurityStationLinkCard)stack.getItem()).getStation(stack) != null;
-			}
-		}
-		@SideOnly(Side.CLIENT)
-		public static class GuiButtonSelection extends GuiButton{
-
-			public GuiButtonSelection(int buttonId, int x, int y) {
-				super(buttonId, x, y, 16,16,"");
-			}
-			@Override
-			public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-				this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-				int i = this.getHoverState(this.hovered);
-				if(i == 2){
-					Render.setColourWithAlphaPercent(0xFFFFFF, 20);
-					Render.drawRect(xPosition, yPosition, width, height);
-				}
-			}
-		}
-		@SideOnly(Side.CLIENT)
-		public static class GuiButtonRedstoneMode extends GuiButtonConfig{
-			public ForceDeviceControlType controlType;
-			public GuiButtonRedstoneMode(int buttonId, int x, int y, ForceDeviceControlType type) {
-				super(buttonId, x, y, 20,20,"");
-				this.controlType = type;
-			}
-			@Override
-			public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-				if (this.visible)
-				{
-					mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
-					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-					this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-					int i = this.getHoverState(this.hovered);
-					GlStateManager.enableBlend();
-					GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-					GlStateManager.blendFunc(770, 771);
-					this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
-					this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
-					this.mouseDragged(mc, mouseX, mouseY);
-					mc.getTextureManager().bindTexture(controlType.iconLocation);
-					Render.drawTexturedRect(xPosition+2, yPosition+2, 16, 16);
-				}
-			}
-			@Override
-			public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
-				if (this.visible){
-					if(hovered){
-						gui.drawHoveringTextI(I18n.format(controlType.name), mouseX, mouseY);
-					}
-				}
-			}
-		}
-		@SideOnly(Side.CLIENT)
-		public static class GuiButtonPowerSharing extends GuiButtonConfig{
-			public boolean controlType;
-			public GuiButtonPowerSharing(int buttonId, int x, int y, boolean type) {
-				super(buttonId, x, y, 20,20,"");
-				this.controlType = type;
-			}
-			@Override
-			public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-				if (this.visible)
-				{
-					mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
-					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-					this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-					int i = this.getHoverState(this.hovered);
-					GlStateManager.enableBlend();
-					GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-					GlStateManager.blendFunc(770, 771);
-					this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
-					this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
-					this.mouseDragged(mc, mouseX, mouseY);
-					mc.getTextureManager().bindTexture(GuiTomsMod.LIST_TEXTURE);
-					Render.drawTexturedRect(xPosition+2, yPosition+2, 16, 16, (controlType ? 114 : 98)/256D, 191/256D);
-				}
-			}
-			@Override
-			public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
-				if (this.visible){
-					if(hovered){
-						gui.drawHoveringTextI(I18n.format(controlType ? "tomsmod.gui.powersharingOn" : "tomsmod.gui.powersharingOff"), mouseX, mouseY);
-					}
-				}
-			}
-		}
-		public static final class ConfigurationOptionSide implements IConfigurationOption{
-			public byte sideConfig;
-			public final ResourceLocation[] sideTexLoc;
-			public final ResourceLocation selectionTexLoc;
-			private int lastButtonID = -1;
-			private GuiButtonSelection buttonUp, buttonDown, buttonNorth, buttonSouth, buttonEast, buttonWest;
-			private IInventory inventory;
-			public ConfigurationOptionSide(byte sideConfig,
-					ResourceLocation[] sideTexLoc,
-					ResourceLocation selectionType, IConfigurable c) {
-				this.sideConfig = sideConfig;
-				this.sideTexLoc = sideTexLoc;
-				this.selectionTexLoc = selectionType;
-				this.inventory = new SecurityCardInventory(c);
-			}
-			public ConfigurationOptionSide(byte sideConfig,
-					ResourceLocation sideTexLoc,
-					ResourceLocation selectionType, IConfigurable c) {
-				this(sideConfig,fillArray(new ResourceLocation[6], sideTexLoc),selectionType,c);
-			}
-			public static ResourceLocation[] fillArray(ResourceLocation[] putTo, ResourceLocation value){
-				for(int i = 0;i<putTo.length;i++)putTo[i] = value;
-				return putTo;
-			}
-			@Override
-			@SideOnly(Side.CLIENT)
-			public void renderBackground(Minecraft mc, int xP, int yP) {
-				mc.renderEngine.bindTexture(sideTexLoc[2]);
-				Render.drawTexturedRect(xP+17, yP+17, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[1]);
-				Render.drawTexturedRect(xP+17, yP, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[0]);
-				Render.drawTexturedRect(xP+17, yP+34, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[4]);
-				Render.drawTexturedRect(xP, yP+17, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[5]);
-				Render.drawTexturedRect(xP+34, yP+17, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[3]);
-				Render.drawTexturedRect(xP+34, yP+34, 16, 16);
-				mc.renderEngine.bindTexture(securitySlotLocation);
-				Render.drawTexturedRect(xP-1, yP-1, 18, 18);
-			}
-			@Override
-			public int getWidth() {
-				return 50;
-			}
-			@Override
-			public int getHeight() {
-				return 50;
-			}
-			@Override
-			public void readFromNBTPacket(NBTTagCompound tag) {
-				sideConfig = tag.getByte("s");
-			}
-			@Override
-			public void writeModificationNBTPacket(NBTTagCompound tag) {
-				tag.setByte("s", sideConfig);
-			}
-			@Override
-			@SideOnly(Side.CLIENT)
-			public void renderForeground(Minecraft mc, int xP, int yP,
-					int mouseX, int mouseY) {
-				if(contains(EnumFacing.DOWN)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+17, yP+34, 16, 16);
-				}
-				if(contains(EnumFacing.UP)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+17, yP, 16, 16);
-				}
-				if(contains(EnumFacing.NORTH)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+17, yP+17, 16, 16);
-				}
-				if(contains(EnumFacing.SOUTH)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+34, yP+34, 16, 16);
-				}
-				if(contains(EnumFacing.WEST)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP, yP+17, 16, 16);
-				}
-				if(contains(EnumFacing.EAST)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+34, yP+17, 16, 16);
-				}
-
-			}
-			@Override
-			public void actionPreformed(Minecraft mc, GuiButton button) {
-				if(button instanceof GuiButtonSelection){
-					if(button.id > lastButtonID){
-						int id = button.id - (lastButtonID + 1);
-						EnumFacing side = EnumFacing.VALUES[id % EnumFacing.VALUES.length];
-						boolean c = contains(side);
-						if(c)sideConfig &= ~(1 << side.ordinal());
-						else sideConfig |= 1 << side.ordinal();
-					}
-				}
-			}
-			public boolean contains(EnumFacing side) {
-				return (sideConfig & (1 << side.ordinal())) != 0;
-			}
-			@Override
-			public void init(Minecraft mc, int x, int y, int lastButtonID, List<GuiButton> buttonList) {
-				this.lastButtonID = lastButtonID;
-				this.buttonDown = new GuiButtonSelection(lastButtonID+1, x+17, y+34);
-				this.buttonUp = new GuiButtonSelection(lastButtonID+2, x+17, y);
-				this.buttonNorth = new GuiButtonSelection(lastButtonID+3, x+17, y+17);
-				this.buttonSouth = new GuiButtonSelection(lastButtonID+4, x+34, y+34);
-				this.buttonWest = new GuiButtonSelection(lastButtonID+5, x, y+17);
-				this.buttonEast = new GuiButtonSelection(lastButtonID+6, x+34, y+17);
-				buttonList.add(buttonDown);
-				buttonList.add(buttonEast);
-				buttonList.add(buttonNorth);
-				buttonList.add(buttonSouth);
-				buttonList.add(buttonUp);
-				buttonList.add(buttonWest);
-			}
-			@Override
-			public void addSlotsToList(IConfigurable tile, List<Slot> slotList, int x, int y) {
-				slotList.add(new SlotSecurityCard(inventory, 0, x, y));
-			}
-			@Override
-			public IInventory getInventory() {
-				return inventory;
-			}
-			@Override
-			public void update(Minecraft mc, int x, int y) {
-
-			}
-		}
-		public static final class ConfigurationRedstoneControl implements IConfigurationOption{
-			private IInventory inventory;
-			private GuiButtonRedstoneMode rsButton;
-			private ForceDeviceControlType controlType;
-			private int lastButtonID = -1;
-			public ConfigurationRedstoneControl(IConfigurable c, ForceDeviceControlType type) {
-				this.inventory = new SecurityCardInventory(c);
-				this.controlType = type;
-			}
-			@Override
-			public void renderBackground(Minecraft mc, int x, int y) {
-				mc.renderEngine.bindTexture(securitySlotLocation);
-				Render.drawTexturedRect(x+1,y+1, 18, 18);
-			}
-
-			@Override
-			public int getWidth() {
-				return 40;
-			}
-
-			@Override
-			public int getHeight() {
-				return 20;
-			}
-
-			@Override
-			public void readFromNBTPacket(NBTTagCompound tag) {
-				this.controlType = ForceDeviceControlType.get(tag.getInteger("r"));
-			}
-
-			@Override
-			public void writeModificationNBTPacket(NBTTagCompound tag) {
-				tag.setInteger("r", this.controlType.ordinal());
-			}
-
-			@Override
-			public void renderForeground(Minecraft mc, int x, int y,
-					int mouseX, int mouseY) {
-
-			}
-			@Override
-			public void actionPreformed(Minecraft mc, GuiButton button) {
-				if(button instanceof GuiButtonRedstoneMode){
-					if(button.id > lastButtonID){
-						int id = button.id - (lastButtonID + 1);
-						if(id == 0){
-							this.controlType = ForceDeviceControlType.get(controlType.ordinal()+1);
-						}
-					}
-				}
-			}
-
-			@Override
-			public void init(Minecraft mc, int x, int y, int lastButtonID,
-					List<GuiButton> buttonList) {
-				this.lastButtonID = lastButtonID;
-				rsButton = new GuiButtonRedstoneMode(lastButtonID+1, x+20, y, controlType);
-				buttonList.add(rsButton);
-			}
-
-			@Override
-			public void addSlotsToList(IConfigurable tile, List<Slot> slotList, int x, int y) {
-				slotList.add(new SlotSecurityCard(inventory, 0, x+2, y+2));
-			}
-
-			@Override
-			public IInventory getInventory() {
-				return inventory;
-			}
-			@Override
-			public void update(Minecraft mc, int x, int y) {
-				rsButton.controlType = controlType;
-			}
-		}
-		public static final class ConfigurationRedstoneControlSimple implements IConfigurationOption{
-			private GuiButtonRedstoneMode rsButton;
-			private ForceDeviceControlType controlType;
-			private int lastButtonID = -1;
-			public ConfigurationRedstoneControlSimple(IConfigurable c, ForceDeviceControlType type) {
-				this.controlType = type;
-			}
-			@Override
-			public void renderBackground(Minecraft mc, int x, int y) {
-
-			}
-
-			@Override
-			public int getWidth() {
-				return 40;
-			}
-
-			@Override
-			public int getHeight() {
-				return 20;
-			}
-
-			@Override
-			public void readFromNBTPacket(NBTTagCompound tag) {
-				this.controlType = ForceDeviceControlType.get(tag.getInteger("r"));
-			}
-
-			@Override
-			public void writeModificationNBTPacket(NBTTagCompound tag) {
-				tag.setInteger("r", this.controlType.ordinal());
-			}
-
-			@Override
-			public void renderForeground(Minecraft mc, int x, int y,
-					int mouseX, int mouseY) {
-
-			}
-			@Override
-			public void actionPreformed(Minecraft mc, GuiButton button) {
-				if(button instanceof GuiButtonRedstoneMode){
-					if(button.id > lastButtonID){
-						int id = button.id - (lastButtonID + 1);
-						if(id == 0){
-							this.controlType = ForceDeviceControlType.get(controlType.ordinal()+1);
-						}
-					}
-				}
-			}
-
-			@Override
-			public void init(Minecraft mc, int x, int y, int lastButtonID,
-					List<GuiButton> buttonList) {
-				this.lastButtonID = lastButtonID;
-				rsButton = new GuiButtonRedstoneMode(lastButtonID+1, x+20, y, controlType);
-				buttonList.add(rsButton);
-			}
-
-			@Override
-			public void addSlotsToList(IConfigurable tile, List<Slot> slotList, int x, int y) {
-			}
-
-			@Override
-			public IInventory getInventory() {
-				return null;
-			}
-			@Override
-			public void update(Minecraft mc, int x, int y) {
-				rsButton.controlType = controlType;
-			}
-		}
-		public static final class ConfigurationOptionMachine implements IConfigurationOption{
-			public static final ResourceLocation[] MACHINE_LOC = new ResourceLocation[]{new ResourceLocation("tomsmodfactory:textures/blocks/machineSide.png"), new ResourceLocation("tomsmodfactory:textures/blocks/machineSide.png"), new ResourceLocation("tomsmodfactory:textures/blocks/machineSide.png")};
-			public byte sideConfig;
-			public final ResourceLocation[] sideTexLoc;
-			public final ResourceLocation selectionTexLoc;
-			private int lastButtonID = -1;
-			private GuiButtonSelection buttonUp, buttonDown, buttonNorth, buttonSouth, buttonEast, buttonWest;
-			private GuiButtonRedstoneMode rsButton;
-			private GuiButtonPowerSharing buttonPowerSharing;
-			private ForceDeviceControlType controlType;
-			private boolean powersharing;
-			public ConfigurationOptionMachine(byte sideConfig,
-					ResourceLocation[] sideTexLoc, ResourceLocation front,
-					ResourceLocation selectionType, ForceDeviceControlType type, IConfigurable c) {
-				this.sideConfig = sideConfig;
-				this.sideTexLoc = new ResourceLocation[6];
-				for(int i = 0;i<6;i++){
-					if(i == 0){
-						this.sideTexLoc[i] = sideTexLoc[2];
-					}else if(i == 1){
-						this.sideTexLoc[i] = sideTexLoc[0];
-					}else if(i == 2){
-						this.sideTexLoc[i] = front;
-					}else{
-						this.sideTexLoc[i] = sideTexLoc[1];
-					}
-				}
-				this.selectionTexLoc = selectionType;
-				this.controlType = type;
-			}
-			public ConfigurationOptionMachine(byte sideConfig,
-					ResourceLocation front,
-					ResourceLocation selectionType, ForceDeviceControlType type, IConfigurable c) {
-				this(sideConfig, MACHINE_LOC, front, selectionType, type, c);
-			}
-			public ConfigurationOptionMachine(byte sideConfig,
-					ResourceLocation front,
-					ResourceLocation selectionType, ResourceLocation top, ForceDeviceControlType type, IConfigurable c) {
-				this(sideConfig, putLoc(top), front, selectionType, type, c);
-			}
-			private static ResourceLocation[] putLoc(ResourceLocation t){
-				if(t != null){
-					ResourceLocation[] ret = new ResourceLocation[3];
-					for(int i = 0;i<3;i++){
-						if(i == 2)ret[i] = t;
-						else ret[i] = MACHINE_LOC[i];
-					}
-					return ret;
-				}else
-					return MACHINE_LOC;
-			}
-			@Override
-			@SideOnly(Side.CLIENT)
-			public void renderBackground(Minecraft mc, int xP, int yP) {
-				mc.renderEngine.bindTexture(sideTexLoc[2]);
-				Render.drawTexturedRect(xP+17, yP+17, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[1]);
-				Render.drawTexturedRect(xP+17, yP, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[0]);
-				Render.drawTexturedRect(xP+17, yP+34, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[4]);
-				Render.drawTexturedRect(xP, yP+17, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[5]);
-				Render.drawTexturedRect(xP+34, yP+17, 16, 16);
-				mc.renderEngine.bindTexture(sideTexLoc[3]);
-				Render.drawTexturedRect(xP+34, yP+34, 16, 16);
-			}
-			@Override
-			public int getWidth() {
-				return 50;
-			}
-			@Override
-			public int getHeight() {
-				return 50;
-			}
-			@Override
-			public void readFromNBTPacket(NBTTagCompound tag) {
-				sideConfig = tag.getByte("s");
-				this.controlType = ForceDeviceControlType.get(tag.getInteger("r"));
-				powersharing = tag.getBoolean("p");
-			}
-			@Override
-			public void writeModificationNBTPacket(NBTTagCompound tag) {
-				tag.setByte("s", sideConfig);
-				tag.setInteger("r", this.controlType.ordinal());
-				tag.setBoolean("p", powersharing);
-			}
-			@Override
-			@SideOnly(Side.CLIENT)
-			public void renderForeground(Minecraft mc, int xP, int yP,
-					int mouseX, int mouseY) {
-				if(contains(EnumFacing.DOWN)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+17, yP+34, 16, 16);
-				}
-				if(contains(EnumFacing.UP)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+17, yP, 16, 16);
-				}
-				if(contains(EnumFacing.NORTH)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+17, yP+17, 16, 16);
-				}
-				if(contains(EnumFacing.SOUTH)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+34, yP+34, 16, 16);
-				}
-				if(contains(EnumFacing.WEST)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP, yP+17, 16, 16);
-				}
-				if(contains(EnumFacing.EAST)){
-					mc.renderEngine.bindTexture(selectionTexLoc);
-					Render.drawTexturedRect(xP+34, yP+17, 16, 16);
-				}
-
-			}
-			@Override
-			public void actionPreformed(Minecraft mc, GuiButton button) {
-				if(button instanceof GuiButtonSelection){
-					if(button.id > lastButtonID){
-						int id = button.id - (lastButtonID + 1);
-						EnumFacing side = EnumFacing.VALUES[id % EnumFacing.VALUES.length];
-						boolean c = contains(side);
-						if(c)sideConfig &= ~(1 << side.ordinal());
-						else sideConfig |= 1 << side.ordinal();
-					}
-				}else{
-					int id = button.id;
-					if(id == lastButtonID+7){
-						this.controlType = ForceDeviceControlType.get(controlType.ordinal()+1);
-					}else if(id == lastButtonID+8){
-						this.powersharing = !powersharing;
-					}
-				}
-			}
-			public boolean contains(EnumFacing side) {
-				return (sideConfig & (1 << side.ordinal())) != 0;
-			}
-			@Override
-			public void init(Minecraft mc, int x, int y, int lastButtonID, List<GuiButton> buttonList) {
-				this.lastButtonID = lastButtonID;
-				this.buttonDown = new GuiButtonSelection(lastButtonID+1, x+17, y+34);
-				this.buttonUp = new GuiButtonSelection(lastButtonID+2, x+17, y);
-				this.buttonNorth = new GuiButtonSelection(lastButtonID+3, x+17, y+17);
-				this.buttonSouth = new GuiButtonSelection(lastButtonID+4, x+34, y+34);
-				this.buttonWest = new GuiButtonSelection(lastButtonID+5, x, y+17);
-				this.buttonEast = new GuiButtonSelection(lastButtonID+6, x+34, y+17);
-				this.rsButton = new GuiButtonRedstoneMode(lastButtonID+7, x-4, y-4, controlType);
-				this.buttonPowerSharing = new GuiButtonPowerSharing(lastButtonID+8, x + 34, y - 4, powersharing);
-				buttonList.add(buttonDown);
-				buttonList.add(buttonEast);
-				buttonList.add(buttonNorth);
-				buttonList.add(buttonSouth);
-				buttonList.add(buttonUp);
-				buttonList.add(buttonWest);
-				buttonList.add(rsButton);
-				buttonList.add(buttonPowerSharing);
-			}
-			@Override
-			public void addSlotsToList(IConfigurable tile, List<Slot> slotList, int x, int y) {
-
-			}
-			@Override
-			public IInventory getInventory() {
-				return null;
-			}
-			@Override
-			public void update(Minecraft mc, int x, int y) {
-				rsButton.controlType = controlType;
-				buttonPowerSharing.controlType = powersharing;
+				return stack != null && stack.getItem() instanceof ISecurityStationLinkCard && ((ISecurityStationLinkCard) stack.getItem()).getStation(stack) != null;
 			}
 		}
 	}
-	public static interface ICustomConfigurationErrorMessage{
+
+	public static interface ICustomConfigurationErrorMessage {
 		ITextComponent[] getMessage(EntityPlayer player, ItemStack stack);
 	}
-	public static class SecurityCardInventory implements IInventory{
-		private ItemStack stack;
+
+	public static class SecurityCardInventory extends InventoryBasic {
 		private IConfigurable te;
+
 		public SecurityCardInventory(IConfigurable tile) {
-			this.stack = tile.getCardStack();
+			super("security", false, 1);
+			this.setInventorySlotContents(0, tile.getCardStack());
 			te = tile;
 		}
 
 		@Override
-		public String getName() {
-			return "security";
-		}
-
-		@Override
-		public boolean hasCustomName() {
-			return false;
-		}
-
-		@Override
-		public 	ITextComponent getDisplayName() {
-			return new TextComponentString(this.getName());
-		}
-
-		@Override
-		public int getSizeInventory() {
-			return 1;
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int index) {
-			return index == 0 ? this.stack : null;
-		}
-
-		@Override
-		public ItemStack decrStackSize(int slot, int count) {
-			if(slot == 0){
-				if (this.stack != null)
-				{
-					ItemStack var3;
-
-					if (this.stack.stackSize <= count)
-					{
-						var3 = this.stack;
-						this.stack = null;
-						return var3;
-					}
-					else
-					{
-						var3 = this.stack.splitStack(count);
-
-						if (this.stack.stackSize == 0)
-						{
-							this.stack = null;
-						}
-
-						return var3;
-					}
-				}
-				else
-				{
-					return null;
-				}
-			}
-			return null;
-		}
-
-		@Override
-		public ItemStack removeStackFromSlot(int index) {
-			if(index == 0){
-				ItemStack s = stack;
-				stack = null;
-				return s;
-			}
-			return null;
-		}
-
-		@Override
-		public void setInventorySlotContents(int index, ItemStack stack) {
-			if(index == 0)this.stack = stack;
-		}
-
-		@Override
-		public int getInventoryStackLimit() {
-			return 1;
-		}
-
-		@Override
-		public void markDirty() {
-
-		}
-
-		@Override
-		public boolean isUseableByPlayer(EntityPlayer player) {
-			return true;
-		}
-
-		@Override
-		public void openInventory(EntityPlayer player) {
-
-		}
-
-		@Override
 		public void closeInventory(EntityPlayer player) {
-			te.setCardStack(stack);
+			te.setCardStack(this.getStackInSlot(0));
 		}
 
 		@Override
 		public boolean isItemValidForSlot(int index, ItemStack stack) {
-			return index == 0 && stack != null && stack.getItem() instanceof ISecurityStationLinkCard && ((ISecurityStationLinkCard)stack.getItem()).getStation(stack) != null;
+			return index == 0 && stack != null && stack.getItem() instanceof ISecurityStationLinkCard && ((ISecurityStationLinkCard) stack.getItem()).getStation(stack) != null;
 		}
-
-		@Override
-		public int getField(int id) {
-			return 0;
-		}
-
-		@Override
-		public void setField(int id, int value) {
-
-		}
-
-		@Override
-		public int getFieldCount() {
-			return 0;
-		}
-
-		@Override
-		public void clear() {
-			this.stack = null;
-		}
-
 	}
 }

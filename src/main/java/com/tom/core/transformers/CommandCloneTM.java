@@ -20,23 +20,29 @@ import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
 import com.tom.core.Tweaks;
 
-public class CommandCloneTM extends CommandClone{
+public class CommandCloneTM extends CommandClone {// Tweaks.checkAndLogCloneMessage(args,
+													// sender, server,
+													// blockpos1, blockpos1, i);
 	/**
 	 * Callback for when the command is executed
+	 *
+	 * @param server
+	 *            The server instance
+	 * @param sender
+	 *            The sender who executed the command
+	 * @param args
+	 *            The arguments that were passed
 	 */
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-	{
-		if (args.length < 9)
-		{
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+		if (args.length < 9) {
 			throw new WrongUsageException("commands.clone.usage", new Object[0]);
-		}
-		else
-		{
+		} else {
 			sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, 0);
 			BlockPos blockpos = parseBlockPos(sender, args, 0, false);
 			BlockPos blockpos1 = parseBlockPos(sender, args, 3, false);
@@ -47,83 +53,60 @@ public class CommandCloneTM extends CommandClone{
 			Tweaks.checkAndLogCloneMessage(args, sender, server, blockpos1, blockpos1, i);
 			boolean flag = false;
 			Block block = null;
-			int j = -1;
+			Predicate<IBlockState> predicate = null;
 
-			if ((args.length < 11 || !"force".equals(args[10]) && !"move".equals(args[10])) && structureboundingbox.intersectsWith(structureboundingbox1))
-			{
+			if ((args.length < 11 || !"force".equals(args[10]) && !"move".equals(args[10])) && structureboundingbox.intersectsWith(structureboundingbox1)) {
 				throw new CommandException("commands.clone.noOverlap", new Object[0]);
-			}
-			else
-			{
-				if (args.length >= 11 && "move".equals(args[10]))
-				{
+			} else {
+				if (args.length >= 11 && "move".equals(args[10])) {
 					flag = true;
 				}
 
-				if (structureboundingbox.minY >= 0 && structureboundingbox.maxY < 256 && structureboundingbox1.minY >= 0 && structureboundingbox1.maxY < 256)
-				{
+				if (structureboundingbox.minY >= 0 && structureboundingbox.maxY < 256 && structureboundingbox1.minY >= 0 && structureboundingbox1.maxY < 256) {
 					World world = sender.getEntityWorld();
 
-					if (world.isAreaLoaded(structureboundingbox) && world.isAreaLoaded(structureboundingbox1))
-					{
+					if (world.isAreaLoaded(structureboundingbox) && world.isAreaLoaded(structureboundingbox1)) {
 						boolean flag1 = false;
 
-						if (args.length >= 10)
-						{
-							if ("masked".equals(args[9]))
-							{
+						if (args.length >= 10) {
+							if ("masked".equals(args[9])) {
 								flag1 = true;
-							}
-							else if ("filtered".equals(args[9]))
-							{
-								if (args.length < 12)
-								{
-									throw new WrongUsageException("commands.clone.usage", new Object[0]);
-								}
+							} else if ("filtered".equals(args[9])) {
+								if (args.length < 12) { throw new WrongUsageException("commands.clone.usage", new Object[0]); }
 
 								block = getBlockByText(sender, args[11]);
 
-								if (args.length >= 13)
-								{
-									j = parseInt(args[12], 0, 15);
+								if (args.length >= 13) {
+									predicate = convertArgToBlockStatePredicate(block, args[12]);
 								}
 							}
 						}
 
-						List<StaticCloneData> list = Lists.<StaticCloneData>newArrayList();
-						List<StaticCloneData> list1 = Lists.<StaticCloneData>newArrayList();
-						List<StaticCloneData> list2 = Lists.<StaticCloneData>newArrayList();
+						List<CommandCloneTM.StaticCloneData> list = Lists.<CommandCloneTM.StaticCloneData>newArrayList();
+						List<CommandCloneTM.StaticCloneData> list1 = Lists.<CommandCloneTM.StaticCloneData>newArrayList();
+						List<CommandCloneTM.StaticCloneData> list2 = Lists.<CommandCloneTM.StaticCloneData>newArrayList();
 						Deque<BlockPos> deque = Lists.<BlockPos>newLinkedList();
 						BlockPos blockpos3 = new BlockPos(structureboundingbox1.minX - structureboundingbox.minX, structureboundingbox1.minY - structureboundingbox.minY, structureboundingbox1.minZ - structureboundingbox.minZ);
 
-						for (int k = structureboundingbox.minZ; k <= structureboundingbox.maxZ; ++k)
-						{
-							for (int l = structureboundingbox.minY; l <= structureboundingbox.maxY; ++l)
-							{
-								for (int i1 = structureboundingbox.minX; i1 <= structureboundingbox.maxX; ++i1)
-								{
-									BlockPos blockpos4 = new BlockPos(i1, l, k);
+						for (int j = structureboundingbox.minZ;j <= structureboundingbox.maxZ;++j) {
+							for (int k = structureboundingbox.minY;k <= structureboundingbox.maxY;++k) {
+								for (int l = structureboundingbox.minX;l <= structureboundingbox.maxX;++l) {
+									BlockPos blockpos4 = new BlockPos(l, k, j);
 									BlockPos blockpos5 = blockpos4.add(blockpos3);
 									IBlockState iblockstate = world.getBlockState(blockpos4);
 
-									if ((!flag1 || iblockstate.getBlock() != Blocks.AIR) && (block == null || iblockstate.getBlock() == block && (j < 0 || iblockstate.getBlock().getMetaFromState(iblockstate) == j)))
-									{
+									if ((!flag1 || iblockstate.getBlock() != Blocks.AIR) && (block == null || iblockstate.getBlock() == block && (predicate == null || predicate.apply(iblockstate)))) {
 										TileEntity tileentity = world.getTileEntity(blockpos4);
 
-										if (tileentity != null)
-										{
+										if (tileentity != null) {
 											NBTTagCompound nbttagcompound = tileentity.writeToNBT(new NBTTagCompound());
-											list1.add(new StaticCloneData(blockpos5, iblockstate, nbttagcompound));
+											list1.add(new CommandCloneTM.StaticCloneData(blockpos5, iblockstate, nbttagcompound));
 											deque.addLast(blockpos4);
-										}
-										else if (!iblockstate.isFullBlock() && !iblockstate.isFullCube())
-										{
-											list2.add(new StaticCloneData(blockpos5, iblockstate, (NBTTagCompound)null));
+										} else if (!iblockstate.isFullBlock() && !iblockstate.isFullCube()) {
+											list2.add(new CommandCloneTM.StaticCloneData(blockpos5, iblockstate, (NBTTagCompound) null));
 											deque.addFirst(blockpos4);
-										}
-										else
-										{
-											list.add(new StaticCloneData(blockpos5, iblockstate, (NBTTagCompound)null));
+										} else {
+											list.add(new CommandCloneTM.StaticCloneData(blockpos5, iblockstate, (NBTTagCompound) null));
 											deque.addLast(blockpos4);
 										}
 									}
@@ -131,39 +114,33 @@ public class CommandCloneTM extends CommandClone{
 							}
 						}
 
-						if (flag)
-						{
-							for (BlockPos blockpos6 : deque)
-							{
+						if (flag) {
+							for (BlockPos blockpos6 : deque) {
 								TileEntity tileentity1 = world.getTileEntity(blockpos6);
 
-								if (tileentity1 instanceof IInventory)
-								{
-									((IInventory)tileentity1).clear();
+								if (tileentity1 instanceof IInventory) {
+									((IInventory) tileentity1).clear();
 								}
 
 								world.setBlockState(blockpos6, Blocks.BARRIER.getDefaultState(), 2);
 							}
 
-							for (BlockPos blockpos7 : deque)
-							{
+							for (BlockPos blockpos7 : deque) {
 								world.setBlockState(blockpos7, Blocks.AIR.getDefaultState(), 3);
 							}
 						}
 
-						List<StaticCloneData> list3 = Lists.<StaticCloneData>newArrayList();
+						List<CommandCloneTM.StaticCloneData> list3 = Lists.<CommandCloneTM.StaticCloneData>newArrayList();
 						list3.addAll(list);
 						list3.addAll(list1);
 						list3.addAll(list2);
-						List<StaticCloneData> list4 = Lists.<StaticCloneData>reverse(list3);
+						List<CommandCloneTM.StaticCloneData> list4 = Lists.<CommandCloneTM.StaticCloneData>reverse(list3);
 
-						for (StaticCloneData commandclone$staticclonedata : list4)
-						{
+						for (CommandCloneTM.StaticCloneData commandclone$staticclonedata : list4) {
 							TileEntity tileentity2 = world.getTileEntity(commandclone$staticclonedata.pos);
 
-							if (tileentity2 instanceof IInventory)
-							{
-								((IInventory)tileentity2).clear();
+							if (tileentity2 instanceof IInventory) {
+								((IInventory) tileentity2).clear();
 							}
 
 							world.setBlockState(commandclone$staticclonedata.pos, Blocks.BARRIER.getDefaultState(), 2);
@@ -171,20 +148,16 @@ public class CommandCloneTM extends CommandClone{
 
 						i = 0;
 
-						for (StaticCloneData commandclone$staticclonedata1 : list3)
-						{
-							if (world.setBlockState(commandclone$staticclonedata1.pos, commandclone$staticclonedata1.blockState, 2))
-							{
+						for (CommandCloneTM.StaticCloneData commandclone$staticclonedata1 : list3) {
+							if (world.setBlockState(commandclone$staticclonedata1.pos, commandclone$staticclonedata1.blockState, 2)) {
 								++i;
 							}
 						}
 
-						for (StaticCloneData commandclone$staticclonedata2 : list1)
-						{
+						for (CommandCloneTM.StaticCloneData commandclone$staticclonedata2 : list1) {
 							TileEntity tileentity3 = world.getTileEntity(commandclone$staticclonedata2.pos);
 
-							if (commandclone$staticclonedata2.nbt != null && tileentity3 != null)
-							{
+							if (commandclone$staticclonedata2.nbt != null && tileentity3 != null) {
 								commandclone$staticclonedata2.nbt.setInteger("x", commandclone$staticclonedata2.pos.getX());
 								commandclone$staticclonedata2.nbt.setInteger("y", commandclone$staticclonedata2.pos.getY());
 								commandclone$staticclonedata2.nbt.setInteger("z", commandclone$staticclonedata2.pos.getZ());
@@ -195,55 +168,43 @@ public class CommandCloneTM extends CommandClone{
 							world.setBlockState(commandclone$staticclonedata2.pos, commandclone$staticclonedata2.blockState, 2);
 						}
 
-						for (StaticCloneData commandclone$staticclonedata3 : list4)
-						{
-							world.notifyNeighborsRespectDebug(commandclone$staticclonedata3.pos, commandclone$staticclonedata3.blockState.getBlock());
+						for (CommandCloneTM.StaticCloneData commandclone$staticclonedata3 : list4) {
+							world.notifyNeighborsRespectDebug(commandclone$staticclonedata3.pos, commandclone$staticclonedata3.blockState.getBlock(), false);
 						}
 
 						List<NextTickListEntry> list5 = world.getPendingBlockUpdates(structureboundingbox, false);
 
-						if (list5 != null)
-						{
-							for (NextTickListEntry nextticklistentry : list5)
-							{
-								if (structureboundingbox.isVecInside(nextticklistentry.position))
-								{
+						if (list5 != null) {
+							for (NextTickListEntry nextticklistentry : list5) {
+								if (structureboundingbox.isVecInside(nextticklistentry.position)) {
 									BlockPos blockpos8 = nextticklistentry.position.add(blockpos3);
-									world.scheduleBlockUpdate(blockpos8, nextticklistentry.getBlock(), (int)(nextticklistentry.scheduledTime - world.getWorldInfo().getWorldTotalTime()), nextticklistentry.priority);
+									world.scheduleBlockUpdate(blockpos8, nextticklistentry.getBlock(), (int) (nextticklistentry.scheduledTime - world.getWorldInfo().getWorldTotalTime()), nextticklistentry.priority);
 								}
 							}
 						}
 
-						if (i <= 0)
-						{
+						if (i <= 0) {
 							throw new CommandException("commands.clone.failed", new Object[0]);
-						}
-						else
-						{
+						} else {
 							sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, i);
-							notifyCommandListener(sender, this, "commands.clone.success", new Object[] {Integer.valueOf(i)});
+							notifyCommandListener(sender, this, "commands.clone.success", new Object[]{Integer.valueOf(i)});
 						}
-					}
-					else
-					{
+					} else {
 						throw new CommandException("commands.clone.outOfWorld", new Object[0]);
 					}
-				}
-				else
-				{
+				} else {
 					throw new CommandException("commands.clone.outOfWorld", new Object[0]);
 				}
 			}
 		}
 	}
-	static class StaticCloneData
-	{
+
+	static class StaticCloneData {
 		public final BlockPos pos;
 		public final IBlockState blockState;
 		public final NBTTagCompound nbt;
 
-		public StaticCloneData(BlockPos posIn, IBlockState stateIn, NBTTagCompound compoundIn)
-		{
+		public StaticCloneData(BlockPos posIn, IBlockState stateIn, NBTTagCompound compoundIn) {
 			this.pos = posIn;
 			this.blockState = stateIn;
 			this.nbt = compoundIn;

@@ -8,8 +8,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureManager;
 
-public abstract class ScrollableField extends Gui
-{
+public abstract class ScrollableField extends Gui {
 	public int x;
 	public int y;
 	public int width;
@@ -29,8 +28,7 @@ public abstract class ScrollableField extends Gui
 
 	public final FontRenderer fontrendererObj;
 
-	public ScrollableField(int x, int y, int width, String label, FontRenderer fontrendererObj)
-	{
+	public ScrollableField(int x, int y, int width, String label, FontRenderer fontrendererObj) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -48,8 +46,7 @@ public abstract class ScrollableField extends Gui
 		this.labelY = (this.y + (this.labelHeight / 2)) - 2;
 	}
 
-	public void draw()
-	{
+	public void draw() {
 		TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
 		// Render.drawRectBorder(labelX, y, width + this.labelWidth + 4,
 		// this.arrowsHeight, 2);
@@ -57,8 +54,7 @@ public abstract class ScrollableField extends Gui
 		// draw the description label
 		this.drawString(this.fontrendererObj, this.label, this.labelX, this.labelY, 0xffffff);
 
-		if (this.drawArrows)
-		{
+		if (this.drawArrows) {
 			renderEngine.bindTexture(Reference.leftArrowTexture);
 			Render.drawTexturedRect(this.leftArrowX, this.arrowsY, ScrollableField.arrowsWidth, this.arrowsHeight, 0.0, 0.0, 1.0, 1.0);
 			renderEngine.bindTexture(Reference.rightArrowTexture);
@@ -66,20 +62,15 @@ public abstract class ScrollableField extends Gui
 		}
 	}
 
-	public void setDrawArrows(boolean value)
-	{
+	public void setDrawArrows(boolean value) {
 		this.drawArrows = value;
 	}
 
-	public void mouseClicked(int x, int y, int button)
-	{
+	public void mouseClicked(int x, int y, int button) {
 		int direction = this.posWithinArrows(x, y);
-		if (direction == 1)
-		{
+		if (direction == 1) {
 			this.nextElement();
-		}
-		else if (direction == -1)
-		{
+		} else if (direction == -1) {
 			this.previousElement();
 		}
 	}
@@ -88,18 +79,12 @@ public abstract class ScrollableField extends Gui
 	 *
 	 * @return Returns clicked arrow: 1 for right and -1 for left
 	 */
-	public int posWithinArrows(int x, int y)
-	{
-		if ((x >= this.leftArrowX) && (y >= this.arrowsY) && (x <= (ScrollableField.arrowsWidth + this.leftArrowX)) && (y <= (this.arrowsHeight + this.arrowsY)))
-		{
+	public int posWithinArrows(int x, int y) {
+		if ((x >= this.leftArrowX) && (y >= this.arrowsY) && (x <= (ScrollableField.arrowsWidth + this.leftArrowX)) && (y <= (this.arrowsHeight + this.arrowsY))) {
 			return -1;
-		}
-		else if ((x >= this.rightArrowX) && (y >= this.arrowsY) && (x <= (ScrollableField.arrowsWidth + this.rightArrowX)) && (y <= (this.arrowsHeight + this.arrowsY)))
-		{
+		} else if ((x >= this.rightArrowX) && (y >= this.arrowsY) && (x <= (ScrollableField.arrowsWidth + this.rightArrowX)) && (y <= (this.arrowsHeight + this.arrowsY))) {
 			return 1;
-		}
-		else
-		{
+		} else {
 			return 0;
 		}
 	}

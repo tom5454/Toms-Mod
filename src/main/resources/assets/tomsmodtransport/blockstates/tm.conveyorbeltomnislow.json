@@ -1,0 +1,47 @@
+{
+	"forge_marker": 1,
+    "variants": {
+        "facing=north,pos=up": { "model": "tomsmodtransport:conveyor"},
+        "facing=south,pos=up": { "model": "tomsmodtransport:conveyor","y":180},
+         "facing=west,pos=up": { "model": "tomsmodtransport:conveyor","y":270},
+         "facing=east,pos=up": { "model": "tomsmodtransport:conveyor","y":90},
+         
+        "facing=north,pos=down": { "model": "tomsmodtransport:conveyor","x":180,"y":180},
+        "facing=south,pos=down": { "model": "tomsmodtransport:conveyor","x":180},
+         "facing=west,pos=down": { "model": "tomsmodtransport:conveyor","y":90,"x":180},
+         "facing=east,pos=down": { "model": "tomsmodtransport:conveyor","y":270,"x":180},
+         
+        "facing=west,pos=north": { "model": "tomsmodtransport:conveyorE","x":270,"y":180},
+        "facing=east,pos=north": { "model": "tomsmodtransport:conveyorW","x":270,"y":180},
+          "facing=up,pos=north": { "model": "tomsmodtransport:conveyor","x":270,"y":180},
+        "facing=down,pos=north": { "model": "tomsmodtransport:conveyorBackward","x":270,"y":180},
+        
+        "facing=west,pos=south": { "model": "tomsmodtransport:conveyorW","x":270,"z":90 },
+        "facing=east,pos=south": { "model": "tomsmodtransport:conveyorE","x":270,"z":270},
+          "facing=up,pos=south": { "model": "tomsmodtransport:conveyor","x":270},
+        "facing=down,pos=south": { "model": "tomsmodtransport:conveyorBackward","x":270,"z":180},
+        
+        "facing=north,pos=east": { "model": "tomsmodtransport:conveyorE","x":270,"y":270},
+        "facing=south,pos=east": { "model": "tomsmodtransport:conveyorW","x":270,"y":270},
+           "facing=up,pos=east": { "model": "tomsmodtransport:conveyor","x":270,"y":270},
+         "facing=down,pos=east": { "model": "tomsmodtransport:conveyorBackward","x":270,"y":270},
+         
+        "facing=north,pos=west": { "model": "tomsmodtransport:conveyorW","x":270,"y":90},
+        "facing=south,pos=west": { "model": "tomsmodtransport:conveyorE","x":270,"y":90},
+           "facing=up,pos=west": { "model": "tomsmodtransport:conveyor","x":270,"y":90},
+         "facing=down,pos=west": { "model": "tomsmodtransport:conveyorBackward","x":270,"y":90},
+         
+        "facing=up,pos=up": { "model": "tomsmodtransport:conveyor"},
+        "facing=down,pos=up": { "model": "tomsmodtransport:conveyor","y":180},
+         "facing=up,pos=down": { "model": "tomsmodtransport:conveyor","y":270},
+         "facing=down,pos=down": { "model": "tomsmodtransport:conveyor","y":90},
+        "facing=north,pos=north": { "model": "tomsmodtransport:conveyor"},
+        "facing=south,pos=north": { "model": "tomsmodtransport:conveyor","y":180},
+         "facing=north,pos=south": { "model": "tomsmodtransport:conveyor","y":270},
+         "facing=south,pos=south": { "model": "tomsmodtransport:conveyor","y":90},
+        "facing=east,pos=east": { "model": "tomsmodtransport:conveyor"},
+        "facing=west,pos=east": { "model": "tomsmodtransport:conveyor","y":180},
+         "facing=west,pos=west": { "model": "tomsmodtransport:conveyor","y":270},
+         "facing=east,pos=west": { "model": "tomsmodtransport:conveyor","y":90}
+    }
+}

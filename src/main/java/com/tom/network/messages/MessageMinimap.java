@@ -14,22 +14,24 @@ import com.tom.network.MessageBase;
 import io.netty.buffer.ByteBuf;
 
 public class MessageMinimap extends MessageBase<MessageMinimap> {
-	private int mx, my, mz,dim,color/*,borderColor,borderColorActive*/;
-	private String group,markerName,icon, beamTexture;
+	private int mx, my, mz, dim, color/*,borderColor,borderColorActive*/;
+	private String group, markerName, icon, beamTexture;
 	private boolean /*bordered, borderedA,*/ reloadable = true;
 	private byte type;
 	private RenderType beam, label;
-	public MessageMinimap(){
-	}
-	public MessageMinimap(EntityPlayer player){
-		this.type = 2;
-		this.mx = MathHelper.floor_double(player.posX);
-		this.my = MathHelper.floor_double(player.posY);
-		this.mz = MathHelper.floor_double(player.posZ);
-		this.dim = player.worldObj.provider.getDimension();
+
+	public MessageMinimap() {
 	}
 
-	public MessageMinimap(String group,int mx,int my,int mz,int dim,String markerName,String icon, int beamColor, RenderType beamRenderType, RenderType labelRenderType, boolean reloadable, String beamTexture) {
+	public MessageMinimap(EntityPlayer player) {
+		this.type = 2;
+		this.mx = MathHelper.floor(player.posX);
+		this.my = MathHelper.floor(player.posY);
+		this.mz = MathHelper.floor(player.posZ);
+		this.dim = player.world.provider.getDimension();
+	}
+
+	public MessageMinimap(String group, int mx, int my, int mz, int dim, String markerName, String icon, int beamColor, RenderType beamRenderType, RenderType labelRenderType, boolean reloadable, String beamTexture) {
 		this.mx = mx;
 		this.my = my;
 		this.mz = mz;
@@ -75,11 +77,12 @@ public class MessageMinimap extends MessageBase<MessageMinimap> {
 		//this.bordered = true;
 		//this.borderedA = true;
 	}*/
-	public MessageMinimap(String group,String markerName){
+	public MessageMinimap(String group, String markerName) {
 		this.type = 1;
 		this.markerName = markerName;
 		this.group = group;
 	}
+
 	/*public MessageMinimap(String name, String groupName, int x, int y, int z, int dimension, int colour, int border, int borderA, boolean borderedA, boolean bordered) {
 		this.markerName = name;
 		this.mx = x;
@@ -145,7 +148,7 @@ public class MessageMinimap extends MessageBase<MessageMinimap> {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		this.type = buf.readByte();
-		if(type == 0){
+		if (type == 0) {
 			this.mx = buf.readInt();
 			this.my = buf.readInt();
 			this.mz = buf.readInt();
@@ -158,18 +161,18 @@ public class MessageMinimap extends MessageBase<MessageMinimap> {
 			this.color = buf.readInt();
 			this.beam = RenderType.VALUES[buf.readByte()];
 			this.label = RenderType.VALUES[buf.readByte()];
-			//if(id != 1) this.icon = ByteBufUtils.readUTF8String(buf);
-			//else if(id != 0) this.color = buf.readInt();
+			// if(id != 1) this.icon = ByteBufUtils.readUTF8String(buf);
+			// else if(id != 0) this.color = buf.readInt();
 			/*if(id == 3 || id == 4){
 				this.bordered = buf.readBoolean();
 				this.borderedA = buf.readBoolean();
 				this.borderColor = buf.readInt();
 				this.borderColorActive = buf.readInt();
 			}*/
-		}else if(type == 1){
+		} else if (type == 1) {
 			this.group = ByteBufUtils.readUTF8String(buf);
 			this.markerName = ByteBufUtils.readUTF8String(buf);
-		}else if(type == 2){
+		} else if (type == 2) {
 			this.mx = buf.readInt();
 			this.my = buf.readInt();
 			this.mz = buf.readInt();
@@ -180,7 +183,7 @@ public class MessageMinimap extends MessageBase<MessageMinimap> {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeByte(type);
-		if(type == 0){
+		if (type == 0) {
 			buf.writeInt(mx);
 			buf.writeInt(my);
 			buf.writeInt(mz);
@@ -193,18 +196,18 @@ public class MessageMinimap extends MessageBase<MessageMinimap> {
 			buf.writeInt(color);
 			buf.writeByte(beam.ordinal());
 			buf.writeByte(label.ordinal());
-			//if(icon != null) ByteBufUtils.writeUTF8String(buf, icon);
-			//else if(isDelete != 0) buf.writeInt(color);
+			// if(icon != null) ByteBufUtils.writeUTF8String(buf, icon);
+			// else if(isDelete != 0) buf.writeInt(color);
 			/*if(id == 3 || id == 4){
 				buf.writeBoolean(bordered);
 				buf.writeBoolean(borderedA);
 				buf.writeInt(borderColor);
 				buf.writeInt(borderColorActive);
 			}*/
-		}else if(type == 1){
+		} else if (type == 1) {
 			ByteBufUtils.writeUTF8String(buf, group);
 			ByteBufUtils.writeUTF8String(buf, markerName);
-		}else if(type == 2){
+		} else if (type == 2) {
 			buf.writeInt(mx);
 			buf.writeInt(my);
 			buf.writeInt(mz);
@@ -215,11 +218,12 @@ public class MessageMinimap extends MessageBase<MessageMinimap> {
 	@Override
 	public void handleClientSide(MessageMinimap message, EntityPlayer player) {
 		this.type = message.type;
-		if(type == 0){
+		if (type == 0) {
 			Minimap.deleteWayPoint(message.group, message.markerName);
-		}else if(type == 1){
+		} else if (type == 1) {
 			Minimap.createTexturedWayPoint(message.group, message.mx, message.my, message.mz, message.dim, message.markerName, message.icon, message.color, message.beam, message.label, message.reloadable, message.beamTexture);
-		}else if(type == 2)Mw.getInstance().onPlayerDeath(message.mx, message.my, message.mz, message.dim);
+		} else if (type == 2)
+			Mw.getInstance().onPlayerDeath(message.mx, message.my, message.mz, message.dim);
 		/*if(id == 0){
 			Minimap.createTexturedWayPoint(message.group, message.mx, message.my, message.mz, message.dim, message.markerName, message.icon);
 		}else if(id == 1){

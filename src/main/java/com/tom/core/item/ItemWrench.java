@@ -12,15 +12,24 @@ import net.minecraft.world.World;
 import com.tom.api.item.IWrench;
 import com.tom.handler.WrenchHandler;
 
-public class ItemWrench extends Item implements IWrench{
+public class ItemWrench extends Item implements IWrench {
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn,
-			World worldIn, BlockPos pos, EnumHand hand, EnumFacing side,
-			float hitX, float hitY, float hitZ) {
-		return WrenchHandler.use(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ, hand) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		return WrenchHandler.use(playerIn.getHeldItem(hand), playerIn, worldIn, pos, side, hitX, hitY, hitZ, hand) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
 	}
+
 	@Override
 	public boolean isWrench(ItemStack is, EntityPlayer player) {
 		return true;
+	}
+
+	@Override
+	public boolean hasContainerItem() {
+		return true;
+	}
+
+	@Override
+	public Item getContainerItem() {
+		return this;
 	}
 }

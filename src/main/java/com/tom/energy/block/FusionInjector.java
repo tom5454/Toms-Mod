@@ -25,18 +25,22 @@ public class FusionInjector extends BlockContainerTomsMod {
 	@SideOnly(Side.CLIENT)
 	private IIcon topPowered;*/
 	public static final PropertyBool READY = PropertyBool.create("ready");
+
 	protected FusionInjector(Material arg0) {
 		super(arg0);
 	}
-	public FusionInjector(){
+
+	public FusionInjector() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
+
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityFusionInjector();
 	}
+
 	/*public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ){
 		if(!world.isRemote)
 			player.openGui(CoreInit.modInstance, GuiHandler.GuiIDs.Injector.ordinal(), world, x, y, z);
@@ -50,7 +54,7 @@ public class FusionInjector extends BlockContainerTomsMod {
 		this.bottom = iconregister.registerIcon("minecraft:fusionRf");
 		this.topPowered = iconregister.registerIcon("minecraft:fusionGlassActive");
 	}
-
+	
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
 		if(side == 1){
 			return ((TileEntityInjector)world.getTileEntity(x, y, z)).ready(false) ? topPowered : top;
@@ -64,24 +68,25 @@ public class FusionInjector extends BlockContainerTomsMod {
 	public boolean hasComparatorInputOverride(IBlockState s) {
 		return true;
 	}
+
 	@Override
 	public int getComparatorInputOverride(IBlockState s, World world, BlockPos pos) {
-		TileEntityFusionInjector te = ((TileEntityFusionInjector)world.getTileEntity(pos));
+		TileEntityFusionInjector te = ((TileEntityFusionInjector) world.getTileEntity(pos));
 		double energy = te.getEnergyStored();
-		int rs = MathHelper.floor_double(energy / (te.getMaxEnergyStored() / 14));
+		int rs = MathHelper.floor(energy / (te.getMaxEnergyStored() / 14));
 		return te.ready(true) ? 15 : (te.getEnergyStored() == 0 ? 0 : rs != 0 ? rs : (te.ready(false) ? 1 : 0));
 	}
+
 	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {READY});
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{READY});
 	}
+
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(READY, meta == 1);
 	}
 
@@ -89,8 +94,7 @@ public class FusionInjector extends BlockContainerTomsMod {
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{//System.out.println("getMeta");
+	public int getMetaFromState(IBlockState state) {// System.out.println("getMeta");
 		return state.getValue(READY) ? 1 : 0;
 	}
 }

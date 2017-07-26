@@ -32,6 +32,7 @@ public class DefaultedHashMap<K, V> extends HashMap<K, V> {
 		V ret = super.get(key);
 		return ret != null ? ret : defaultValue;
 	}
+
 	public V getDefaultValue() {
 		return defaultValue;
 	}

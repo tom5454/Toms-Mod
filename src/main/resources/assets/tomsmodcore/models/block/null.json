@@ -1,0 +1,13 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [ 0.0, 0.0, 0.0 ], 
+            "to": [ 0.0, 0.0, 0.0 ], 
+            "faces": {
+                "north": { "texture": "tomsmodcore:blocks/null", "uv": [ 0.0, 0.0, 0.0, 0.0 ] }
+            }
+        }
+    ]
+}

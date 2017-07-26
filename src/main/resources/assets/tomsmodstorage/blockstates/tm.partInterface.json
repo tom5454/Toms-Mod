@@ -5,7 +5,8 @@
     "textures": {
     	"connection":"tomsmodstorage:blocks/offline"
     },
-    "uvlock": false
+    "uvlock": false,
+    "model": "tomsmodcore:null"
   },
    "variants": {
      "normal": [

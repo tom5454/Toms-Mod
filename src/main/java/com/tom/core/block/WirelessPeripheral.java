@@ -15,13 +15,15 @@ import com.tom.core.tileentity.TileEntityWirelessPeripheral;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class WirelessPeripheral extends BlockContainerTomsMod implements IPeripheralProvider{
+public class WirelessPeripheral extends BlockContainerTomsMod implements IPeripheralProvider {
 
 	protected WirelessPeripheral(Material p_i45386_1_) {
 		super(p_i45386_1_);
 	}
-	public WirelessPeripheral(){
+
+	public WirelessPeripheral() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
@@ -31,11 +33,12 @@ public class WirelessPeripheral extends BlockContainerTomsMod implements IPeriph
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityWirelessPeripheral();
 	}
+
 	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityWirelessPeripheral ? (IPeripheral)te : null;
+		return te instanceof TileEntityWirelessPeripheral ? (IPeripheral) te : null;
 	}
 
 }

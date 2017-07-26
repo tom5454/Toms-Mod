@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
+    "parent": "tomsmodcore:item/cablebase",
     "textures": {
-        "layer0": "tomsmodcore:items/resources/cablezinc"
+        "wire": "tomsmodcore:items/resources/wirezinc"
     }
 }

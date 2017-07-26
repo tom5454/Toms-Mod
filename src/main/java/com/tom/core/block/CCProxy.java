@@ -19,6 +19,7 @@ import com.tom.core.tileentity.TileEntityCCProxy;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
 public class CCProxy extends BlockContainerTomsMod implements IPeripheralProvider {
 	/*@SideOnly(Side.CLIENT)
@@ -30,52 +31,74 @@ public class CCProxy extends BlockContainerTomsMod implements IPeripheralProvide
 	protected CCProxy(Material arg0) {
 		super(arg0);
 	}
-	public CCProxy(){
+
+	public CCProxy() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
+
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityCCProxy();
 	}
+
 	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing f) {
-		TileEntityCCProxy te = (TileEntityCCProxy)world.getTileEntity(pos);
+		TileEntityCCProxy te = (TileEntityCCProxy) world.getTileEntity(pos);
 		return te;
 	}
+
 	/*@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState b,Block block){
 		TileEntityCCProxy te = (TileEntityCCProxy)world.getTileEntity(pos);
 		te.onNeibourChange();
 	}*/
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState bs, EntityLivingBase entity, ItemStack itemstack){
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState bs, EntityLivingBase entity, ItemStack itemstack) {
 		boolean shift = entity.isSneaking();
 		TileEntity te = world.getTileEntity(pos);
 		TileEntityCCProxy te2 = (TileEntityCCProxy) te;
 		EnumFacing dir = shift ? TomsModUtils.getDirectionFacing(entity, true).getOpposite() : TomsModUtils.getDirectionFacing(entity, true);
 		int d = dir.ordinal();
 		int d2 = dir.getOpposite().ordinal();
-		if (d == 0) te2.d = 5;
-		else if(d == 1) te2.d = 4;
-		else if(d == 2) te2.d = 0;
-		else if(d == 3) te2.d = 1;
-		else if(d == 4) te2.d = 2;
-		else if(d == 5) te2.d = 3;
-		if (d == 5) te2.direction = 4;
-		else if(d == 4) te2.direction = 5;
-		else if(d == 3) te2.direction = 2;
-		else if(d == 2) te2.direction = 3;
-		else if(d == 0) te2.direction = 0;
-		else if(d == 1) te2.direction = 1;
-		if (d2 == 5) te2.directionO = 4;
-		else if(d2 == 4) te2.directionO = 5;
-		else if(d2 == 3) te2.directionO = 2;
-		else if(d2 == 2) te2.directionO = 3;
-		else if(d2 == 0) te2.directionO = 0;
-		else if(d2 == 1) te2.directionO = 1;
+		if (d == 0)
+			te2.d = 5;
+		else if (d == 1)
+			te2.d = 4;
+		else if (d == 2)
+			te2.d = 0;
+		else if (d == 3)
+			te2.d = 1;
+		else if (d == 4)
+			te2.d = 2;
+		else if (d == 5)
+			te2.d = 3;
+		if (d == 5)
+			te2.direction = 4;
+		else if (d == 4)
+			te2.direction = 5;
+		else if (d == 3)
+			te2.direction = 2;
+		else if (d == 2)
+			te2.direction = 3;
+		else if (d == 0)
+			te2.direction = 0;
+		else if (d == 1)
+			te2.direction = 1;
+		if (d2 == 5)
+			te2.directionO = 4;
+		else if (d2 == 4)
+			te2.directionO = 5;
+		else if (d2 == 3)
+			te2.directionO = 2;
+		else if (d2 == 2)
+			te2.directionO = 3;
+		else if (d2 == 0)
+			te2.directionO = 0;
+		else if (d2 == 1)
+			te2.directionO = 1;
 		te2.direction2 = d;
 		te2.directionO2 = d2;
 	}

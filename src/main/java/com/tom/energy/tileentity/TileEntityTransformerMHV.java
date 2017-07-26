@@ -18,9 +18,8 @@ import com.tom.api.tileentity.TileEntityTomsMod;
 
 import com.tom.energy.block.TransformerMH;
 
-public class TileEntityTransformerMHV extends TileEntityTomsMod implements
-IEnergyHandler, ICustomMultimeterInformation {
-	//private EnergyStorage energy = new EnergyStorage(10000);
+public class TileEntityTransformerMHV extends TileEntityTomsMod implements IEnergyHandler, ICustomMultimeterInformation {
+	// private EnergyStorage energy = new EnergyStorage(10000);
 	@Override
 	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
 		EnumFacing facing = this.getFacing();
@@ -33,10 +32,9 @@ IEnergyHandler, ICustomMultimeterInformation {
 	}
 
 	@Override
-	public double receiveEnergy(EnumFacing from, EnergyType type,
-			double maxReceive, boolean simulate) {
+	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive, boolean simulate) {
 		EnumFacing facing = this.getFacing();
-		if(type == HV && from == facing && !getMode()){
+		if (type == HV && from == facing && !getMode()) {
 			/*TileEntity receiver = worldObj.getTileEntity(pos.offset(facing));
 			if(receiver instanceof IEnergyReceiver) {
 				//System.out.println("send");
@@ -52,8 +50,8 @@ IEnergyHandler, ICustomMultimeterInformation {
 					}
 				}
 			}*/
-			return HV.convertFrom(MV, MV.pushEnergyTo(worldObj, pos, facing, MV.convertFrom(HV, maxReceive), 5000, simulate));
-		}else if(type == MV && from == facing.getOpposite() && getMode()){
+			return HV.convertFrom(MV, MV.pushEnergyTo(world, pos, facing, MV.convertFrom(HV, maxReceive), 5000, simulate));
+		} else if (type == MV && from == facing.getOpposite() && getMode()) {
 			/*TileEntity receiver = worldObj.getTileEntity(pos.offset(facing));
 			if(receiver instanceof IEnergyReceiver) {
 				//System.out.println("send");
@@ -74,14 +72,14 @@ IEnergyHandler, ICustomMultimeterInformation {
 				if (container == null) {
 					return 0;
 				}
-
+			
 				if (fOut != null) {
 					ISlottedPart part = container.getPartInSlot(PartSlot.getFaceSlot(fOut));
 					if (part instanceof IMicroblock.IFaceMicroblock && !((IMicroblock.IFaceMicroblock) part).isFaceHollow()) {
 						return 0;
 					}
 				}
-
+			
 				ISlottedPart part = container.getPartInSlot(PartSlot.CENTER);
 				try{
 					if (part instanceof PartDuct<?>) {
@@ -100,14 +98,13 @@ IEnergyHandler, ICustomMultimeterInformation {
 					return 0;
 				}
 			}*/
-			return MV.convertFrom(HV, HV.pushEnergyTo(worldObj, pos, facing.getOpposite(), HV.convertFrom(MV, maxReceive), HV.convertFrom(MV, 5000), simulate));
+			return MV.convertFrom(HV, HV.pushEnergyTo(world, pos, facing.getOpposite(), HV.convertFrom(MV, maxReceive), HV.convertFrom(MV, 5000), simulate));
 		}
 		return 0;
 	}
 
 	@Override
-	public double extractEnergy(EnumFacing from, EnergyType type,
-			double maxExtract, boolean simulate) {
+	public double extractEnergy(EnumFacing from, EnergyType type, double maxExtract, boolean simulate) {
 		return 0;
 	}
 
@@ -120,25 +117,30 @@ IEnergyHandler, ICustomMultimeterInformation {
 	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return 0;
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		//this.energy.writeToNBT(tag);
+		// this.energy.writeToNBT(tag);
 		return tag;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		//this.energy.writeToNBT(tag);
+		// this.energy.writeToNBT(tag);
 	}
-	public EnumFacing getFacing(){
-		IBlockState state = worldObj.getBlockState(pos);
+
+	public EnumFacing getFacing() {
+		IBlockState state = world.getBlockState(pos);
 		return state.getValue(TransformerMH.FACING);
 	}
-	public boolean getMode(){
-		IBlockState state = worldObj.getBlockState(pos);
+
+	public boolean getMode() {
+		IBlockState state = world.getBlockState(pos);
 		return state.getValue(TransformerMH.MODE);
 	}
+
 	@Override
 	public List<ITextComponent> getInformation(List<ITextComponent> list) {
 		list.add(new TextComponentTranslation("tomsMod.chat.step" + (getMode() ? "Up" : "Down")));

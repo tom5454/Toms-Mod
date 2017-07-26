@@ -6,5 +6,6 @@ import net.minecraft.item.ItemStack;
 
 public interface ICustomCraftingHandler {
 	void onCrafing(EntityPlayer crafter, ItemStack returnStack, IInventory crafingTableInventory);
+
 	void onUsing(EntityPlayer crafter, ItemStack returnStack, IInventory crafingTableInventory, ItemStack stack);
 }

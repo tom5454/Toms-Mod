@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodenergy:blocks/fusionCase",
+        "down": "tomsmodenergy:blocks/fusionCase",
+        "north": "tomsmodenergy:blocks/fusionCase",
+        "east": "tomsmodenergy:blocks/fusionCase",
+        "south": "tomsmodenergy:blocks/fusionPower",
+        "west": "tomsmodenergy:blocks/fusionCase",
+        "particle": "tomsmodenergy:blocks/fusionCase"
+    }
+}

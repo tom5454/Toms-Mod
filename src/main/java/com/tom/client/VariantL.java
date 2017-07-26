@@ -7,18 +7,22 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class VariantL {
 	@SuppressWarnings("rawtypes")
 	private static Class variantClazz, vanillaClazz;
 	private static Method variantAccepts, variantLoad, vanillaLoad;
 	private static Object variantInstance, vanillaInstance;
 	private static boolean hasInit;
+
 	public static boolean accepts(ResourceLocation modelLocation) {
 		findLoader();
-		try{
+		try {
 			return (Boolean) variantAccepts.invoke(variantInstance, modelLocation);
-		} catch (NullPointerException e){
+		} catch (NullPointerException e) {
 		} catch (IllegalAccessException e) {
 		} catch (IllegalArgumentException e) {
 		} catch (InvocationTargetException e) {
@@ -29,9 +33,9 @@ public class VariantL {
 
 	public static IModel loadModel(ResourceLocation file) throws Exception {
 		findLoader();
-		try{
+		try {
 			return (IModel) variantLoad.invoke(variantInstance, file);
-		} catch (NullPointerException e){
+		} catch (NullPointerException e) {
 		} catch (IllegalAccessException e) {
 		} catch (IllegalArgumentException e) {
 		} catch (InvocationTargetException e) {
@@ -39,11 +43,12 @@ public class VariantL {
 		}
 		return ModelLoaderRegistry.getMissingModel();
 	}
+
 	public static IModel loadModelV(ResourceLocation file) throws Exception {
 		findLoader();
-		try{
+		try {
 			return (IModel) vanillaLoad.invoke(vanillaInstance, file);
-		} catch (NullPointerException e){
+		} catch (NullPointerException e) {
 		} catch (IllegalAccessException e) {
 		} catch (IllegalArgumentException e) {
 		} catch (InvocationTargetException e) {
@@ -51,9 +56,10 @@ public class VariantL {
 		}
 		return ModelLoaderRegistry.getMissingModel();
 	}
+
 	@SuppressWarnings("unchecked")
-	private static void findLoader(){
-		if(!hasInit){
+	private static void findLoader() {
+		if (!hasInit) {
 			hasInit = true;
 			try {
 				variantClazz = Class.forName("net.minecraftforge.client.model.ModelLoader$VariantLoader");

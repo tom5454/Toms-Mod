@@ -16,11 +16,13 @@ public class FusionCharger extends BlockContainerTomsMod {
 	protected FusionCharger(Material arg0) {
 		super(arg0);
 	}
-	public FusionCharger(){
+
+	public FusionCharger() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
+
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityFusionCharger();
@@ -30,11 +32,12 @@ public class FusionCharger extends BlockContainerTomsMod {
 	public boolean hasComparatorInputOverride(IBlockState s) {
 		return true;
 	}
+
 	@Override
 	public int getComparatorInputOverride(IBlockState s, World world, BlockPos pos) {
-		TileEntityFusionCharger te = ((TileEntityFusionCharger)world.getTileEntity(pos));
+		TileEntityFusionCharger te = ((TileEntityFusionCharger) world.getTileEntity(pos));
 		double energy = te.getEnergyStored();
-		int rs = MathHelper.floor_double(energy / (te.getMaxEnergyStored() / 15));
+		int rs = MathHelper.floor(energy / (te.getMaxEnergyStored() / 15));
 		return rs != 0 ? rs : (te.ready() ? 1 : 0);
 	}
 

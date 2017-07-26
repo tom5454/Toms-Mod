@@ -1,5 +1,7 @@
 {
     "variants": {
-        "normal": { "model": "tomsmodcore:orePlatinum"}
+        "type=0": { "model": "tomsmodcore:orePlatinum"},
+        "type=1": { "model": "tomsmodcore:orePlatinumnether"},
+        "type=2": { "model": "tomsmodcore:orePlatinumend"}
     }
 }

@@ -4,8 +4,7 @@
         "particle": "tomsmodtransport:blocks/conveyorBottom",
         "0": "tomsmodcore:blocks/GrayD",
         "1": "tomsmodtransport:blocks/conveyorSide",
-        "2": "tomsmodtransport:blocks/conveyorBottom",
-        "3": "tomsmodtransport:blocks/conveyorTop"
+        "2": "tomsmodtransport:blocks/conveyorBottom"
     },
     "parent": "block/block",
         "display": {
@@ -65,12 +64,12 @@
             "from": [ 1.1, 5.1, 0.0 ], 
             "to": [ 14.9, 5.699999999999999, 16.0 ], 
             "faces": {
-                "north": { "texture": "#3", "uv": [ 1.0, 7.5, 14.8, 8.1 ], "rotation": 180 },
+                "north": { "texture": "#top", "uv": [ 1.0, 7.5, 14.8, 8.1 ], "rotation": 180 },
                 "east": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 0.6 ] },
-                "south": { "texture": "#3", "uv": [ 1.0, 8.1, 14.8, 8.7 ] },
+                "south": { "texture": "#top", "uv": [ 1.0, 8.1, 14.8, 8.7 ] },
                 "west": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 0.6 ] },
-                "up": { "texture": "#3", "uv": [ 1.0, 0.0, 14.8, 16.0 ] },
-                "down": { "texture": "#3", "uv": [ 1.0, 0.0, 14.8, 16.0 ] }
+                "up": { "texture": "#top", "uv": [ 1.0, 0.0, 14.8, 16.0 ] },
+                "down": { "texture": "#top", "uv": [ 1.0, 0.0, 14.8, 16.0 ] }
             }
         }
     ]

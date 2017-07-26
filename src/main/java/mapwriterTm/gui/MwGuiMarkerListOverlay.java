@@ -7,8 +7,7 @@ import mapwriterTm.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
-public class MwGuiMarkerListOverlay extends MwGuiSlot
-{
+public class MwGuiMarkerListOverlay extends MwGuiSlot {
 	private final GuiScreen parentScreen;
 	private final MarkerManager markerManager;
 
@@ -16,8 +15,7 @@ public class MwGuiMarkerListOverlay extends MwGuiSlot
 	public static int ListY = 10;
 	private int height;
 
-	public MwGuiMarkerListOverlay(GuiScreen parentScreen, MarkerManager markerManager)
-	{
+	public MwGuiMarkerListOverlay(GuiScreen parentScreen, MarkerManager markerManager) {
 		super(Minecraft.getMinecraft(), // mcIn
 				listWidth, // width
 				parentScreen.height - 20, // height
@@ -33,18 +31,20 @@ public class MwGuiMarkerListOverlay extends MwGuiSlot
 	}
 
 	@Override
-	protected int getSlotHeight(int index)
-	{
+	protected int getSlotHeight(int index) {
 		String str = Utils.stringArrayToString(this.getLabelString(index));
-		int height = this.mc.fontRendererObj.splitStringWidth(str, MwGuiMarkerListOverlay.listWidth - 6);
+		int height = this.splitStringWidth(str, MwGuiMarkerListOverlay.listWidth - 6);
 
 		height += this.spacingY * 2;
 
 		return height;
 	}
 
-	protected String[] getLabelString(int index)
-	{
+	public int splitStringWidth(String str, int maxLength) {
+		return this.mc.fontRenderer.FONT_HEIGHT * this.mc.fontRenderer.listFormattedStringToWidth(str, maxLength).size();
+	}
+
+	protected String[] getLabelString(int index) {
 		Marker m = this.markerManager.visibleMarkerList.get(index);
 
 		String[] text = new String[2];
@@ -54,54 +54,44 @@ public class MwGuiMarkerListOverlay extends MwGuiSlot
 	}
 
 	@Override
-	protected int getSize()
-	{
+	protected int getSize() {
 		return this.markerManager.visibleMarkerList.size();
 	}
 
 	@Override
-	protected void elementClicked(int slotIndex, boolean isDoubleClick, int mouseX, int mouseY, int mouseButton)
-	{
+	protected void elementClicked(int slotIndex, boolean isDoubleClick, int mouseX, int mouseY, int mouseButton) {
 		this.markerManager.selectedMarker = this.markerManager.visibleMarkerList.get(slotIndex);
-		if (mouseButton == 1)
-		{
-			if (this.parentScreen instanceof MwGui)
-			{
+		if (mouseButton == 1) {
+			if (this.parentScreen instanceof MwGui) {
 				((MwGui) this.parentScreen).openMarkerGui(this.markerManager.selectedMarker, mouseX, mouseY);
 				;
 			}
 		}
-		if ((mouseButton == 0) && isDoubleClick)
-		{
-			if (this.parentScreen instanceof MwGui)
-			{
+		if ((mouseButton == 0) && isDoubleClick) {
+			if (this.parentScreen instanceof MwGui) {
 				((MwGui) this.parentScreen).centerOnSelectedMarker();
 			}
 		}
 	}
 
 	@Override
-	protected boolean isSelected(int slotIndex)
-	{
+	protected boolean isSelected(int slotIndex) {
 		return this.markerManager.selectedMarker == this.markerManager.visibleMarkerList.get(slotIndex);
 	}
 
 	@Override
-	protected void drawBackground()
-	{
+	protected void drawBackground() {
 	}
 
 	@Override
-	protected void drawSlot(int entryID, int x, int y, int slotHeight, int mouseXIn, int mouseYIn)
-	{
+	protected void drawSlot(int entryID, int x, int y, int slotHeight, int mouseXIn, int mouseYIn) {
 		MwGuiLabel label = new MwGuiLabel(this.getLabelString(entryID), null, x, y, false, false, MwGuiMarkerListOverlay.listWidth, this.height);
 
 		label.draw();
 	}
 
 	@Override
-	public void setDimensions(int widthIn, int heightIn, int topIn, int bottomIn, int left)
-	{
+	public void setDimensions(int widthIn, int heightIn, int topIn, int bottomIn, int left) {
 		this.height = this.parentScreen.height - 20;
 
 		super.setDimensions(widthIn, heightIn, topIn, bottomIn, left);

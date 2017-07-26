@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.google.common.base.Predicate;
 
-public class PredicatedLinkedHashMap<K, V> extends LinkedHashMap<Predicate<K>, V>{
+public class PredicatedLinkedHashMap<K, V> extends LinkedHashMap<Predicate<K>, V> {
 
 	private static final long serialVersionUID = 2334298365758753028L;
 	private V defaultValue;
@@ -33,10 +33,8 @@ public class PredicatedLinkedHashMap<K, V> extends LinkedHashMap<Predicate<K>, V
 	@SuppressWarnings("unchecked")
 	@Override
 	public V get(Object key) {
-		for(java.util.Map.Entry<Predicate<K>, V> s : entrySet()){
-			if(s.getKey().apply((K) key)){
-				return s.getValue();
-			}
+		for (java.util.Map.Entry<Predicate<K>, V> s : entrySet()) {
+			if (s.getKey().apply((K) key)) { return s.getValue(); }
 		}
 		return defaultValue;
 	}

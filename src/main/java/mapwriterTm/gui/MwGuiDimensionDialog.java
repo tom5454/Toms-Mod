@@ -11,15 +11,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class MwGuiDimensionDialog extends MwGuiTextDialog
-{
+public class MwGuiDimensionDialog extends MwGuiTextDialog {
 
 	final Mw mw;
 	final MapView mapView;
 	final int dimension;
 
-	public MwGuiDimensionDialog(GuiScreen parentScreen, Mw mw, MapView mapView, int dimension)
-	{
+	public MwGuiDimensionDialog(GuiScreen parentScreen, Mw mw, MapView mapView, int dimension) {
 		super(parentScreen, I18n.format("mw.gui.mwguidimensiondialog.title") + ":", Integer.toString(dimension), I18n.format("mw.gui.mwguidimensiondialog.error"));
 		this.mw = mw;
 		this.mapView = mapView;
@@ -27,12 +25,10 @@ public class MwGuiDimensionDialog extends MwGuiTextDialog
 	}
 
 	@Override
-	public boolean submit()
-	{
+	public boolean submit() {
 		boolean done = false;
 		int dimension = this.getInputAsInt();
-		if (this.inputValid)
-		{
+		if (this.inputValid) {
 			this.mapView.setDimensionAndAdjustZoom(dimension);
 			this.mw.miniMap.view.setDimension(dimension);
 			WorldConfig.getInstance().addDimension(dimension);

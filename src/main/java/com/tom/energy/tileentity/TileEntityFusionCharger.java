@@ -13,7 +13,7 @@ import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.lib.Configs;
 
-public class TileEntityFusionCharger extends TileEntityTomsMod implements IEnergyReceiver{
+public class TileEntityFusionCharger extends TileEntityTomsMod implements IEnergyReceiver {
 	private EnergyStorage energy = new EnergyStorage(Configs.ChargerMaxEnergy, Configs.InjectorMaxEnergyInput);
 
 	@Override
@@ -22,8 +22,7 @@ public class TileEntityFusionCharger extends TileEntityTomsMod implements IEnerg
 	}
 
 	@Override
-	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive,
-			boolean simulate) {
+	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive, boolean simulate) {
 		/*int energyReceive = 0;
 		//boolean canReceive = this.maxEnergy > this.energy;
 		if(this.maxEnergy > this.energy && this.canConnectEnergy(from)){
@@ -31,9 +30,9 @@ public class TileEntityFusionCharger extends TileEntityTomsMod implements IEnerg
 			energyReceive = maxReceive >= canReceive ? canReceive : maxReceive;
 		}
 		//if(canReceive){
-
+		
 		//}
-
+		
 		if(!simulate) this.energy = this.energy + energyReceive;*/
 		return energy.receiveEnergy(maxReceive, simulate);
 	}
@@ -55,13 +54,15 @@ public class TileEntityFusionCharger extends TileEntityTomsMod implements IEnerg
 		super.readFromNBT(tag);
 		energy.readFromNBT(tag.getCompoundTag("Energy"));
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		tag.setTag("Energy",energy.writeToNBT(new NBTTagCompound()));
+		tag.setTag("Energy", energy.writeToNBT(new NBTTagCompound()));
 		return tag;
 	}
-	public void disCharge(){
+
+	public void disCharge() {
 		this.energy.extractEnergy(Configs.ChargerUsage, false);
 	}
 
@@ -72,11 +73,13 @@ public class TileEntityFusionCharger extends TileEntityTomsMod implements IEnerg
 	public double getMaxEnergyStored() {
 		return this.energy.getEnergyStored();
 	}
-	public boolean ready(){
+
+	public boolean ready() {
 		return (this.energy.getEnergyStored() - Configs.InjectorUsage) >= 0;
 	}
-	public void disCharge(double ammount){
-		this.energy.extractEnergy(ammount,false);
+
+	public void disCharge(double ammount) {
+		this.energy.extractEnergy(ammount, false);
 	}
 
 	@Override

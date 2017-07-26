@@ -8,7 +8,8 @@ public class FusionCore extends Block {
 	protected FusionCore(Material arg0) {
 		super(arg0);
 	}
-	public FusionCore(){
+
+	public FusionCore() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);

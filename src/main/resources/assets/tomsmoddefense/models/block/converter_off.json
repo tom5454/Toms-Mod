@@ -6,7 +6,7 @@
         "north": "tomsmoddefense:blocks/converter_front",
             "east": "tomsmoddefense:blocks/converter_in",
               "south": "tomsmoddefense:blocks/converter",
-           "west": "tomsmoddefense:blocks/converter_out",
+           "west": "tomsmoddefense:blocks/converter",
         "particle": "tomsmoddefense:blocks/converter"
     }
 }

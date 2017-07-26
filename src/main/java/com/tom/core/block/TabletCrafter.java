@@ -3,7 +3,6 @@ package com.tom.core.block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -21,11 +20,12 @@ public class TabletCrafter extends BlockContainerTomsMod {
 	protected TabletCrafter(Material p_i45386_1_) {
 		super(p_i45386_1_);
 	}
+
 	/*@SideOnly(Side.CLIENT)
 	private IIcon bottom;
 	@SideOnly(Side.CLIENT)
 	private IIcon top;*/
-	public TabletCrafter(){
+	public TabletCrafter() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
@@ -35,13 +35,11 @@ public class TabletCrafter extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityTabletCrafter();
 	}
+
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!world.isRemote){
-			player.openGui(CoreInit.modInstance, GuiHandler.GuiIDs.tabletCrafter.ordinal(), world, pos.getX(),pos.getY(),pos.getZ());
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote) {
+			player.openGui(CoreInit.modInstance, GuiHandler.GuiIDs.tabletCrafter.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
 	}

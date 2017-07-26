@@ -7,7 +7,8 @@
       "particle": "tomsmodstorage:blocks/cable/cable_blue",
       "gray": "tomsmodcore:blocks/GrayD"
     },
-    "uvlock": false
+    "uvlock": false,
+    "model": "tomsmodcore:null"
   },
    "variants": {
     "normal": [

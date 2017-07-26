@@ -5,13 +5,16 @@ import java.util.Map.Entry;
 public class EmptyEntry<K, V> implements Entry<K, V> {
 	K key;
 	V value;
-	public EmptyEntry(K key){
+
+	public EmptyEntry(K key) {
 		this.key = key;
 	}
-	public EmptyEntry(K key, V value){
+
+	public EmptyEntry(K key, V value) {
 		this.key = key;
 		this.value = value;
 	}
+
 	@Override
 	public K getKey() {
 		return this.key;

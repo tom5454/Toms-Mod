@@ -12,7 +12,7 @@ import com.tom.api.block.BlockContainerTomsMod;
 
 import com.tom.core.tileentity.TileEntityAntenna;
 
-public class Antenna extends BlockContainerTomsMod{
+public class Antenna extends BlockContainerTomsMod {
 	/*@SideOnly(Side.CLIENT)
 	private IIcon online;
 	@SideOnly(Side.CLIENT)
@@ -22,14 +22,16 @@ public class Antenna extends BlockContainerTomsMod{
 	@SideOnly(Side.CLIENT)
 	private IIcon noCont;*/
 	public static final PropertyInteger STATE = PropertyInteger.create("state", 0, 2);
+
 	protected Antenna(Material p_i45386_1_) {
 		super(p_i45386_1_);
 	}
+
 	public Antenna() {
 		super(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
-		//this.setBlockTextureName("minecraft:tm/Antenna2");
+		// this.setBlockTextureName("minecraft:tm/Antenna2");
 	}
 	/*@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z){
@@ -40,45 +42,45 @@ public class Antenna extends BlockContainerTomsMod{
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityAntenna();
 	}
-	/*@Override
-    public boolean renderAsNormalBlock(){
-        return false;
-    }
 
-    @Override
-    public boolean isOpaqueCube(){
-        return false;
-    }*/
-	/*public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
-    	if(side > 1){
-    		TileEntityAntenna te = (TileEntityAntenna) world.getTileEntity(x, y, z);
-    		if(te.powered && te.redstone){
-    			//if(){
-    				if(te.online) return this.online;
-    				else return this.noCont;
-    			//}else return this.missing;
-    		}else return this.off;
-    	}else return this.blockIcon;
-    }
-    @SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconregister){
-    	this.blockIcon = iconregister.registerIcon("minecraft:tm/Antenna2");
-    	this.online = iconregister.registerIcon("minecraft:tm/AntennaSideOnline");
-    	this.missing = iconregister.registerIcon("minecraft:tm/AntennaSideMissing");
-    	this.off = iconregister.registerIcon("minecraft:tm/AntennaSideOff");
-    	this.noCont = iconregister.registerIcon("minecraft:tm/AntennaSideCContNF");
-    }*/
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {STATE});
+	/*@Override
+	public boolean renderAsNormalBlock(){
+	    return false;
 	}
+	
+	@Override
+	public boolean isOpaqueCube(){
+	    return false;
+	}*/
+	/*public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
+		if(side > 1){
+			TileEntityAntenna te = (TileEntityAntenna) world.getTileEntity(x, y, z);
+			if(te.powered && te.redstone){
+				//if(){
+					if(te.online) return this.online;
+					else return this.noCont;
+				//}else return this.missing;
+			}else return this.off;
+		}else return this.blockIcon;
+	}
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister iconregister){
+		this.blockIcon = iconregister.registerIcon("minecraft:tm/Antenna2");
+		this.online = iconregister.registerIcon("minecraft:tm/AntennaSideOnline");
+		this.missing = iconregister.registerIcon("minecraft:tm/AntennaSideMissing");
+		this.off = iconregister.registerIcon("minecraft:tm/AntennaSideOff");
+		this.noCont = iconregister.registerIcon("minecraft:tm/AntennaSideCContNF");
+	}*/
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{STATE});
+	}
+
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(STATE, meta % 3);
 	}
 
@@ -86,8 +88,7 @@ public class Antenna extends BlockContainerTomsMod{
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{//System.out.println("getMeta");
+	public int getMetaFromState(IBlockState state) {// System.out.println("getMeta");
 		return state.getValue(STATE);
 	}
 }

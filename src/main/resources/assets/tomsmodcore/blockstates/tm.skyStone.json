@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "tomsmodcore:skystone"}
+        "type=normal": { "model": "tomsmodcore:skystone"},
+        "type=burnt": { "model": "tomsmodcore:skystone_burnt"}
     }
 }

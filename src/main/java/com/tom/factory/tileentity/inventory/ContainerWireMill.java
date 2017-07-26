@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,6 +20,7 @@ public class ContainerWireMill extends ContainerTomsMod {
 	private TileEntityWireMill te;
 	private int lastEnergy, lastProgress;
 	private int lastMaxProgress;
+
 	public ContainerWireMill(InventoryPlayer playerInv, TileEntityWireMill te) {
 		this.te = te;
 		addSlotToContainer(new Slot(te, 0, 58, 35));
@@ -29,35 +29,40 @@ public class ContainerWireMill extends ContainerTomsMod {
 		addSlotToContainer(new SlotBlendingModule(te, 3, 81, 16));
 		addPlayerSlots(playerInv, 8, 84);
 	}
+
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return te.isUseableByPlayer(playerIn);
+		return te.isUsableByPlayer(playerIn);
 	}
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-		return null;
-	}
+
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		for(IContainerListener crafter : listeners){
+		for (IContainerListener crafter : listeners) {
 			MessageProgress msg = new MessageProgress(crafter);
-			if(lastEnergy != te.getClientEnergyStored())msg.add(0, te.getClientEnergyStored());
-			//crafter.sendProgressBarUpdate(this, 0, te.getClientEnergyStored());
-			if(lastProgress != te.getField(0))crafter.sendProgressBarUpdate(this, 1, te.getField(0));
-			if(lastMaxProgress != te.getField(1))crafter.sendProgressBarUpdate(this, 2, te.getField(1));
+			if (lastEnergy != te.getClientEnergyStored())
+				msg.add(0, te.getClientEnergyStored());
+			// crafter.sendProgressBarUpdate(this, 0,
+			// te.getClientEnergyStored());
+			if (lastProgress != te.getField(0))
+				crafter.sendWindowProperty(this, 1, te.getField(0));
+			if (lastMaxProgress != te.getField(1))
+				crafter.sendWindowProperty(this, 2, te.getField(1));
 			msg.send();
 		}
 		lastEnergy = te.getClientEnergyStored();
 		lastProgress = te.getField(0);
 		lastMaxProgress = te.getField(1);
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int data)
-	{
-		if(id == 0)te.clientEnergy = data;
-		else if(id == 1)te.setField(0, data);
-		else if(id == 2)te.setField(1, data);
+	public void updateProgressBar(int id, int data) {
+		if (id == 0)
+			te.clientEnergy = data;
+		else if (id == 1)
+			te.setField(0, data);
+		else if (id == 2)
+			te.setField(1, data);
 	}
 }

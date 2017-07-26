@@ -23,41 +23,47 @@ public class ItemBattery extends ItemEnergyContainer {
 		super(10000, 750, 1000);
 		setMaxStackSize(16);
 	}
+
 	@Override
 	public boolean showDurabilityBar(ItemStack stack) {
 		return getEnergyStored(stack) > 0;
 	}
+
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		return 1 - (getEnergyStored(stack) / capacity);
 	}
+
 	@Override
 	public int getItemStackLimit(ItemStack stack) {
 		return getEnergyStored(stack) > 0 ? 1 : super.getItemStackLimit(stack);
 	}
+
 	@Override
 	public boolean canInteract(ItemStack container) {
-		return container.stackSize == 1;
+		return container.getCount() == 1;
 	}
+
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos,
-			EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		ItemStack stack = playerIn.getHeldItem(hand);
 		TileEntity tile = worldIn.getTileEntity(pos);
-		if(tile != null && tile.hasCapability(EnergyType.ENERGY_HANDLER_CAPABILITY, facing)){
-			if(getEnergyStored(stack) > 0){
+		if (tile != null && tile.hasCapability(EnergyType.ENERGY_HANDLER_CAPABILITY, facing)) {
+			if (getEnergyStored(stack) > 0) {
 				EnergyType.LV.pushEnergyTo(worldIn, pos.offset(facing), facing, getItemContainerAsStorage(stack, 500), false);
 			}
 			return EnumActionResult.SUCCESS;
 		}
-		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+		return super.onItemUse(playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
+
 	/**
-	 * allows items to add custom lines of information to the mouseover description
+	 * allows items to add custom lines of information to the mouseover
+	 * description
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
-	{
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
 		tooltip.add(getInfo(stack));
 	}
 }

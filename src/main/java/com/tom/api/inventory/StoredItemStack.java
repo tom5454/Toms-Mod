@@ -2,7 +2,6 @@ package com.tom.api.inventory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import org.lwjgl.opengl.GL11;
 
@@ -12,6 +11,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -22,194 +23,242 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.apis.TomsModUtils;
-import com.tom.storage.multipart.StorageNetworkGrid;
-import com.tom.storage.multipart.StorageNetworkGrid.CalculatedCrafting;
-import com.tom.storage.multipart.StorageNetworkGrid.ClientCraftingStack;
-import com.tom.storage.multipart.StorageNetworkGrid.CraftableProperties;
-import com.tom.storage.multipart.StorageNetworkGrid.ICache;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftable;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingRecipe;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingReportScreen;
-import com.tom.storage.multipart.StorageNetworkGrid.InventoryCache;
-import com.tom.storage.multipart.StorageNetworkGrid.NetworkCache;
-import com.tom.storage.multipart.StorageNetworkGrid.RecipeReturnInformation;
-import com.tom.storage.multipart.StorageNetworkGrid.RecipeToCraft;
+import com.tom.storage.handler.AutoCraftingHandler;
+import com.tom.storage.handler.ICache;
+import com.tom.storage.handler.ICraftable;
+import com.tom.storage.handler.InventoryCache;
+import com.tom.storage.handler.NetworkCache;
+import com.tom.storage.handler.StorageNetworkGrid;
+import com.tom.storage.handler.StorageNetworkGrid.ICraftingReportScreen;
 
 import io.netty.buffer.ByteBuf;
 
-public class StoredItemStack implements ICraftable{
-	public ItemStack stack;
-	public int itemCount;
-	public int maxStackSize = 64;
+public class StoredItemStack implements ICraftable {
+	public static class StoredItemStackComparator {
+		StoredItemStack stack;
+
+		public StoredItemStackComparator(StoredItemStack stack) {
+			this.stack = stack;
+		}
+
+		@Override
+		public boolean equals(Object other) {
+			if (this == other)
+				return true;
+			if (!(other instanceof StoredItemStack))
+				return false;
+			StoredItemStack o = (StoredItemStack) other;
+			return TomsModUtils.areItemStacksEqual(stack.getStack(), o.getStack(), true, true, false) && stack.getQuantity() <= o.getQuantity();
+		}
+	}
+
+	private ItemStack stack;
+	private long itemCount;
 	private static final String ITEM_COUNT_NAME = "c", ITEMSTACK_NAME = "s";
-	private boolean first = false;
-	private CraftableProperties properties = new CraftableProperties();
+	private long level = -1;
+	private ICraftable.CraftableProperties properties = new ICraftable.CraftableProperties();
 	private boolean hasProperties = false;
-	public void writeToNBT(NBTTagCompound tag){
-		tag.setInteger(ITEM_COUNT_NAME, itemCount);
-		if(stack != null)tag.setTag(ITEMSTACK_NAME, stack.writeToNBT(new NBTTagCompound()));
+
+	public void writeToNBT(NBTTagCompound tag) {
+		tag.setLong(ITEM_COUNT_NAME, getQuantity());
+		tag.setTag(ITEMSTACK_NAME, stack.writeToNBT(new NBTTagCompound()));
 		tag.getCompoundTag(ITEMSTACK_NAME).removeTag("Count");
-		if(hasProperties){
+		if (hasProperties) {
 			tag.setBoolean("p", hasProperties);
 			tag.setTag("prop", properties.writeToNBT(new NBTTagCompound()));
 		}
 	}
-	public static StoredItemStack readFromNBT(NBTTagCompound tag){
-		ItemStack cheat = ItemStack.loadItemStackFromNBT(tag);
+
+	public static StoredItemStack readFromNBT(NBTTagCompound tag) {
+		ItemStack cheat = TomsModUtils.loadItemStackFromNBT(tag);
 		tag.getCompoundTag(ITEMSTACK_NAME).setByte("Count", (byte) 1);
-		StoredItemStack stack = new StoredItemStack(cheat != null ? cheat : ItemStack.loadItemStackFromNBT(tag.getCompoundTag(ITEMSTACK_NAME)), cheat != null ? cheat.stackSize : tag.getInteger(ITEM_COUNT_NAME));
-		if(tag.getBoolean("p")){
+		StoredItemStack stack = new StoredItemStack(!cheat.isEmpty() ? cheat : TomsModUtils.loadItemStackFromNBT(tag.getCompoundTag(ITEMSTACK_NAME)), !cheat.isEmpty() ? cheat.getCount() : tag.getLong(ITEM_COUNT_NAME));
+		if (tag.getBoolean("p")) {
 			stack.properties.readFromNBT(tag.getCompoundTag("prop"));
 		}
-		return stack;
+		return !stack.stack.isEmpty() ? stack : null;
 	}
-	public void writeToPacket(ByteBuf buf){
+
+	public void writeToPacket(ByteBuf buf) {
 		NBTTagCompound tag = new NBTTagCompound();
 		this.writeToNBT(tag);
 		ByteBufUtils.writeTag(buf, tag);
 	}
-	public static StoredItemStack readFromPacket(ByteBuf buf){
+
+	public static StoredItemStack readFromPacket(ByteBuf buf) {
 		NBTTagCompound tag = ByteBufUtils.readTag(buf);
 		return readFromNBT(tag);
 	}
-	public StoredItemStack(ItemStack stack, int stackSize) {
-		if(stack == null)return;
-		if(stackSize < 0)stackSize = stack.stackSize;
-		this.itemCount = stackSize;
+
+	public StoredItemStack(ItemStack stack, long stackSize) {
+		if (stack == null)
+			return;
+		if (stackSize < 0)
+			stackSize = stack.getCount();
+		this.setQuantity(stackSize);
 		this.stack = stack.copy();
 	}
-	private StoredItemStack(ItemStack stack) {
-		this(stack, stack.stackSize);
-	}
-	public int getMaxStackSize(){
-		return maxStackSize;
-	}
+
 	@Override
 	public boolean equals(Object other) {
-		if(this == other)return true;
-		if(other instanceof ItemStack)return isItemEqual((ItemStack) other);
-		if(!(other instanceof StoredItemStack))return false;
+		if (this == other)
+			return true;
+		if (other instanceof ItemStack)
+			return isItemEqual((ItemStack) other);
+		if (!(other instanceof StoredItemStack))
+			return false;
 		StoredItemStack o = (StoredItemStack) other;
-		return TomsModUtils.areItemStacksEqual(stack, o.stack, true, true, false) && (itemCount == -1 ? o.itemCount == 0 : (o.itemCount == -1 ? itemCount == 0 : true));
+		return TomsModUtils.areItemStacksEqual(stack, o.stack, true, true, false) && (getQuantity() == -1 ? o.getQuantity() == 0 : (o.getQuantity() == -1 ? getQuantity() == 0 : true));
 	}
+
 	@Override
-	public StoredItemStack copy(){
-		StoredItemStack s = new StoredItemStack(stack.copy(),itemCount);
-		s.first = first;
+	public StoredItemStack copy() {
+		StoredItemStack s = new StoredItemStack(stack.copy(), getQuantity());
+		s.level = level;
 		return s;
 	}
-	public boolean isItemEqual(ItemStack other){
+
+	public boolean isItemEqual(ItemStack other) {
 		return TomsModUtils.areItemStacksEqual(stack, other, true, true, false);
 	}
+
 	@Override
 	public String toString() {
-		return super.toString() + "_" + itemCount + "_X_" + stack.toString();
+		return super.toString() + "_" + getQuantity() + "_X_" + stack.toString();
 	}
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public void addValidRecipes(List<ICraftingRecipe<?>> recipes, List<ICraftingRecipe<?>> validRecipes) {
-		for(int i = 0;i<recipes.size();i++){
-			ICraftingRecipe r = recipes.get(i);
+	public void addValidRecipes(List<AutoCraftingHandler.ICraftingRecipe<?>> recipes, List<AutoCraftingHandler.ICraftingRecipe<?>> validRecipes) {
+		for (int i = 0;i < recipes.size();i++) {
+			AutoCraftingHandler.ICraftingRecipe r = recipes.get(i);
 			List<StoredItemStack> outputs = r.getOutputs();
-			for(int j = 0;j<outputs.size();j++){
+			for (int j = 0;j < outputs.size();j++) {
 				StoredItemStack outS = outputs.get(j);
-				if(TomsModUtils.areItemStacksEqualOreDict(outS.stack, stack, properties.useMeta, properties.useNBT, false, properties.useOreDict)){
+				if (TomsModUtils.areItemStacksEqualOreDict(outS.stack, stack, properties.useMeta, properties.useNBT, false, properties.useOreDict)) {
 					validRecipes.add(r);
 					break;
 				}
 			}
 		}
 	}
+
 	@Override
 	public void pull(NetworkCache cache, List<ICraftable> requiredStacksToPull) {
 		List<StoredItemStack> storedStacks = cache.<StoredItemStack>getCache(InventoryCache.class).getStored();
-		List<ICraftable> toRemove = new ArrayList<ICraftable>();
-		for(int i = 0;i<storedStacks.size();i++){
+		List<ICraftable> toRemove = new ArrayList<>();
+		for (int i = 0;i < storedStacks.size();i++) {
 			StoredItemStack storedItemStack = storedStacks.get(i);
-			if(TomsModUtils.areItemStacksEqualOreDict(storedItemStack.stack, stack, properties.useMeta, properties.useNBT, false, properties.useOreDict)){
-				int pull = Math.min(itemCount, storedItemStack.itemCount);
-				itemCount -= pull;
-				storedItemStack.itemCount -= pull;
-				if(pull > 0){
+			if (TomsModUtils.areItemStacksEqualOreDict(storedItemStack.stack, stack, properties.useMeta, properties.useNBT, false, properties.useOreDict)) {
+				long pull = Math.min(getQuantity(), storedItemStack.getQuantity());
+				setQuantity(getQuantity() - pull);
+				storedItemStack.setQuantity(storedItemStack.getQuantity() - pull);
+				if (pull > 0) {
 					/*while(pull > 0){
 						int pulled = Math.min(pull, storedItemStack.stack.getMaxStackSize());
 						pull -= pulled;
 						memoryUsage += pulled;
 						operations += 1;
 						s.stackSize = pulled;
-
+					
 					}*/
 					ItemStack s = storedItemStack.stack.copy();
-					s.stackSize = pull;
-					StorageNetworkGrid.addCraftableToList(new StoredItemStack(s, pull), requiredStacksToPull);
+					AutoCraftingHandler.addCraftableToList(new StoredItemStack(s, pull), requiredStacksToPull);
 				}
-				if(storedItemStack.itemCount < 1){
+				if (storedItemStack.getQuantity() < 1) {
 					toRemove.add(storedItemStack);
 				}
 			}
 		}
-		for(int i = 0;i<toRemove.size();i++){
+		for (int i = 0;i < toRemove.size();i++) {
 			boolean success = storedStacks.remove(toRemove.get(i));
-			if(!success)System.err.println("Remove failed");
+			if (!success)
+				System.err.println("Remove failed");
 		}
 	}
+
 	@Override
 	public boolean hasQuantity() {
-		return itemCount > 0;
+		return getQuantity() > 0;
 	}
+
 	@Override
-	public boolean isEqual(ICraftable s) {
-		return equals(s);
+	public boolean isEqual(ICraftable other) {
+		if (other == this)
+			return true;
+		if (!(other instanceof StoredItemStack))
+			return false;
+		StoredItemStack o = (StoredItemStack) other;
+		return TomsModUtils.areItemStacksEqualOreDict(stack, o.stack, properties.useMeta, properties.useNBT, false, properties.useOreDict) && (getQuantity() == -1 ? o.getQuantity() == 0 : (o.getQuantity() == -1 ? getQuantity() == 0 : true));
 	}
+
 	@Override
-	public void removeQuantity(int value) {
-		itemCount -= value;
+	public void removeQuantity(long value) {
+		setQuantity(getQuantity() - value);
 	}
+
 	@Override
-	public int handleSecondaryPull(ICraftable s) {
-		int pull = Math.min(itemCount, s.getQuantity());
-		itemCount -= pull;
+	public long handleSecondaryPull(ICraftable s) {
+		long pull = Math.min(getQuantity(), s.getQuantity());
+		setQuantity(getQuantity() - pull);
 		s.removeQuantity(pull);
 		return pull;
 	}
+
 	@Override
 	public void setNoQuantity() {
-		itemCount = 0;
+		setQuantity(0);
 	}
+
 	@Override
 	public void add(ICraftable other) {
-		itemCount += other.getQuantity();
-		//other.setNoQuantity();
+		setQuantity(getQuantity() + other.getQuantity());
+		// other.setNoQuantity();
 	}
+
 	@Override
-	public RecipeReturnInformation useRecipe(ICraftingRecipe<?> rIn, NetworkCache cache, List<ICraftable> secondaryOutList, List<ICraftable> requiredStacksToPull, Stack<RecipeToCraft> recipesToCraft, Stack<ICraftable> toCraft) {
+	public AutoCraftingHandler.RecipeReturnInformation useRecipe(AutoCraftingHandler.ICraftingRecipe<?> rIn, NetworkCache cache, AutoCraftingHandler.SecondaryOutList secondaryOutList, List<ICraftable> requiredStacksToPull, List<AutoCraftingHandler.RecipeToCraft> recipesToCraft, List<ICraftable> toCraft) {
 		@SuppressWarnings("unchecked")
-		ICraftingRecipe<StoredItemStack> r = (ICraftingRecipe<StoredItemStack>) rIn;
+		AutoCraftingHandler.ICraftingRecipe<StoredItemStack> r = (AutoCraftingHandler.ICraftingRecipe<StoredItemStack>) rIn;
 		List<StoredItemStack> storedStacks = cache.getCache(InventoryCache.class).getStored();
 		int time = 0, operations = 0, memoryUsage = 0;
 		boolean doBreak = false;
-		if(r.isStoredOnly()){
+		if (r.isStoredOnly()) {
 			List<StoredItemStack> inputs = r.getInputs();
 			boolean contains = true;
-			for(int j = 0;j<inputs.size();j++){
+			ICraftable.CraftableProperties properties = new ICraftable.CraftableProperties();
+			for (int j = 0;j < inputs.size();j++) {
+				if (inputs.get(j).isEqual(this)) {
+					properties = inputs.get(j).getProperties();
+					break;
+				}
+			}
+			for (int j = 0;j < inputs.size();j++) {
 				StoredItemStack inStack = inputs.get(j).copy();
-				boolean stackFound = false;
-				for(int k = 0;k<storedStacks.size();k++){
+				for (int k = 0;k < storedStacks.size();k++) {
 					StoredItemStack storedStack = storedStacks.get(j);
-					if(TomsModUtils.areItemStacksEqualOreDict(inStack.stack, storedStack.stack, properties.useMeta, properties.useNBT, false, properties.useOreDict)){
-						if(storedStack.itemCount < inStack.itemCount){
-
-						}else{
-							stackFound = true;
+					if (TomsModUtils.areItemStacksEqualOreDict(inStack.stack, storedStack.stack, properties.useMeta, properties.useNBT, false, properties.useOreDict)) {
+						if (storedStack.hasQuantity()) {
+							long max = Math.min(inStack.itemCount, storedStack.itemCount);
+							inStack.removeQuantity(max);
+							storedStack.removeQuantity(max);
 						}
+					}
+
+				}
+				if (inStack.hasQuantity()) {
+					long contain = secondaryOutList.contains(inStack);
+					if (inStack.itemCount > contain) {
+						contains = false;
 						break;
 					}
 				}
-				if(!stackFound)contains = false;
+				if (inStack.hasQuantity())
+					contains = false;
 			}
-			if(contains){
+			if (contains) {
 				List<StoredItemStack> outputs = r.getOutputs();
-				RecipeToCraft toC = new RecipeToCraft(r);
+				AutoCraftingHandler.RecipeToCraft toC = new AutoCraftingHandler.RecipeToCraft(r);
 				/*if(recipesToCraft.contains(toC)){
 					for(int j = 0;j<recipesToCraft.size();j++){
 						RecipeToCraft c = recipesToCraft.get(i);
@@ -219,41 +268,44 @@ public class StoredItemStack implements ICraftable{
 						}
 					}
 				}else*/
+				toC.setResult(getLevel() == 0);
 				recipesToCraft.add(toC);
 				time += r.getTime();
 				operations += inputs.size();
-				//int found =
-				for(int j = 0;j<inputs.size();j++){
+				// int found =
+				for (int j = 0;j < inputs.size();j++) {
 					StoredItemStack stack = inputs.get(j);
-					memoryUsage += stack.itemCount;
-					//StoredItemStack s = new StoredItemStack(stack, stack.stackSize);
-					//toCraft.add(s);
-					StorageNetworkGrid.addCraftableToCraftList(stack, toCraft);
-					if(r.useContainerItems()){
+					memoryUsage += stack.getQuantity();
+					// StoredItemStack s = new StoredItemStack(stack,
+					// stack.stackSize);
+					// toCraft.add(s);
+					AutoCraftingHandler.addCraftableToCraftList(stack, toCraft);
+					if (r.useContainerItems()) {
 						ItemStack containerItem = ForgeHooks.getContainerItem(stack.stack.copy().splitStack(1));
-						if(containerItem != null){
-							containerItem.stackSize = stack.itemCount;
-							StorageNetworkGrid.addCraftableToList(new StoredItemStack(containerItem), secondaryOutList);
+						if (containerItem != null) {
+							AutoCraftingHandler.addCraftableToList(new StoredItemStack(containerItem, stack.getQuantity()), secondaryOutList);
 						}
 					}
 				}
-				for(int j = 0;j<outputs.size();j++){
+				for (int j = 0;j < outputs.size();j++) {
 					StoredItemStack stack = outputs.get(j).copy();
-					if(isEqual(stack)){
-						int maxPull = Math.min(stack.itemCount, itemCount);
-						stack.itemCount -= maxPull;
-						itemCount -= maxPull;
-						if(stack.itemCount > 0)StorageNetworkGrid.addCraftableToList(stack, secondaryOutList);
-					}else{
-						StorageNetworkGrid.addCraftableToList(stack, secondaryOutList);
+					if (isEqual(stack)) {
+						long maxPull = Math.min(stack.getQuantity(), getQuantity());
+						stack.setQuantity(stack.getQuantity() - maxPull);
+						setQuantity(getQuantity() - maxPull);
+						if (stack.getQuantity() > 0)
+							AutoCraftingHandler.addCraftableToList(stack, secondaryOutList);
+					} else {
+						AutoCraftingHandler.addCraftableToList(stack, secondaryOutList);
 					}
 				}
 				doBreak = true;
 			}
-		}else{
+		} else {
 			List<StoredItemStack> inputs = r.getInputs();
 			List<StoredItemStack> outputs = r.getOutputs();
-			RecipeToCraft toC = new RecipeToCraft(r);
+			AutoCraftingHandler.RecipeToCraft toC = new AutoCraftingHandler.RecipeToCraft(r);
+			toC.setResult(getLevel() == 0);
 			/*if(recipesToCraft.contains(toC)){
 				for(int j = 0;j<recipesToCraft.size();j++){
 					RecipeToCraft c = recipesToCraft.get(j);
@@ -266,169 +318,161 @@ public class StoredItemStack implements ICraftable{
 			recipesToCraft.add(toC);
 			time += r.getTime();
 			operations += inputs.size();
-			//int found =
-			for(int j = 0;j<inputs.size();j++){
+			// int found =
+			for (int j = 0;j < inputs.size();j++) {
 				StoredItemStack stack = inputs.get(j).copy();
-				memoryUsage += stack.itemCount;
-				//StoredItemStack s = new StoredItemStack(stack, stack.stackSize);
-				//toCraft.add(s);
-				StorageNetworkGrid.addCraftableToCraftList(stack, toCraft);
-				if(r.useContainerItems()){
+				memoryUsage += stack.getQuantity();
+				// StoredItemStack s = new StoredItemStack(stack,
+				// stack.stackSize);
+				// toCraft.add(s);
+				AutoCraftingHandler.addCraftableToCraftList(stack, toCraft);
+				if (r.useContainerItems()) {
 					ItemStack containerItem = ForgeHooks.getContainerItem(stack.stack.copy().splitStack(1));
-					if(containerItem != null){
-						containerItem.stackSize = stack.itemCount;
-						StorageNetworkGrid.addCraftableToList(new StoredItemStack(containerItem), secondaryOutList);
+					if (containerItem != null) {
+						AutoCraftingHandler.addCraftableToList(new StoredItemStack(containerItem, stack.getQuantity()), secondaryOutList);
 					}
 				}
 			}
-			for(int j = 0;j<outputs.size();j++){
+			for (int j = 0;j < outputs.size();j++) {
 				StoredItemStack stack = outputs.get(j).copy();
-				if(isEqual(stack)){
-					int maxPull = Math.min(stack.itemCount, itemCount);
-					stack.itemCount -= maxPull;
-					itemCount -= maxPull;
-					if(stack.itemCount > 0)StorageNetworkGrid.addCraftableToList(stack, secondaryOutList);
-				}else{
-					StorageNetworkGrid.addCraftableToList(stack, secondaryOutList);
+				if (isEqual(stack)) {
+					long maxPull = Math.min(stack.getQuantity(), getQuantity());
+					stack.setQuantity(stack.getQuantity() - maxPull);
+					setQuantity(getQuantity() - maxPull);
+					if (stack.getQuantity() > 0)
+						AutoCraftingHandler.addCraftableToList(stack, secondaryOutList);
+				} else {
+					AutoCraftingHandler.addCraftableToList(stack, secondaryOutList);
 				}
 			}
 			doBreak = true;
 		}
-		return new RecipeReturnInformation(doBreak, time, operations, memoryUsage);
+		return new AutoCraftingHandler.RecipeReturnInformation(doBreak, time, operations, memoryUsage);
 	}
+
 	@Override
 	public void writeObjToNBT(NBTTagCompound t) {
 		writeToNBT(t);
 	}
+
 	@Override
-	public int getQuantity() {
-		return itemCount;
+	public long getQuantity() {
+		return stack.isEmpty() ? 0 : itemCount;
 	}
-	@Override
-	public void pullFromGrid(StorageNetworkGrid cache, List<ICraftable> pulledList) {
-		int pulled = 0;
-		while(pulled < itemCount){
-			ItemStack stack = cache.getInventory().pullStack(this, itemCount);
-			if(stack != null){
-				StorageNetworkGrid.addCraftableToList(new StoredItemStack(stack, stack.stackSize), pulledList);
-			}else{
-				break;
-			}
-			pulled += stack.getMaxStackSize();
-		}
-	}
+
 	@Override
 	public ITextComponent serializeTextComponent(TextFormatting color) {
 		ITextComponent t = stack.getTextComponent();
 		t.getStyle().setColor(color);
-		return new TextComponentTranslation("tomsMod.stack", t, itemCount);
+		return new TextComponentTranslation("tomsMod.stack", t, getQuantity());
 	}
+
 	@Override
-	public void checkIfIngredientsAreAvailable(NetworkCache cache, List<ICraftable> missingStacks, CalculatedCrafting crafting) {
+	public void checkIfIngredientsAreAvailable(NetworkCache cache, List<ICraftable> missingStacks, AutoCraftingHandler.CalculatedCrafting crafting) {
 		boolean stackFound = false;
 		List<StoredItemStack> storedStacks = cache.getCache(InventoryCache.class).getStored();
-		for(int j = 0;j<storedStacks.size();j++){
+		for (int j = 0;j < storedStacks.size();j++) {
 			StoredItemStack storedStack = storedStacks.get(j);
-			if(TomsModUtils.areItemStacksEqualOreDict(stack, storedStack.stack, properties.useMeta, properties.useNBT, false, properties.useOreDict)){
+			if (TomsModUtils.areItemStacksEqualOreDict(stack, storedStack.stack, properties.useMeta, properties.useNBT, false, properties.useOreDict)) {
 				stackFound = true;
-				if(storedStack.itemCount < itemCount){
-					//ItemStack copiedStack = stack.copy();
-					int found = Math.min(storedStack.itemCount, itemCount);
-					storedStack.itemCount -= found;
-					int missing = itemCount;
-					itemCount = found;
+				if (storedStack.getQuantity() < getQuantity()) {
+					// ItemStack copiedStack = stack.copy();
+					long found = Math.min(storedStack.getQuantity(), getQuantity());
+					storedStack.setQuantity(storedStack.getQuantity() - found);
+					long missing = getQuantity();
+					setQuantity(found);
 					missing -= found;
-					//copiedStack.stackSize -= found;
+					// copiedStack.stackSize -= found;
 					/*if(copiedStack.stackSize < 1){
 						//crafting.requiredStacks.remove(this);
 						copiedStack = null;
 					}*/
-					if(storedStack.itemCount < 1){
+					if (storedStack.getQuantity() < 1) {
 						storedStacks.remove(j);
 					}
-					if(missing > 0){
+					if (missing > 0) {
 						ItemStack s = stack.copy();
-						s.stackSize = 1;
+						s.setCount(1);
 						StoredItemStack storedS = new StoredItemStack(s, missing);
-						//if(missingStacks.contains(storedS)){
+						// if(missingStacks.contains(storedS)){
 						boolean f = false;
-						for(int k = 0;k<missingStacks.size();k++){
+						for (int k = 0;k < missingStacks.size();k++) {
 							ICraftable mStack = missingStacks.get(k);
-							if(mStack.equals(storedS)){
-								((StoredItemStack)mStack).itemCount += storedS.itemCount;
+							if (mStack.equals(storedS)) {
+								((StoredItemStack) mStack).setQuantity(((StoredItemStack) mStack).getQuantity() + storedS.getQuantity());
 								f = true;
 								break;
 							}
 						}
-						//}else{
-						if(!f)missingStacks.add(storedS);
-						//}
-						//itemCount = 0;
+						// }else{
+						if (!f)
+							missingStacks.add(storedS);
+						// }
+						// itemCount = 0;
 					}
-				}else{
-					storedStack.itemCount -= itemCount;
-					//itemCount = 0;
+				} else {
+					storedStack.setQuantity(storedStack.getQuantity() - itemCount);
+					// itemCount = 0;
 					break;
 				}
 			}
 		}
-		if(!stackFound){
+		if (!stackFound) {
 			StoredItemStack storedS = copy();
-			//if(missingStacks.contains(storedS)){
+			// if(missingStacks.contains(storedS)){
 			boolean found = false;
-			for(int k = 0;k<missingStacks.size();k++){
+			for (int k = 0;k < missingStacks.size();k++) {
 				ICraftable mStack = missingStacks.get(k);
-				if(mStack.isEqual(storedS)){
-					((StoredItemStack)mStack).itemCount += storedS.itemCount;
+				if (mStack.isEqual(storedS)) {
+					((StoredItemStack) mStack).setQuantity(((StoredItemStack) mStack).getQuantity() + storedS.getQuantity());
 					found = true;
 					break;
 				}
 			}
-			//}else{
-			if(!found)missingStacks.add(storedS);
-			itemCount = 0;
-			//}
-			//crafting.requiredStacks.remove(this);
+			// }else{
+			if (!found)
+				missingStacks.add(storedS);
+			setQuantity(0);
+			// }
+			// crafting.requiredStacks.remove(this);
 		}
 	}
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void drawEntry(ClientCraftingStack s, int posX, int posY, int mouseX, int mouseY, ICraftingReportScreen screen, boolean isTooltip) {
-		if(isTooltip){
+	public void drawEntry(AutoCraftingHandler.ClientCraftingStack s, int posX, int posY, int mouseX, int mouseY, ICraftingReportScreen screen, boolean isTooltip) {
+		if (isTooltip) {
 			ItemStack stack = this.stack.copy();
-			stack.stackSize = 1;
+			stack.setCount(1);
 			String name = I18n.format(this.stack.getUnlocalizedName() + ".name");
-			if (((StoredItemStack)s.mainStack).stack.getTagCompound() != null && this.stack.getTagCompound().hasKey("display", 10))
-			{
+			if (((StoredItemStack) s.mainStack).stack.getTagCompound() != null && this.stack.getTagCompound().hasKey("display", 10)) {
 				NBTTagCompound nbttagcompound = this.stack.getTagCompound().getCompoundTag("display");
 
-				if (nbttagcompound.hasKey("Name", 8))
-				{
+				if (nbttagcompound.hasKey("Name", 8)) {
 					name = nbttagcompound.getString("Name");
 				}
 			}
 			List<String> hovering = TomsModUtils.getStringList(name);
-			if(s.stored > 0)hovering.add(I18n.format("tomsMod.storage.available", s.stored));
-			if(s.toCraft > 0)hovering.add(I18n.format("tomsMod.storage.toCraft", s.toCraft));
-			if(s.missing > 0)hovering.add(I18n.format("tomsMod.storage.missing", s.missing));
-			for (int j = 0; j < hovering.size(); ++j)
-			{
-				if (j == 0)
-				{
+			if (s.stored > 0)
+				hovering.add(I18n.format(s.crafting ? "tomsMod.storage.stored" : "tomsMod.storage.available", s.stored));
+			if (s.toCraft > 0)
+				hovering.add(I18n.format("tomsMod.storage.toCraft", s.toCraft));
+			if (s.missing > 0)
+				hovering.add(I18n.format(s.crafting ? "tomsMod.storage.crafting" : "tomsMod.storage.missing", s.missing));
+			for (int j = 0;j < hovering.size();++j) {
+				if (j == 0) {
 					hovering.set(j, stack.getRarity().rarityColor + hovering.get(j));
-				}
-				else
-				{
+				} else {
 					hovering.set(j, TextFormatting.GRAY + hovering.get(j));
 				}
 			}
 			screen.drawHoveringText(hovering, mouseX, mouseY);
-		}else{
+		} else {
 			ItemStack stack = this.stack.copy();
-			stack.stackSize = 1;
-			if(s.missing > 0){
-				Render.setColourWithAlphaPercent(0xFF0000,50);
+			stack.setCount(1);
+			if (s.missing > 0) {
+				Render.setColourWithAlphaPercent(0xFF0000, 50);
 				Render.drawRect(posX, posY, 67, 22);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			}
@@ -437,46 +481,111 @@ public class StoredItemStack implements ICraftable{
 			GL11.glTranslated(posX + 10, posY + 11, screen.getZLevel());
 			double scale = 0.5D;
 			GL11.glScaled(scale, scale, scale);
-			if(s.toCraft > 0)screen.getFontRenderer().drawString(I18n.format("tomsMod.storage.toCraft", TomsModUtils.formatNumber(s.toCraft)), 0, -screen.getFontRenderer().FONT_HEIGHT / 2, 4210752);
-			if(s.stored > 0)screen.getFontRenderer().drawString(I18n.format("tomsMod.storage.available", TomsModUtils.formatNumber(s.stored)), 0, s.toCraft > 0 ? (-screen.getFontRenderer().FONT_HEIGHT * 2) : (-screen.getFontRenderer().FONT_HEIGHT / 2), 4210752);
-			if(s.missing > 0)screen.getFontRenderer().drawString(I18n.format("tomsMod.storage.missing", TomsModUtils.formatNumber(s.missing)), 0, s.toCraft > 0 || s.stored > 0 ? (screen.getFontRenderer().FONT_HEIGHT) : (screen.getFontRenderer().FONT_HEIGHT / 2), 4210752);
+			if (s.toCraft > 0)
+				screen.getFontRenderer().drawString(I18n.format("tomsMod.storage.toCraft", TomsModUtils.formatNumber(s.toCraft)), 0, -screen.getFontRenderer().FONT_HEIGHT / 2, 4210752);
+			if (s.stored > 0)
+				screen.getFontRenderer().drawString(I18n.format(s.crafting ? "tomsMod.storage.stored" : "tomsMod.storage.available", TomsModUtils.formatNumber(s.stored)), 0, s.toCraft > 0 ? (-screen.getFontRenderer().FONT_HEIGHT * 2) : (-screen.getFontRenderer().FONT_HEIGHT / 2), 4210752);
+			if (s.missing > 0)
+				screen.getFontRenderer().drawString(I18n.format(s.crafting ? "tomsMod.storage.crafting" : "tomsMod.storage.missing", TomsModUtils.formatNumber(s.missing)), 0, s.toCraft > 0 || s.stored > 0 ? (screen.getFontRenderer().FONT_HEIGHT) : (screen.getFontRenderer().FONT_HEIGHT / 2), 4210752);
 			GL11.glPopMatrix();
 		}
 	}
+
 	@Override
 	public ICraftable pushToGrid(StorageNetworkGrid grid) {
-		ItemStack s = stack.copy();
-		s.stackSize = itemCount;
-		s = grid.pushStack(s);
-		return s != null && s.stackSize > 0 ? new StoredItemStack(s, s.stackSize) : null;
+		ICraftable s = grid.pushStack(copy());
+		return s != null && s.hasQuantity() ? s : null;
 	}
+
 	@Override
-	public void setQuantity(int value) {
+	public void setQuantity(long value) {
 		itemCount = value;
 	}
+
 	@Override
 	public Class<? extends ICache<?>> getCacheClass() {
 		return InventoryCache.class;
 	}
+
 	@Override
 	public String serializeStringTooltip() {
-		return itemCount + " * " + TomsModUtils.getTranslatedName(stack);
+		return getQuantity() + " * " + TomsModUtils.getTranslatedName(stack);
 	}
+
 	@Override
-	public boolean isFirst() {
-		return first;
-	}
-	@Override
-	public void setFirst() {
-		first = true;
-	}
-	@Override
-	public CraftableProperties getProperties() {
+	public ICraftable.CraftableProperties getProperties() {
 		return properties;
 	}
-	public StoredItemStack setHasProperites(CraftableProperties p) {
+
+	public StoredItemStack setHasProperites(ICraftable.CraftableProperties p) {
 		this.hasProperties = true;
 		this.properties = p;
 		return this;
+	}
+
+	@Override
+	public long getMaxStackSize() {
+		return stack.getMaxStackSize();
+	}
+
+	public StoredItemStack copy(long newCount) {
+		StoredItemStack ret = copy();
+		ret.setQuantity(newCount);
+		return ret;
+	}
+
+	public ItemStack getStack() {
+		return stack;
+	}
+
+	public ItemStack getActualStack() {
+		ItemStack s = stack.copy();
+		s.setCount((int) itemCount);
+		return s;
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return stack.getUnlocalizedName();
+	}
+
+	@Override
+	public String getDisplayName() {
+		return stack.getDisplayName();
+	}
+
+	@Override
+	public ResourceLocation getDelegateName() {
+		return stack.getItem().delegate.name();
+	}
+
+	@Override
+	public int getBaseBytes() {
+		return 32;
+	}
+
+	@Override
+	public int getQuantityBytes() {
+		return MathHelper.ceil(itemCount / (getMaxStackSize() / 4F));
+	}
+
+	@Override
+	public long getMaxQuantityForBytes(int bytes) {
+		float f = getMaxStackSize() / 4F;
+		long ret = MathHelper.lfloor(bytes * f);
+		if (ret == 0 && f > 1 && itemCount % f != 0) {
+			ret = MathHelper.lfloor(f - itemCount % f);
+		}
+		return ret < 1 ? 0 : ret;
+	}
+
+	@Override
+	public long getLevel() {
+		return level;
+	}
+
+	@Override
+	public void setLevel(long level) {
+		this.level = level;
 	}
 }

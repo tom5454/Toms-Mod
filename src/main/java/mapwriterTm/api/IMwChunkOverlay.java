@@ -2,8 +2,7 @@ package mapwriterTm.api;
 
 import java.awt.Point;
 
-public interface IMwChunkOverlay
-{
+public interface IMwChunkOverlay {
 	public Point getCoordinates();
 
 	public int getColor();

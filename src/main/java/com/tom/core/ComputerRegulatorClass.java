@@ -8,22 +8,28 @@ public class ComputerRegulatorClass {
 	private static Field serverRegistry;
 	private static Method getMethod;
 	private static Class<?> serverRegClass;
-	public static void regulate(int id, String method){
+
+	public static void regulate(int id, String method) {
 		try {
 			Class<?> c = serverRegistry.getType().getSuperclass();
 			Object get = serverRegistry.get("");
 			Object cast = c.cast(get);
-			Object o = getMethod.invoke(cast,id);
+			Object o = getMethod.invoke(cast, id);
 			o.getClass().getMethod(method).invoke(o);
-		} catch (Exception e) {e.printStackTrace();}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	public static void init(){
+
+	public static void init() {
 		try {
-			computerCraft = Class.forName( "dan200.computercraft.ComputerCraft");
+			computerCraft = Class.forName("dan200.computercraft.ComputerCraft");
 			serverRegistry = computerCraft.getDeclaredField("serverComputerRegistry");
 			serverRegClass = serverRegistry.getDeclaringClass().getSuperclass();
-			getMethod = serverRegClass.getDeclaredMethod("get", new Class[]{int.class});//.getDeclaredMethod("get", new Class[]{int.class});
-		}catch(Exception e) {
+			getMethod = serverRegClass.getDeclaredMethod("get", new Class[]{int.class});// .getDeclaredMethod("get",
+																						// new
+																						// Class[]{int.class});
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -6,9 +6,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public abstract class TileEntityCamoable extends TileEntityTomsMod {
 	public abstract ItemStack getCamoStack();
+
 	public abstract AxisAlignedBB getBounds();
-	public boolean doRender(){
+
+	public boolean doRender() {
 		return true;
 	}
+
 	public abstract IBlockState getDefaultState();
 }

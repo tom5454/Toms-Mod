@@ -6,6 +6,7 @@ import java.util.Stack;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -20,20 +21,24 @@ import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
+import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 
 public class TileEntityPump extends TileEntityMachineBase implements ITileFluidHandler, ICustomMultimeterInformation {
 	private EnergyStorage energy = new EnergyStorage(5000, 20);
 	private FluidTank tank = new FluidTank(1000);
-	private Stack<BlockPos> fluidBlocks = new Stack<BlockPos>();
+	private Stack<BlockPos> fluidBlocks = new Stack<>();
 	private int cooldown;
 	private int lvl = 1;
+	private boolean clearing = false;
+
 	@Override
 	public IFluidHandler getTankOnSide(EnumFacing f) {
 		tank.setCanFill(false);
@@ -85,51 +90,70 @@ public class TileEntityPump extends TileEntityMachineBase implements ITileFluidH
 	public int getMaxProcessTimeNormal() {
 		return 20;
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		//compound.setInteger("progress", progress);
+		// compound.setInteger("progress", progress);
 		compound.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+		compound.setTag("fluidblocks", TomsModUtils.writeCollection(fluidBlocks, TomsModUtils::writeBlockPosToNewNBT));
+		compound.setInteger("lvl", lvl);
+		compound.setInteger("cooldown", cooldown);
+		compound.setBoolean("clearing", clearing);
 		return compound;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		tank.readFromNBT(compound.getCompoundTag("tank"));
-		//progress = compound.getInteger("progress");
+		lvl = compound.getInteger("lvl");
+		cooldown = compound.getInteger("cooldown");
+		fluidBlocks.clear();
+		TomsModUtils.readCollection(fluidBlocks, compound.getTagList("fluidblocks", 10), TomsModUtils::readBlockPosFromNBT);
+		clearing = compound.getBoolean("clearing");
+		// progress = compound.getInteger("progress");
 	}
+
+	@Override
+	public void writeToStackNBT(NBTTagCompound tag) {
+		super.writeToStackNBT(tag);
+		tag.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+		tag.setBoolean("clearing", clearing);
+	}
+
 	@Override
 	public void updateEntity() {
-		if(!worldObj.isRemote){
-			if(energy.getEnergyStored() > 1 && canRun()){
-				if(cooldown < 1){
-					if(fluidBlocks.isEmpty()){
+		if (!world.isRemote) {
+			if (energy.getEnergyStored() > 1 && canRun()) {
+				if (cooldown < 1) {
+					if (fluidBlocks.isEmpty()) {
 						checkFluidBlocks(pos.down(lvl));
 						cooldown = 300;
-						if(fluidBlocks.isEmpty()){
-							if(lvl > 30){
+						if (fluidBlocks.isEmpty()) {
+							if (lvl > 30) {
 								lvl = 1;
 								cooldown += 50;
-							}else
+							} else
 								lvl++;
 						}
-					}else{
+					} else {
 						pump();
 					}
-				}else{
-					cooldown -= MathHelper.floor_double(getMaxProgress() / 10D);
+				} else {
+					cooldown -= MathHelper.floor(getMaxProgress() / 10D);
 				}
-				if(tank.getFluidAmount() > 0){
+				if (tank.getFluidAmount() > 0) {
 					EnumFacing f = EnumFacing.DOWN;
-					TileEntity tile = worldObj.getTileEntity(pos.offset(f.getOpposite()));
-					if(tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f)){
+					TileEntity tile = world.getTileEntity(pos.offset(f.getOpposite()));
+					if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f)) {
 						int extra = Math.min(tank.getFluidAmount(), 100);
 						IFluidHandler t = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f);
-						if(t != null){
-							int filled = t.fill(new FluidStack(CoreInit.steam, extra), false);
-							if(filled > 0){
+						if (t != null) {
+							int filled = t.fill(new FluidStack(CoreInit.steam.get(), extra), false);
+							if (filled > 0) {
 								FluidStack drained = tank.drain(filled, false);
-								if(drained != null && drained.amount > 0){
+								if (drained != null && drained.amount > 0) {
 									int canDrain = Math.min(filled, Math.min(500, drained.amount));
 									t.fill(tank.drain(canDrain, true), true);
 									energy.extractEnergy(0.05, false);
@@ -141,67 +165,75 @@ public class TileEntityPump extends TileEntityMachineBase implements ITileFluidH
 			}
 		}
 	}
-	private void checkFluidBlocks(BlockPos pos){
-		if(pos.getY() < 2){
+
+	private void checkFluidBlocks(BlockPos pos) {
+		if (pos.getY() < 2) {
 			lvl = 0;
 			return;
 		}
 		fluidBlocks.clear();
-		IBlockState stateB = worldObj.getBlockState(pos);
-		if(stateB.getBlock() instanceof BlockFluidBase || stateB.getBlock() instanceof BlockLiquid){
-			Stack<BlockPos> nextPos = new Stack<BlockPos>();
+		IBlockState stateB = world.getBlockState(pos);
+		if (stateB.getBlock() instanceof BlockFluidBase || stateB.getBlock() instanceof BlockLiquid) {
+			Stack<BlockPos> nextPos = new Stack<>();
 			nextPos.add(pos);
-			while (!nextPos.isEmpty()){
+			while (!nextPos.isEmpty()) {
 				BlockPos p = nextPos.pop();
-				if(!fluidBlocks.contains(p)){
+				if (!fluidBlocks.contains(p) && p.distanceSq(this.pos) < 4096) {
 					fluidBlocks.add(p);
-					for(EnumFacing f : EnumFacing.HORIZONTALS){
-						if(!fluidBlocks.contains(p.offset(f))){
-							IBlockState stateB2 = worldObj.getBlockState(p.offset(f));
-							if(stateB2.getBlock() instanceof BlockFluidBase || stateB2.getBlock() instanceof BlockLiquid){
+					for (EnumFacing f : EnumFacing.HORIZONTALS) {
+						if (!fluidBlocks.contains(p.offset(f))) {
+							IBlockState stateB2 = world.getBlockState(p.offset(f));
+							if (stateB2.getBlock() instanceof BlockFluidBase || stateB2.getBlock() instanceof BlockLiquid) {
 								nextPos.add(p.offset(f));
 							}
 						}
 					}
 				}
 			}
-		}else if(stateB.getMaterial() != Material.AIR){
+		} else if (stateB.getMaterial() != Material.AIR) {
 			lvl = 0;
 		}
 	}
-	private void pump(){
-		if(!fluidBlocks.isEmpty()){
-			if(tank.getFluid() == null){
+
+	private void pump() {
+		if (!fluidBlocks.isEmpty()) {
+			if (tank.getFluid() == null) {
 				BlockPos pos = fluidBlocks.pop();
-				IBlockState stateB = worldObj.getBlockState(pos);
-				if(stateB.getBlock() instanceof BlockFluidBase || stateB.getBlock() instanceof BlockLiquid){
-					IFluidHandler h = FluidUtil.getFluidHandler(worldObj, pos, EnumFacing.UP);
+				if (pos == null)
+					return;
+				IBlockState stateB = world.getBlockState(pos);
+				if (stateB.getBlock() instanceof IFluidBlock || stateB.getBlock() instanceof BlockLiquid) {
+					IFluidHandler h = FluidUtil.getFluidHandler(world, pos, EnumFacing.UP);
 					if (h != null) {
 						FluidStack drained = h.drain(1000, false);
-						if(drained != null && drained.amount > 0){
-							if(tank.fillInternal(drained, false) == 1000){
+						int temp = drained.getFluid().getTemperature(world, pos);
+						if (drained != null && drained.amount > 0) {
+							if (tank.fillInternal(drained, false) == 1000) {
 								tank.fillInternal(h.drain(1000, true), true);
 								energy.extractEnergy(1, false);
 								cooldown = 120;
-							}else{
+								if (!clearing && !(pos.getX() == this.pos.getX() && pos.getZ() == this.pos.getZ()))
+									world.setBlockState(pos, temp > 300 ? Blocks.STONE.getDefaultState() : Blocks.DIRT.getDefaultState());
+							} else {
 								cooldown = 100;
 							}
-						}else{
+						} else {
 							cooldown = 50;
 						}
-					}else{
+					} else {
 						cooldown = 50;
 					}
-				}else{
+				} else {
 					cooldown = 50;
 				}
-			}else{
+			} else {
 				cooldown = 200;
 			}
-		}else{
+		} else {
 			cooldown = 200;
 		}
 	}
+
 	@Override
 	public boolean canHaveInventory(EnumFacing f) {
 		return false;
@@ -209,9 +241,16 @@ public class TileEntityPump extends TileEntityMachineBase implements ITileFluidH
 
 	@Override
 	public List<ITextComponent> getInformation(List<ITextComponent> list) {
-		list.add(new TextComponentTranslation("tomsMod.chat.workingYLevel", pos.down(lvl).getY()));
+		if (!fluidBlocks.isEmpty()) {
+			BlockPos pos = fluidBlocks.peek();
+			if (pos != null) {
+				list.add(new TextComponentTranslation("tomsMod.chat.working", pos.getX(), pos.getY(), pos.getZ()));
+			}
+		}
+		list.add(new TextComponentTranslation("tomsMod.chat.clearing", TomsModUtils.getYesNoMessage(clearing)));
 		return list;
 	}
+
 	@Override
 	public ResourceLocation getFront() {
 		return new ResourceLocation("tomsmodfactory:textures/blocks/pumpSide.png");
@@ -225,5 +264,21 @@ public class TileEntityPump extends TileEntityMachineBase implements ITileFluidH
 	@Override
 	public int[] getInputSlots() {
 		return null;
+	}
+
+	@Override
+	public void checkItems() {
+	}
+
+	@Override
+	public void finish() {
+	}
+
+	@Override
+	public void updateProgress() {
+	}
+
+	public void changeClearing() {
+		clearing = !clearing;
 	}
 }

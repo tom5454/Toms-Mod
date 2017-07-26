@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "facing=north,state=0": { "model": "tomsmodstorage:controller" },
+        "facing=south,state=0": { "model": "tomsmodstorage:controller", "y": 180 },
+         "facing=west,state=0": { "model": "tomsmodstorage:controller", "y": 270 },
+         "facing=east,state=0": { "model": "tomsmodstorage:controller", "y": 90 },
+        "facing=north,state=1": { "model": "tomsmodstorage:controller_err" },
+        "facing=south,state=1": { "model": "tomsmodstorage:controller_err", "y": 180 },
+         "facing=west,state=1": { "model": "tomsmodstorage:controller_err", "y": 270 },
+         "facing=east,state=1": { "model": "tomsmodstorage:controller_err", "y": 90 },
+        "facing=north,state=2": { "model": "tomsmodstorage:controller_on" },
+        "facing=south,state=2": { "model": "tomsmodstorage:controller_on", "y": 180 },
+         "facing=west,state=2": { "model": "tomsmodstorage:controller_on", "y": 270 },
+         "facing=east,state=2": { "model": "tomsmodstorage:controller_on", "y": 90 }
+    }
+}

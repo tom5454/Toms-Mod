@@ -18,7 +18,7 @@
          "facing=east,state=2,type=wooden": { "model": "tomsmodcore:research_table/resTableR", "y": 270 },
            "facing=up,state=2,type=wooden": { "model": "tomsmodcore:research_table/resTableR", "x": 90 },
          "facing=down,state=2,type=wooden": { "model": "tomsmodcore:research_table/resTableR", "x": 270 },
-         
+
         "facing=north,state=0,type=bronze": { "model": "tomsmodcore:research_table/resTableBase", "y": 180 },
         "facing=south,state=0,type=bronze": { "model": "tomsmodcore:research_table/resTableBase"},
          "facing=west,state=0,type=bronze": { "model": "tomsmodcore:research_table/resTableBase", "y": 90 },
@@ -37,7 +37,7 @@
          "facing=east,state=2,type=bronze": { "model": "tomsmodcore:research_table/resTableRB", "y": 270 },
            "facing=up,state=2,type=bronze": { "model": "tomsmodcore:research_table/resTableRB", "x": 90 },
          "facing=down,state=2,type=bronze": { "model": "tomsmodcore:research_table/resTableRB", "x": 270 },
-         
+
         "facing=north,state=0,type=electrical": { "model": "tomsmodcore:research_table/resTableBase", "y": 180 },
         "facing=south,state=0,type=electrical": { "model": "tomsmodcore:research_table/resTableBase"},
          "facing=west,state=0,type=electrical": { "model": "tomsmodcore:research_table/resTableBase", "y": 90 },
@@ -55,6 +55,44 @@
          "facing=west,state=2,type=electrical": { "model": "tomsmodcore:research_table/resTableRE", "y": 90 },
          "facing=east,state=2,type=electrical": { "model": "tomsmodcore:research_table/resTableRE", "y": 270 },
            "facing=up,state=2,type=electrical": { "model": "tomsmodcore:research_table/resTableRE", "x": 90 },
-         "facing=down,state=2,type=electrical": { "model": "tomsmodcore:research_table/resTableRE", "x": 270 }
+         "facing=down,state=2,type=electrical": { "model": "tomsmodcore:research_table/resTableRE", "x": 270 },
+
+        "facing=north,state=0,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "y": 180 },
+        "facing=south,state=0,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableBase"},
+         "facing=west,state=0,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "y": 90 },
+         "facing=east,state=0,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "y": 270 },
+           "facing=up,state=0,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "x": 90 },
+         "facing=down,state=0,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "x": 270 },
+        "facing=north,state=1,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableLME", "y": 180 },
+        "facing=south,state=1,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableLME"},
+         "facing=west,state=1,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableLME", "y": 90 },
+         "facing=east,state=1,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableLME", "y": 270 },
+           "facing=up,state=1,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableLME", "x": 90 },
+         "facing=down,state=1,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableLME", "x": 270 },
+        "facing=north,state=2,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableRME", "y": 180 },
+        "facing=south,state=2,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableRME"},
+         "facing=west,state=2,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableRME", "y": 90 },
+         "facing=east,state=2,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableRME", "y": 270 },
+           "facing=up,state=2,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableRME", "x": 90 },
+         "facing=down,state=2,type=mv_electrical": { "model": "tomsmodcore:research_table/resTableRME", "x": 270 },
+
+        "facing=north,state=0,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "y": 180 },
+        "facing=south,state=0,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableBase"},
+         "facing=west,state=0,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "y": 90 },
+         "facing=east,state=0,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "y": 270 },
+           "facing=up,state=0,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "x": 90 },
+         "facing=down,state=0,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableBase", "x": 270 },
+        "facing=north,state=1,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableLHE", "y": 180 },
+        "facing=south,state=1,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableLHE"},
+         "facing=west,state=1,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableLHE", "y": 90 },
+         "facing=east,state=1,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableLHE", "y": 270 },
+           "facing=up,state=1,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableLHE", "x": 90 },
+         "facing=down,state=1,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableLHE", "x": 270 },
+        "facing=north,state=2,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableRHE", "y": 180 },
+        "facing=south,state=2,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableRHE"},
+         "facing=west,state=2,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableRHE", "y": 90 },
+         "facing=east,state=2,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableRHE", "y": 270 },
+           "facing=up,state=2,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableRHE", "x": 90 },
+         "facing=down,state=2,type=hv_electrical": { "model": "tomsmodcore:research_table/resTableRHE", "x": 270 }
     }
 }

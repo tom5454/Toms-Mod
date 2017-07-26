@@ -21,7 +21,7 @@ import dan200.computercraft.api.peripheral.IPeripheralProvider;
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
 public class RedstonePort extends BlockContainerTomsMod implements IPeripheralProvider {
 
-	public RedstonePort(){
+	public RedstonePort() {
 		super(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
@@ -31,34 +31,40 @@ public class RedstonePort extends BlockContainerTomsMod implements IPeripheralPr
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityRedstonePort();
 	}
+
 	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityRedstonePort ? (IPeripheral)te : null;
+		return te instanceof TileEntityRedstonePort ? (IPeripheral) te : null;
 	}
+
 	@Override
 	public boolean hasComparatorInputOverride(IBlockState blockState) {
 		return true;
 	}
+
 	@Override
 	public int getComparatorInputOverride(IBlockState blockState, World world, BlockPos pos) {
-		return ((TileEntityRedstonePort)world.getTileEntity(pos)).getComparatorOutput();
+		return ((TileEntityRedstonePort) world.getTileEntity(pos)).getComparatorOutput();
 	}
+
 	@Override
-	public boolean canConnectRedstone(IBlockState blockState, IBlockAccess world, BlockPos pos, EnumFacing par5){
+	public boolean canConnectRedstone(IBlockState blockState, IBlockAccess world, BlockPos pos, EnumFacing par5) {
 		return true;
 	}
+
 	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess world,
-			BlockPos pos, EnumFacing side) {
-		return ((TileEntityRedstonePort)world.getTileEntity(pos)).getOutput() ? 15 : 0;
+	public int getWeakPower(IBlockState blockState, IBlockAccess world, BlockPos pos, EnumFacing side) {
+		return ((TileEntityRedstonePort) world.getTileEntity(pos)).getOutput() ? 15 : 0;
 	}
+
 	@Override
 	public boolean canProvidePower(IBlockState s) {
 		return true;
 	}
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing s){
+
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing s) {
 		return true;
 	}
 }

@@ -1,0 +1,8 @@
+{
+    "parent": "block/half_slab",
+    "textures":{
+		"bottom": "tomsmodcore:blocks/resources/blocksteel",
+		"top": "tomsmodcore:blocks/resources/blocksteel",
+		"side": "tomsmodcore:blocks/resources/blocksteel"
+	}
+}

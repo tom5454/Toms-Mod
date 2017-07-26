@@ -8,37 +8,38 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import io.netty.buffer.ByteBuf;
 
-public abstract class MessageXYZ<REQ extends IMessage> extends MessageBase<REQ>{
+public abstract class MessageXYZ<REQ extends IMessage> extends MessageBase<REQ> {
 
-    protected int x, y, z;
+	protected int x, y, z;
 
-    public MessageXYZ(){}
+	public MessageXYZ() {
+	}
 
-    public MessageXYZ(int x, int y, int z){
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+	public MessageXYZ(int x, int y, int z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
-    public MessageXYZ(TileEntity te){
-        this(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ());
-    }
+	public MessageXYZ(TileEntity te) {
+		this(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ());
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf){
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		x = buf.readInt();
+		y = buf.readInt();
+		z = buf.readInt();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf){
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(x);
+		buf.writeInt(y);
+		buf.writeInt(z);
+	}
 
-    protected TileEntity getTileEntity(World world){
-        return world.getTileEntity(new BlockPos(x, y, z));
-    }
+	protected TileEntity getTileEntity(World world) {
+		return world.getTileEntity(new BlockPos(x, y, z));
+	}
 }

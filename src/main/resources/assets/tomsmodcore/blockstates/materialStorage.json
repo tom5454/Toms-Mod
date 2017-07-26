@@ -13,7 +13,7 @@
 		"type=10": {"model":"tomsmodcore:resources/block_fluix"},
 		"type=11": {"model":"tomsmodcore:resources/block_greenium"},
 		"type=12": {"model":"tomsmodcore:resources/block_lead"},
-		"type=13": {"model":"tomsmodcore:resources/block_lithium"},
+		"type=13": {"model":"tomsmodcore:resources/block_brass"},
 		"type=14": {"model":"tomsmodcore:resources/block_nickel"},
 		"type=15": {"model":"tomsmodcore:resources/block_platinum"}
 	}

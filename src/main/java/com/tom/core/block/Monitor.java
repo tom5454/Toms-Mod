@@ -3,7 +3,6 @@ package com.tom.core.block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -19,8 +18,9 @@ import com.tom.core.tileentity.TileEntityMonitor;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class Monitor extends BlockMonitorBase implements IPeripheralProvider{
+public class Monitor extends BlockMonitorBase implements IPeripheralProvider {
 	/*@SideOnly(Side.CLIENT)
 	private IIcon side;
 	//@SideOnly(Side.CLIENT)
@@ -38,7 +38,8 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider{
 	protected Monitor(Material arg0) {
 		super(arg0);
 	}
-	public Monitor(){
+
+	public Monitor() {
 		this(Material.GLASS);
 		this.setHardness(2F);
 		this.setResistance(2F);
@@ -47,16 +48,16 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider{
 	/*@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconregister){
 		this.blockIcon = iconregister.registerIcon("minecraft:monitorSide");
-//		this.back = iconregister.registerIcon("minecraft:monitorSide");
-//		this.side1 = iconregister.registerIcon("minecraft:monitorSide");
-//		this.side2 = iconregister.registerIcon("minecraft:monitorSide");
-//		this.side3 = iconregister.registerIcon("minecraft:monitorSide");
-//		this.side4 = iconregister.registerIcon("minecraft:monitorSide");
+	//		this.back = iconregister.registerIcon("minecraft:monitorSide");
+	//		this.side1 = iconregister.registerIcon("minecraft:monitorSide");
+	//		this.side2 = iconregister.registerIcon("minecraft:monitorSide");
+	//		this.side3 = iconregister.registerIcon("minecraft:monitorSide");
+	//		this.side4 = iconregister.registerIcon("minecraft:monitorSide");
 		this.front = iconregister.registerIcon("minecraft:monitor16");
-//		this.blockIcon = iconregister.registerIcon("minecraft:tm/Gray");
+	//		this.blockIcon = iconregister.registerIcon("minecraft:tm/Gray");
 		this.side = iconregister.registerIcon("minecraft:tm/transparent");
 	}
-
+	
 	/*public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
 		return this.side;
 	}*/
@@ -68,7 +69,7 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider{
 		}else{
 			return this.blockIcon;
 		}
-
+	
 	}
 	public IIcon getIcon(int side, int meta){
 		if(side == 3){
@@ -78,11 +79,9 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider{
 		}
 	}*/
 	@Override
-	public TileEntity createNewTileEntity(World world, int par2)
-	{
+	public TileEntity createNewTileEntity(World world, int par2) {
 		return new TileEntityMonitor();
 	}
-
 
 	/*public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ){
 		int meta = world.getBlockMetadata(x, y, z);
@@ -164,7 +163,7 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider{
 		te.screen[s+10][3] = 0x00FA9A;
 		te.screen[s+10][4] = 0xFFFFFF;
 		te.screen[s+10][5] = 0xFFFFFF;
-
+	
 		te.screen[s+1][7] = 0xFFFFFF;
 		te.screen[s+1][8] = 0xFFFFFF;
 		te.screen[s+2][9] = 0xFFFFFF;
@@ -184,25 +183,23 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider{
 		te.screen[0][0][1] = 255;
 		te.screen[0][0][2] = 255;
 		te.screen[0][0][3] = 255;*/
-	//world.markBlockForUpdate(x, y, z);
-	//}
+	// world.markBlockForUpdate(x, y, z);
+	// }
 
-	//}
+	// }
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tilee = world.getTileEntity(pos);
-		TileEntityMonitor te = ((TileEntityMonitor)tilee);
+		TileEntityMonitor te = ((TileEntityMonitor) tilee);
 		return te.onBlockActivated(!world.isRemote, side, hitX, hitY, hitZ, player);
 	}
+
 	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 		TileEntity tilee = world.getTileEntity(pos);
-		if(tilee instanceof TileEntityMonitor){
-			TileEntityMonitor te = ((TileEntityMonitor)tilee);
+		if (tilee instanceof TileEntityMonitor) {
+			TileEntityMonitor te = ((TileEntityMonitor) tilee);
 			return te.direction == side.ordinal() ? null : te;
 		}
 		return null;
@@ -226,12 +223,12 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider{
 		}
 	}*/
 
-	//@SideOnly(Side.CLIENT)
-	//public void updateTick(World world, int i, int j, int k, Random random){
+	// @SideOnly(Side.CLIENT)
+	// public void updateTick(World world, int i, int j, int k, Random random){
 
-	//}
+	// }
 	@Override
-	public boolean isSideSolid(IBlockState s, IBlockAccess world, BlockPos pos, EnumFacing side){
+	public boolean isSideSolid(IBlockState s, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
 	}
 }

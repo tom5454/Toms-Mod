@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "blocks/advanced_command_block","particle": "blocks/advanced_command_block"
+        "all": "blocks/command_block_back","particle": "blocks/command_block_back"
     }
 }

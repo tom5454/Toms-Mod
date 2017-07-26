@@ -1,8 +1,9 @@
 {
     "parent": "block/orientable",
     "textures": {
-        "top": "blocks/fusionGlassInActive",
-        "front": "blocks/fusionController",
-        "side": "blocks/fusionCase"
+        "top": "tomsmodenergy:blocks/fusionGlassInActive",
+        "front": "tomsmodenergy:blocks/fusionController",
+        "side": "tomsmodenergy:blocks/fusionCase",
+        "down": "tomsmodenergy:blocks/fusionCase"
     }
 }

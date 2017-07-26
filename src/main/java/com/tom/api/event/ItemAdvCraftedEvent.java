@@ -23,26 +23,25 @@ public class ItemAdvCraftedEvent extends Event {
 	public int timeNew;
 	public ITextComponent errorMsg;
 
-	public ItemAdvCraftedEvent(ItemStack crafting, String player, IInventory craftMatrix, ItemStack secondStack,
-			int time) {
+	public ItemAdvCraftedEvent(ItemStack crafting, String player, IInventory craftMatrix, ItemStack secondStack, int time) {
 		this.crafting = crafting;
 		this.player = player;
 		this.craftMatrix = craftMatrix;
 		this.secondStack = new ItemStackAccess(secondStack);
 		this.timeNew = this.timeOld = time;
 	}
+
 	public ResearchHandler getResearchHandler() {
 		return ResearchHandler.getHandlerFromName(player);
 	}
 
-	public static class EventResult{
+	public static class EventResult {
 		public final boolean canCraft;
 		public final ITextComponent errorMessage;
 		public final ItemStack mainStack, secondStack;
 		public final int time;
 
-		public EventResult(boolean canCraft, ITextComponent errorMessage, ItemStack mainStack, ItemStack secondStack,
-				int time) {
+		public EventResult(boolean canCraft, ITextComponent errorMessage, ItemStack mainStack, ItemStack secondStack, int time) {
 			this.canCraft = canCraft;
 			this.errorMessage = errorMessage;
 			this.mainStack = mainStack;
@@ -51,11 +50,11 @@ public class ItemAdvCraftedEvent extends Event {
 		}
 	}
 
-	public static EventResult fire(String player, ItemStack[] mainInv, int from, ItemStack crafting, ItemStack secondary, int time){
+	public static EventResult fire(String player, ItemStack[] mainInv, int from, ItemStack crafting, ItemStack secondary, int time) {
 		ItemStack[] array = new ItemStack[9];
 		System.arraycopy(mainInv, from, array, 0, 9);
 		IInventory inv = new InventoryBasic("", false, array.length);
-		for(int i = 0;i<array.length;i++){
+		for (int i = 0;i < array.length;i++) {
 			inv.setInventorySlotContents(i, array[i]);
 		}
 		ItemAdvCraftedEvent evt = new ItemAdvCraftedEvent(crafting, player, inv, secondary, time);

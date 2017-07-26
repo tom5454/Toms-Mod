@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -13,17 +14,20 @@ import net.minecraftforge.oredict.OreDictionary;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
+import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.storage.StorageInit;
+import com.tom.storage.multipart.block.StorageNetworkCable;
 
 public class OreDict {
-	private static List<String> printedIDs = new ArrayList<String>();
-	public static void init(){
-		//CoreInit.log.info(CoreInit.oreUranium);
-		registerOre("oreCopper", CoreInit.oreCopper);
+	private static List<String> printedIDs = new ArrayList<>();
+
+	public static void init() {
+		// CoreInit.log.info(CoreInit.oreUranium);
+		/*registerOre("oreCopper", CoreInit.oreCopper);
 		registerOre("oreTin", CoreInit.oreTin);
 		registerOre("oreBlueMetal", CoreInit.oreBlueMetal);
 		registerOre("oreLead", CoreInit.oreLead);
-		registerOre("oreLithium", CoreInit.oreLithium);
+		//registerOre("oreLithium", CoreInit.oreLithium);
 		registerOre("oreNickel", CoreInit.oreNickel);
 		registerOre("orePlatinum", CoreInit.orePlatinum);
 		registerOre("oreRedDiamond", CoreInit.oreRedDiamond);
@@ -37,18 +41,25 @@ public class OreDict {
 		registerOre("oreAluminum", CoreInit.oreBauxite);
 		registerOre("oreAluminium", CoreInit.oreBauxite);
 		registerOre("oreZinc", CoreInit.oreZinc);
-		registerOre("oreTungstate", CoreInit.oreWolfram);
+		registerOre("oreTungstate", CoreInit.oreWolfram);*/
 		TMResource.loadOreDict();
-		//registerOre("rodIron", CraftingMaterial.IRON_ROD.getStackNormal());
-		//registerOre("obsidian", Blocks.obsidian);
+		// registerOre("rodIron", CraftingMaterial.IRON_ROD.getStackNormal());
+		// registerOre("obsidian", Blocks.obsidian);
 		registerOre("itemMortar", CoreInit.mortarAndPestle);
 		registerOre("blockPiston", Blocks.PISTON);
 		registerOre("blockPiston", Blocks.STICKY_PISTON);
 		registerOre("glassHardened", new ItemStack(CoreInit.hardenedGlass, 1, 0));
 		registerOre("glassEnder", new ItemStack(CoreInit.hardenedGlass, 1, 1));
 		registerOre("glassPaneHardened", new ItemStack(CoreInit.hardenedGlassPane));
-		StorageInit.cable.loadOreDict();
-		//registerOre("dustIron", Items.gunpowder);
+		((StorageNetworkCable) StorageInit.cable).loadOreDict();
+		registerOre("blockFlint", new ItemStack(CoreInit.flintBlock));
+		registerOre("itemFlint", new ItemStack(Items.FLINT));
+		registerOre("logRubber", new ItemStack(CoreInit.rubberWood));
+		registerOre("saplingRubber", new ItemStack(CoreInit.rubberSapling));
+		registerOre("leavesRubber", new ItemStack(CoreInit.rubberLeaves));
+		registerOre("tomsmodwrench", new ItemStack(CoreInit.wrench));
+		registerOre("slimeball", CraftingMaterial.ROSIN.getStackNormal());
+		// registerOre("dustIron", Items.gunpowder);
 		/*OreDictionary.registerOre("ingotCopper", TMResource.COPPER.getStack(Type.INGOT));
 		OreDictionary.registerOre("ingotUranium", TMResource.URANIUM.getStack(Type.INGOT));
 		OreDictionary.registerOre("ingotAdvA1", TMResource.advAlloyMK1.getStack(Type.INGOT));
@@ -60,18 +71,26 @@ public class OreDict {
 		OreDictionary.registerOre("ingotLithium", TMResource.LITHIUM.getStack(Type.INGOT));
 		OreDictionary.registerOre("ingotAdvA1", TMResource.TIN.getStack(Type.INGOT));*/
 	}
-	public static void registerOre(String name, Item      ore){ registerOre(name, new ItemStack(ore));  }
-	public static void registerOre(String name, Block     ore){ registerOre(name, new ItemStack(ore));  }
-	public static void registerOre(String name, ItemStack ore){
-		if(Config.logOredictNames && !printedIDs.contains(name)){
+
+	public static void registerOre(String name, Item ore) {
+		registerOre(name, new ItemStack(ore));
+	}
+
+	public static void registerOre(String name, Block ore) {
+		registerOre(name, new ItemStack(ore));
+	}
+
+	public static void registerOre(String name, ItemStack ore) {
+		if (Config.logOredictNames && !printedIDs.contains(name)) {
 			CoreInit.log.info("OreDict name: " + name);
 			printedIDs.add(name);
 		}
 		OreDictionary.registerOre(name, ore);
 	}
-	public static List<ItemStack> getOres(List<String> ids){
-		List<ItemStack> stackList = new ArrayList<ItemStack>();
-		for(String id : ids){
+
+	public static List<ItemStack> getOres(List<String> ids) {
+		List<ItemStack> stackList = new ArrayList<>();
+		for (String id : ids) {
 			List<ItemStack> oreStacks = OreDictionary.getOres(id);
 			stackList.addAll(oreStacks);
 			/*else{
@@ -86,12 +105,15 @@ public class OreDict {
 		}
 		return stackList;
 	}
+
 	public static boolean isOre(ItemStack itemStack, String oreID) {
-		if(itemStack == null)return false;
+		if (itemStack.isEmpty())
+			return false;
 		int id = OreDictionary.getOreID(oreID);
 		int[] ids = OreDictionary.getOreIDs(itemStack);
-		for(int i = 0;i<ids.length;i++){
-			if(ids[i] == id)return true;
+		for (int i = 0;i < ids.length;i++) {
+			if (ids[i] == id)
+				return true;
 		}
 		return false;
 	}

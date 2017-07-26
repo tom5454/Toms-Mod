@@ -1,5 +1,6 @@
 package com.tom.api.energy;
 
+import static com.tom.api.energy.EnergyStorage.DUMMY_STORAGE;
 import static com.tom.api.energy.EnergyStorage.regulateValue;
 
 import net.minecraft.client.resources.I18n;
@@ -16,8 +17,6 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 	protected int capacity;
 	protected double maxReceive;
 	protected double maxExtract;
-
-	public static final EnergyStorage NULL_STORAGE = new EnergyStorage(0);
 
 	public ItemEnergyContainer(int capacity) {
 		this(capacity, capacity, capacity);
@@ -54,7 +53,8 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 	/* IEnergyContainerItem */
 	@Override
 	public double receiveEnergy(ItemStack container, double maxReceive, boolean simulate) {
-		if(!canInteract(container))return 0;
+		if (!canInteract(container))
+			return 0;
 		if (container.getTagCompound() == null) {
 			container.setTagCompound(new NBTTagCompound());
 		}
@@ -70,10 +70,9 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 
 	@Override
 	public double extractEnergy(ItemStack container, double maxExtract, boolean simulate) {
-		if(!canInteract(container))return 0;
-		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
+		if (!canInteract(container))
 			return 0;
-		}
+		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) { return 0; }
 		double energy = container.getTagCompound().getDouble("Energy");
 		double energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
 
@@ -86,9 +85,7 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 
 	@Override
 	public double getEnergyStored(ItemStack container) {
-		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
-			return 0;
-		}
+		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) { return 0; }
 		return regulateValue(container.getTagCompound().getDouble("Energy"));
 	}
 
@@ -96,67 +93,81 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 	public int getMaxEnergyStored(ItemStack container) {
 		return capacity;
 	}
+
 	@Override
-	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
-	{
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		return slotChanged || (oldStack != null && newStack != null && (oldStack.getMetadata() != newStack.getMetadata() || oldStack.getItem() != newStack.getItem()));
 	}
-	public double getPercentStored(ItemStack container){
+
+	public double getPercentStored(ItemStack container) {
 		return this.getEnergyStored(container) / this.getMaxEnergyStored(container);
 	}
-	public boolean canInteract(ItemStack container){
+
+	public boolean canInteract(ItemStack container) {
 		return true;
 	}
-	public static IEnergyStorage getItemContainerAsStorage(ItemStack stack, double maxTransfer){
-		if(stack == null || !(stack.getItem() instanceof ItemEnergyContainer)){
-			return NULL_STORAGE;
-		}else{
+
+	public static IEnergyStorage getItemContainerAsStorage(ItemStack stack, double maxTransfer) {
+		if (stack == null || !(stack.getItem() instanceof ItemEnergyContainer)) {
+			return DUMMY_STORAGE;
+		} else {
 			ItemEnergyContainer c = (ItemEnergyContainer) stack.getItem();
 			return new ItemEnergyStorage(maxTransfer, c, stack);
 		}
 	}
-	public static class ItemEnergyStorage implements IEnergyStorage{
+
+	public static class ItemEnergyStorage implements IEnergyStorage {
 		private final ItemEnergyContainer c;
 		private final ItemStack stack;
 		private final double maxTransfer;
+
 		public ItemEnergyStorage(double maxTransfer, ItemEnergyContainer c, ItemStack stack) {
 			this.c = c;
 			this.stack = stack;
 			this.maxTransfer = maxTransfer;
 		}
+
 		@Override
 		public double getEnergyStored() {
 			return c.getEnergyStored(stack);
 		}
+
 		@Override
 		public int getMaxEnergyStored() {
 			return c.getMaxEnergyStored(stack);
 		}
+
 		@Override
 		public double receiveEnergy(double maxReceive, boolean simulate) {
 			return c.receiveEnergy(stack, Math.min(maxReceive, maxTransfer), simulate);
 		}
+
 		@Override
 		public double extractEnergy(double maxExtract, boolean simulate) {
 			return c.extractEnergy(stack, Math.min(maxExtract, maxTransfer), simulate);
 		}
+
 		@Override
 		public boolean isFull() {
 			return c.isFull(stack);
 		}
+
 		@Override
 		public boolean hasEnergy() {
 			return c.hasEnergy(stack);
 		}
+
 		@Override
 		public double getMaxExtract() {
 			return Math.min(maxTransfer, c.maxExtract);
 		}
+
 		@Override
 		public double getMaxReceive() {
 			return Math.min(maxTransfer, c.maxReceive);
 		}
 	}
+
 	public boolean isFull(ItemStack stack) {
 		return getEnergyStored(stack) == capacity;
 	}
@@ -164,16 +175,18 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 	public boolean hasEnergy(ItemStack stack) {
 		return getEnergyStored(stack) > 0;
 	}
+
 	@SideOnly(Side.CLIENT)
-	public static String getInfo(IEnergyContainerItem item, ItemStack stack){
+	public static String getInfo(IEnergyContainerItem item, ItemStack stack) {
 		double energy = item.getEnergyStored(stack);
 		int max = item.getMaxEnergyStored(stack);
 		double per = energy / max * 1000;
-		double p = MathHelper.floor_double(per) / 10D;
-		return I18n.format("tomsMod.tooltip.charge") + ": "+max+"/"+energy+" "+p+"%";
+		double p = MathHelper.floor(per) / 10D;
+		return I18n.format("tomsMod.tooltip.charge") + ": " + energy + "/" + max + " " + p + "%";
 	}
+
 	@SideOnly(Side.CLIENT)
-	public String getInfo(ItemStack stack){
+	public String getInfo(ItemStack stack) {
 		return getInfo(this, stack);
 	}
 }

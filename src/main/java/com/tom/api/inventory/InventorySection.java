@@ -8,6 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 public class InventorySection implements IInventory {
 	private final IInventory inv;
 	private final int start, length;
+
 	public InventorySection(IInventory inv, int start, int length) {
 		this.inv = inv;
 		this.start = start;
@@ -65,11 +66,6 @@ public class InventorySection implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return inv.isUseableByPlayer(player);
-	}
-
-	@Override
 	public void openInventory(EntityPlayer player) {
 		inv.openInventory(player);
 	}
@@ -101,9 +97,19 @@ public class InventorySection implements IInventory {
 
 	@Override
 	public void clear() {
-		for(int i = 0;i<length;i++){
+		for (int i = 0;i < length;i++) {
 			removeStackFromSlot(i);
 		}
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
+	}
+
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return inv.isUsableByPlayer(player);
 	}
 
 }

@@ -8,7 +8,8 @@
       "ductC":"tomsmodtransport:blocks/fluidDuctC",
       "ductCe":"tomsmodtransport:blocks/fluidServo"
     },
-    "uvlock": false
+    "uvlock": false,
+    "model": "tomsmodcore:null"
   },
    "variants": {
     "normal": [
@@ -44,14 +45,6 @@
             "x": 180
           }
         }
-      },
-      "3": {
-        "submodel": {
-          "down": {
-            "model": "duct_connection_extra",
-            "x": 180
-          }
-        }
       }
     },
       
@@ -76,13 +69,6 @@
             "model": "duct_connection"
           }
         }
-      },
-      "3": {
-        "submodel": {
-          "up": {
-            "model": "duct_connection_extra"
-          }
-        }
       }
     },
     "north": {
@@ -99,11 +85,6 @@
       "2": {
         "submodel": {
           "north": { "model": "duct_connection", "x": 90 }
-        }
-      },
-      "3": {
-        "submodel": {
-          "north": { "model": "duct_connection_extra", "x": 90 }
         }
       }
     },
@@ -122,11 +103,6 @@
         "submodel": {
           "south": { "model": "duct_connection", "x": 90, "y": 180 }
         }
-      },
-      "3": {
-        "submodel": {
-          "south": { "model": "duct_connection_extra", "x": 90, "y": 180 }
-        }
       }
     },
     "west": {
@@ -144,11 +120,6 @@
         "submodel": {
           "west": { "model": "duct_connection", "x": 90, "y": 270 }
         }
-      },
-      "3": {
-        "submodel": {
-          "west": { "model": "duct_connection_extra", "x": 90, "y": 270 }
-        }
       }
     },
     "east": {
@@ -165,11 +136,6 @@
       "2": {
         "submodel": {
           "east": { "model": "duct_connection", "x": 90, "y": 90 }
-        }
-      },
-      "3": {
-        "submodel": {
-          "east": { "model": "duct_connection_extra", "x": 90, "y": 90 }
         }
       }
     }

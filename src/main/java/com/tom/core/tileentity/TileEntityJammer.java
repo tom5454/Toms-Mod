@@ -11,12 +11,14 @@ public class TileEntityJammer extends TileEntityJammerBase {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		IBlockState state = worldObj.getBlockState(pos);
+		IBlockState state = world.getBlockState(pos);
 		boolean act = state.getValue(Jammer.ACTIVE);
-		if(this.active){
-			if(!act) TomsModUtils.setBlockState(worldObj, pos, state.withProperty(Jammer.ACTIVE, true));
-		}else{
-			if(act) TomsModUtils.setBlockState(worldObj, pos, state.withProperty(Jammer.ACTIVE, false));
+		if (this.active) {
+			if (!act)
+				TomsModUtils.setBlockState(world, pos, state.withProperty(Jammer.ACTIVE, true));
+		} else {
+			if (act)
+				TomsModUtils.setBlockState(world, pos, state.withProperty(Jammer.ACTIVE, false));
 		}
 	}
 }

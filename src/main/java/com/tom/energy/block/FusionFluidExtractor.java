@@ -15,15 +15,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fluids.FluidUtil;
-
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.apis.TomsModUtils;
 
 import com.tom.energy.tileentity.TileEntityFusionFluidExtractor;
 
 public class FusionFluidExtractor extends BlockContainerTomsMod {
-	public static final PropertyDirection FACING = PropertyDirection.create("facing",Plane.HORIZONTAL);
+	public static final PropertyDirection FACING = PropertyDirection.create("facing", Plane.HORIZONTAL);
 	/*@SideOnly(Side.CLIENT)
 	private IIcon front;*/
 
@@ -67,24 +65,23 @@ public class FusionFluidExtractor extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityFusionFluidExtractor();
 	}
+
 	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {FACING});
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{FACING});
 	}
+
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		EnumFacing enumfacing = EnumFacing.getFront(meta % 6);
 
-		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-		{
+		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
 			enumfacing = EnumFacing.NORTH;
 		}
-		//System.out.println("getState");
+		// System.out.println("getState");
 		return this.getDefaultState().withProperty(FACING, enumfacing);
 	}
 
@@ -92,18 +89,18 @@ public class FusionFluidExtractor extends BlockContainerTomsMod {
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{//System.out.println("getMeta");
+	public int getMetaFromState(IBlockState state) {// System.out.println("getMeta");
 		return state.getValue(FACING).getIndex();
 	}
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState state, EntityLivingBase entity, ItemStack itemstack){
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack itemstack) {
 		EnumFacing f = TomsModUtils.getDirectionFacing(entity, false);
-		world.setBlockState(pos, state.withProperty(FACING,f), 2);
+		world.setBlockState(pos, state.withProperty(FACING, f), 2);
 	}
+
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		return FluidUtil.interactWithFluidHandler(heldItem, ((TileEntityFusionFluidExtractor) worldIn.getTileEntity(pos)).getTankOnSide(side), playerIn);
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		return TomsModUtils.interactWithFluidHandler(((TileEntityFusionFluidExtractor) worldIn.getTileEntity(pos)).getTankOnSide(side), playerIn, hand);
 	}
 }

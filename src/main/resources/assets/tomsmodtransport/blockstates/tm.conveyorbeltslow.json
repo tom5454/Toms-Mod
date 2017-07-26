@@ -1,0 +1,8 @@
+{
+	"variants":{
+		"facing=north": {"model": "tomsmodtransport:conveyor"},
+		"facing=south": {"model": "tomsmodtransport:conveyor", "y": 180},
+		"facing=east": {"model": "tomsmodtransport:conveyor", "y": 90},
+		"facing=west": {"model": "tomsmodtransport:conveyor", "y": 270}
+	}
+}

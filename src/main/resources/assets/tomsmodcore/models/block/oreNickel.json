@@ -1,6 +1,6 @@
 {
-    "parent": "block/cube",
-    "textures": {
-        "up": "blocks/oreNickel","down": "blocks/oreNickel","north": "blocks/oreNickel","east": "blocks/oreNickel","south": "blocks/oreNickel","west": "blocks/oreNickel","particle": "blocks/oreNickel"
-    }
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "tomsmodcore:blocks/orenickel"
+  }
 }

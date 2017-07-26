@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "tomsmodcore:oreWolfram"}
+        "type=0": { "model": "tomsmodcore:oreWolfram"},
+        "type=1": { "model": "tomsmodcore:oreWolframend"}
     }
 }

@@ -1,6 +1,6 @@
 {
     "parent": "block/controllerA",
     "textures": {
-    	"front":"blocks/fusionPreHeaterOn"
+    	"front":"tomsmodfactory:blocks/fusionPreHeaterOn"
     }
 }

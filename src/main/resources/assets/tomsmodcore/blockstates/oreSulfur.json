@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "tomsmodcore:oreSulfur"}
+        "type=0": { "model": "tomsmodcore:oreSulfur"},
+        "type=1": { "model": "tomsmodcore:oreSulfurnether"}
     }
 }

@@ -24,10 +24,11 @@ public class SolderingStation extends BlockMachineBase {
 	public TileEntityMachineBase createNewTileEntity(World worldIn, int meta) {
 		return new TileEntitySolderingStation();
 	}
+
 	@Override
-	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if(!worldIn.isRemote)playerIn.openGui(CoreInit.modInstance, GuiIDs.solderingStation.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!worldIn.isRemote)
+			playerIn.openGui(CoreInit.modInstance, GuiIDs.solderingStation.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 }

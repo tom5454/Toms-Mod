@@ -12,9 +12,10 @@ import com.tom.core.tileentity.TileEntityTabletController.LuaSound;
 import io.netty.buffer.ByteBuf;
 
 public class TabletHandler {
-	public TabletHandler(int id){
+	public TabletHandler(int id) {
 		this.id = id;
 	}
+
 	public int id;
 	public boolean connectedToAntenna = false;
 	public boolean connectedToAccessPoint = false;
@@ -35,24 +36,26 @@ public class TabletHandler {
 	public boolean in = false;
 	public String cHitBox = "";
 	public Terminal term = new Terminal(1);
-	public void writeToPacket(ByteBuf buf){
+
+	public void writeToPacket(ByteBuf buf) {
 		buf.writeBoolean(antAntenna);
 		buf.writeBoolean(apAntenna);
 		buf.writeBoolean(connectedToAntenna);
 		buf.writeBoolean(connectedToAccessPoint);
 		term.writeToPacket(buf);
 	}
-	public void readFromPacket(ByteBuf buf){
+
+	public void readFromPacket(ByteBuf buf) {
 		this.antAntenna = buf.readBoolean();
 		this.apAntenna = buf.readBoolean();
 		this.connectedToAntenna = buf.readBoolean();
 		this.connectedToAccessPoint = buf.readBoolean();
 		this.term.readFromPacket(buf);
 	}
+
 	public NBTTagCompound modemTag = new NBTTagCompound();
 	public String playerName = "";
 	public boolean hasModem = false;
-	public Object[] obj = new Object[]{"null","",false,false,0,0,0,0,0,0,0,0,0,false,0,0,0};
+	public Object[] obj = new Object[]{"null", "", false, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, 0, 0, 0};
 	public List<LuaSound> sounds = new ArrayList<LuaSound>();
 }
-	

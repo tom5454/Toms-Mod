@@ -1,0 +1,91 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "textures": {
+        "0": "tomsmodstorage:blocks/controllerSideOn",
+        "1": "tomsmodstorage:blocks/controllerTopOn",
+        "2": "tomsmodstorage:blocks/controllerBottomOn",
+        "3": "tomsmodstorage:blocks/controllerScreen"
+    },
+    "parent": "block/block",
+        "display": {
+        "gui": {
+            "rotation": [ 30, 135, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.625, 0.625, 0.625 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 90, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.5, 0.5, 0.5 ]
+        }
+    },
+    "elements": [
+        {
+            "name": "base",
+            "from": [ 0.0, 0.0, 0.0 ], 
+            "to": [ 16.0, 16.0, 16.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "up": { "texture": "#1", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "down": { "texture": "#2", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        },
+        {
+            "name": "screenHolder",
+            "from": [ 1.0, 14.0, 10.0 ], 
+            "to": [ 2.0, 20.0, 11.0 ], 
+            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": -22.5 },
+            "faces": {
+                "north": { "texture": "#3", "uv": [ 0.0, 0.0, 1.0, 6.0 ] },
+                "east": { "texture": "#3", "uv": [ 0.0, 0.0, 1.0, 6.0 ] },
+                "south": { "texture": "#3", "uv": [ 0.0, 0.0, 1.0, 6.0 ] },
+                "west": { "texture": "#3", "uv": [ 0.0, 0.0, 1.0, 6.0 ] },
+                "up": { "texture": "#3", "uv": [ 0.0, 5.0, 1.0, 6.0 ] },
+                "down": { "texture": "#3", "uv": [ 0.0, 5.0, 1.0, 6.0 ] }
+            }
+        },
+        {
+            "name": "screenHolder2",
+            "from": [ 14.0, 14.0, 10.0 ], 
+            "to": [ 15.0, 20.0, 11.0 ], 
+            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": -22.5 },
+            "faces": {
+                "north": { "texture": "#3", "uv": [ 0.0, 0.0, 1.0, 6.0 ] },
+                "east": { "texture": "#3", "uv": [ 0.0, 0.0, 1.0, 6.0 ] },
+                "south": { "texture": "#3", "uv": [ 0.0, 0.0, 1.0, 6.0 ] },
+                "west": { "texture": "#3", "uv": [ 0.0, 0.0, 1.0, 6.0 ] },
+                "up": { "texture": "#3", "uv": [ 0.0, 5.0, 1.0, 6.0 ] },
+                "down": { "texture": "#3", "uv": [ 0.0, 5.0, 1.0, 6.0 ] }
+            }
+        },
+        {
+            "name": "screen",
+            "from": [ 2.0, 16.0, 10.0 ], 
+            "to": [ 14.0, 20.0, 11.0 ], 
+            "rotation": { "origin": [ 8.0, 8.0, 8.0 ], "axis": "x", "angle": -22.5 },
+            "faces": {
+                "north": { "texture": "#3", "uv": [ 1.0, 0.0, 13.0, 4.0 ] },
+                "east": { "texture": "#3", "uv": [ 1.0, 0.0, 2.0, 4.0 ] },
+                "south": { "texture": "#3", "uv": [ 1.0, 0.0, 13.0, 4.0 ] },
+                "west": { "texture": "#3", "uv": [ 1.0, 0.0, 2.0, 4.0 ] },
+                "up": { "texture": "#3", "uv": [ 1.0, 4.0, 13.0, 5.0 ] },
+                "down": { "texture": "#3", "uv": [ 1.0, 4.0, 13.0, 5.0 ] }
+            }
+        },
+        {
+            "name": "keyboard",
+            "from": [ 3.0, 16.0, 9.699999995529652 ], 
+            "to": [ 13.0, 16.299999989569187, 13.699999995529652 ], 
+            "faces": {
+                "north": { "texture": "#3", "uv": [ 0.0, 15.0, 10.0, 15.299999989569187 ] },
+                "east": { "texture": "#3", "uv": [ 0.0, 15.0, 4.0, 15.299999989569187 ] },
+                "south": { "texture": "#3", "uv": [ 0.0, 15.0, 10.0, 15.299999989569187 ] },
+                "west": { "texture": "#3", "uv": [ 0.0, 15.0, 4.0, 15.299999989569187 ] },
+                "up": { "texture": "#3", "uv": [ 1.0, 10.0, 11.0, 14.0 ] }
+            }
+        }
+    ]
+}

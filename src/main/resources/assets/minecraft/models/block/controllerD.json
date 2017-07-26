@@ -1,6 +1,6 @@
 {
     "parent": "block/controller",
     "textures": {
-    	"front":"blocks/contDeformed"
+    	"front":"tomsmodfactory:blocks/contDeformed"
     }
 }

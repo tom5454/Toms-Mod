@@ -10,10 +10,14 @@ import io.netty.buffer.ByteBuf;
 
 public class MessageKey extends MessageBase<MessageKey> {
 	private int key;
-	public MessageKey(){}
-	public MessageKey(Keybindings key){
+
+	public MessageKey() {
+	}
+
+	public MessageKey(Keybindings key) {
 		this.key = key.ordinal();
 	}
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		this.key = buf.readInt();
@@ -25,7 +29,8 @@ public class MessageKey extends MessageBase<MessageKey> {
 	}
 
 	@Override
-	public void handleClientSide(MessageKey message, EntityPlayer player) {}
+	public void handleClientSide(MessageKey message, EntityPlayer player) {
+	}
 
 	@Override
 	public void handleServerSide(MessageKey message, EntityPlayer player) {

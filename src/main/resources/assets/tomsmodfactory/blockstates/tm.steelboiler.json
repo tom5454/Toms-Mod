@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "connected=false": { "model": "tomsmodfactory:steelboiler"},
+         "connected=true": { "model": "tomsmodfactory:steelboilerc"}
+    }
+}

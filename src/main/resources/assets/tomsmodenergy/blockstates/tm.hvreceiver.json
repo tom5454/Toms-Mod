@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": { "model": "tomsmodenergy:receiverhv", "y": 180 },
+        "facing=south": { "model": "tomsmodenergy:receiverhv"},
+        "facing=west":  { "model": "tomsmodenergy:receiverhv", "y": 90 },
+        "facing=east":  { "model": "tomsmodenergy:receiverhv", "y": 270 },
+        "facing=up":    { "model": "tomsmodenergy:receiverhv", "x": 90 },
+        "facing=down":  { "model": "tomsmodenergy:receiverhv", "x": 270 }
+    }
+}

@@ -18,8 +18,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-public class MapRenderer
-{
+public class MapRenderer {
 	private Mw mw;
 	private MapMode mapMode;
 	private MapView mapView;
@@ -30,15 +29,13 @@ public class MapRenderer
 	private int textY = 0;
 	private int textX = 0;
 
-	public MapRenderer(Mw mw, MapMode mapMode, MapView mapView)
-	{
+	public MapRenderer(Mw mw, MapMode mapMode, MapView mapView) {
 		this.mw = mw;
 		this.mapMode = mapMode;
 		this.mapView = mapView;
 	}
 
-	private void drawMap()
-	{
+	private void drawMap() {
 
 		int regionZoomLevel = Math.max(0, this.mapView.getZoomLevel());
 		double tSize = this.mw.textureSize;
@@ -57,15 +54,12 @@ public class MapRenderer
 		// pixel boundaries when zoomed in.
 
 		double u, v, w, h;
-		if ((!this.mapMode.config.circular) && (Config.mapPixelSnapEnabled) && (this.mapView.getZoomLevel() >= 0))
-		{
+		if ((!this.mapMode.config.circular) && (Config.mapPixelSnapEnabled) && (this.mapView.getZoomLevel() >= 0)) {
 			u = (Math.round(this.mapView.getMinX() / zoomScale) / tSize) % 1.0;
 			v = (Math.round(this.mapView.getMinZ() / zoomScale) / tSize) % 1.0;
 			w = Math.round(this.mapView.getWidth() / zoomScale) / tSize;
 			h = Math.round(this.mapView.getHeight() / zoomScale) / tSize;
-		}
-		else
-		{
+		} else {
 			double tSizeInBlocks = tSize * zoomScale;
 			u = (this.mapView.getMinX() / tSizeInBlocks) % 1.0;
 			v = (this.mapView.getMinZ() / tSizeInBlocks) % 1.0;
@@ -74,17 +68,13 @@ public class MapRenderer
 		}
 		GlStateManager.pushMatrix();
 
-		if (this.mapMode.config.rotate && (this.mapMode.config.circular == true))
-		{
+		if (this.mapMode.config.rotate && (this.mapMode.config.circular == true)) {
 			GlStateManager.rotate(this.mw.mapRotationDegrees, 0.0f, 0.0f, 1.0f);
 		}
-		if (this.mapMode.config.circular)
-		{
+		if (this.mapMode.config.circular) {
 			Render.setCircularStencil(0, 0, this.mapMode.h / 2.0);
 		}
-
-		if ((this.mapView.getUndergroundMode()) && (regionZoomLevel == 0))
-		{
+		if ((this.mapView.getUndergroundMode()) && (regionZoomLevel == 0)) {
 			// draw the underground map
 			this.mw.undergroundMapTexture.requestView(this.mapView);
 			// underground map needs to have a black background
@@ -93,9 +83,7 @@ public class MapRenderer
 			Render.setColourWithAlphaPercent(0xffffff, this.mapMode.config.alphaPercent);
 			this.mw.undergroundMapTexture.bind();
 			Render.drawTexturedRect(this.mapMode.x, this.mapMode.y, this.mapMode.w, this.mapMode.h, u, v, u + w, v + h);
-		}
-		else
-		{
+		} else {
 			// draw the surface map
 			MapViewRequest req = new MapViewRequest(this.mapView);
 			this.mw.mapTexture.requestView(req, this.mw.executor, this.mw.regionManager);
@@ -105,8 +93,7 @@ public class MapRenderer
 
 			// only draw surface map if the request is loaded (view requests are
 			// loaded by the background thread)
-			if (this.mw.mapTexture.isLoaded(req))
-			{
+			if (this.mw.mapTexture.isLoaded(req)) {
 				this.mw.mapTexture.bind();
 				Render.setColourWithAlphaPercent(0xffffff, this.mapMode.config.alphaPercent);
 				Render.drawTexturedRect(this.mapMode.x, this.mapMode.y, this.mapMode.w, this.mapMode.h, u, v, u + w, v + h);
@@ -117,30 +104,25 @@ public class MapRenderer
 		IMwDataProvider provider = this.drawOverlay();
 
 		// overlay onDraw event
-		if (provider != null)
-		{
+		if (provider != null) {
 			GlStateManager.pushMatrix();
 			provider.onDraw(this.mapView, this.mapMode);
 			GlStateManager.popMatrix();
 		}
 
-		if (this.mapMode.config.circular)
-		{
+		if (this.mapMode.config.circular) {
 			Render.disableStencil();
 		}
 		GlStateManager.popMatrix();
 	}
 
-	private void drawBackground(double tSize, double u, double v, double w, double h)
-	{
-		if (!Config.backgroundTextureMode.equals(Config.backgroundModeStringArray[0]))
-		{
+	private void drawBackground(double tSize, double u, double v, double w, double h) {
+		if (!Config.backgroundTextureMode.equals(Config.backgroundModeStringArray[0])) {
 			double bu1 = 0.0;
 			double bu2 = 1.0;
 			double bv1 = 0.0;
 			double bv2 = 1.0;
-			if (Config.backgroundTextureMode.equals(Config.backgroundModeStringArray[2]))
-			{
+			if (Config.backgroundTextureMode.equals(Config.backgroundModeStringArray[2])) {
 				// background moves with map if mode is 2
 				double bSize = tSize / 256.0;
 				bu1 = u * bSize;
@@ -150,40 +132,25 @@ public class MapRenderer
 			}
 			this.mw.mc.renderEngine.bindTexture(Reference.backgroundTexture);
 			Render.setColourWithAlphaPercent(0xffffff, this.mapMode.config.alphaPercent);
-			Render.drawTexturedRect(
-					this.mapMode.x,
-					this.mapMode.y,
-					this.mapMode.w,
-					this.mapMode.h,
-					bu1,
-					bv1,
-					bu2,
-					bv2);
-		}
-		else
-		{
+			Render.drawTexturedRect(this.mapMode.x, this.mapMode.y, this.mapMode.w, this.mapMode.h, bu1, bv1, bu2, bv2);
+		} else {
 			// mode 0, no background texture
 			Render.setColourWithAlphaPercent(0x000000, this.mapMode.config.alphaPercent);
 			Render.drawRect(this.mapMode.x, this.mapMode.y, this.mapMode.w, this.mapMode.h);
 		}
 	}
 
-	private void drawBorder()
-	{
-		if (this.mapMode.config.circular)
-		{
+	private void drawBorder() {
+		if (this.mapMode.config.circular) {
 			this.mw.mc.renderEngine.bindTexture(Reference.roundMapTexture);
-		}
-		else
-		{
+		} else {
 			this.mw.mc.renderEngine.bindTexture(Reference.squareMapTexture);
 		}
 		Render.setColour(0xffffffff);
 		Render.drawTexturedRect(this.mapMode.x / 0.75, this.mapMode.y / 0.75, this.mapMode.w / 0.75, this.mapMode.h / 0.75, 0.0, 0.0, 1.0, 1.0);
 	}
 
-	private void drawPlayerArrow()
-	{
+	private void drawPlayerArrow() {
 		GlStateManager.pushMatrix();
 		double scale = this.mapView.getDimensionScaling(this.mw.playerDimension);
 		Point.Double p = this.mapMode.getClampedScreenXY(this.mapView, this.mw.playerX * scale, this.mw.playerZ * scale);
@@ -191,8 +158,7 @@ public class MapRenderer
 
 		// the arrow only needs to be rotated if the map is NOT rotated
 		GlStateManager.translate(p.x, p.y, 0.0);
-		if (!this.mapMode.config.rotate || (this.mapMode.config.circular == false))
-		{
+		if (!this.mapMode.config.rotate || (this.mapMode.config.circular == false)) {
 			GlStateManager.rotate(-this.mw.mapRotationDegrees, 0.0f, 0.0f, 1.0f);
 		}
 
@@ -203,12 +169,10 @@ public class MapRenderer
 		GlStateManager.popMatrix();
 	}
 
-	private void drawIcons()
-	{
+	private void drawIcons() {
 		GlStateManager.pushMatrix();
 
-		if (this.mapMode.config.rotate && (this.mapMode.config.circular == true))
-		{
+		if (this.mapMode.config.rotate && (this.mapMode.config.circular == true)) {
 			GlStateManager.rotate(this.mw.mapRotationDegrees, 0.0f, 0.0f, 1.0f);
 		}
 
@@ -216,8 +180,7 @@ public class MapRenderer
 		this.mw.markerManager.drawMarkers(this.mapMode, this.mapView);
 
 		// draw player trail
-		if (this.mw.playerTrail.enabled)
-		{
+		if (this.mw.playerTrail.enabled) {
 			this.mw.playerTrail.draw(this.mapMode, this.mapView);
 		}
 
@@ -231,10 +194,8 @@ public class MapRenderer
 		this.drawPlayerArrow();
 	}
 
-	private void drawNorthArrow()
-	{
-		if (this.mapMode.config.rotate)
-		{
+	private void drawNorthArrow() {
+		if (this.mapMode.config.rotate) {
 			double y = this.mapMode.h / 2.0;
 			double arrowSize = this.mapMode.config.playerArrowSize;
 			Render.setColour(0xffffffff);
@@ -243,8 +204,7 @@ public class MapRenderer
 		}
 	}
 
-	private void drawStatusText()
-	{
+	private void drawStatusText() {
 		this.textOffset = 12;
 		this.textY = this.mapMode.textY;
 		this.textX = this.mapMode.textX;
@@ -254,17 +214,14 @@ public class MapRenderer
 		drawUndergroundMode();
 	}
 
-	private void drawCoords()
-	{
+	private void drawCoords() {
 		// draw coordinates
-		if (!this.mapMode.config.coordsMode.equals(MapModeConfig.coordsModeStringArray[0]))
-		{
+		if (!this.mapMode.config.coordsMode.equals(MapModeConfig.coordsModeStringArray[0])) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(this.textX, this.textY, 0);
-			if (this.mapMode.config.coordsMode.equals(MapModeConfig.coordsModeStringArray[1]))
-			{
+			if (this.mapMode.config.coordsMode.equals(MapModeConfig.coordsModeStringArray[1])) {
 				GlStateManager.scale(0.5f, 0.5f, 1.0f);
-				this.textOffset = (int)(this.textOffset * 0.5f);
+				this.textOffset = (int) (this.textOffset * 0.5f);
 			}
 			Render.drawCentredString(0, 0, this.mapMode.textColour, "%d, %d, %d", this.mw.playerXInt, this.mw.playerYInt, this.mw.playerZInt);
 			this.textY += this.textOffset;
@@ -272,29 +229,27 @@ public class MapRenderer
 		}
 	}
 
-	private void drawDistance(){
-		if (!this.mapMode.config.distMode.equals(MapModeConfig.coordsModeStringArray[0]))
-		{
+	private void drawDistance() {
+		if (!this.mapMode.config.distMode.equals(MapModeConfig.coordsModeStringArray[0])) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(this.textX, this.textY, 0);
-			if (this.mapMode.config.distMode.equals(MapModeConfig.coordsModeStringArray[1]))
-			{
+			if (this.mapMode.config.distMode.equals(MapModeConfig.coordsModeStringArray[1])) {
 				GlStateManager.scale(0.5f, 0.5f, 1.0f);
-				this.textOffset = (int)(this.textOffset * 0.5f);
+				this.textOffset = (int) (this.textOffset * 0.5f);
 			}
-			if(this.mw.hasSelected){
+			if (this.mw.hasSelected) {
 				GlStateManager.pushMatrix();
-				String dist = I18n.format("tomsMod.minimap.dist")+": "+MathHelper.floor_double(this.mw.selectedDist);
-				Render.drawCentredString(0, 0, this.mapMode.textColour,dist);
+				String dist = I18n.format("tomsMod.minimap.dist") + ": " + MathHelper.floor(this.mw.selectedDist);
+				Render.drawCentredString(0, 0, this.mapMode.textColour, dist);
 				int lenth = mw.mc.getRenderManager().getFontRenderer().getStringWidth(dist);
-				int lenth2 = (lenth/2)+5;
+				int lenth2 = (lenth / 2) + 5;
 				int sY = mw.selectedY;
-				int pY = MathHelper.floor_double(mw.mc.thePlayer.posY);
-				String r = sY > pY + 2 ? (sY > pY + 20 ? (sY > pY + 40 ? "up3" : "up2") : "up1") : (sY < pY - 3 ? (sY < pY - 20 ? (sY < pY - 40 ? "down3" : "down2") : "down1") : "l" ) ;
-				ResourceLocation t = new ResourceLocation("tm:minimap/"+r+".png");
+				int pY = MathHelper.floor(mw.mc.player.posY);
+				String r = sY > pY + 2 ? (sY > pY + 20 ? (sY > pY + 40 ? "up3" : "up2") : "up1") : (sY < pY - 3 ? (sY < pY - 20 ? (sY < pY - 40 ? "down3" : "down2") : "down1") : "l");
+				ResourceLocation t = new ResourceLocation("tm:minimap/" + r + ".png");
 				mw.mc.renderEngine.bindTexture(t);
 				double size = 16;
-				Render.drawTexturedRect(lenth2,-5,size,size);
+				Render.drawTexturedRect(lenth2, -5, size, size);
 				this.textY += this.textOffset;
 				GlStateManager.popMatrix();
 			}
@@ -302,53 +257,40 @@ public class MapRenderer
 		}
 	}
 
-	private void drawBiomeName()
-	{
-		if (!this.mapMode.config.biomeMode.equals(MapModeConfig.coordsModeStringArray[0]))
-		{
+	private void drawBiomeName() {
+		if (!this.mapMode.config.biomeMode.equals(MapModeConfig.coordsModeStringArray[0])) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(this.textX, this.textY, 0);
-			if (this.mapMode.config.biomeMode.equals(MapModeConfig.coordsModeStringArray[1]))
-			{
+			if (this.mapMode.config.biomeMode.equals(MapModeConfig.coordsModeStringArray[1])) {
 				GlStateManager.scale(0.5f, 0.5f, 1.0f);
-				this.textOffset = (int)(this.textOffset * 0.5f);
+				this.textOffset = (int) (this.textOffset * 0.5f);
 			}
-			Render.drawCentredString(
-					0,
-					0,
-					this.mapMode.textColour,
-					this.mw.playerBiome.equals("") ? "BiomeName" : this.mw.playerBiome);
+			Render.drawCentredString(0, 0, this.mapMode.textColour, this.mw.playerBiome.equals("") ? "BiomeName" : this.mw.playerBiome);
 			this.textY += this.textOffset;
 			GlStateManager.popMatrix();
 		}
 	}
 
-	private void drawUndergroundMode()
-	{
-		if (Config.undergroundMode)
-		{
+	private void drawUndergroundMode() {
+		if (Config.undergroundMode) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(this.textX, this.textY, 0);
 			GlStateManager.scale(0.5f, 0.5f, 1.0f);
-			this.textOffset = (int)(this.textOffset * 0.5f);
+			this.textOffset = (int) (this.textOffset * 0.5f);
 			Render.drawCentredString(0, 0, this.mapMode.textColour, I18n.format("tomsMod.minimap.ugmode"));
 			this.textY += this.textOffset;
 			GlStateManager.popMatrix();
 		}
 	}
 
-	private IMwDataProvider drawOverlay()
-	{
+	private IMwDataProvider drawOverlay() {
 		// draw overlays from registered providers
 		// for (IMwDataProvider provider : MwAPI.getDataProviders())
 		IMwDataProvider provider = MwAPI.getCurrentDataProvider();
-		if (provider != null)
-		{
+		if (provider != null) {
 			ArrayList<IMwChunkOverlay> overlays = provider.getChunksOverlay(this.mapView.getDimension(), this.mapView.getX(), this.mapView.getZ(), this.mapView.getMinX(), this.mapView.getMinZ(), this.mapView.getMaxX(), this.mapView.getMaxZ());
-			if (overlays != null)
-			{
-				for (IMwChunkOverlay overlay : overlays)
-				{
+			if (overlays != null) {
+				for (IMwChunkOverlay overlay : overlays) {
 					paintChunk(this.mapMode, this.mapView, overlay);
 				}
 			}
@@ -356,8 +298,7 @@ public class MapRenderer
 		return provider;
 	}
 
-	public void draw()
-	{
+	public void draw() {
 		mw.mc.mcProfiler.startSection("UpdateMargin");
 		this.mapMode.updateMargin();
 		mw.mc.mcProfiler.endSection();
@@ -373,8 +314,7 @@ public class MapRenderer
 		// draw background, the map texture, and enabled overlays
 		this.drawMap();
 		mw.mc.mcProfiler.endStartSection("DrawBorder");
-		if (this.mapMode.config.borderMode)
-		{
+		if (this.mapMode.config.borderMode) {
 			this.drawBorder();
 		}
 		mw.mc.mcProfiler.endStartSection("DrawIcons");
@@ -388,8 +328,7 @@ public class MapRenderer
 		GlStateManager.popMatrix();
 	}
 
-	public void drawDummy()
-	{
+	public void drawDummy() {
 		this.mapMode.updateMargin();
 		this.mapMode.setScreenRes();
 
@@ -399,69 +338,50 @@ public class MapRenderer
 		GlStateManager.translate(this.mapMode.xTranslation, this.mapMode.yTranslation, 1000.0);
 
 		double u, v, w, h;
-		if ((!this.mapMode.config.circular))
-		{
+		if ((!this.mapMode.config.circular)) {
 			u = 0.0;
 			v = 0.0;
 			w = (1.0 * (this.mapMode.config.widthPercent / 100));
 			h = (1.0 * (this.mapMode.config.heightPercent / 100));
-		}
-		else
-		{
-			double scale1 = this.mw.mc.displayWidth < this.mw.mc.displayHeight ? 1
-					: ((double) this.mw.mc.displayHeight / (double) this.mw.mc.displayWidth);
-			double scale2 = this.mw.mc.displayWidth < this.mw.mc.displayHeight
-					? ((double) this.mw.mc.displayWidth / (double) this.mw.mc.displayHeight) : 1;
-					u = 0.0;
-					v = 0.0;
-					w = (1.0 * (this.mapMode.config.heightPercent / 100) * scale1);
-					h = (1.0 * (this.mapMode.config.heightPercent / 100) * scale2);
+		} else {
+			double scale1 = this.mw.mc.displayWidth < this.mw.mc.displayHeight ? 1 : ((double) this.mw.mc.displayHeight / (double) this.mw.mc.displayWidth);
+			double scale2 = this.mw.mc.displayWidth < this.mw.mc.displayHeight ? ((double) this.mw.mc.displayWidth / (double) this.mw.mc.displayHeight) : 1;
+			u = 0.0;
+			v = 0.0;
+			w = (1.0 * (this.mapMode.config.heightPercent / 100) * scale1);
+			h = (1.0 * (this.mapMode.config.heightPercent / 100) * scale2);
 		}
 
 		GlStateManager.pushMatrix();
 
-		if (this.mapMode.config.rotate && (this.mapMode.config.circular == true))
-		{
+		if (this.mapMode.config.rotate && (this.mapMode.config.circular == true)) {
 			GlStateManager.rotate(0.0f, 0.0f, 0.0f, 1.0f);
 		}
-		if (this.mapMode.config.circular)
-		{
+		if (this.mapMode.config.circular) {
 			Render.setCircularStencil(0, 0, this.mapMode.h / 2.0);
 		}
 
 		this.mw.mc.renderEngine.bindTexture(Reference.DummyMapTexture);
 		Render.setColourWithAlphaPercent(0xffffff, 60);
-		Render.drawTexturedRect(
-				this.mapMode.x,
-				this.mapMode.y,
-				this.mapMode.w,
-				this.mapMode.h,
-				u,
-				v,
-				u + w,
-				v + h);
+		Render.drawTexturedRect(this.mapMode.x, this.mapMode.y, this.mapMode.w, this.mapMode.h, u, v, u + w, v + h);
 
-		if (this.mapMode.config.circular)
-		{
+		if (this.mapMode.config.circular) {
 			Render.disableStencil();
 		}
 
 		GlStateManager.popMatrix();
 
-		if (this.mapMode.config.borderMode)
-		{
+		if (this.mapMode.config.borderMode) {
 			this.drawBorder();
 		}
 
 		GlStateManager.pushMatrix();
 
-		if (this.mapMode.config.rotate && (this.mapMode.config.circular == true))
-		{
+		if (this.mapMode.config.rotate && (this.mapMode.config.circular == true)) {
 			GlStateManager.rotate(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 		// draw north arrow
-		if (this.mapMode.config.rotate)
-		{
+		if (this.mapMode.config.rotate) {
 			drawNorthArrow();
 		}
 
@@ -474,8 +394,7 @@ public class MapRenderer
 		GlStateManager.popMatrix();
 	}
 
-	private static void paintChunk(MapMode mapMode, MapView mapView, IMwChunkOverlay overlay)
-	{
+	private static void paintChunk(MapMode mapMode, MapView mapView, IMwChunkOverlay overlay) {
 		int chunkX = overlay.getCoordinates().x;
 		int chunkZ = overlay.getCoordinates().y;
 		float filling = overlay.getFilling();
@@ -498,8 +417,7 @@ public class MapRenderer
 		double offsetX = ((botCorner.x - topCorner.x) - sizeX) / 2;
 		double offsetY = ((botCorner.y - topCorner.y) - sizeY) / 2;
 
-		if (overlay.hasBorder())
-		{
+		if (overlay.hasBorder()) {
 			Render.setColour(overlay.getBorderColor());
 			Render.drawRectBorder(topCorner.x + 1, topCorner.y + 1, botCorner.x - topCorner.x - 1, botCorner.y - topCorner.y - 1, overlay.getBorderWidth());
 		}
@@ -508,8 +426,7 @@ public class MapRenderer
 		Render.drawRect(topCorner.x + offsetX + 1, topCorner.y + offsetY + 1, sizeX - 1, sizeY - 1);
 	}
 
-	public MapMode getMapMode()
-	{
+	public MapMode getMapMode() {
 		return this.mapMode;
 	}
 }

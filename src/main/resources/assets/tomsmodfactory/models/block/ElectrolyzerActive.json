@@ -1,6 +1,6 @@
 {
     "parent": "block/controller",
     "textures": {
-    	"front":"blocks/ElectrolyzerOn"
+    	"front":"tomsmodfactory:blocks/ElectrolyzerOn"
     }
 }

@@ -17,16 +17,16 @@ import com.tom.api.tileentity.ILinkable;
 import com.tom.apis.ExtraBlockHitInfo;
 import com.tom.apis.TomsModUtils;
 
-public class Linker extends Item implements ILinkContainer{
-	public Linker(){
+public class Linker extends Item implements ILinkContainer {
+	public Linker() {
 		this.setMaxStackSize(1);
 	}
+
 	@Override
-	public EnumActionResult onItemUse(ItemStack itemStack, EntityPlayer entity,
-			World world, BlockPos pos, EnumHand hand, EnumFacing side,
-			float hitX, float hitY, float hitZ) {
-		if(!world.isRemote){
-			if(entity.isSneaking()){
+	public EnumActionResult onItemUse(EntityPlayer entity, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack itemStack = entity.getHeldItem(hand);
+		if (!world.isRemote) {
+			if (entity.isSneaking()) {
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setInteger("x", pos.getX());
 				tag.setInteger("y", pos.getY());
@@ -39,13 +39,14 @@ public class Linker extends Item implements ILinkContainer{
 				itemStack.setTagCompound(tag);
 				TomsModUtils.sendNoSpamTranslate(entity, "tomsMod.chat.posSaved");
 				return EnumActionResult.SUCCESS;
-			}else{
+			} else {
 				TileEntity tilee = world.getTileEntity(pos);
 				NBTTagCompound tag = itemStack.getTagCompound();
-				if(tag != null && tilee instanceof ILinkable && tag.hasKey("x") && tag.hasKey("y") && tag.hasKey("z")){
+				if (tag != null && tilee instanceof ILinkable && tag.hasKey("x") && tag.hasKey("y") && tag.hasKey("z")) {
 					ILinkable te = (ILinkable) tilee;
-					boolean success = te.link(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z"), EnumFacing.VALUES[tag.getInteger("side")], new ExtraBlockHitInfo(tag.getFloat("hX"),tag.getFloat("hY"),tag.getFloat("hZ")),tag.getInteger("dim"));
-					if(success)TomsModUtils.sendNoSpamTranslate(entity, TextFormatting.GREEN, "tomsMod.chat.linkSuccessful");
+					boolean success = te.link(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z"), EnumFacing.VALUES[tag.getInteger("side")], new ExtraBlockHitInfo(tag.getFloat("hX"), tag.getFloat("hY"), tag.getFloat("hZ")), tag.getInteger("dim"));
+					if (success)
+						TomsModUtils.sendNoSpamTranslate(entity, TextFormatting.GREEN, "tomsMod.chat.linkSuccessful");
 					return success ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
 				}
 			}

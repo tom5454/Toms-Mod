@@ -33,6 +33,7 @@ import com.tom.core.tileentity.TileEntityTreeTap;
 public class BlockTreeTap extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyInteger STATE = PropertyInteger.create("state", 0, 2);
+
 	public BlockTreeTap() {
 		super(Material.WOOD);
 		setResistance(0.5F);
@@ -43,68 +44,73 @@ public class BlockTreeTap extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityTreeTap();
 	}
+
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos,
-			EntityPlayer player) {
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
 		return new ItemStack(CoreInit.treeTap);
 	}
+
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return CoreInit.treeTap;
 	}
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntityTreeTap te = (TileEntityTreeTap) worldIn.getTileEntity(pos);
-		if(te.getBottleStack() != null){
+		if (!te.getBottleStack().isEmpty()) {
 			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), te.getBottleStack());
-			te.setBottleStack(null);
+			te.setBottleStack(ItemStack.EMPTY);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}
+
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack held, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntityTreeTap te = (TileEntityTreeTap) worldIn.getTileEntity(pos);
+		ItemStack held = playerIn.getHeldItem(hand);
 		int s = state.getValue(STATE);
-		if(s == 2){
-			if(!worldIn.isRemote){
+		if (s == 2) {
+			if (!worldIn.isRemote) {
 				boolean added = playerIn.inventory.addItemStackToInventory(te.getBottleStack());
-				if(added){
-					te.setBottleStack(null);
+				if (added) {
+					te.setBottleStack(ItemStack.EMPTY);
 				}
 				AchievementHandler.giveAchievement(playerIn, "rubber");
 			}
 			playerIn.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.4F, 0.5F);
-		}else{
-			if(s == 0){
-				if(held != null && held.getItem() == Items.GLASS_BOTTLE){
-					te.setBottleStack(held.splitStack(1));//EntityItem
+		} else {
+			if (s == 0) {
+				if (!held.isEmpty() && held.getItem() == Items.GLASS_BOTTLE) {
+					te.setBottleStack(held.splitStack(1));// EntityItem
 					playerIn.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.4F, 0.5F);
 				}
 			}
 		}
-		//playerIn.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.4F, 0.5F);
+		// playerIn.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.4F, 0.5F);
 		return true;
 	}
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		return setBlockBounds(0.3F, 0.3F, 0.0F, 0.7F, 0.7F, 0.6F, state.getValue(FACING));
 	}
+
 	@Override
 	public BlockRenderLayer getBlockLayer() {
 		return BlockRenderLayer.TRANSLUCENT;
 	}
+
 	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {FACING,STATE});
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{FACING, STATE});
 	}
+
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 */
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		boolean formed = (meta & 8) > 0;
 		boolean isRight = (meta & 4) > 0;
 		return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(STATE, formed ? isRight ? 2 : 1 : 0);
@@ -114,33 +120,33 @@ public class BlockTreeTap extends BlockContainerTomsMod {
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{
+	public int getMetaFromState(IBlockState state) {
 		boolean formed = state.getValue(STATE) > 0;
 		boolean isRight = state.getValue(STATE) == 2;
 		int i = 0;
 		i = i | state.getValue(FACING).getHorizontalIndex();
 
-		if (formed)
-		{
+		if (formed) {
 			i |= 8;
 		}
 
-		if (isRight)
-		{
+		if (isRight) {
 			i |= 4;
 		}
 
 		return i;
 	}
+
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
+
 	@Override
 	public boolean isFullBlock(IBlockState state) {
 		return false;
 	}
+
 	@Override
 	public boolean isFullCube(IBlockState state) {
 		return false;

@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -38,86 +39,87 @@ import com.tom.defense.ProjectorLensConfigEntry.CompiledProjectorConfig;
 import com.tom.defense.block.FieldProjector;
 import com.tom.handler.GuiHandler.GuiIDs;
 
-public class TileEntityForceFieldProjector extends TileEntityTomsMod implements
-IForceDevice, ISidedInventory, IGuiTile {
+public class TileEntityForceFieldProjector extends TileEntityTomsMod implements IForceDevice, ISidedInventory, IGuiTile {
 	public ForceDeviceControlType rsMode = ForceDeviceControlType.LOW_REDSTONE;
-	private ItemStack[] stack = new ItemStack[this.getSizeInventory()];
-	private EnergyStorage energy = new EnergyStorage(1000000,100000);
+	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
+	private EnergyStorage energy = new EnergyStorage(1000000, 100000);
 	public boolean active = false;
 	private boolean firstStart = true, lastActive = false;
 	public int clientEnergy = 0, lastDrained = 0, offsetX = 0, offsetY = 0, offsetZ = 0;
 	private CompiledProjectorConfig config;
+
 	@Override
 	public double receiveEnergy(double maxReceive, boolean simulate) {
 		return energy.receiveEnergy(maxReceive, simulate);
 	}
+
 	@Override
 	public boolean isValid(BlockPos from) {
 		BlockPos c = this.getCapacitorPos();
-		return this.hasWorldObj() && c != null && c.equals(from) && pos != null && worldObj.getBlockState(pos) != null && worldObj.getBlockState(pos).getBlock() == DefenseInit.fieldProjector;
+		return this.hasWorld() && c != null && c.equals(from) && pos != null && world.getBlockState(pos) != null && world.getBlockState(pos).getBlock() == DefenseInit.fieldProjector;
 	}
-	public BlockPos getCapacitorPos(){
-		return stack[1] != null && stack[1].getItem() instanceof IPowerLinkCard ? ((IPowerLinkCard)stack[1].getItem()).getMaster(stack[1]) : null;
+
+	public BlockPos getCapacitorPos() {
+		return !inv.getStackInSlot(1).isEmpty() && inv.getStackInSlot(1).getItem() instanceof IPowerLinkCard ? ((IPowerLinkCard) inv.getStackInSlot(1).getItem()).getMaster(inv.getStackInSlot(1)) : null;
 	}
+
 	public boolean onBlockActivated(EntityPlayer player, ItemStack held) {
-		if(!worldObj.isRemote){
-			//player.attackEntityFrom(DamageSourceTomsMod.fieldDamage, 8F);
-			if(held != null && held.getItem() instanceof ISwitch && ((ISwitch)held.getItem()).isSwitch(held, player)){
-				if(rsMode == ForceDeviceControlType.SWITCH){
+		if (!world.isRemote) {
+			// player.attackEntityFrom(DamageSourceTomsMod.fieldDamage, 8F);
+			if (!held.isEmpty() && held.getItem() instanceof ISwitch && ((ISwitch) held.getItem()).isSwitch(held, player)) {
+				if (rsMode == ForceDeviceControlType.SWITCH) {
 					boolean canAccess = true;
 					BlockPos securityStationPos = this.getSecurityStationPos();
-					if(securityStationPos != null){
-						TileEntity tileentity = worldObj.getTileEntity(securityStationPos);
-						if(tileentity instanceof ISecurityStation){
+					if (securityStationPos != null) {
+						TileEntity tileentity = world.getTileEntity(securityStationPos);
+						if (tileentity instanceof ISecurityStation) {
 							ISecurityStation tile = (ISecurityStation) tileentity;
 							canAccess = tile.canPlayerAccess(AccessType.SWITCH_DEVICES, player);
 						}
 					}
-					if(canAccess){
+					if (canAccess) {
 						this.active = !this.active;
 						return true;
-					}else{
+					} else {
 						TomsModUtils.sendAccessDeniedMessageTo(player, "tomsMod.chat.fieldSecurity");
 						return false;
 					}
-				}else{
-					TomsModUtils.sendNoSpamTranslate(player, new Style().setColor(TextFormatting.RED), "tomsMod.chat.mnotSwitchable", new TextComponentTranslation(held.getUnlocalizedName()+".name"));
+				} else {
+					TomsModUtils.sendNoSpamTranslate(player, new Style().setColor(TextFormatting.RED), "tomsMod.chat.mnotSwitchable", new TextComponentTranslation(held.getUnlocalizedName() + ".name"));
 					return false;
 				}
-			}else{
+			} else {
 				boolean canAccess = true;
 				BlockPos securityStationPos = this.getSecurityStationPos();
-				if(securityStationPos != null){
-					TileEntity tileentity = worldObj.getTileEntity(securityStationPos);
-					if(tileentity instanceof ISecurityStation){
+				if (securityStationPos != null) {
+					TileEntity tileentity = world.getTileEntity(securityStationPos);
+					if (tileentity instanceof ISecurityStation) {
 						ISecurityStation tile = (ISecurityStation) tileentity;
 						canAccess = tile.canPlayerAccess(AccessType.CONFIGURATION, player);
 					}
 				}
-				if(canAccess){
-					player.openGui(CoreInit.modInstance, GuiIDs.forceFieldProjector.ordinal(), worldObj, pos.getX(),pos.getY(),pos.getZ());
-				}else{
+				if (canAccess) {
+					player.openGui(CoreInit.modInstance, GuiIDs.forceFieldProjector.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+				} else {
 					TomsModUtils.sendAccessDeniedMessageTo(player, "tomsMod.chat.fieldSecurity");
 					return false;
 				}
 				return true;
 			}
-		}else{
+		} else {
 			return true;
 		}
 	}
 
 	@Override
 	public void buttonPressed(EntityPlayer player, int id, int extra) {
-		if(id == 0){
+		if (id == 0) {
 			rsMode = ForceDeviceControlType.get(extra);
-		}else if(id == 1){
+		} else if (id == 1) {
 			this.offsetX = extra;
-		}
-		else if(id == 2){
+		} else if (id == 2) {
 			this.offsetY = extra;
-		}
-		else if(id == 3){
+		} else if (id == 3) {
 			this.offsetZ = extra;
 		}
 	}
@@ -143,51 +145,13 @@ IForceDevice, ISidedInventory, IGuiTile {
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index) {
-		return stack[index];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int par2) {
-		if (this.stack[slot] != null) {
-			ItemStack itemstack;
-			if (this.stack[slot].stackSize <= par2) {
-				itemstack = this.stack[slot];
-				this.stack[slot] = null;
-				return itemstack;
-			} else {
-				itemstack = this.stack[slot].splitStack(par2);
-
-				if (this.stack[slot].stackSize == 0) {
-					this.stack[slot] = null;
-				}
-				return itemstack;
-			}
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		ItemStack is = stack[index];
-		stack[index] = null;
-		return is;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		this.stack[index] = stack;
-	}
-
-	@Override
 	public int getInventoryStackLimit() {
 		return 64;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return TomsModUtils.isUseable(pos, player, worldObj, this);
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return TomsModUtils.isUsable(pos, player, world, this);
 	}
 
 	@Override
@@ -212,11 +176,16 @@ IForceDevice, ISidedInventory, IGuiTile {
 
 	@Override
 	public void setField(int id, int value) {
-		if(id == 0)this.clientEnergy = value;
-		else if(id == 1)this.lastDrained = value;
-		else if(id == 2)this.offsetX = value;
-		else if(id == 3)this.offsetY = value;
-		else if(id == 4)this.offsetZ = value;
+		if (id == 0)
+			this.clientEnergy = value;
+		else if (id == 1)
+			this.lastDrained = value;
+		else if (id == 2)
+			this.offsetX = value;
+		else if (id == 3)
+			this.offsetY = value;
+		else if (id == 4)
+			this.offsetZ = value;
 	}
 
 	@Override
@@ -225,45 +194,22 @@ IForceDevice, ISidedInventory, IGuiTile {
 	}
 
 	@Override
-	public void clear() {
-		this.stack = new ItemStack[this.getSizeInventory()];
-	}
-	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		energy.readFromNBT(compound);
-		stack = new ItemStack[this.getSizeInventory()];
-		NBTTagList list = compound.getTagList("inventory", 10);
-		for (int i = 0; i < list.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
-			int j = nbttagcompound.getByte("Slot") & 255;
-
-			if (j >= 0 && j < this.stack.length)
-			{
-				this.stack[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
-			}
-		}
+		TomsModUtils.loadAllItems(compound.getTagList("inventory", 10), inv);
 		rsMode = ForceDeviceControlType.get(compound.getInteger("redstone_mode"));
 		this.active = compound.getBoolean("active");
 		offsetX = compound.getInteger("offsetX");
 		offsetY = compound.getInteger("offsetY");
 		offsetZ = compound.getInteger("offsetZ");
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		energy.writeToNBT(compound);
-		NBTTagList list = new NBTTagList();
-		for(int i = 0;i<stack.length;i++){
-			if(stack[i] != null){
-				NBTTagCompound tag = new NBTTagCompound();
-				stack[i].writeToNBT(tag);
-				tag.setByte("Slot", (byte) i);
-				list.appendTag(tag);
-			}
-		}
-		compound.setTag("inventory", list);
+		compound.setTag("inventory", TomsModUtils.saveAllItems(inv));
 		compound.setInteger("redstone_mode", rsMode.ordinal());
 		compound.setBoolean("active", active);
 		compound.setInteger("offsetX", offsetX);
@@ -271,13 +217,14 @@ IForceDevice, ISidedInventory, IGuiTile {
 		compound.setInteger("offsetZ", offsetZ);
 		return compound;
 	}
+
 	public void writeToStackNBT(NBTTagCompound compound) {
 		energy.writeToNBT(compound);
 		NBTTagList list = new NBTTagList();
-		for(int i = 0;i<stack.length;i++){
-			if(i != 3 && stack[i] != null){
+		for (int i = 0;i < inv.getSizeInventory();i++) {
+			if (i != 3) {
 				NBTTagCompound tag = new NBTTagCompound();
-				stack[i].writeToNBT(tag);
+				inv.getStackInSlot(i).writeToNBT(tag);
 				tag.setByte("Slot", (byte) i);
 				list.appendTag(tag);
 			}
@@ -288,96 +235,141 @@ IForceDevice, ISidedInventory, IGuiTile {
 		compound.setInteger("offsetY", offsetY);
 		compound.setInteger("offsetZ", offsetZ);
 	}
+
+	@Override
 	public BlockPos getSecurityStationPos() {
-		return stack[0] != null && stack[0].getItem() instanceof ISecurityStationLinkCard ? ((ISecurityStationLinkCard)stack[0].getItem()).getStation(stack[0]) : null;
+		return !inv.getStackInSlot(0).isEmpty() && inv.getStackInSlot(0).getItem() instanceof ISecurityStationLinkCard ? ((ISecurityStationLinkCard) inv.getStackInSlot(0).getItem()).getStation(inv.getStackInSlot(0)) : null;
 	}
+
 	@Override
 	public void updateEntity(IBlockState currentState) {
-		if(!worldObj.isRemote){
-			if(this.firstStart){
+		if (!world.isRemote) {
+			if (this.firstStart) {
 				this.updateConfig();
 				firstStart = false;
 			}
 			{
 				BlockPos pos = this.getCapacitorPos();
-				if(pos != null){
-					TileEntity tile = worldObj.getTileEntity(pos);
-					if(tile instanceof IForcePowerStation) {
+				if (pos != null) {
+					TileEntity tile = world.getTileEntity(pos);
+					if (tile instanceof IForcePowerStation) {
 						IForcePowerStation te = (IForcePowerStation) tile;
 						te.registerDevice(this);
 					}
 				}
 			}
-			if(rsMode == ForceDeviceControlType.HIGH_REDSTONE){
-				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
-			}else if(rsMode == ForceDeviceControlType.LOW_REDSTONE){
-				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) == 0;
-			}else if(rsMode == ForceDeviceControlType.IGNORE){
+			if (rsMode == ForceDeviceControlType.HIGH_REDSTONE) {
+				this.active = world.isBlockIndirectlyGettingPowered(pos) > 0;
+			} else if (rsMode == ForceDeviceControlType.LOW_REDSTONE) {
+				this.active = world.isBlockIndirectlyGettingPowered(pos) == 0;
+			} else if (rsMode == ForceDeviceControlType.IGNORE) {
 				this.active = true;
 			}
-			if(!lastActive && active){
+			if (!lastActive && active) {
 				this.updateConfig();
 			}
 			lastActive = active;
-			this.clientEnergy  = MathHelper.floor_double(this.energy.getEnergyStored());
-			TomsModUtils.setBlockStateWithCondition(worldObj, pos, currentState, FieldProjector.ACTIVE, this.active && this.energy.getEnergyStored() > 0.1D);
+			this.clientEnergy = MathHelper.floor(this.energy.getEnergyStored());
+			TomsModUtils.setBlockStateWithCondition(world, pos, currentState, FieldProjector.ACTIVE, this.active && this.energy.getEnergyStored() > 0.1D);
 			this.lastDrained = 0;
-			if(config != null){
-				if(this.active && this.energy.getEnergyStored() > 100D){
-					int energyUsed = config.build(worldObj);
-					double realEnergyUsed = 0.01 + (energyUsed / (100D + (stack[3] != null && stack[3].getItem() == DefenseInit.efficiencyUpgrade ? stack[3].stackSize * 50 : 0)));
+			if (config != null) {
+				if (this.active && this.energy.getEnergyStored() > 100D) {
+					int energyUsed = config.build(world);
+					double realEnergyUsed = 0.01 + (energyUsed / (100D + (inv.getStackInSlot(3).isEmpty() && inv.getStackInSlot(3).getItem() == DefenseInit.efficiencyUpgrade ? inv.getStackInSlot(3).getCount() * 50 : 0)));
 					energy.extractEnergy(realEnergyUsed, false);
-					this.lastDrained = MathHelper.floor_double(realEnergyUsed * 100);
-				}else{
-					config.destroy(worldObj);
+					this.lastDrained = MathHelper.floor(realEnergyUsed * 100);
+				} else {
+					config.destroy(world);
 				}
 			}
 		}
 	}
-	private List<ProjectorLensConfigEntry> getConfig(){
-		List<ProjectorLensConfigEntry> entryList = new ArrayList<ProjectorLensConfigEntry>();
-		if(stack[2] != null){
-			if(stack[2].getTagCompound() == null)stack[2].setTagCompound(new NBTTagCompound());
-			NBTTagList list = stack[2].getTagCompound().getTagList("entries", 10);
-			for(int i = 0;i<list.tagCount();i++){
+
+	private List<ProjectorLensConfigEntry> getConfig() {
+		List<ProjectorLensConfigEntry> entryList = new ArrayList<>();
+		if (!inv.getStackInSlot(2).isEmpty()) {
+			if (inv.getStackInSlot(2).getTagCompound() == null)
+				inv.getStackInSlot(2).setTagCompound(new NBTTagCompound());
+			NBTTagList list = inv.getStackInSlot(2).getTagCompound().getTagList("entries", 10);
+			for (int i = 0;i < list.tagCount();i++) {
 				NBTTagCompound tag = list.getCompoundTagAt(i);
 				entryList.add(ProjectorLensConfigEntry.fromNBT(tag));
 			}
 		}
 		return entryList;
 	}
+
 	public void breakBlock() {
-		config.destroy(worldObj);
+		config.destroy(world);
 	}
-	public boolean isValidFieldBlock(BlockPos pos){
+
+	public boolean isValidFieldBlock(BlockPos pos) {
 		return active && config.contains(pos);
 	}
+
 	public int getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
-	private void updateConfig(){
-		if(this.config != null && worldObj != null)config.destroy(worldObj);
-		this.config = CompiledProjectorConfig.compile(getConfig(), pos.offset(EnumFacing.UP).add(offsetX, offsetY, offsetZ), pos, worldObj.provider.getDimension());
+
+	private void updateConfig() {
+		if (this.config != null && world != null)
+			config.destroy(world);
+		this.config = CompiledProjectorConfig.compile(getConfig(), pos.offset(EnumFacing.UP).add(offsetX, offsetY, offsetZ), pos, world.provider.getDimension());
 	}
+
 	@Override
 	public void markDirty() {
 		super.markDirty();
 		this.updateConfig();
 	}
+
 	@Override
 	public BlockPos getPos2() {
 		return pos;
 	}
+
 	@Override
 	public int[] getSlotsForFace(EnumFacing side) {
 		return new int[]{};
 	}
+
 	@Override
 	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
 		return false;
 	}
+
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
 		return false;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index) {
+		return inv.getStackInSlot(index);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+		return inv.decrStackSize(index, count);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return inv.removeStackFromSlot(index);
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		inv.setInventorySlotContents(index, stack);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
+	}
+
+	@Override
+	public void clear() {
+		inv.clear();
 	}
 }

@@ -21,55 +21,65 @@ import net.minecraftforge.fml.common.registry.RegistryBuilder;
 import com.google.common.collect.BiMap;
 
 import com.tom.api.research.IScanningInformation;
-import com.tom.api.research.IScanningInformation.ScanningInformation;
 import com.tom.api.research.Research;
+import com.tom.config.Config;
 
 public class ResearchHandler {
-	//private static List<Research> researchList = new ArrayList<Research>();
-	private static Map<String, ResearchHandler> researchHandlerList = new HashMap<String,ResearchHandler>();
+	// private static List<Research> researchList = new ArrayList<Research>();
+	private static Map<String, ResearchHandler> researchHandlerList = new HashMap<>();
 	public static Logger log = LogManager.getLogger("Tom's Mod Research Handler");
-	//private static File researchData = null;
-	//private static final String CATRGORY = "research", NAME = "data", ERRORED = "errored";
-	private List<Research> researchDone = new ArrayList<Research>();
-	private List<IScanningInformation> scanInfo = new ArrayList<IScanningInformation>();
+	// private static File researchData = null;
+	// private static final String CATRGORY = "research", NAME = "data", ERRORED
+	// = "errored";
+	private List<Research> researchDone = new ArrayList<>();
+	private List<IScanningInformation> scanInfo = new ArrayList<>();
 	public final String name;
 	private static FMLControlledNamespacedRegistry<Research> iResearchRegistry;
 	private static final ResourceLocation loc = new ResourceLocation("tomsmod:research");
 	private static final int MIN_ID = 0;
 	private static final int MAX_ID = Integer.MAX_VALUE - 1;
-	public static void init(){
+
+	public static void init() {
 		log.info("Loading Research Handler...");
-		RegistryBuilder<Research> builder = new RegistryBuilder<Research>();
+		RegistryBuilder<Research> builder = new RegistryBuilder<>();
 		builder.setName(loc);
 		builder.setType(Research.class);
 		builder.setIDRange(MIN_ID, MAX_ID);
 		iResearchRegistry = (FMLControlledNamespacedRegistry<Research>) builder.create();
-		//iResearchRegistry = PersistentRegistryManager.createRegistry(loc, Research.class, new ResourceLocation("invalid"), MIN_ID, MAX_ID, true, ResearchCallbacks.INSTANCE, ResearchCallbacks.INSTANCE, ResearchCallbacks.INSTANCE);
+		// iResearchRegistry = PersistentRegistryManager.createRegistry(loc,
+		// Research.class, new ResourceLocation("invalid"), MIN_ID, MAX_ID,
+		// true, ResearchCallbacks.INSTANCE, ResearchCallbacks.INSTANCE,
+		// ResearchCallbacks.INSTANCE);
 	}
-	//private static boolean allowSave = false;
-	public static Research getResearchByID(int id){
-		if(id == -1)return null;
+
+	// private static boolean allowSave = false;
+	public static Research getResearchByID(int id) {
+		if (id == -1)
+			return null;
 		return iResearchRegistry.getObjectById(id);
 	}
-	public static int getId(Research research){
-		if(research == null)return -1;
+
+	public static int getId(Research research) {
+		if (research == null)
+			return -1;
 		return iResearchRegistry.getId(research);
 	}
-	public List<ResearchInformation> getAvailableResearches(){
-		List<ResearchInformation> ret = new ArrayList<ResearchInformation>();
-		for(Entry<ResourceLocation, Research> rE : iResearchRegistry.getEntries()){
+
+	public List<ResearchInformation> getAvailableResearches() {
+		List<ResearchInformation> ret = new ArrayList<>();
+		for (Entry<ResourceLocation, Research> rE : iResearchRegistry.getEntries()) {
 			Research r = rE.getValue();
-			if(r.isValid() && !this.researchDone.contains(r)){
+			if (r.isValid() && !this.researchDone.contains(r)) {
 				List<Research> parents = r.getParents();
-				if(parents == null || this.researchDone.containsAll(parents)){
+				if (parents == null || this.researchDone.containsAll(parents)) {
 					List<IScanningInformation> requiredS = r.getRequiredScans();
-					if(requiredS == null || this.scanInfo.containsAll(requiredS)){
+					if (requiredS == null || this.scanInfo.containsAll(requiredS) || Config.disableScanning) {
 						ret.add(new ResearchInformation(r));
-					}else{
-						ResearchInformation rInfo = new ResearchInformation(r,false);
-						for(int i = 0;i<requiredS.size();i++){
+					} else {
+						ResearchInformation rInfo = new ResearchInformation(r, false);
+						for (int i = 0;i < requiredS.size();i++) {
 							IScanningInformation info = requiredS.get(i);
-							if(!this.scanInfo.contains(info)){
+							if (!this.scanInfo.contains(info)) {
 								rInfo.missing.add(info);
 							}
 						}
@@ -80,21 +90,24 @@ public class ResearchHandler {
 		}
 		return ret;
 	}
-	public static void load(String name, NBTTagCompound tag){
-		//CoreInit.log.info("Loading Research Handler for...");
+
+	public static void load(String name, NBTTagCompound tag) {
+		// CoreInit.log.info("Loading Research Handler for...");
 		/*researchHandlerList.clear();
 		researchData = new File(TomsModUtils.getSavedFile(server),"research.tmcfg");
 		Configuration cfg = new Configuration(researchData);*/
-		//String in = cfg.get(CATRGORY, NAME, "").getString();
-		//List<String> errored = new ArrayList<String>();
-		//String[] erroredIn = cfg.get(CATRGORY, ERRORED, new String[]{}).getStringList();
+		// String in = cfg.get(CATRGORY, NAME, "").getString();
+		// List<String> errored = new ArrayList<String>();
+		// String[] erroredIn = cfg.get(CATRGORY, ERRORED, new
+		// String[]{}).getStringList();
 		/*for(String e : erroredIn){
 			errored.add(e);
 			CoreInit.log.warn("Found an errored tag: "+e);
 		}*/
-		//try{
-		//NBTTagCompound nbt = JsonToNBT.getTagFromJson(in);
-		//if(!nbt.hasKey("name")) throw new NoSuchFieldException("missing name tag");
+		// try{
+		// NBTTagCompound nbt = JsonToNBT.getTagFromJson(in);
+		// if(!nbt.hasKey("name")) throw new NoSuchFieldException("missing name
+		// tag");
 		researchHandlerList.put(name, fromNBT(tag.getCompoundTag("handler"), name));
 		/*}catch(Exception e){
 			Exception e2 = new ResearchHandlerLoadingException(e);
@@ -106,37 +119,41 @@ public class ResearchHandler {
 		Property p = cfg.get(CATRGORY, ERRORED, new String[]{});
 		p.comment = "Invalid tags saved here.";
 		p.set(erroredOut);*/
-		//allowSave = true;
+		// allowSave = true;
 	}
-	public static void save(String name, NBTTagCompound tag){
-		//if(!allowSave)return;
-		//long timeStart = System.currentTimeMillis();
-		//CoreInit.log.info("Saving Research Handler Data...");
-		//cfg.get(CATRGORY, NAME, new String[]{});
-		//List<String> sList = new ArrayList<String>();
-		//for(Entry<String, ResearchHandler> eResH : researchHandlerList.entrySet()){
-		//String name = eResH.getKey();
+
+	public static void save(String name, NBTTagCompound tag) {
+		// if(!allowSave)return;
+		// long timeStart = System.currentTimeMillis();
+		// CoreInit.log.info("Saving Research Handler Data...");
+		// cfg.get(CATRGORY, NAME, new String[]{});
+		// List<String> sList = new ArrayList<String>();
+		// for(Entry<String, ResearchHandler> eResH :
+		// researchHandlerList.entrySet()){
+		// String name = eResH.getKey();
 		ResearchHandler h = getHandlerFromName(name);
-		//NBTTagCompound mainTag = new NBTTagCompound();
-		//mainTag.setString("name", name);
+		// NBTTagCompound mainTag = new NBTTagCompound();
+		// mainTag.setString("name", name);
 		NBTTagCompound hTag = new NBTTagCompound();
 		h.writeToNBT(hTag);
-		tag.setTag("handler",hTag);
-		//String data = mainTag.toString();
-		//sList.add(data);
-		//}
-		//String[] out = sList.toArray(new String[]{});
-		//cfg.get(CATRGORY, NAME, "").set(data);
-		//cfg.save();
-		//CoreInit.log.info("Done in " + (System.currentTimeMillis() - timeStart) + " ms");
+		tag.setTag("handler", hTag);
+		// String data = mainTag.toString();
+		// sList.add(data);
+		// }
+		// String[] out = sList.toArray(new String[]{});
+		// cfg.get(CATRGORY, NAME, "").set(data);
+		// cfg.save();
+		// CoreInit.log.info("Done in " + (System.currentTimeMillis() -
+		// timeStart) + " ms");
 	}
+
 	/*public static void cleanup(){
 		CoreInit.log.info("Cleaning up Research Handler...");
 		save();
 		researchHandlerList.clear();
 		allowSave = false;
 	}*/
-	public void writeToNBT(NBTTagCompound tag){
+	public void writeToNBT(NBTTagCompound tag) {
 		/*List<Integer> iList = new ArrayList<Integer>();
 		for(Research res : researchDone){
 			int id = getId(res);
@@ -150,119 +167,137 @@ public class ResearchHandler {
 			out[i] = outI[i];
 		}
 		tag.setIntArray("ids", out);*/
-		NBTTagList ids = new NBTTagList();//8
-		for(Research res : researchDone){
-			try{
+		NBTTagList ids = new NBTTagList();// 8
+		for (Research res : researchDone) {
+			try {
 				ids.appendTag(new NBTTagString(res.delegate.name().toString()));
-			}catch(Exception e){}
+			} catch (Exception e) {
+			}
 		}
 		tag.setTag("ids", ids);
 		NBTTagList list = new NBTTagList();
-		for(IScanningInformation i : this.scanInfo){
-			NBTTagCompound t = new NBTTagCompound();
-			i.writeToNBT(t);
-			list.appendTag(t);
+		for (IScanningInformation i : this.scanInfo) {
+			if (i != null) {
+				NBTTagCompound t = new NBTTagCompound();
+				IScanningInformation.Handler.writeToNBT(t, i);
+				list.appendTag(t);
+			}
 		}
 		tag.setTag("scan", list);
 	}
-	public void readFromNBT(NBTTagCompound tag){
-		if(tag.hasKey("ids", 11)){
+
+	public void readFromNBT(NBTTagCompound tag) {
+		if (tag.hasKey("ids", 11)) {
 			int[] in = tag.getIntArray("ids");
-			for(int i : in){
+			for (int i : in) {
 				Research res = getResearchByID(i);
-				if(res != null){
+				if (res != null) {
 					this.researchDone.add(res);
 				}
 			}
-		}else{
+		} else {
 			NBTTagList list = tag.getTagList("ids", 8);
-			for(int i = 0;i<list.tagCount();i++){
+			for (int i = 0;i < list.tagCount();i++) {
 				Research res = iResearchRegistry.getObject(new ResourceLocation(list.getStringTagAt(i)));
-				if(res != null){
+				if (res != null) {
 					this.researchDone.add(res);
 				}
 			}
 		}
 		NBTTagList list = tag.getTagList("scan", 10);
-		for(int i = 0;i<list.tagCount();i++){
+		for (int i = 0;i < list.tagCount();i++) {
 			NBTTagCompound t = list.getCompoundTagAt(i);
-			IScanningInformation info = ScanningInformation.fromNBT(t);
-			if(info != null){
+			IScanningInformation info = IScanningInformation.Handler.fromNBT(t);
+			if (info != null) {
 				this.scanInfo.add(info);
 			}
 		}
 	}
-	public static ResearchHandler fromNBT(NBTTagCompound tag, String name){
+
+	public static ResearchHandler fromNBT(NBTTagCompound tag, String name) {
 		ResearchHandler ret = new ResearchHandler(name);
 		ret.readFromNBT(tag);
 		return ret;
 	}
-	public static ResearchHandler getHandlerFromName(String name){
-		if(researchHandlerList.containsKey(name)){
+
+	public static ResearchHandler getHandlerFromName(String name) {
+		if (researchHandlerList.containsKey(name)) {
 			return researchHandlerList.get(name);
-		}else{
+		} else {
 			ResearchHandler h = new ResearchHandler(name);
 			researchHandlerList.put(name, h);
 			return h;
 		}
 	}
-	public static class ResearchHandlerLoadingException extends Exception{
+
+	public static class ResearchHandlerLoadingException extends Exception {
 		private static final long serialVersionUID = 8689253275484614664L;
+
 		public ResearchHandlerLoadingException(Throwable causedBy) {
 			super(causedBy);
 		}
 	}
+
 	private ResearchHandler(String name) {
 		this.name = name;
 	}
-	public int addScanningInformation(List<IScanningInformation> infoList, int max){
+
+	public int addScanningInformation(List<IScanningInformation> infoList, int max) {
 		int count = 0;
-		for(IScanningInformation info : infoList){
-			if(count == max)break;
-			if(!this.scanInfo.contains(info)){
+		for (IScanningInformation info : infoList) {
+			if (count == max)
+				break;
+			if (!this.scanInfo.contains(info)) {
 				this.scanInfo.add(info);
 				count++;
 			}
 		}
 		return count;
 	}
-	public void markResearchComplete(Research research){
-		if(research == null)return;
-		if(!this.researchDone.contains(research))
+
+	public void markResearchComplete(Research research) {
+		if (research == null)
+			return;
+		if (!this.researchDone.contains(research))
 			this.researchDone.add(research);
 	}
-	public static class ResearchInformation{
+
+	public static class ResearchInformation {
 		private final Research research;
 		public boolean available = true;
-		public List<IScanningInformation> missing = new ArrayList<IScanningInformation>();
+		public List<IScanningInformation> missing = new ArrayList<>();
+
 		public ResearchInformation(Research research) {
 			this.research = research;
 		}
+
 		public ResearchInformation(Research research, boolean available) {
 			this.research = research;
 			this.available = available;
 		}
+
 		public Research getResearch() {
 			return research;
 		}
 	}
-	public List<Research> getResearchesCompleted(){
+
+	public List<Research> getResearchesCompleted() {
 		return this.researchDone;
 	}
-	public static List<String> getResearchNames(List<Research> in){
-		List<String> ret = new ArrayList<String>();
-		for(Research r : in){
+
+	public static List<String> getResearchNames(List<Research> in) {
+		List<String> ret = new ArrayList<>();
+		for (Research r : in) {
 			ret.add(r.getUnlocalizedName());
 		}
 		return ret;
 	}
-	public static class ResearchCallbacks implements IForgeRegistry.AddCallback<Research>,IForgeRegistry.ClearCallback<Research>,IForgeRegistry.CreateCallback<Research>
-	{
+
+	public static class ResearchCallbacks implements IForgeRegistry.AddCallback<Research>, IForgeRegistry.ClearCallback<Research>, IForgeRegistry.CreateCallback<Research> {
 		public static final ResearchCallbacks INSTANCE = new ResearchCallbacks();
 
 		@Override
-		public void onCreate(Map<ResourceLocation, ?> slaveset,
-				BiMap<ResourceLocation, ? extends IForgeRegistry<?>> registries) {
+		public void onCreate(Map<ResourceLocation, ?> slaveset, BiMap<ResourceLocation, ? extends IForgeRegistry<?>> registries) {
 
 		}
 
@@ -276,13 +311,34 @@ public class ResearchHandler {
 
 		}
 	}
-	public boolean isCompleted(Research research){
-		if(research == null)return false;
+
+	public boolean isCompleted(Research research) {
+		if (research == null)
+			return false;
 		return researchDone.contains(research);
 	}
-	public static boolean isCompleted(ResearchHandler handler, Research research){
-		if(handler == null)return false;
-		if(research == null)return false;
+
+	public static boolean isCompleted(ResearchHandler handler, Research research) {
+		if (handler == null)
+			return false;
+		if (research == null)
+			return false;
 		return handler.isCompleted(research);
+	}
+
+	public static Research getResearchByName(String string) {
+		return iResearchRegistry.getObject(new ResourceLocation(string));
+	}
+
+	public static List<Research> getAllResearches() {
+		return iResearchRegistry.getValues();
+	}
+
+	public void removeResearch(Research r) {
+		researchDone.remove(r);
+	}
+
+	public void clearScans() {
+		scanInfo.clear();
 	}
 }

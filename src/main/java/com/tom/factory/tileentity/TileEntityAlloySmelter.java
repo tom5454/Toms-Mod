@@ -7,18 +7,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
-import com.tom.apis.TomsModUtils;
-import com.tom.factory.block.AlloySmelter;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
 public class TileEntityAlloySmelter extends TileEntityMachineBase {
 	private EnergyStorage energy = new EnergyStorage(10000, 100);
-	private static final int[] SLOTS_IN = new int[]{0,1};
+	private static final int[] SLOTS_IN = new int[]{0, 1};
 	private static final int[] SLOTS_OUT = new int[]{2};
 	private static final int MAX_PROCESS_TIME = 300;
-	//private int maxProgress = 1;
+	// private int maxProgress = 1;
 	public int clientEnergy = 0;
+
 	@Override
 	public int getSizeInventory() {
 		return 4;
@@ -48,67 +47,27 @@ public class TileEntityAlloySmelter extends TileEntityMachineBase {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		this.progress = compound.getInteger("progress");
-		//this.maxProgress = compound.getInteger("maxProgress");
+		// this.maxProgress = compound.getInteger("maxProgress");
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setInteger("progress", progress);
-		//compound.setInteger("mayProgress", maxProgress);
+		// compound.setInteger("mayProgress", maxProgress);
 		return compound;
-	}
-	@Override
-	public void updateEntity() {
-		if(!worldObj.isRemote){
-			if(energy.extractEnergy(20D, true) == 20D && canRun()){
-				if(progress > 0){
-					updateProgress();
-				}else if(progress == 0){
-					ItemStackChecker s = MachineCraftingHandler.getAlloySmelterOutput(stack[0], stack[1]);
-					if(s != null){
-						if(stack[2] != null){
-							if(TomsModUtils.areItemStacksEqual(stack[2], s.getStack(), true, true, false) && stack[2].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
-								stack[2].stackSize += s.getStack().stackSize;
-								progress = -1;
-								decrStackSize(0, s.getExtra());
-								decrStackSize(1, s.getExtra2());
-							}
-						}else{
-							progress = -1;
-							stack[2] = s.getStack();
-							decrStackSize(0, s.getExtra());
-							decrStackSize(1, s.getExtra2());
-						}
-					}else{
-						progress = -1;
-					}
-				}else{
-					ItemStackChecker s = MachineCraftingHandler.getAlloySmelterOutput(stack[0], stack[1]);
-					if(s != null){
-						if(stack[2] != null){
-							if(TomsModUtils.areItemStacksEqual(stack[2], s.getStack(), true, true, false) && stack[2].stackSize + s.getStack().stackSize <= s.getStack().getMaxStackSize() && stack[0].stackSize >= s.getExtra()){
-								progress = getMaxProgress();
-							}
-						}else{
-							progress = getMaxProgress();
-						}
-					}
-					TomsModUtils.setBlockStateWithCondition(worldObj, pos, AlloySmelter.ACTIVE, progress > 0);
-				}
-			}else{
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, AlloySmelter.ACTIVE, false);
-			}
-		}
 	}
 
 	public int getClientEnergyStored() {
-		return MathHelper.ceiling_double_int(energy.getEnergyStored());
+		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
 	public int getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
-	private void updateProgress(){
+
+	@Override
+	public void updateProgress() {
 		int upgradeC = getSpeedUpgradeCount();
 		int p = upgradeC + 1 + (upgradeC / 2);
 		progress = Math.max(0, progress - p);
@@ -143,5 +102,17 @@ public class TileEntityAlloySmelter extends TileEntityMachineBase {
 	@Override
 	public int[] getInputSlots() {
 		return SLOTS_IN;
+	}
+
+	@Override
+	public void checkItems() {
+		ItemStackChecker s = MachineCraftingHandler.getAlloySmelterOutput(inv.getStackInSlot(0), inv.getStackInSlot(1));
+		checkItems(s, 2, getMaxProgress(), 0, 1);
+		setOut(0, s);
+	}
+
+	@Override
+	public void finish() {
+		addItemsAndSetProgress(getOutput(0), 2, 0, 1);
 	}
 }

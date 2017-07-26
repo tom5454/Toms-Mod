@@ -1,10 +1,6 @@
 {
     "variants": {
         "type=noct": { "model": "tomsmodfactory:mbCase"},
-        "type=full": { "model": "tomsmodfactory:mbCaseF"},
-        "type=udct": { "model": "tomsmodfactory:mbCaseUD"},
-        "type=dotc": { "model": "tomsmodfactory:mbCaseD"},
-        "type=rlct": { "model": "tomsmodfactory:mbCaseRL"},
-        "type=rlat": { "model": "tomsmodfactory:mbCaseRL", "y":90}
+        "type=full": { "model": "tomsmodfactory:mbCaseF"}
     }
 }

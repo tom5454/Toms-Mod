@@ -13,46 +13,49 @@ import io.netty.buffer.ByteBuf;
 
 public class MessageTabletGui extends MessageBase<MessageTabletGui> {
 
-	//private TabletHandler tab;
+	// private TabletHandler tab;
 	private ItemStack tabStack;
-	public MessageTabletGui(){
+
+	public MessageTabletGui() {
 
 	}
-	public MessageTabletGui(ItemStack tabStack){
+
+	public MessageTabletGui(ItemStack tabStack) {
 		this.tabStack = tabStack;
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf){
+	public void fromBytes(ByteBuf buf) {
 		/*boolean tn = buf.readBoolean();
-    	int id = buf.readInt();
-    	this.nn = tn;
-    	if(tn){
-    		this.tab = new TabletHandler(id);
-    		this.tab.readFromPacket(buf);
-    	}*/
+		int id = buf.readInt();
+		this.nn = tn;
+		if(tn){
+			this.tab = new TabletHandler(id);
+			this.tab.readFromPacket(buf);
+		}*/
 		tabStack = ByteBufUtils.readItemStack(buf);
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf){
+	public void toBytes(ByteBuf buf) {
 		/*boolean tn = tab != null;
-    	buf.writeBoolean(tn);
-    	buf.writeInt(tab.id);
-    	if(tn){
-    		this.tab.writeToPacket(buf);
-    	}*/
+		buf.writeBoolean(tn);
+		buf.writeInt(tab.id);
+		if(tn){
+			this.tab.writeToPacket(buf);
+		}*/
 		ByteBufUtils.writeItemStack(buf, tabStack);
 	}
 
 	@Override
-	public void handleClientSide(MessageTabletGui message, EntityPlayer player){
-		if(player.openContainer instanceof ContainerTablet) {
-			((ContainerTablet)player.openContainer).tabStack = message.tabStack;
+	public void handleClientSide(MessageTabletGui message, EntityPlayer player) {
+		if (player.openContainer instanceof ContainerTablet) {
+			((ContainerTablet) player.openContainer).tabStack = message.tabStack;
 		}
 	}
 
 	@Override
-	public void handleServerSide(MessageTabletGui message, EntityPlayer player){}
+	public void handleServerSide(MessageTabletGui message, EntityPlayer player) {
+	}
 
 }

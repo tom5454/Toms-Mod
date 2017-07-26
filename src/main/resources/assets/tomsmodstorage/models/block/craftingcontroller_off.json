@@ -1,0 +1,6 @@
+{
+	"parent": "tomsmodstorage:block/craftingcontroller",
+	"textures":{
+		"tex": "tomsmodstorage:blocks/craftingcontrolleroff"
+	}
+}

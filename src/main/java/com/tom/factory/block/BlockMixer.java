@@ -9,9 +9,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fluids.FluidUtil;
-
 import com.tom.api.ITileFluidHandler;
+import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntityMachineBase;
 import com.tom.factory.tileentity.TileEntityMixer;
@@ -27,10 +26,11 @@ public class BlockMixer extends BlockMachineBase {
 	public TileEntityMachineBase createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityMixer();
 	}
+
 	@Override
-	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if(!FluidUtil.interactWithFluidHandler(heldItem, ((ITileFluidHandler) worldIn.getTileEntity(pos)).getTankOnSide(side), playerIn) && !worldIn.isRemote)playerIn.openGui(CoreInit.modInstance, GuiIDs.mixer.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!TomsModUtils.interactWithFluidHandler(((ITileFluidHandler) worldIn.getTileEntity(pos)).getTankOnSide(side), playerIn, hand) && !worldIn.isRemote)
+			playerIn.openGui(CoreInit.modInstance, GuiIDs.mixer.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 }

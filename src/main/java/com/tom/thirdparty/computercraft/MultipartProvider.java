@@ -12,13 +12,14 @@ import dan200.computercraft.api.peripheral.IPeripheralProvider;
 
 public class MultipartProvider implements IPeripheralProvider {
 	public static final MultipartProvider INSTANCE = new MultipartProvider();
-	private MultipartProvider() {}
+
+	private MultipartProvider() {
+	}
+
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 		IModule m = TomsModUtils.getModule(world, pos, side);
-		if(m instanceof IPeripheralPart){
-			return ((IPeripheralPart)m).getPeripheral(side);
-		}
+		if (m instanceof IPeripheralPart) { return ((IPeripheralPart) m).getPeripheral(side); }
 		return null;
 	}
 

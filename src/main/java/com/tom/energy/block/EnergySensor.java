@@ -27,49 +27,71 @@ public class EnergySensor extends BlockContainerTomsMod {
 	protected EnergySensor(Material arg0) {
 		super(arg0);
 	}
-	public EnergySensor(){
+
+	public EnergySensor() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
+
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityEnergySensor();
 	}
+
 	/*@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block b){
 		TileEntityEnergySensor te = (TileEntityEnergySensor)world.getTileEntity(x, y, z);
 		te.onNeibourChange();
 	}*/
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState bs, EntityLivingBase entity, ItemStack itemstack){
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState bs, EntityLivingBase entity, ItemStack itemstack) {
 		boolean shift = entity.isSneaking();
 		TileEntity te = world.getTileEntity(pos);
 		TileEntityEnergySensor te2 = (TileEntityEnergySensor) te;
 		EnumFacing dir = shift ? TomsModUtils.getDirectionFacing(entity, true).getOpposite() : TomsModUtils.getDirectionFacing(entity, true);
 		int d = dir.ordinal();
 		int d2 = dir.getOpposite().ordinal();
-		if (d == 0) te2.d = 5;
-		else if(d == 1) te2.d = 4;
-		else if(d == 2) te2.d = 0;
-		else if(d == 3) te2.d = 1;
-		else if(d == 4) te2.d = 2;
-		else if(d == 5) te2.d = 3;
+		if (d == 0)
+			te2.d = 5;
+		else if (d == 1)
+			te2.d = 4;
+		else if (d == 2)
+			te2.d = 0;
+		else if (d == 3)
+			te2.d = 1;
+		else if (d == 4)
+			te2.d = 2;
+		else if (d == 5)
+			te2.d = 3;
 		te2.direction2 = d;
 		te2.directionO2 = d2;
-		if (d == 5) te2.direction = 4;
-		else if(d == 4) te2.direction = 5;
-		else if(d == 3) te2.direction = 2;
-		else if(d == 2) te2.direction = 3;
-		else if(d == 0) te2.direction = 0;
-		else if(d == 1) te2.direction = 1;
-		if (d2 == 5) te2.directionO = 4;
-		else if(d2 == 4) te2.directionO = 5;
-		else if(d2 == 3) te2.directionO = 2;
-		else if(d2 == 2) te2.directionO = 3;
-		else if(d2 == 0) te2.directionO = 0;
-		else if(d2 == 1) te2.directionO = 1;
+		if (d == 5)
+			te2.direction = 4;
+		else if (d == 4)
+			te2.direction = 5;
+		else if (d == 3)
+			te2.direction = 2;
+		else if (d == 2)
+			te2.direction = 3;
+		else if (d == 0)
+			te2.direction = 0;
+		else if (d == 1)
+			te2.direction = 1;
+		if (d2 == 5)
+			te2.directionO = 4;
+		else if (d2 == 4)
+			te2.directionO = 5;
+		else if (d2 == 3)
+			te2.directionO = 2;
+		else if (d2 == 2)
+			te2.directionO = 3;
+		else if (d2 == 0)
+			te2.directionO = 0;
+		else if (d2 == 1)
+			te2.directionO = 1;
 	}
+
 	/*public void registerBlockIcons(IIconRegister i){
 		this.blockIcon = i.registerIcon("minecraft:mbf");
 		this.side = i.registerIcon("minecraft:mbf");
@@ -87,23 +109,21 @@ public class EnergySensor extends BlockContainerTomsMod {
 		}
 	}*/
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!world.isRemote){
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack heldItem = player.getHeldItem(hand);
+		if (!world.isRemote) {
 			TileEntity tilee = world.getTileEntity(pos);
-			if(tilee instanceof TileEntityEnergySensor){
-				TileEntityEnergySensor te = (TileEntityEnergySensor)tilee;
-				if(heldItem != null && CoreInit.isWrench(heldItem,player)){
-					if(player.isSneaking()){
+			if (tilee instanceof TileEntityEnergySensor) {
+				TileEntityEnergySensor te = (TileEntityEnergySensor) tilee;
+				if (heldItem != null && CoreInit.isWrench(player, hand)) {
+					if (player.isSneaking()) {
 						te.energyRate--;
-						if(te.energyRate == 0){
+						if (te.energyRate == 0) {
 							te.energyRate = 6;
 						}
-					}else{
+					} else {
 						te.energyRate++;
-						if(te.energyRate == 7){
+						if (te.energyRate == 7) {
 							te.energyRate = 1;
 						}
 					}
@@ -114,12 +134,14 @@ public class EnergySensor extends BlockContainerTomsMod {
 		}
 		return true;
 	}
+
 	@Override
 	public boolean hasComparatorInputOverride(IBlockState s) {
 		return true;
 	}
+
 	@Override
 	public int getComparatorInputOverride(IBlockState s, World world, BlockPos pos) {
-		return ((TileEntityEnergySensor)world.getTileEntity(pos)).comparator;
+		return ((TileEntityEnergySensor) world.getTileEntity(pos)).comparator;
 	}
 }

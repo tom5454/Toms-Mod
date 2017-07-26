@@ -4,10 +4,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
-public interface ICustomCraftingHandlerAdv{
+public interface ICustomCraftingHandlerAdv {
 	void onCrafingAdv(String player, ItemStack crafting, ItemStackAccess second, IInventory craftMatrix);
+
 	void onUsingAdv(String player, ItemStack crafting, ItemStackAccess second, IInventory craftMatrix, ItemStack s) throws CraftingErrorException;
-	public static class ItemStackAccess{
+
+	public static class ItemStackAccess {
 		private ItemStack stack;
 
 		public ItemStack getStack() {
@@ -22,13 +24,15 @@ public interface ICustomCraftingHandlerAdv{
 			this.stack = stack;
 		}
 	}
-	public static class CraftingErrorException extends Exception{
+
+	public static class CraftingErrorException extends Exception {
 		private static final long serialVersionUID = 4524518439893452334L;
 		private ITextComponent comp;
 
 		public CraftingErrorException(ITextComponent comp) {
 			this.comp = comp;
 		}
+
 		public ITextComponent getTextComponent() {
 			return comp;
 		}

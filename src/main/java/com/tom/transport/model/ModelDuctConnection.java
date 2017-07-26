@@ -9,46 +9,42 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelDuctConnection extends ModelBase
-{
+public class ModelDuctConnection extends ModelBase {
 	public static final ModelDuctConnection instance = new ModelDuctConnection();
-  //fields
-    ModelRenderer c;
-  
-  public ModelDuctConnection()
-  {
-    textureWidth = 32;
-    textureHeight = 32;
-    
-      c = new ModelRenderer(this, 0, 0);
-      c.addBox(0F, 0F, 0F, 8, 5, 8);
-      c.setRotationPoint(-4F, 19F, -4F);
-      c.setTextureSize(32, 32);
-      c.mirror = true;
-      setRotation(c, 0F, 0F, 0F);
-  }
-  
-  @Override
-public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-  {
-    super.render(entity, f, f1, f2, f3, f4, f5);
-    setRotationAngles(f, f1, f2, f3, f4, f5,entity);
-    c.render(f5);
-  }
-  
-  private void setRotation(ModelRenderer model, float x, float y, float z)
-  {
-    model.rotateAngleX = x;
-    model.rotateAngleY = y;
-    model.rotateAngleZ = z;
-  }
-  
-  @Override
-public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5,Entity ent)
-  {
-    super.setRotationAngles(f, f1, f2, f3, f4, f5,ent);
-  }
-  public void render(float size){
-	  c.render(size);
-  }
+	// fields
+	ModelRenderer c;
+
+	public ModelDuctConnection() {
+		textureWidth = 32;
+		textureHeight = 32;
+
+		c = new ModelRenderer(this, 0, 0);
+		c.addBox(0F, 0F, 0F, 8, 5, 8);
+		c.setRotationPoint(-4F, 19F, -4F);
+		c.setTextureSize(32, 32);
+		c.mirror = true;
+		setRotation(c, 0F, 0F, 0F);
+	}
+
+	@Override
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		super.render(entity, f, f1, f2, f3, f4, f5);
+		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+		c.render(f5);
+	}
+
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
+		model.rotateAngleX = x;
+		model.rotateAngleY = y;
+		model.rotateAngleZ = z;
+	}
+
+	@Override
+	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity ent) {
+		super.setRotationAngles(f, f1, f2, f3, f4, f5, ent);
+	}
+
+	public void render(float size) {
+		c.render(size);
+	}
 }

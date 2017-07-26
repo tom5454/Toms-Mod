@@ -3,11 +3,13 @@ package com.tom.factory.tileentity;
 import static com.tom.api.energy.EnergyType.HV;
 import static com.tom.api.energy.EnergyType.LV;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -23,67 +25,35 @@ import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.IConfigurable;
-import com.tom.api.tileentity.IConfigurable.IConfigurationOption.ConfigurationOptionMachine;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.apis.TomsModUtils;
+import com.tom.config.Config;
+import com.tom.config.ConfigurationOptionMachine;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockMachineBase;
+import com.tom.factory.block.SteamAlloySmelter;
+import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
 public abstract class TileEntityMachineBase extends TileEntityTomsMod implements ISidedInventory, IEnergyReceiver, IConfigurable {
-	protected ItemStack[] stack = new ItemStack[this.getSizeInventory()];
+	protected InventoryBasic inv = new InventoryBasic("", false, this.getSizeInventory());
 	protected EnergyType TYPE = HV;
 	public boolean active = false;
-	//private boolean lastActive = false;
+	// private boolean lastActive = false;
 	protected static final float[] TYPE_MULTIPLIER_SPEED = new float[]{1.0F, 0.85F, 0.7F};
-	protected static final int[] MAX_SPEED_UPGRADE_COUNT = new int[]{24, 10, 4};
+	protected static final int[] MAX_SPEED_UPGRADE_COUNT = Config.max_speed_upgrades;
 	protected int maxProgress = 1;
 	protected int progress = -1;
 	public ForceDeviceControlType rs;
 	private boolean powersharing = false;
 	private byte outputSides;
 	private IConfigurationOption cfgOption;
+	private List<ItemStackChecker> output = new ArrayList<>();
+
 	public TileEntityMachineBase() {
 		rs = ForceDeviceControlType.IGNORE;
-		cfgOption = new ConfigurationOptionMachine(outputSides, getFront(), new ResourceLocation("tomsmodfactory:textures/blocks/itemOutput.png"), getTop(), rs, this);
+		cfgOption = new ConfigurationOptionMachine(getFront(), new ResourceLocation("tomsmodfactory:textures/blocks/itemOutput.png"), getTop());
 		updateSlots();
-	}
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		return stack[index];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int par2) {
-		if (this.stack[slot] != null) {
-			ItemStack itemstack;
-			if (this.stack[slot].stackSize <= par2) {
-				itemstack = this.stack[slot];
-				this.stack[slot] = null;
-				return itemstack;
-			} else {
-				itemstack = this.stack[slot].splitStack(par2);
-
-				if (this.stack[slot].stackSize == 0) {
-					this.stack[slot] = null;
-				}
-				return itemstack;
-			}
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		ItemStack is = stack[index];
-		stack[index] = null;
-		return is;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		this.stack[index] = stack;
 	}
 
 	@Override
@@ -92,8 +62,8 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return TomsModUtils.isUseable(pos, player, worldObj, this);
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return TomsModUtils.isUsable(pos, player, world, this);
 	}
 
 	@Override
@@ -112,11 +82,6 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	}
 
 	@Override
-	public void clear() {
-		stack = new ItemStack[this.getSizeInventory()];
-	}
-
-	@Override
 	public boolean hasCustomName() {
 		return false;
 	}
@@ -125,21 +90,11 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	public ITextComponent getDisplayName() {
 		return new TextComponentString(getName());
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		stack = new ItemStack[this.getSizeInventory()];
-		NBTTagList list = compound.getTagList("inventory", 10);
-		for (int i = 0; i < list.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
-			int j = nbttagcompound.getByte("Slot") & 255;
-
-			if (j >= 0 && j < this.stack.length)
-			{
-				this.stack[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
-			}
-		}
+		TomsModUtils.loadAllItems(compound.getTagList("inventory", 10), inv);
 		getEnergy().readFromNBT(compound);
 		TYPE = EnergyType.VALUES[compound.getInteger("energyType")];
 		rs = ForceDeviceControlType.get(compound.getInteger("rsMode"));
@@ -147,26 +102,20 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 		powersharing = compound.getBoolean("powersharing");
 		updateSlots();
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		NBTTagList list = new NBTTagList();
-		for(int i = 0;i<stack.length;i++){
-			if(stack[i] != null){
-				NBTTagCompound tag = new NBTTagCompound();
-				stack[i].writeToNBT(tag);
-				tag.setByte("Slot", (byte) i);
-				list.appendTag(tag);
-			}
-		}
-		compound.setTag("inventory", list);
+		compound.setTag("inventory", TomsModUtils.saveAllItems(inv));
 		getEnergy().writeToNBT(compound);
 		compound.setInteger("energyType", TYPE.ordinal());
 		compound.setInteger("rsMode", rs.ordinal());
 		compound.setByte("output", outputSides);
 		compound.setBoolean("powersharing", powersharing);
+		compound.setTag("outputList", TomsModUtils.writeCollection(output, ItemStackChecker::writeToNew));
 		return compound;
 	}
+
 	@Override
 	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
 		return type == TYPE;
@@ -191,45 +140,51 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return getEnergy().getMaxEnergyStored();
 	}
+
 	public abstract EnergyStorage getEnergy();
 
-	public void setType(int meta){
-		if(meta == 0){
+	public void setType(int meta) {
+		if (meta == 0) {
 			TYPE = HV;
-		}else if(meta == 1){
+		} else if (meta == 1) {
 			TYPE = EnergyType.MV;
-		}else{
+		} else {
 			TYPE = EnergyType.LV;
 		}
 	}
-	public int getType(){
+
+	public int getType() {
 		return getMetaFromEnergyType(TYPE);
 	}
-	public void writeToStackNBT(NBTTagCompound tag){
+
+	public void writeToStackNBT(NBTTagCompound tag) {
 		getEnergy().writeToNBT(tag);
 		int i = getUpgradeSlot();
-		if(i > -1){
+		if (i > -1) {
 			NBTTagList list = new NBTTagList();
-			if(stack[i] != null){
-				NBTTagCompound t = new NBTTagCompound();
-				stack[i].writeToNBT(t);
-				t.setByte("Slot", (byte) i);
-				list.appendTag(t);
-			}
+			NBTTagCompound t = new NBTTagCompound();
+			inv.getStackInSlot(i).writeToNBT(t);
+			t.setByte("Slot", (byte) i);
+			list.appendTag(t);
 			tag.setTag("inventory", list);
 		}
 		tag.setInteger("rsMode", rs.ordinal());
 		tag.setByte("output", outputSides);
 	}
+
 	public abstract int getUpgradeSlot();
+
 	public abstract int[] getOutputSlots();
+
 	public abstract int[] getInputSlots();
-	public void pushOutput(EnumFacing side){
+
+	public void pushOutput(EnumFacing side) {
 	}
 
-	public int getMaxProgress(){
-		return !worldObj.isRemote ? MathHelper.floor_double(getMaxProcessTimeNormal() / TYPE_MULTIPLIER_SPEED[getType()]) : maxProgress;
+	public int getMaxProgress() {
+		return !world.isRemote ? MathHelper.floor(getMaxProcessTimeNormal() / TYPE_MULTIPLIER_SPEED[getType()]) : maxProgress;
 	}
+
 	@Override
 	public int getField(int id) {
 		return id == 0 ? progress : id == 1 ? maxProgress : 0;
@@ -237,62 +192,67 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 
 	@Override
 	public void setField(int id, int value) {
-		if(id == 0)progress = value;
-		else if(id == 1)maxProgress = value;
+		if (id == 0)
+			progress = value;
+		else if (id == 1)
+			maxProgress = value;
 	}
+
 	@Override
 	public final void preUpdate(IBlockState state) {
-		if(!worldObj.isRemote){
+		if (!world.isRemote) {
 			maxProgress = getMaxProgress();
-			if(rs == ForceDeviceControlType.HIGH_REDSTONE){
-				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
-			}else if(rs == ForceDeviceControlType.LOW_REDSTONE){
-				this.active = worldObj.isBlockIndirectlyGettingPowered(pos) == 0;
-			}else if(rs == ForceDeviceControlType.IGNORE){
+			if (rs == ForceDeviceControlType.HIGH_REDSTONE) {
+				this.active = world.isBlockIndirectlyGettingPowered(pos) > 0;
+			} else if (rs == ForceDeviceControlType.LOW_REDSTONE) {
+				this.active = world.isBlockIndirectlyGettingPowered(pos) == 0;
+			} else if (rs == ForceDeviceControlType.IGNORE) {
 				this.active = true;
 			}
-			//lastActive = active;
-			if(powersharing && getEnergy().getEnergyStoredPer() > 0.5F && worldObj.getTotalWorldTime() % 10 == 0){
+			// lastActive = active;
+			if (powersharing && getEnergy().getEnergyStoredPer() > 0.5F && world.getTotalWorldTime() % 10 == 0) {
 				EnumFacing facing = state.getValue(BlockMachineBase.FACING);
 				sharePower(facing.rotateY());
 				sharePower(facing.rotateYCCW());
 			}
 		}
 	}
-	private void sharePower(EnumFacing f){
+
+	private void sharePower(EnumFacing f) {
 		TileEntityMachineBase t = this;
 		int d = 0;
-		while(t != null && d < 8 && getEnergy().getEnergyStoredPer() > 0.5F){
+		while (t != null && d < 8 && getEnergy().getEnergyStoredPer() > 0.5F) {
 			d++;
-			TileEntity te = worldObj.getTileEntity(pos.offset(f, d));
-			if(te != null && te instanceof TileEntityMachineBase){
+			TileEntity te = world.getTileEntity(pos.offset(f, d));
+			if (te != null && te instanceof TileEntityMachineBase) {
 				t = (TileEntityMachineBase) te;
 				double r = t.receiveEnergy(f.getOpposite(), TYPE, 250, true);
-				if(r > 0){
+				if (r > 0) {
 					t.receiveEnergy(f, TYPE, getEnergy().extractEnergy(r, false), false);
 					r = t.receiveEnergy(f.getOpposite(), TYPE, 250, true);
-					if(r > 0){
+					if (r > 0) {
 						t.receiveEnergy(f, TYPE, getEnergy().extractEnergy(r, false), false);
 						r = t.receiveEnergy(f.getOpposite(), TYPE, 250, true);
-						if(r > 0){
+						if (r > 0) {
 							t.receiveEnergy(f, TYPE, getEnergy().extractEnergy(r, false), false);
 						}
 					}
 				}
-			}else{
+			} else {
 				t = null;
 			}
 		}
 	}
+
 	@Override
 	public final void postUpdate(IBlockState state) {
-		if(outputSides != 0){
+		if (outputSides != 0) {
 			int[] out = getOutputSlots();
 			EnumFacing facing = state.getValue(BlockMachineBase.FACING);
-			for(int i = 0;i<EnumFacing.VALUES.length;i++){
+			for (int i = 0;i < EnumFacing.VALUES.length;i++) {
 				EnumFacing f = EnumFacing.VALUES[i];
 				EnumFacing f2 = f;
-				switch(f){
+				switch (f) {
 				case DOWN:
 					f2 = EnumFacing.DOWN;
 					break;
@@ -314,34 +274,40 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 				default:
 					break;
 				}
-				if(contains(f)){
+				if (contains(f)) {
 					pushOutput(f2);
-					if(out != null){
-						for(int j = 0;j<out.length;j++){
+					if (out != null) {
+						for (int j = 0;j < out.length;j++) {
 							int s = out[j];
-							stack[s] = TomsModUtils.pushStackToNeighbours(stack[s], worldObj, pos, new EnumFacing[]{f2});
+							inv.setInventorySlotContents(s, TomsModUtils.pushStackToNeighbours(inv.getStackInSlot(s), world, pos, new EnumFacing[]{f2}));
 						}
 					}
 				}
 			}
 		}
 	}
+
 	public abstract int getMaxProcessTimeNormal();
+
 	public abstract ResourceLocation getFront();
-	public ResourceLocation getTop(){
+
+	public ResourceLocation getTop() {
 		return null;
 	}
 
-	public static int getMetaFromEnergyType(EnergyType type){
+	public static int getMetaFromEnergyType(EnergyType type) {
 		return type == HV ? 0 : type == EnergyType.MV ? 1 : 2;
 	}
-	public int getSpeedUpgradeCount(){
+
+	public int getSpeedUpgradeCount() {
 		int slot = getUpgradeSlot();
-		return Math.min(slot < 0 ? 0 : stack[slot] != null && stack[slot].getItem() == FactoryInit.speedUpgrade ? stack[slot].stackSize : 0, MAX_SPEED_UPGRADE_COUNT[getType()]);
+		return Math.min(slot < 0 ? 0 : !inv.getStackInSlot(slot).isEmpty() && inv.getStackInSlot(slot).getItem() == FactoryInit.speedUpgrade ? inv.getStackInSlot(slot).getCount() : 0, MAX_SPEED_UPGRADE_COUNT[getType()]);
 	}
-	public int getMaxSpeedUpgradeCount(){
+
+	public int getMaxSpeedUpgradeCount() {
 		return MAX_SPEED_UPGRADE_COUNT[getType()];
 	}
+
 	@Override
 	public IConfigurationOption getOption() {
 		return cfgOption;
@@ -371,7 +337,9 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	public ItemStack getCardStack() {
 		return null;
 	}
+
 	private int[][] SLOTS = new int[6][0];
+
 	@Override
 	public void receiveNBTPacket(NBTTagCompound tag) {
 		outputSides = tag.getByte("s");
@@ -386,46 +354,178 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 		tag.setInteger("r", rs.ordinal());
 		tag.setBoolean("p", powersharing);
 	}
+
 	@Override
 	public int[] getSlotsForFace(EnumFacing side) {
 		return SLOTS[side.ordinal()];
 	}
-	protected boolean canRun(){
-		if(rs == ForceDeviceControlType.HIGH_REDSTONE){
-			this.active = worldObj.isBlockIndirectlyGettingPowered(pos) > 0;
-		}else if(rs == ForceDeviceControlType.LOW_REDSTONE){
-			this.active = worldObj.isBlockIndirectlyGettingPowered(pos) == 0;
-		}else if(rs == ForceDeviceControlType.IGNORE){
+
+	protected boolean canRun() {
+		if (rs == ForceDeviceControlType.HIGH_REDSTONE) {
+			this.active = world.isBlockIndirectlyGettingPowered(pos) > 0;
+		} else if (rs == ForceDeviceControlType.LOW_REDSTONE) {
+			this.active = world.isBlockIndirectlyGettingPowered(pos) == 0;
+		} else if (rs == ForceDeviceControlType.IGNORE) {
 			this.active = true;
 		}
 		return active;
 	}
+
 	public boolean contains(EnumFacing side) {
 		return (outputSides & (1 << side.ordinal())) != 0;
 	}
-	protected void updateSlots(){
+
+	protected void updateSlots() {
 		int[] in = getInputSlots();
 		int[] out = getOutputSlots();
 		SLOTS = new int[6][];
-		for(int i = 0;i<EnumFacing.VALUES.length;i++){
+		for (int i = 0;i < EnumFacing.VALUES.length;i++) {
 			int size = 0;
-			if(in != null){
+			if (in != null) {
 				size += in.length;
 			}
-			if(out != null && contains(EnumFacing.VALUES[i])){
+			if (out != null && contains(EnumFacing.VALUES[i])) {
 				size += out.length;
 			}
 			SLOTS[i] = new int[size];
-			if(in != null){
-				for(int j = 0;j<in.length;j++){
+			if (in != null) {
+				for (int j = 0;j < in.length;j++) {
 					SLOTS[i][j] = in[j];
 				}
 			}
-			if(out != null && contains(EnumFacing.VALUES[i])){
-				for(int j = 0;j<out.length;j++){
+			if (out != null && contains(EnumFacing.VALUES[i])) {
+				for (int j = 0;j < out.length;j++) {
 					SLOTS[i][j] = out[j];
 				}
 			}
 		}
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index) {
+		return inv.getStackInSlot(index);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+		return inv.decrStackSize(index, count);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return inv.removeStackFromSlot(index);
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		this.inv.setInventorySlotContents(index, stack);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
+	}
+
+	@Override
+	public void clear() {
+		inv.clear();
+	}
+
+	@Override
+	public void updateEntity() {
+		if (!world.isRemote) {
+			if (getEnergy().extractEnergy(20D, true) == 20D && canRun()) {
+				if (progress > 0) {
+					updateProgress();
+				} else if (progress == 0) {
+					finish();
+				} else {
+					checkItems();
+					TomsModUtils.setBlockStateWithCondition(world, pos, SteamAlloySmelter.ACTIVE, progress > 0);
+				}
+			} else {
+				TomsModUtils.setBlockStateWithCondition(world, pos, SteamAlloySmelter.ACTIVE, false);
+			}
+		}
+	}
+
+	public abstract void checkItems();
+
+	public abstract void finish();
+
+	public abstract void updateProgress();
+
+	public void addItemsAndSetProgress(ItemStackChecker s, int outputSlot) {
+		addItemsAndSetProgress(s, outputSlot, 0, -1, null);
+	}
+
+	public void addItemsAndSetProgress(ItemStackChecker s, int outputSlot, int inSlot1, int inSlot2) {
+		addItemsAndSetProgress(s, outputSlot, inSlot1, inSlot2, null);
+	}
+
+	public void addItemsAndSetProgress(ItemStackChecker s, int outputSlot, int inSlot1, int inSlot2, Runnable doRun) {
+		if (s != null) {
+			if (!inv.getStackInSlot(outputSlot).isEmpty()) {
+				if (TomsModUtils.areItemStacksEqual(inv.getStackInSlot(outputSlot), s.getStack(), true, true, false) && inv.getStackInSlot(outputSlot).getCount() + s.getStack().getCount() <= s.getStack().getMaxStackSize()) {
+					inv.getStackInSlot(outputSlot).grow(s.getStack().getCount());
+					progress = -1;
+					if (doRun != null)
+						doRun.run();
+				}
+			} else {
+				progress = -1;
+				inv.setInventorySlotContents(outputSlot, s.getStack());
+				if (doRun != null)
+					doRun.run();
+			}
+		} else {
+			progress = -1;
+		}
+	}
+
+	public void checkItems(ItemStackChecker s, int outputSlot, int MAX_PROCESS_TIME, int inSlot1, int inSlot2) {
+		checkItems(s, outputSlot, MAX_PROCESS_TIME, inSlot1, inSlot2, null);
+	}
+
+	public void checkItems(ItemStackChecker s, int outputSlot, int MAX_PROCESS_TIME, int inSlot1, int inSlot2, Runnable doRun) {
+		if (s != null) {
+			if (!inv.getStackInSlot(outputSlot).isEmpty()) {
+				if (TomsModUtils.areItemStacksEqual(inv.getStackInSlot(outputSlot), s.getStack(), true, true, false) && inv.getStackInSlot(outputSlot).getCount() + s.getStack().getCount() <= s.getStack().getMaxStackSize() && inv.getStackInSlot(0).getCount() >= s.getExtra()) {
+					progress = MAX_PROCESS_TIME;
+					if (inSlot1 > -1)
+						decrStackSize(inSlot1, s.getExtra());
+					if (inSlot2 > -1)
+						decrStackSize(inSlot2, s.getExtra2());
+					if (doRun != null)
+						doRun.run();
+				}
+			} else {
+				progress = MAX_PROCESS_TIME;
+				if (inSlot1 > -1)
+					decrStackSize(inSlot1, s.getExtra());
+				if (inSlot2 > -1)
+					decrStackSize(inSlot2, s.getExtra2());
+				if (doRun != null)
+					doRun.run();
+			}
+		}
+	}
+
+	public ItemStackChecker getOutput(int i) {
+		return output.size() > i ? output.get(i) : null;
+	}
+
+	public void setOut(int i, ItemStackChecker s) {
+		if (s == null)
+			return;
+		if (output.size() <= i) {
+			output.add(s);
+		} else
+			output.set(i, s);
+	}
+
+	@Override
+	public String getConfigName() {
+		return getBlockType().getUnlocalizedName() + ".name";
 	}
 }

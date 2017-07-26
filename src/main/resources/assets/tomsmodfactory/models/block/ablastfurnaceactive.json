@@ -1,0 +1,8 @@
+{
+    "parent": "block/adv_facing",
+    "textures": {
+        "top": "tomsmodfactory:blocks/ablastFurnaceBrick",
+        "front": "tomsmodfactory:blocks/ablastFurnaceOn",
+        "side": "tomsmodfactory:blocks/ablastFurnaceBrick"
+    }
+}

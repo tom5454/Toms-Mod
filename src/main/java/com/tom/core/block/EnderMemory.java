@@ -18,34 +18,38 @@ import com.tom.core.tileentity.TileEntityEnderMemory;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class EnderMemory extends BlockContainerTomsMod implements IPeripheralProvider{
+public class EnderMemory extends BlockContainerTomsMod implements IPeripheralProvider {
 
 	protected EnderMemory(Material arg0) {
 		super(arg0);
 	}
 
-	public EnderMemory(){
+	public EnderMemory() {
 		this(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
+
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityEnderMemory();
 	}
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState bs, EntityLivingBase entity, ItemStack itemstack){
-		TileEntityEnderMemory te = (TileEntityEnderMemory)world.getTileEntity(pos);
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState bs, EntityLivingBase entity, ItemStack itemstack) {
+		TileEntityEnderMemory te = (TileEntityEnderMemory) world.getTileEntity(pos);
 		String pName = entity.getName();
-		//System.out.println(pName);
+		// System.out.println(pName);
 		te.playerName = pName;
 	}
+
 	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityEnderMemory ? (IPeripheral)te : null;
+		return te instanceof TileEntityEnderMemory ? (IPeripheral) te : null;
 	}
 
 }

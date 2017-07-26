@@ -1,6 +1,6 @@
 {
     "parent": "block/controller",
     "textures": {
-    	"front":"blocks/centrifugeOn"
+    	"front":"tomsmodfactory:blocks/centrifugeOn"
     }
 }

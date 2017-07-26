@@ -14,6 +14,7 @@ public interface IEnergyStorageTile {
 	 * Returns the maximum amount of energy that can be stored in that type.
 	 */
 	int getMaxEnergyStored(EnumFacing from, EnergyType type);
+
 	/**
 	 *
 	 * @return the valid energy types that can be stored.

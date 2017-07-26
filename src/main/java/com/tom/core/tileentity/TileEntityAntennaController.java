@@ -13,62 +13,63 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
 public class TileEntityAntennaController extends TileEntityTomsMod implements IPeripheral {
 	/*private TileEntityAntennaController cu = this;
 	protected IGridBlock gridBlock = new IGridBlock(){
-
+	
 		@Override
 		public double getIdlePowerUsage() {
 			return 12.0;
 		}
-
+	
 		@Override
 		public EnumSet<GridFlags> getFlags() {
 			EnumSet<GridFlags> r = EnumSet.of(GridFlags.REQUIRE_CHANNEL);
 			return r;
 		}
-
+	
 		@Override
 		public boolean isWorldAccessible() {
 			return true;
 		}
-
+	
 		@Override
 		public DimensionalCoord getLocation() {
 			return new DimensionalCoord(cu);
 		}
-
+	
 		@Override
 		public AEColor getGridColor() {
 			return AEColor.Transparent;
 		}
-
+	
 		@Override
 		public void onGridNotification(GridNotification notification) {
 			
 		}
-
+	
 		@Override
 		public void setNetworkStatus(IGrid grid, int channelsInUse) {
 			
 		}
-
+	
 		@Override
 		public EnumSet<ForgeDirection> getConnectableSides() {
 			return EnumSet.allOf(ForgeDirection.class);
 		}
-
+	
 		@Override
 		public IGridHost getMachine() {
 			return cu;
 		}
-
+	
 		@Override
 		public void gridChanged() {
 			
 		}
-
+	
 		@Override
 		public ItemStack getMachineRepresentation() {
 			return new ItemStack(CoreInit.AntennaController);
@@ -83,54 +84,54 @@ public class TileEntityAntennaController extends TileEntityTomsMod implements IP
 	public IGridNode getGridNode(ForgeDirection dir) {
 		return AEApi.instance().createGridNode(this.gridBlock);
 	}
-
+	
 	@Override
 	public AECableType getCableConnectionType(ForgeDirection dir) {
 		return AECableType.SMART;
 	}
-
+	
 	@Override
 	public void securityBreak() {
-
+	
 	}
-
+	
 	@Override
 	public String getType() {
 		return "antennaController";
 	}
-
+	
 	@Override
 	public String[] getMethodNames() {
 		return null;
 	}
-
+	
 	@Override
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] arguments) throws LuaException,
 			InterruptedException {
 		return null;
 	}
-
+	
 	@Override
 	public void attach(IComputerAccess computer) {
 		this.computers.add(computer);
 	}
-
+	
 	@Override
 	public void detach(IComputerAccess computer) {
 		this.computers.remove(computer);
 	}
-
+	
 	@Override
 	public boolean equals(IPeripheral other) {
 		return false;
 	}
-
+	
 	@Override
 	public void onUpdateTick() {
-
+	
 	}
-
+	
 	@Override
 	public void removeNode(IGridNode gridNode, IGridHost machine) {
 		if(machine instanceof TileEntityAntenna){
@@ -138,7 +139,7 @@ public class TileEntityAntennaController extends TileEntityTomsMod implements IP
 			this.antennas.remove(ant);
 		}
 	}
-
+	
 	@Override
 	public void addNode(IGridNode gridNode, IGridHost machine) {
 		if(machine instanceof TileEntityAntenna){
@@ -146,20 +147,20 @@ public class TileEntityAntennaController extends TileEntityTomsMod implements IP
 			this.antennas.add(ant);
 		}
 	}
-
+	
 	@Override
 	public void onSplit(IGridStorage destinationStorage) {
-
+	
 	}
-
+	
 	@Override
 	public void onJoin(IGridStorage sourceStorage) {
-
+	
 	}
-
+	
 	@Override
 	public void populateGridStorage(IGridStorage destinationStorage) {
-
+	
 	}
 	public boolean isActive()
 	{
@@ -167,10 +168,10 @@ public class TileEntityAntennaController extends TileEntityTomsMod implements IP
 		{
 			return false;
 		}
-
+	
 		return this.node.isActive();
 	}
-
+	
 	public boolean isPowered()
 	{
 		IEnergyGrid eg = this.getEnergy();
@@ -179,7 +180,7 @@ public class TileEntityAntennaController extends TileEntityTomsMod implements IP
 		}else return false;
 		
 	}
-
+	
 	public IEnergyGrid getEnergy()
 	{
 		final IGrid grid = this.getGrid();
@@ -216,7 +217,7 @@ public class TileEntityAntennaController extends TileEntityTomsMod implements IP
 			this.node = null;
 		}
 	}
-
+	
 	public void onChunkUnload()
 	{
 		this.isReady = false;
@@ -227,10 +228,12 @@ public class TileEntityAntennaController extends TileEntityTomsMod implements IP
 			this.node = AEApi.instance().createGridNode( this.gridBlock );
 		}
 	}*/
-	public String[] methods = {"listMethods","sendMsg"};
-	public void receive(String pName, Object msg){
-		
+	public String[] methods = {"listMethods", "sendMsg"};
+
+	public void receive(String pName, Object msg) {
+
 	}
+
 	@Override
 	public String getType() {
 		return "antennaController";
@@ -242,19 +245,17 @@ public class TileEntityAntennaController extends TileEntityTomsMod implements IP
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] a) throws LuaException,
-			InterruptedException {
-		if(method == 0){
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+		if (method == 0) {
 			Object[] o = new Object[methods.length];
-			for(int i = 0;i<o.length;i++){
+			for (int i = 0;i < o.length;i++) {
 				o[i] = methods[i];
 			}
 			return o;
-		}else if(method == 1){
-			if(a.length > 1 && a[0] instanceof String){
+		} else if (method == 1) {
+			if (a.length > 1 && a[0] instanceof String) {
 				String pName = (String) a[0];
-				for(TileEntityAntennaBase ant : this.antennas){
+				for (TileEntityAntennaBase ant : this.antennas) {
 					ant.sendMsg(pName, a[1]);
 				}
 			}
@@ -276,15 +277,18 @@ public class TileEntityAntennaController extends TileEntityTomsMod implements IP
 	public boolean equals(IPeripheral other) {
 		return false;
 	}
-	public void link(TileEntityAntennaBase a){
+
+	public void link(TileEntityAntennaBase a) {
 		this.antennas.add(a);
 	}
-	public void disConnect(TileEntityAntennaBase te){
+
+	public void disConnect(TileEntityAntennaBase te) {
 		this.antennas.remove(te);
 	}
-	public void queueEvent(String event, Object[] args){
-		//System.out.println("queueEvent");
-		for(IComputerAccess c : this.computers){
+
+	public void queueEvent(String event, Object[] args) {
+		// System.out.println("queueEvent");
+		for (IComputerAccess c : this.computers) {
 			c.queueEvent(event, args);
 		}
 	}

@@ -11,12 +11,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Holotape extends Item {
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack is, EntityPlayer player, List list, boolean isAdvanced)
-	{
+	public void addInformation(ItemStack is, EntityPlayer player, List list, boolean isAdvanced) {
 		super.addInformation(is, player, list, isAdvanced);
-		if(is.getTagCompound() != null && is.getTagCompound().hasKey("name")){
+		if (is.getTagCompound() != null && is.getTagCompound().hasKey("name")) {
 			String name = is.getTagCompound().getString("name");
 			list.add(name);
 		}

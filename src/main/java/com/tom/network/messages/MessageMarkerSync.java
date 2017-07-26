@@ -19,12 +19,14 @@ import io.netty.buffer.ByteBuf;
 
 public class MessageMarkerSync extends MessageBase<MessageMarkerSync> {
 	private byte type;
-	private int mx, my, mz,dim,color, id;
-	private String group,markerName,icon, beamTexture;
+	private int mx, my, mz, dim, color, id;
+	private String group, markerName, icon, beamTexture;
 	private RenderType beam, label;
+
 	public MessageMarkerSync() {
 		type = 0;
 	}
+
 	/*public MessageMarkerSync(MarkerManager manager) {
 		type = 1;
 		groupList = manager.groupList;
@@ -44,15 +46,16 @@ public class MessageMarkerSync extends MessageBase<MessageMarkerSync> {
 		this.label = marker.labelType;
 		this.markerName = marker.name;
 	}
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		type = buf.readByte();
-		if(type == 1){
+		if (type == 1) {
 			/*int groupAmount = buf.readShort();
 			for(int i = 0;i<groupAmount;i++){
 				groupList.add(ByteBufUtils.readUTF8String(buf));
 			}*/
-		}else if(type == 2 || type == 3){
+		} else if (type == 2 || type == 3) {
 			this.id = buf.readInt();
 			this.mx = buf.readInt();
 			this.my = buf.readInt();
@@ -71,12 +74,12 @@ public class MessageMarkerSync extends MessageBase<MessageMarkerSync> {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeByte(type);
-		if(type == 1){
+		if (type == 1) {
 			/*buf.writeShort(groupList.size());
 			for(int i = 0;i<groupList.size();i++){
 				ByteBufUtils.writeUTF8String(buf, groupList.get(i));
 			}*/
-		}else if(type == 2 || type == 3){
+		} else if (type == 2 || type == 3) {
 			buf.writeInt(id);
 			buf.writeInt(mx);
 			buf.writeInt(my);
@@ -98,9 +101,10 @@ public class MessageMarkerSync extends MessageBase<MessageMarkerSync> {
 
 			@Override
 			public void run() {
-				if(m.type == 2 || m.type == 3){
+				if (m.type == 2 || m.type == 3) {
 					Mw.getInstance().markerManager.markerListServer.put(m.id, new Marker(m.markerName, m.group, m.mx, m.my, m.mz, m.dim, m.icon, m.color, m.beam, m.label, m.beamTexture, false));
-					if(m.type == 3)Mw.getInstance().markerManager.update();
+					if (m.type == 3)
+						Mw.getInstance().markerManager.update();
 				}
 			}
 		});
@@ -108,20 +112,21 @@ public class MessageMarkerSync extends MessageBase<MessageMarkerSync> {
 
 	@Override
 	public void handleServerSide(MessageMarkerSync message, EntityPlayer player) {
-		if(message.type == 0){
+		if (message.type == 0) {
 			sendSyncMessageTo(player);
 		}
 	}
-	public static void sendSyncMessageTo(EntityPlayer player){
-		if(CoreInit.isMapEnabled){
-			for (int i = 0;i<Minimap.markerManagerServer.markerList.size();i++)
-			{
+
+	public static void sendSyncMessageTo(EntityPlayer player) {
+		if (CoreInit.isMapEnabled) {
+			for (int i = 0;i < Minimap.markerManagerServer.markerList.size();i++) {
 				NetworkHandler.sendTo(new MessageMarkerSync(Minimap.markerManagerServer.markerList.get(i), i, i + 1 == Minimap.markerManagerServer.markerList.size()), (EntityPlayerMP) player);
 			}
 		}
 	}
-	public static void sendSyncMessage(){
-		for(EntityPlayerMP player : TomsModUtils.getServer().getPlayerList().getPlayerList()){
+
+	public static void sendSyncMessage() {
+		for (EntityPlayerMP player : TomsModUtils.getServer().getPlayerList().getPlayers()) {
 			sendSyncMessageTo(player);
 		}
 	}

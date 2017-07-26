@@ -1,109 +1,86 @@
 package com.tom.storage.multipart;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
+import net.minecraftforge.items.IItemHandler;
+
+import com.tom.api.inventory.IStorageInventory;
 import com.tom.api.inventory.IStorageInventory.BasicFilter;
 import com.tom.api.inventory.IStorageInventory.BasicFilter.IFilteringInformation;
+import com.tom.api.inventory.IStorageInventory.BasicFilter.Mode;
 import com.tom.api.inventory.IStorageInventory.FilteredStorageInventory;
-import com.tom.api.inventory.IStorageInventory.IStorageInv;
 import com.tom.api.multipart.IGuiMultipart;
-import com.tom.api.multipart.PartModule;
-import com.tom.core.CoreInit;
-import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.storage.StorageInit;
-import com.tom.storage.multipart.StorageNetworkGrid.ICraftingHandler;
-import com.tom.storage.multipart.StorageNetworkGrid.IStorageData;
+import com.tom.apis.TomsModUtils;
+import com.tom.storage.handler.StorageNetworkGrid.IChannelLoadListener;
 import com.tom.storage.tileentity.gui.GuiStorageBus;
 import com.tom.storage.tileentity.inventory.ContainerStorageBus;
 
-import mcmultipart.multipart.PartSlot;
-import mcmultipart.raytrace.PartMOP;
+import mcmultipart.api.container.IMultipartContainer;
+import mcmultipart.api.multipart.MultipartHelper;
+import mcmultipart.api.slot.EnumFaceSlot;
+import mcmultipart.api.slot.IPartSlot;
 
-public class PartStorageBus extends PartModule<StorageNetworkGrid> implements IGuiMultipart{
-	public PartStorageBus() {
-		this(EnumFacing.NORTH);
-	}
-	public PartStorageBus(EnumFacing face) {
-		super(StorageInit.storageBus, 0.4, 0.25, face, "tomsmodstorage:tm.storageBus", 2);
-	}
+public class PartStorageBus extends PartChannelModule implements IGuiMultipart, IChannelLoadListener {
 	private boolean checkNBT = true;
 	private boolean checkMeta = true;
 	private boolean checkMod = false;
+	private boolean canViewAll = false;
+	private boolean isWhiteList = true;
+	private Mode mode = Mode.IO;
 	private static final String TAG_NBT_NAME = "config";
-	private IStorageData data = null;
+	private IStorageInventory data = null;
 	public InventoryBasic filterInv = new InventoryBasic("", false, 36);
-	@Override
-	public void onGridReload() {
-
-	}
 
 	@Override
-	public void onGridPostReload() {
+	public void updateEntityI() {
+		if (!world.isRemote) {
+			EnumFacing f = getFacing();
+			BlockPos pos = getPos2().offset(f);
+			final IItemHandler inventory = TomsModUtils.getItemHandler(world, pos, f.getOpposite(), false);
+			if (inventory != null && isActive().fullyActive()) {
+				if (data == null) {
+					data = new FilteredStorageInventory(inventory, 0, new BasicFilter(filterInv, new IFilteringInformation() {
 
-	}
-
-	@Override
-	public StorageNetworkGrid constructGrid() {
-		return new StorageNetworkGrid();
-	}
-
-	@Override
-	public void updateEntity() {
-		if(!worldObj.isRemote){
-			BlockPos pos = getPos2().offset(facing);
-			final IInventory inventory = TileEntityHopper.getInventoryAtPosition(worldObj, pos.getX(), pos.getY(), pos.getZ());
-			if(inventory != null){
-				if(data == null){
-					data = new IStorageData() {
-						IStorageInv inv = new FilteredStorageInventory(inventory, 0, new BasicFilter(filterInv, new IFilteringInformation() {
-
-							@Override
-							public boolean useNBT() {
-								return checkNBT;
-							}
-
-							@Override
-							public boolean useMod() {
-								return checkMod;
-							}
-
-							@Override
-							public boolean useMeta() {
-								return checkMeta;
-							}
-						}), facing.getOpposite());
 						@Override
-						public IStorageInv getInventory() {
-							return inv;
+						public boolean useNBT() {
+							return checkNBT;
 						}
 
 						@Override
-						public void update(ItemStack stack, IInventory inv, World world, int priority) {
-							this.inv.update(stack, inv, priority);
+						public boolean useMod() {
+							return checkMod;
 						}
 
 						@Override
-						public ICraftingHandler<?> getCraftingHandler() {
-							return null;
+						public boolean useMeta() {
+							return checkMeta;
 						}
-					};
+
+						@Override
+						public boolean canViewAll() {
+							return canViewAll;
+						}
+
+						@Override
+						public Mode getMode() {
+							return mode;
+						}
+
+						@Override
+						public boolean isWhiteList() {
+							return isWhiteList;
+						}
+					}), f.getOpposite(), grid);
 				}
-				data.getInventory().update(null, inventory, 0);
-				grid.getData().addStorageData(data);
-				grid.drainEnergy(0.5D);
-			}else{
-				if(data != null){
-					grid.getData().removeStorageData(data);
+				((FilteredStorageInventory) data).update(null, inventory, 0);
+				grid.getData().addInventory(data);
+			} else {
+				if (data != null) {
+					grid.getData().removeInventory(data);
 					data = null;
 				}
 			}
@@ -111,31 +88,20 @@ public class PartStorageBus extends PartModule<StorageNetworkGrid> implements IG
 	}
 
 	@Override
-	public int getState() {
-		return grid.isPowered() ? 2 : 0;
-	}
-	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setBoolean("checkMeta", checkMeta);
 		tag.setBoolean("checkNBT", checkNBT);
 		tag.setBoolean("checkMod", checkMod);
-		NBTTagList list = new NBTTagList();
-		for (int i = 0; i < filterInv.getSizeInventory(); ++i)
-		{
-			if (filterInv.getStackInSlot(i) != null)
-			{
-				NBTTagCompound nbttagcompound = new NBTTagCompound();
-				nbttagcompound.setByte("Slot", (byte)i);
-				filterInv.getStackInSlot(i).writeToNBT(nbttagcompound);
-				list.appendTag(nbttagcompound);
-			}
-		}
-		tag.setTag("itemList", list);
+		tag.setTag("itemList", TomsModUtils.saveAllItems(filterInv));
+		tag.setBoolean("canView", canViewAll);
+		tag.setBoolean("whitelist", isWhiteList);
+		tag.setInteger("mode", mode.ordinal());
 		nbt.setTag(TAG_NBT_NAME, tag);
 		return nbt;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -143,40 +109,112 @@ public class PartStorageBus extends PartModule<StorageNetworkGrid> implements IG
 		this.checkMeta = tag.getBoolean("checkMeta");
 		this.checkNBT = tag.getBoolean("checkNBT");
 		this.checkMod = tag.getBoolean("checkMod");
-		NBTTagList list = tag.getTagList("itemList", 10);
-		filterInv.clear();
-		for (int i = 0; i < list.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
-			int j = nbttagcompound.getByte("Slot") & 255;
-
-			if (j >= 0 && j < filterInv.getSizeInventory())
-			{
-				filterInv.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound));
-			}
-		}
+		TomsModUtils.loadAllItems(tag.getTagList("itemList", 10), filterInv);
+		this.canViewAll = tag.getBoolean("canView");
+		this.isWhiteList = tag.getBoolean("whitelist");
+		this.mode = Mode.VALUES[tag.getInteger("mode")];
 	}
+
 	@Override
 	public Object getGui(EntityPlayer player) {
 		return new GuiStorageBus(this, player.inventory);
 	}
+
 	@Override
 	public Object getContainer(EntityPlayer player) {
 		return new ContainerStorageBus(this, player.inventory);
 	}
-	@Override
-	public void buttonPressed(EntityPlayer player, int id, int extra) {
 
-	}
 	@Override
-	public PartSlot getPosition() {
-		return PartSlot.getFaceSlot(facing);
+	public void buttonPressed(EntityPlayer player, int id, int value) {
+		if (id == 0) {
+			this.setWhiteList(value == 1);
+		} else if (id == 1) {
+			this.setCheckMeta(value == 1);
+		} else if (id == 2) {
+			this.setCheckNBT(value == 1);
+		} else if (id == 3) {
+			this.setCheckMod(value == 1);
+		} else if (id == 4) {
+			this.setCanViewAll(value == 1);
+		} else if (id == 5) {
+			this.setMode(Mode.VALUES[value % Mode.VALUES.length]);
+		}
 	}
+
 	@Override
-	public boolean onPartActivated(EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, PartMOP hit) {
-		BlockPos pos = getPos2();
-		if(!player.worldObj.isRemote)player.openGui(CoreInit.modInstance, GuiIDs.getMultipartGuiId(facing).ordinal(), getWorld2(), pos.getX(), pos.getY(), pos.getZ());
-		return true;
+	public IPartSlot getPosition() {
+		IMultipartContainer c = MultipartHelper.getContainer(world, pos).orElse(null);
+		return c != null ? EnumFaceSlot.fromFace(getFacing()) : null;
+	}
+
+	@Override
+	public double getPowerDrained() {
+		return 0.6D;
+	}
+
+	@Override
+	public int getPriority() {
+		return 5;
+	}
+
+	@Override
+	public void invalidateGrid() {
+		if (data != null)
+			grid.getData().removeInventory(data);
+		super.invalidateGrid();
+	}
+
+	@Override
+	public void onPartsUpdate() {
+		updateEntityI();
+	}
+
+	public boolean isWhiteList() {
+		return isWhiteList;
+	}
+
+	public boolean isCheckNBT() {
+		return checkNBT;
+	}
+
+	public void setCheckNBT(boolean checkNBT) {
+		this.checkNBT = checkNBT;
+	}
+
+	public boolean isCheckMeta() {
+		return checkMeta;
+	}
+
+	public void setCheckMeta(boolean checkMeta) {
+		this.checkMeta = checkMeta;
+	}
+
+	public boolean isCheckMod() {
+		return checkMod;
+	}
+
+	public void setCheckMod(boolean checkMod) {
+		this.checkMod = checkMod;
+	}
+
+	public boolean isCanViewAll() {
+		return canViewAll;
+	}
+
+	public void setCanViewAll(boolean canViewAll) {
+		this.canViewAll = canViewAll;
+	}
+
+	public Mode getMode() {
+		return mode;
+	}
+
+	public void setMode(Mode mode) {
+		this.mode = mode;
+	}
+
+	public void setWhiteList(boolean isWhiteList) {
+		this.isWhiteList = isWhiteList;
 	}
 }

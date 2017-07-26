@@ -22,6 +22,7 @@ public class TileEntityLiquidFueledGenerator extends TileEntityTomsMod implement
 	private EnergyStorage energy = new EnergyStorage(20000, 200);
 	private FluidTank tank = new FluidTank(10000);
 	private int burnTimeLeft = 0;
+
 	@Override
 	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
 		return type == LV;
@@ -51,14 +52,18 @@ public class TileEntityLiquidFueledGenerator extends TileEntityTomsMod implement
 	public IFluidHandler getTankOnSide(EnumFacing f) {
 		return Helper.getFluidHandlerFromTank(tank, FuelHandler.IS_FLUID_FUEL_PREDICATE, true, false);
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		energy.readFromNBT(compound);
-		if(compound.hasKey("tankS"))tank.readFromNBT(compound.getCompoundTag("tankS"));
-		else tank.readFromNBT(compound.getCompoundTag("tank"));
+		if (compound.hasKey("tankS"))
+			tank.readFromNBT(compound.getCompoundTag("tankS"));
+		else
+			tank.readFromNBT(compound.getCompoundTag("tank"));
 		burnTimeLeft = compound.getInteger("burnTime");
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
@@ -67,27 +72,30 @@ public class TileEntityLiquidFueledGenerator extends TileEntityTomsMod implement
 		compound.setInteger("burnTime", burnTimeLeft);
 		return compound;
 	}
+
 	@Override
 	public void updateEntity(IBlockState state) {
-		if(!worldObj.isRemote){
-			if(burnTimeLeft < 1 && tank.getFluidAmount() > 4){
+		if (!world.isRemote) {
+			if (burnTimeLeft < 1 && tank.getFluidAmount() > 4) {
 				int burnTime = FuelHandler.getBurnTimeForFluid(tank.getFluid());
 				tank.drainInternal(5, true);
 				burnTimeLeft += burnTime / 80;
 			}
-			if(burnTimeLeft > 0 && !energy.isFull()){
-				if(burnTimeLeft > 0)burnTimeLeft--;
+			if (burnTimeLeft > 0 && !energy.isFull()) {
+				if (burnTimeLeft > 0)
+					burnTimeLeft--;
 				energy.receiveEnergy(20, false);
 			}
-			if(this.energy.getEnergyStored() > 0){
-				for(EnumFacing f : EnumFacing.VALUES){
-					//	TileEntity receiver = worldObj.getTileEntity(pos.offset(f));
-					//if(receiver instanceof IEnergyReceiver) {
-					//System.out.println("send");
+			if (this.energy.getEnergyStored() > 0) {
+				for (EnumFacing f : EnumFacing.VALUES) {
+					// TileEntity receiver =
+					// worldObj.getTileEntity(pos.offset(f));
+					// if(receiver instanceof IEnergyReceiver) {
+					// System.out.println("send");
 					EnumFacing fOut = f.getOpposite();
-					//IEnergyReceiver recv = (IEnergyReceiver)receiver;
-					LV.pushEnergyTo(worldObj, pos, fOut, energy, false);
-					//}
+					// IEnergyReceiver recv = (IEnergyReceiver)receiver;
+					LV.pushEnergyTo(world, pos, fOut, energy, false);
+					// }
 				}
 			}
 		}

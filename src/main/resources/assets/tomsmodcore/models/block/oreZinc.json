@@ -1,6 +1,6 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all":"blocks/oreZinc","particle": "blocks/oreZinc"
-    }
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "tomsmodcore:blocks/orezinc"
+  }
 }

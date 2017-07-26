@@ -33,23 +33,25 @@ import com.tom.core.Minimap;
 import com.tom.lib.GlobalFields;
 
 public class ItemEntityTracker extends ItemEnergyContainer {
-	public ItemEntityTracker(){
+	public ItemEntityTracker() {
 		super(1000000);
 	}
+
 	/*@SideOnly(Side.CLIENT)
 	private IIcon off;
 	@SideOnly(Side.CLIENT)
 	private IIcon jammed;*/
 	private static final int updateRate = 20;
+
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced)
-	{
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced) {
 		boolean active = itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("active") ? itemStack.getTagCompound().getBoolean("active") : false;
 		list.add(getInfo(itemStack));
 		TomsModUtils.addActiveTag(list, active);
 	}
+
 	@Override
 	public void onUpdate(ItemStack is, World world, Entity entity, int par4, boolean par5) {
 		NBTTagCompound tag = is.getTagCompound();
@@ -57,52 +59,55 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 		boolean active = tag != null && tag.hasKey("active") ? tag.getBoolean("active") : false;
 		boolean jammed = tag != null && tag.hasKey("jammed") ? tag.getBoolean("jammed") : false;
 		int meta = is.getItemDamage();
-		if(active && jammed){
-			if(meta != 2)is.setItemDamage(2);
-		}else if(active){
-			if(meta != 1)is.setItemDamage(1);
-		}else{
-			if(meta != 0)is.setItemDamage(0);
+		if (active && jammed) {
+			if (meta != 2)
+				is.setItemDamage(2);
+		} else if (active) {
+			if (meta != 1)
+				is.setItemDamage(1);
+		} else {
+			if (meta != 0)
+				is.setItemDamage(0);
 		}
-		List<EntityMob> mobs = new ArrayList<EntityMob>();
-		List<EntityAnimal> animals = new ArrayList<EntityAnimal>();
-		List<EntityLiving> other = new ArrayList<EntityLiving>();
+		List<EntityMob> mobs = new ArrayList<>();
+		List<EntityAnimal> animals = new ArrayList<>();
+		List<EntityLiving> other = new ArrayList<>();
 		int i = tag != null && tag.hasKey("timer") ? tag.getInteger("timer") : 0;
-		if(i == updateRate && entity instanceof EntityPlayer){
+		if (i == updateRate && entity instanceof EntityPlayer) {
 			tag.setInteger("timer", 0);
-			if(world.isRemote){
-				//System.out.println("update");
-				if(!jammed){
-					List<?> entities = powered && active ? world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(entity.posX - 32, entity.posY - 32, entity.posZ - 32, entity.posX + 33, entity.posY + 33, entity.posZ + 33)) : new ArrayList<Object>();
-					for(Object o : entities){
-						if(o instanceof EntityLiving && !o.equals(entity)){
-							if(o instanceof EntityMob){
+			if (world.isRemote) {
+				// System.out.println("update");
+				if (!jammed) {
+					List<?> entities = powered && active ? world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(entity.posX - 32, entity.posY - 32, entity.posZ - 32, entity.posX + 33, entity.posY + 33, entity.posZ + 33)) : new ArrayList<>();
+					for (Object o : entities) {
+						if (o instanceof EntityLiving && !o.equals(entity)) {
+							if (o instanceof EntityMob) {
 								mobs.add((EntityMob) o);
-							}else if(o instanceof EntityAnimal){
+							} else if (o instanceof EntityAnimal) {
 								animals.add((EntityAnimal) o);
-							}else if(o instanceof INpc || o instanceof EntityPlayer){
+							} else if (o instanceof INpc || o instanceof EntityPlayer) {
 								other.add((EntityLiving) o);
 							}
 						}
 					}
 				}
-				for(String a : GlobalFields.animals){
+				for (String a : GlobalFields.animals) {
 					/*int int1 = GlobalFields.animals.indexOf(a);
 					String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 							+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 								int1+">";*/
-					//System.out.println(a);
-					//System.out.println();
+					// System.out.println(a);
+					// System.out.println();
 					Minimap.deleteWayPoint("animals", a);
 				}
-				for(String a : GlobalFields.mobs){
+				for (String a : GlobalFields.mobs) {
 					/*int int1 = GlobalFields.mobs.indexOf(a);
 					String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 							+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 								int1+">";*/
 					Minimap.deleteWayPoint("enemies", a);
 				}
-				for(String a : GlobalFields.other){
+				for (String a : GlobalFields.other) {
 					/*int int1 = GlobalFields.other.indexOf(a);
 					String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 							+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
@@ -112,77 +117,67 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 				GlobalFields.animals.clear();
 				GlobalFields.mobs.clear();
 				GlobalFields.other.clear();
-				if(!jammed){
-					for(EntityAnimal a : animals){
+				if (!jammed) {
+					for (EntityAnimal a : animals) {
 						int int1 = animals.indexOf(a);
-						String name = a.hasCustomName() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
-								+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
-								int1+">";
-						Minimap.createTexturedWayPoint("animals", MathHelper.floor_double(a.posX), MathHelper.floor_double(a.posY), MathHelper.floor_double(a.posZ),
-								a.dimension, name, "tm:minimap/entityFriendly",0, RenderType.NONE, RenderType.NONE,false, "");
+						String name = a.hasCustomName() ? a.getCustomNameTag() : a.getName() + "<" + a.getMaxHealth() + "HP/" + a.getHealth() + "HP, " + (Math.floor(a.posX * 100D) / 100D) + ", " + (Math.floor(a.posY * 100D) / 100D) + ", " + (Math.floor(a.posZ * 100D) / 100D) + ", " + int1 + ">";
+						Minimap.createTexturedWayPoint("animals", MathHelper.floor(a.posX), MathHelper.floor(a.posY), MathHelper.floor(a.posZ), a.dimension, name, "tm:minimap/entityFriendly", 0, RenderType.NONE, RenderType.NONE, false, "");
 						GlobalFields.animals.add(name);
 					}
-					for(EntityMob a : mobs){
+					for (EntityMob a : mobs) {
 						int int1 = mobs.indexOf(a);
-						String name = a.hasCustomName() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
-								+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
-								int1+">";
-						Minimap.createTexturedWayPoint("enemies",  MathHelper.floor_double(a.posX), MathHelper.floor_double(a.posY), MathHelper.floor_double(a.posZ),
-								a.dimension, name, "tm:minimap/entityEnemy",0, RenderType.NONE, RenderType.NONE, false, "");
+						String name = a.hasCustomName() ? a.getCustomNameTag() : a.getName() + "<" + a.getMaxHealth() + "HP/" + a.getHealth() + "HP, " + (Math.floor(a.posX * 100D) / 100D) + ", " + (Math.floor(a.posY * 100D) / 100D) + ", " + (Math.floor(a.posZ * 100D) / 100D) + ", " + int1 + ">";
+						Minimap.createTexturedWayPoint("enemies", MathHelper.floor(a.posX), MathHelper.floor(a.posY), MathHelper.floor(a.posZ), a.dimension, name, "tm:minimap/entityEnemy", 0, RenderType.NONE, RenderType.NONE, false, "");
 						GlobalFields.mobs.add(name);
 					}
-					for(EntityLiving a : other){
+					for (EntityLiving a : other) {
 						int int1 = other.indexOf(a);
-						String name = a.hasCustomName() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
-								+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
-								int1+">";
-						Minimap.createTexturedWayPoint("other",  MathHelper.floor_double(a.posX), MathHelper.floor_double(a.posY), MathHelper.floor_double(a.posZ),
-								a.dimension, name, "tm:minimap/entityVillager",0, RenderType.NONE, RenderType.NONE,false, "");
+						String name = a.hasCustomName() ? a.getCustomNameTag() : a.getName() + "<" + a.getMaxHealth() + "HP/" + a.getHealth() + "HP, " + (Math.floor(a.posX * 100D) / 100D) + ", " + (Math.floor(a.posY * 100D) / 100D) + ", " + (Math.floor(a.posZ * 100D) / 100D) + ", " + int1 + ">";
+						Minimap.createTexturedWayPoint("other", MathHelper.floor(a.posX), MathHelper.floor(a.posY), MathHelper.floor(a.posZ), a.dimension, name, "tm:minimap/entityVillager", 0, RenderType.NONE, RenderType.NONE, false, "");
 						GlobalFields.other.add(name);
 					}
-				}else{
+				} else {
 					String name = "Unknown";
 					int jx = is.getTagCompound().hasKey("jx") ? is.getTagCompound().getInteger("jx") : 0;
 					int jy = is.getTagCompound().hasKey("jy") ? is.getTagCompound().getInteger("jy") : 0;
 					int jz = is.getTagCompound().hasKey("jz") ? is.getTagCompound().getInteger("jz") : 0;
 					int jd = is.getTagCompound().hasKey("jd") ? is.getTagCompound().getInteger("jd") : 0;
-					Minimap.createTexturedWayPoint("other",  jx, jy,jz,
-							jd, name, "tm:minimap/entityUnknown",0, RenderType.NONE, RenderType.NONE, false, "");
+					Minimap.createTexturedWayPoint("other", jx, jy, jz, jd, name, "tm:minimap/entityUnknown", 0, RenderType.NONE, RenderType.NONE, false, "");
 					GlobalFields.other.add(name);
 				}
 				/*GlobalFields.animals = new ArrayList<EntityAnimal>(animals);
 				GlobalFields.mobs = new ArrayList<EntityMob>(mobs);
 				GlobalFields.other = new ArrayList<EntityLiving>(other);*/
-			}else{
+			} else {
 				this.extractEnergy(is, 10, false);
 				int jx = is.getTagCompound().hasKey("jx") ? is.getTagCompound().getInteger("jx") : 0;
 				int jy = is.getTagCompound().hasKey("jy") ? is.getTagCompound().getInteger("jy") : 0;
 				int jz = is.getTagCompound().hasKey("jz") ? is.getTagCompound().getInteger("jz") : 0;
 				TileEntity tile = world.getTileEntity(new BlockPos(jx, jy, jz));
-				if(!(tile instanceof TileEntityJammerBase && ((TileEntityJammerBase)tile).isActive()) || entity.getDistance(jx, jy, jz) > ((TileEntityJammerBase)tile).getRange()){
+				if (!(tile instanceof TileEntityJammerBase && ((TileEntityJammerBase) tile).isActive()) || entity.getDistance(jx, jy, jz) > ((TileEntityJammerBase) tile).getRange()) {
 					is.getTagCompound().setBoolean("jammed", false);
 				}
 			}
-		}else if(!powered && active){
+		} else if (!powered && active) {
 			tag.setBoolean("active", false);
-			tag.setInteger("timer",updateRate);
-			for(String a : GlobalFields.animals){
+			tag.setInteger("timer", updateRate);
+			for (String a : GlobalFields.animals) {
 				/*int int1 = GlobalFields.animals.indexOf(a);
 				String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 						+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 							int1+">";*/
-				//System.out.println(a);
-				//System.out.println();
+				// System.out.println(a);
+				// System.out.println();
 				Minimap.deleteWayPoint("animals", a);
 			}
-			for(String a : GlobalFields.mobs){
+			for (String a : GlobalFields.mobs) {
 				/*int int1 = GlobalFields.mobs.indexOf(a);
 				String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 						+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 							int1+">";*/
 				Minimap.deleteWayPoint("enemies", a);
 			}
-			for(String a : GlobalFields.other){
+			for (String a : GlobalFields.other) {
 				/*int int1 = GlobalFields.other.indexOf(a);
 				String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 						+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
@@ -191,45 +186,46 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 			}
 			Mw.getInstance().markerManager.setVisibleGroupName("all");
 			Mw.getInstance().markerManager.update();
-		}else if(powered && active){
-			tag.setInteger("timer", i+1);
+		} else if (powered && active) {
+			tag.setInteger("timer", i + 1);
 		}
 	}
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack is,
-			World world, EntityPlayer player, EnumHand hand) {
-		this.onItemUse(is, player, world);
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, is);
-	}
-	private void onItemUse(ItemStack is, EntityPlayer player, World world){
-		if(is.getTagCompound() != null){
-			NBTTagCompound tag = is.getTagCompound();
-			if(tag.hasKey("active")){
-				if(player.isSneaking()){
-					if(this.getEnergyStored(is) < 10){
 
-					}else{
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		this.onItemUse(player.getHeldItem(hand), player, world);
+		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+	}
+
+	private void onItemUse(ItemStack is, EntityPlayer player, World world) {
+		if (is.getTagCompound() != null) {
+			NBTTagCompound tag = is.getTagCompound();
+			if (tag.hasKey("active")) {
+				if (player.isSneaking()) {
+					if (this.getEnergyStored(is) < 10) {
+
+					} else {
 						boolean active = tag.getBoolean("active");
 						is.getTagCompound().setBoolean("active", !active);
-						if(active && world.isRemote){
-							//System.out.println("turn off");
-							for(String a : GlobalFields.animals){
+						if (active && world.isRemote) {
+							// System.out.println("turn off");
+							for (String a : GlobalFields.animals) {
 								/*int int1 = GlobalFields.animals.indexOf(a);
 								String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 										+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 											int1+">";*/
-								//System.out.println(a);
-								//System.out.println();
+								// System.out.println(a);
+								// System.out.println();
 								Minimap.deleteWayPoint("animals", a);
 							}
-							for(String a : GlobalFields.mobs){
+							for (String a : GlobalFields.mobs) {
 								/*int int1 = GlobalFields.mobs.indexOf(a);
 								String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 										+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 											int1+">";*/
 								Minimap.deleteWayPoint("enemies", a);
 							}
-							for(String a : GlobalFields.other){
+							for (String a : GlobalFields.other) {
 								/*int int1 = GlobalFields.other.indexOf(a);
 								String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 										+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
@@ -241,10 +237,10 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 						}
 					}
 				}
-			}else{
+			} else {
 				is.getTagCompound().setBoolean("active", true);
 			}
-		}else{
+		} else {
 			is.setTagCompound(new NBTTagCompound());
 			is.getTagCompound().setBoolean("active", true);
 		}
@@ -266,8 +262,9 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 		boolean jammed = tag != null && tag.hasKey("jammed") ? tag.getBoolean("jammed") : false;
 		return active ? jammed ? this.jammed : this.itemIcon : this.off;
 	}*/
-	/**if(is.getTagCompound() != null && entity instanceof EntityPlayer){
-			NBTTagCompound tag = is.getTagCompound();
-			if(tag.hasKey("active")){
-				if(tag.getBoolean("active")){*/
+	/**
+	 * if(is.getTagCompound() != null && entity instanceof EntityPlayer){
+	 * NBTTagCompound tag = is.getTagCompound(); if(tag.hasKey("active")){
+	 * if(tag.getBoolean("active")){
+	 */
 }

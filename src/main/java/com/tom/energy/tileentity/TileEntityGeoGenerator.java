@@ -24,6 +24,7 @@ import com.tom.energy.block.GeoGenerator;
 public class TileEntityGeoGenerator extends TileEntityTomsMod implements ITileFluidHandler, IEnergyProvider {
 	private EnergyStorage energy = new EnergyStorage(20000, 200);
 	private FluidTank tank = new FluidTank(10000);
+
 	@Override
 	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
 		return type == LV;
@@ -53,13 +54,17 @@ public class TileEntityGeoGenerator extends TileEntityTomsMod implements ITileFl
 	public IFluidHandler getTankOnSide(EnumFacing f) {
 		return Helper.getFluidHandlerFromTank(tank, FluidRegistry.LAVA, true, false);
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		energy.readFromNBT(compound);
-		if(compound.hasKey("tankS"))tank.readFromNBT(compound.getCompoundTag("tankS"));
-		else tank.readFromNBT(compound.getCompoundTag("tank"));
+		if (compound.hasKey("tankS"))
+			tank.readFromNBT(compound.getCompoundTag("tankS"));
+		else
+			tank.readFromNBT(compound.getCompoundTag("tank"));
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
@@ -67,25 +72,27 @@ public class TileEntityGeoGenerator extends TileEntityTomsMod implements ITileFl
 		compound.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
 		return compound;
 	}
+
 	@Override
 	public void updateEntity(IBlockState state) {
-		if(!worldObj.isRemote){
-			if(tank.getFluidAmount() > 0 && !energy.isFull()){
+		if (!world.isRemote) {
+			if (tank.getFluidAmount() > 0 && !energy.isFull()) {
 				tank.drainInternal(1, true);
 				energy.receiveEnergy(20, false);
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, state, GeoGenerator.ACTIVE, true);
-			}else{
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, state, GeoGenerator.ACTIVE, false);
+				TomsModUtils.setBlockStateWithCondition(world, pos, state, GeoGenerator.ACTIVE, true);
+			} else {
+				TomsModUtils.setBlockStateWithCondition(world, pos, state, GeoGenerator.ACTIVE, false);
 			}
-			if(this.energy.getEnergyStored() > 0){
-				for(EnumFacing f : EnumFacing.VALUES){
-					//	TileEntity receiver = worldObj.getTileEntity(pos.offset(f));
-					//if(receiver instanceof IEnergyReceiver) {
-					//System.out.println("send");
+			if (this.energy.getEnergyStored() > 0) {
+				for (EnumFacing f : EnumFacing.VALUES) {
+					// TileEntity receiver =
+					// worldObj.getTileEntity(pos.offset(f));
+					// if(receiver instanceof IEnergyReceiver) {
+					// System.out.println("send");
 					EnumFacing fOut = f.getOpposite();
-					//IEnergyReceiver recv = (IEnergyReceiver)receiver;
-					LV.pushEnergyTo(worldObj, pos, fOut, energy, false);
-					//}
+					// IEnergyReceiver recv = (IEnergyReceiver)receiver;
+					LV.pushEnergyTo(world, pos, fOut, energy, false);
+					// }
 				}
 			}
 		}

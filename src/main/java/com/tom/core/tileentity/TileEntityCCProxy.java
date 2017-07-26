@@ -10,8 +10,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.Optional;
 
 import com.tom.api.energy.EnergyType;
@@ -27,12 +27,11 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 
-@SuppressWarnings("deprecation")
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
-	private List<IComputerAccess> computers = new ArrayList<IComputerAccess>();
+public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral {
+	private List<IComputerAccess> computers = new ArrayList<>();
 	public String pName = "tm_ender_memory";
-	public String[] methods = {"listMethods","getName","call"};
+	public String[] methods = {"listMethods", "getName", "call"};
 	private String name = "tm_proxy";
 	public int d = 0;
 	private boolean firstStart = true;
@@ -41,6 +40,7 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 	public int directionO = 1;
 	public int direction2 = 0;
 	public int directionO2 = 1;
+
 	@Override
 	public String getType() {
 		return this.name;
@@ -52,50 +52,48 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] a) throws LuaException,
-	InterruptedException {
-		if(method == 0){
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+		if (method == 0) {
 			Object[] o = new Object[methods.length];
-			for(int i = 0;i<o.length;i++){
+			for (int i = 0;i < o.length;i++) {
 				o[i] = methods[i];
 			}
 			return o;
-		}else if(method == 1){
+		} else if (method == 1) {
 			this.onNeibourChange();
-			if(current != null){
+			if (current != null) {
 				return new Object[]{current.getName()};
-			}else{
+			} else {
 				throw new LuaException("There is no valid device in front of the Proxy");
 			}
-		}else if(method == 2){
+		} else if (method == 2) {
 			this.onNeibourChange();
-			if(current != null){
-				if(a.length > 0 && a[0] instanceof String){
+			if (current != null) {
+				if (a.length > 0 && a[0] instanceof String) {
 					String m = (String) a[0];
 					String[] methods = current.getMethodNames();
-					if(m.equals("listMethods")){
+					if (m.equals("listMethods")) {
 						Object[] o = new Object[methods.length];
-						for(int i = 0;i<o.length;i++){
+						for (int i = 0;i < o.length;i++) {
 							o[i] = methods[i];
 						}
 						return o;
-					}else{
-						for(int i = 0;i<methods.length;i++){
-							if(m.equals(methods[i])){
-								Object[] args = new Object[a.length-1];
-								for(int j = 0;j<args.length;j++){
-									args[j] = a[j+1];
+					} else {
+						for (int i = 0;i < methods.length;i++) {
+							if (m.equals(methods[i])) {
+								Object[] args = new Object[a.length - 1];
+								for (int j = 0;j < args.length;j++) {
+									args[j] = a[j + 1];
 								}
 								return current.callMethod(computer, context, i, args);
 							}
 						}
 						throw new LuaException("Method not found");
 					}
-				}else{
+				} else {
 					throw new LuaException("Invalid argument 1, String excepted");
 				}
-			}else{
+			} else {
 				throw new LuaException("There is no valid device in front of the Proxy");
 			}
 		}
@@ -116,37 +114,36 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 	public boolean equals(IPeripheral other) {
 		return (other.getType() == this.getType());
 	}
+
 	@Override
-	public void updateEntity(){
-		if(!this.worldObj.isRemote && this.firstStart){
+	public void updateEntity() {
+		if (!this.world.isRemote && this.firstStart) {
 			this.firstStart = false;
 			this.onNeibourChange();
 		}
 	}
 
-	public void onNeibourChange(){
+	public void onNeibourChange() {
 		int[] coords = TomsModUtils.getCoordTableUD(TomsModUtils.getCoordTable(pos), d);
-		TileEntity tilee = worldObj.getTileEntity(new BlockPos(coords[0], coords[1], coords[2]));
-		//System.out.println(coords[0]+" "+ coords[1]+" "+ coords[2] + " y" + super.yCoord);
-		if(tilee instanceof IPeripheralProxyControllable){
+		TileEntity tilee = world.getTileEntity(new BlockPos(coords[0], coords[1], coords[2]));
+		// System.out.println(coords[0]+" "+ coords[1]+" "+ coords[2] + " y" +
+		// super.yCoord);
+		if (tilee instanceof IPeripheralProxyControllable) {
 			IPeripheralProxyControllable t = (IPeripheralProxyControllable) tilee;
 			this.current = t;
-		}else if(tilee instanceof IEnergyHandler){
+		} else if (tilee instanceof IEnergyHandler) {
 			final IEnergyHandler t = (IEnergyHandler) tilee;
-			this.current = new IPeripheralProxyControllable(){
+			this.current = new IPeripheralProxyControllable() {
 				@Override
 				public String[] getMethodNames() {
-					return new String[]{"getEnergyStored","getMaxEnergyStored"};
+					return new String[]{"getEnergyStored", "getMaxEnergyStored"};
 				}
+
 				@Override
-				public Object[] callMethod(IComputerAccess computer,
-						ILuaContext context, int method, Object[] arguments)
-								throws LuaException, InterruptedException {
-					if(method == 0){
+				public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+					if (method == 0) {
 						return new Object[]{t.getEnergyStored(TomsModUtils.getFD(d), EnergyType.HV)};
-					}else if(method == 1){
-						return new Object[]{t.getMaxEnergyStored(TomsModUtils.getFD(d), EnergyType.HV)};
-					}
+					} else if (method == 1) { return new Object[]{t.getMaxEnergyStored(TomsModUtils.getFD(d), EnergyType.HV)}; }
 					return null;
 				}
 
@@ -156,48 +153,47 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 				}
 
 			};
-		}else if(tilee instanceof IFluidHandler){
+		} else if (tilee instanceof IFluidHandler) {
 			final IFluidHandler t = (IFluidHandler) tilee;
-			this.current = new IPeripheralProxyControllable(){
+			this.current = new IPeripheralProxyControllable() {
 				@Override
 				public String[] getMethodNames() {
-					return new String[]{"getFluidAmount","getFluidName","getCapacity"};
+					return new String[]{"getFluidAmount", "getFluidName", "getCapacity"};
 				}
 
 				@Override
-				public Object[] callMethod(IComputerAccess computer,
-						ILuaContext context, int method, Object[] arguments)
-								throws LuaException, InterruptedException {
-					if(method == 0){
-						FluidTankInfo[] in = t.getTankInfo(TomsModUtils.getFD(d));
+				public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+					if (method == 0) {
+						IFluidTankProperties[] in = t.getTankProperties();
 						Object[] o = new Object[in.length];
-						for(int i = 0;i<o.length;i++){
-							FluidStack f = in[i].fluid;
-							if(f != null){
-								o[i] = f.amount;
-							}else{
-								o[i] = 0;
+						for (int i = 0;i < o.length;i++) {
+							if (in[i] != null) {
+								FluidStack f = in[i].getContents();
+								if (f != null) {
+									o[i] = f.amount;
+								} else {
+									o[i] = 0;
+								}
 							}
-
 						}
 						return o;
-					}else if(method == 1){
-						FluidTankInfo[] in = t.getTankInfo(TomsModUtils.getFD(d));
+					} else if (method == 1) {
+						IFluidTankProperties[] in = t.getTankProperties();
 						Object[] o = new Object[in.length];
-						for(int i = 0;i<o.length;i++){
-							FluidStack f = in[i].fluid;
-							if(f != null){
+						for (int i = 0;i < o.length;i++) {
+							FluidStack f = in[i].getContents();
+							if (f != null) {
 								o[i] = f.getFluid().getLocalizedName(f);
-							}else{
+							} else {
 								o[i] = null;
 							}
 						}
 						return o;
-					}else if(method == 2){
-						FluidTankInfo[] in = t.getTankInfo(TomsModUtils.getFD(d));
+					} else if (method == 2) {
+						IFluidTankProperties[] in = t.getTankProperties();
 						Object[] o = new Object[in.length];
-						for(int i = 0;i<o.length;i++){
-							o[i] = in[i].capacity;
+						for (int i = 0;i < o.length;i++) {
+							o[i] = in[i].getCapacity();
 						}
 						return o;
 					}
@@ -210,21 +206,27 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 				}
 
 			};
-		}else if(tilee instanceof IPeripheral){
-			Block block = worldObj.getBlockState(new BlockPos(coords[0], coords[1], coords[2])).getBlock();
-			if(block instanceof IPeripheralProvider){
+		} else if (tilee instanceof IPeripheral) {
+			Block block = world.getBlockState(new BlockPos(coords[0], coords[1], coords[2])).getBlock();
+			if (block instanceof IPeripheralProvider) {
 				IPeripheralProvider p = (IPeripheralProvider) block;
 				int d = TomsModUtils.getFD(this.d).ordinal();
 				int dir = 0;
-				if (d == 5) dir = 4;
-				else if(d == 4) dir = 5;
-				else if (d == 3) dir = 2;
-				else if(d == 2) dir = 3;
-				else if(d == 0) dir = 1;
-				else if(d == 1) dir = 0;
-				final IPeripheral peripheral = p.getPeripheral(worldObj, new BlockPos(coords[0], coords[1], coords[2]), EnumFacing.VALUES[dir]);
-				if(peripheral != null){
-					this.current = new IPeripheralProxyControllable(){
+				if (d == 5)
+					dir = 4;
+				else if (d == 4)
+					dir = 5;
+				else if (d == 3)
+					dir = 2;
+				else if (d == 2)
+					dir = 3;
+				else if (d == 0)
+					dir = 1;
+				else if (d == 1)
+					dir = 0;
+				final IPeripheral peripheral = p.getPeripheral(world, new BlockPos(coords[0], coords[1], coords[2]), EnumFacing.VALUES[dir]);
+				if (peripheral != null) {
+					this.current = new IPeripheralProxyControllable() {
 
 						@Override
 						public String[] getMethodNames() {
@@ -232,9 +234,7 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 						}
 
 						@Override
-						public Object[] callMethod(IComputerAccess computer,
-								ILuaContext context, int method, Object[] arguments)
-										throws LuaException, InterruptedException {
+						public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
 							return peripheral.callMethod(computer, context, method, arguments);
 						}
 
@@ -244,62 +244,58 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 						}
 
 					};
-				}else{
+				} else {
 					this.current = null;
 				}
-			}else{
+			} else {
 				this.current = null;
 			}
-		}else if(tilee instanceof IEnergyHandler && tilee instanceof IFluidHandler){
+		} else if (tilee instanceof IEnergyHandler && tilee instanceof IFluidHandler) {
 			final IFluidHandler t = (IFluidHandler) tilee;
 			final IEnergyHandler t2 = (IEnergyHandler) tilee;
-			this.current = new IPeripheralProxyControllable(){
+			this.current = new IPeripheralProxyControllable() {
 				@Override
 				public String[] getMethodNames() {
-					return new String[]{"getFluidAmount","getFluidName","getCapacity","getEnergyStored","getMaxEnergyStored"};
+					return new String[]{"getFluidAmount", "getFluidName", "getCapacity", "getEnergyStored", "getMaxEnergyStored"};
 				}
 
 				@Override
-				public Object[] callMethod(IComputerAccess computer,
-						ILuaContext context, int method, Object[] arguments)
-								throws LuaException, InterruptedException {
-					if(method == 0){
-						FluidTankInfo[] in = t.getTankInfo(TomsModUtils.getFD(d));
+				public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+					if (method == 0) {
+						IFluidTankProperties[] in = t.getTankProperties();
 						Object[] o = new Object[in.length];
-						for(int i = 0;i<o.length;i++){
-							FluidStack f = in[i].fluid;
-							if(f != null){
+						for (int i = 0;i < o.length;i++) {
+							FluidStack f = in[i].getContents();
+							if (f != null) {
 								o[i] = f.amount;
-							}else{
+							} else {
 								o[i] = 0;
 							}
 
 						}
 						return o;
-					}else if(method == 1){
-						FluidTankInfo[] in = t.getTankInfo(TomsModUtils.getFD(d));
+					} else if (method == 1) {
+						IFluidTankProperties[] in = t.getTankProperties();
 						Object[] o = new Object[in.length];
-						for(int i = 0;i<o.length;i++){
-							FluidStack f = in[i].fluid;
-							if(f != null){
+						for (int i = 0;i < o.length;i++) {
+							FluidStack f = in[i].getContents();
+							if (f != null) {
 								o[i] = f.getFluid().getLocalizedName(f);
-							}else{
+							} else {
 								o[i] = null;
 							}
 						}
 						return o;
-					}else if(method == 2){
-						FluidTankInfo[] in = t.getTankInfo(TomsModUtils.getFD(d));
+					} else if (method == 2) {
+						IFluidTankProperties[] in = t.getTankProperties();
 						Object[] o = new Object[in.length];
-						for(int i = 0;i<o.length;i++){
-							o[i] = in[i].capacity;
+						for (int i = 0;i < o.length;i++) {
+							o[i] = in[i].getCapacity();
 						}
 						return o;
-					}else if(method == 3){
+					} else if (method == 3) {
 						return new Object[]{t2.getEnergyStored(TomsModUtils.getFD(d), EnergyType.HV)};
-					}else if(method == 4){
-						return new Object[]{t2.getMaxEnergyStored(TomsModUtils.getFD(d), EnergyType.HV)};
-					}
+					} else if (method == 4) { return new Object[]{t2.getMaxEnergyStored(TomsModUtils.getFD(d), EnergyType.HV)}; }
 					return null;
 				}
 
@@ -309,10 +305,11 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 				}
 
 			};
-		}else{
+		} else {
 			this.current = null;
 		}
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
@@ -327,10 +324,10 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setInteger("d", this.d);
-		tag.setInteger("direction",this.direction);
-		tag.setInteger("directionOpposite",this.directionO);
-		tag.setInteger("direction2",this.direction2);
-		tag.setInteger("direction2Opposite",this.directionO2);
+		tag.setInteger("direction", this.direction);
+		tag.setInteger("directionOpposite", this.directionO);
+		tag.setInteger("direction2", this.direction2);
+		tag.setInteger("direction2Opposite", this.directionO2);
 		return tag;
 	}
 	/*@Override
@@ -339,7 +336,7 @@ public class TileEntityCCProxy extends TileEntityTomsMod implements IPeripheral{
 		buf.writeInt(direction);
 		buf.writeInt(directionO);
 	}
-
+	
 	@Override
 	public void readFromPacket(ByteBuf buf){
 		 this.d = buf.readInt();

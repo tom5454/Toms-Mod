@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "tomsmodcore:oreCopper"}
+        "type=0": { "model": "tomsmodcore:oreCopper"},
+        "type=1": { "model": "tomsmodcore:oreCoppernether"}
     }
 }

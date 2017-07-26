@@ -8,30 +8,25 @@ import javax.imageio.ImageIO;
 
 import mapwriterTm.util.Logging;
 
-public class MergeToImage
-{
+public class MergeToImage {
 	public static final int MAX_WIDTH = 8192;
 	public static final int MAX_HEIGHT = 8192;
 
-	public static BufferedImage mergeRegions(RegionManager regionManager, int x, int z, int w, int h, int dimension)
-	{
+	public static BufferedImage mergeRegions(RegionManager regionManager, int x, int z, int w, int h, int dimension) {
 		// create the image and graphics context
 		// this is the most likely place to run out of memory
 		BufferedImage mergedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 
 		// copy region PNGs to the image
-		for (int zi = 0; zi < h; zi += Region.SIZE)
-		{
-			for (int xi = 0; xi < w; xi += Region.SIZE)
-			{
+		for (int zi = 0;zi < h;zi += Region.SIZE) {
+			for (int xi = 0;xi < w;xi += Region.SIZE) {
 				// MwUtil.log("merging region (%d,%d)", rX << Mw.REGION_SHIFT,
 				// rZ << Mw.REGION_SHIFT);
 
 				// get region pixels
 				Region region = regionManager.getRegion(x + xi, z + zi, 0, dimension);
 				int[] regionPixels = region.surfacePixels.getPixels();
-				if (regionPixels != null)
-				{
+				if (regionPixels != null) {
 					mergedImage.setRGB(xi, zi, Region.SIZE, Region.SIZE, regionPixels, 0, Region.SIZE);
 				}
 			}
@@ -40,22 +35,17 @@ public class MergeToImage
 		return mergedImage;
 	}
 
-	public static boolean writeImage(BufferedImage img, File f)
-	{
+	public static boolean writeImage(BufferedImage img, File f) {
 		boolean error = true;
-		try
-		{
+		try {
 			ImageIO.write(img, "png", f);
 			error = false;
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 		}
 		return error;
 	}
 
-	public static int merge(RegionManager regionManager, int xCentre, int zCentre, int w, int h, int dimension, File dir, String basename)
-	{
+	public static int merge(RegionManager regionManager, int xCentre, int zCentre, int w, int h, int dimension, File dir, String basename) {
 
 		// round up to nearest 512 block boundary
 		w = (((w + Region.SIZE) - 1) & Region.MASK);
@@ -79,12 +69,10 @@ public class MergeToImage
 
 		int countZ = 0;
 		int count = 0;
-		for (int z = zMin; z < zMax; z += MAX_WIDTH)
-		{
+		for (int z = zMin;z < zMax;z += MAX_WIDTH) {
 			int imgH = Math.min(zMax - z, MAX_HEIGHT);
 			int countX = 0;
-			for (int x = xMin; x < xMax; x += MAX_WIDTH)
-			{
+			for (int x = xMin;x < xMax;x += MAX_WIDTH) {
 				int imgW = Math.min(xMax - x, MAX_WIDTH);
 
 				String imgName = String.format("%s.%d.%d.png", basename, countX, countZ);

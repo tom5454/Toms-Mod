@@ -7,16 +7,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
-import com.tom.apis.TomsModUtils;
-import com.tom.factory.block.ElectricFurnace;
 import com.tom.recipes.handler.MachineCraftingHandler;
+import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
 public class TileEntityElectricFurnace extends TileEntityMachineBase {
 	private EnergyStorage energy = new EnergyStorage(10000, 100);
-	private static final int[] SLOTS = new int[]{0,1};
+	private static final int[] SLOTS = new int[]{0, 1};
 	private static final int MAX_PROCESS_TIME = 150;
-	//private int maxProgress = 1;
+	// private int maxProgress = 1;
 	public int clientEnergy = 0;
+
 	@Override
 	public int getSizeInventory() {
 		return 3;
@@ -51,65 +51,27 @@ public class TileEntityElectricFurnace extends TileEntityMachineBase {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		this.progress = compound.getInteger("progress");
-		//this.maxProgress = compound.getInteger("maxProgress");
+		// this.maxProgress = compound.getInteger("maxProgress");
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setInteger("progress", progress);
-		//compound.setInteger("mayProgress", maxProgress);
+		// compound.setInteger("mayProgress", maxProgress);
 		return compound;
-	}
-	@Override
-	public void updateEntity() {
-		if(!worldObj.isRemote){
-			if(energy.extractEnergy(20D, true) == 20D && canRun()){
-				if(progress > 0){
-					updateProgress();
-				}else if(progress == 0){
-					ItemStack s = MachineCraftingHandler.getFurnaceRecipe(stack[0]);
-					if(s != null){
-						if(stack[1] != null){
-							if(TomsModUtils.areItemStacksEqual(stack[1], s, true, true, false) && stack[1].stackSize + s.stackSize <= s.getMaxStackSize() && stack[0].stackSize >= 1){
-								stack[1].stackSize += s.stackSize;
-								progress = -1;
-								decrStackSize(0, 1);
-							}
-						}else{
-							progress = -1;
-							stack[1] = s;
-							decrStackSize(0, 1);
-						}
-					}else{
-						progress = -1;
-					}
-				}else{
-					ItemStack s = MachineCraftingHandler.getFurnaceRecipe(stack[0]);
-					if(s != null){
-						if(stack[1] != null){
-							if(TomsModUtils.areItemStacksEqual(stack[1], s, true, true, false) && stack[1].stackSize + s.stackSize <= s.getMaxStackSize() && stack[0].stackSize >= 1){
-								progress = getMaxProgress();
-							}
-						}else{
-							progress = getMaxProgress();
-						}
-					}
-					TomsModUtils.setBlockStateWithCondition(worldObj, pos, ElectricFurnace.ACTIVE, progress > 0);
-				}
-			}else{
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, ElectricFurnace.ACTIVE, false);
-			}
-		}
 	}
 
 	public int getClientEnergyStored() {
-		return MathHelper.ceiling_double_int(energy.getEnergyStored());
+		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
 	public int getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
-	private void updateProgress(){
+
+	@Override
+	public void updateProgress() {
 		int upgradeC = getSpeedUpgradeCount();
 		int p = upgradeC + 1 + (upgradeC / 2);
 		progress = Math.max(0, progress - p);
@@ -130,6 +92,7 @@ public class TileEntityElectricFurnace extends TileEntityMachineBase {
 	public int getMaxProcessTimeNormal() {
 		return MAX_PROCESS_TIME;
 	}
+
 	@Override
 	public ResourceLocation getFront() {
 		return new ResourceLocation("tomsmodfactory:textures/blocks/eFurnace.png");
@@ -143,5 +106,21 @@ public class TileEntityElectricFurnace extends TileEntityMachineBase {
 	@Override
 	public int[] getInputSlots() {
 		return new int[]{0};
+	}
+
+	@Override
+	public void checkItems() {
+		ItemStack s = MachineCraftingHandler.getFurnaceRecipe(inv.getStackInSlot(0));
+		if (!s.isEmpty()) {
+			ItemStackChecker c = new ItemStackChecker(s);
+			c.setExtra(1);
+			checkItems(c, 1, getMaxProgress(), 0, -1);
+			setOut(0, c);
+		}
+	}
+
+	@Override
+	public void finish() {
+		addItemsAndSetProgress(getOutput(0), 1, 0, -1);
 	}
 }

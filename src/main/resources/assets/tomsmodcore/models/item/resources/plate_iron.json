@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "tomsmodcore:items/resources/plateiron"
-    }
+  "parent": "tomsmodcore:item/platebase",
+  "textures": {
+    "block": "blocks/iron_block"
+  }
 }

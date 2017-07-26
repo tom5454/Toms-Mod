@@ -1,6 +1,7 @@
 package com.tom.factory.tileentity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -20,30 +21,27 @@ import com.tom.api.ITileFluidHandler;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.inventory.InventorySection;
 import com.tom.apis.TomsModUtils;
+import com.tom.apis.TomsModUtils.FillRunnable;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
+import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.core.TMResource.Type;
-import com.tom.factory.block.BlockCrusher;
+import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
-public class TileEntityMixer extends TileEntityMachineBase implements ITileFluidHandler{
+public class TileEntityMixer extends TileEntityMachineBase implements ITileFluidHandler {
 	private FluidTank tankIn = new FluidTank(10000);
 	private FluidTank tankIn2 = new FluidTank(10000);
 	private FluidTank tankOut = new FluidTank(10000);
 	private EnergyStorage energy = new EnergyStorage(10000, 100);
 	private static final int MAX_PROCESS_TIME = 300;
 	public int clientEnergy = 0;
-	private static final Object[][] RECIPES_NEW = new Object[][]{
-		{TomsModUtils.createRecipe(new Object[]{
-				new ItemStack(Items.GUNPOWDER, 2), new ItemStack(Items.ROTTEN_FLESH, 8), TMResource.SULFUR.getStackName(Type.DUST), Items.SUGAR}),
-			new Object[][]{{new FluidStack(FluidRegistry.WATER, 1000), true, 0}, {new FluidStack(CoreInit.hydrogenChlorine, 500), false, 1}, {new FluidStack(CoreInit.Hydrogen, 1000), true, 2}},
-			true,
-		},
-	};
+	private static final Object[][] RECIPES_NEW = new Object[][]{{TomsModUtils.createRecipe(new Object[]{new ItemStack(Items.GUNPOWDER, 2), new ItemStack(Items.ROTTEN_FLESH, 8), "dyeWhite", Items.SUGAR}), new Object[][]{{new FluidStack(FluidRegistry.WATER, 1000), true, 0}, {new FluidStack(CoreInit.hydrogenChloride.get(), 500), false, 1}, {new FluidStack(CoreInit.Hydrogen.get(), 1000), true, 2}}, true,}, {TomsModUtils.createRecipe(new Object[]{CraftingMaterial.PLASTIC_SHEET.getStack(), new Object[]{"dyeWhite", 2}, new Object[]{TMResource.IRON.getStackName(Type.DUST), 3}, Items.SUGAR}), new Object[][]{{new FluidStack(FluidRegistry.WATER, 1000), true, 0}, {new FluidStack(CoreInit.heatConductingPaste.get(), 100), false, 1}}, true,},};
 	public static final Object[][] RECIPES = new Object[RECIPES_NEW.length + TileEntitySteamMixer.RECIPES.length][];
-	static{
+	static {
 		System.arraycopy(TileEntitySteamMixer.RECIPES, 0, RECIPES, 0, TileEntitySteamMixer.RECIPES.length);
 		System.arraycopy(RECIPES_NEW, 0, RECIPES, TileEntitySteamMixer.RECIPES.length, RECIPES_NEW.length);
 	}
+
 	@Override
 	public int getSizeInventory() {
 		return 5;
@@ -58,14 +56,17 @@ public class TileEntityMixer extends TileEntityMachineBase implements ITileFluid
 	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
 		return index < 4;
 	}
+
 	@Override
 	public String getName() {
 		return "mixer";
 	}
+
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
 		return index == 1;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
@@ -74,6 +75,7 @@ public class TileEntityMixer extends TileEntityMachineBase implements ITileFluid
 		tankIn2.readFromNBT(compound.getCompoundTag("tankIn2"));
 		tankOut.readFromNBT(compound.getCompoundTag("tankOut"));
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
@@ -83,35 +85,25 @@ public class TileEntityMixer extends TileEntityMachineBase implements ITileFluid
 		compound.setTag("tankOut", tankOut.writeToNBT(new NBTTagCompound()));
 		return compound;
 	}
+
 	@Override
-	public void updateEntity() {
-		if(!worldObj.isRemote){
-			if(energy.extractEnergy(20D, true) == 20D && canRun()){
-				if(progress > 0){
-					updateProgress();
-				}else if(progress == 0){
-					findRecipe(true);
-					progress = -1;
-				}else{
-					if(findRecipe(false) > -1){
-						progress = getMaxProgress();
-					}
-					TomsModUtils.setBlockStateWithCondition(worldObj, pos, BlockCrusher.ACTIVE, progress > 0);
-				}
-			}else{
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, BlockCrusher.ACTIVE, false);
-			}
-		}
+	public void writeToStackNBT(NBTTagCompound tag) {
+		super.writeToStackNBT(tag);
+		tag.setTag("tankIn", tankIn.writeToNBT(new NBTTagCompound()));
+		tag.setTag("tankIn2", tankIn2.writeToNBT(new NBTTagCompound()));
+		tag.setTag("tankOut", tankOut.writeToNBT(new NBTTagCompound()));
 	}
 
 	public int getClientEnergyStored() {
-		return MathHelper.ceiling_double_int(energy.getEnergyStored());
+		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
 	public int getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
-	private void updateProgress(){
+
+	@Override
+	public void updateProgress() {
 		int upgradeC = getSpeedUpgradeCount();
 		int p = upgradeC + 1 + (upgradeC / 2);
 		progress = Math.max(0, progress - p);
@@ -135,26 +127,32 @@ public class TileEntityMixer extends TileEntityMachineBase implements ITileFluid
 
 	@Override
 	public IFluidHandler getTankOnSide(EnumFacing f) {
-		return Helper.getFluidHandlerFromTanksWithPredicate(new FluidTank[]{tankIn, tankIn2, tankOut}, new Object[]{FluidRegistry.WATER, CoreInit.Hydrogen, null}, new boolean[]{true, true, false}, new boolean[]{false, false, true});
+		return Helper.getFluidHandlerFromTanksWithPredicate(new FluidTank[]{tankIn, tankIn2, tankOut}, new Object[]{FluidRegistry.WATER, CoreInit.Hydrogen.get(), null}, new boolean[]{true, true, false}, new boolean[]{false, false, true});
 	}
+
 	@SuppressWarnings("unchecked")
-	private int findRecipe(boolean apply) {
+	private Object[] findRecipe(boolean apply) {
 		Object[] obj = TomsModUtils.checkAndConsumeMatch(RECIPES, new InventorySection(this, 0, 4), new Object[]{tankIn, tankOut, tankIn2});
-		if((Integer)obj[0] > -1){
-			if(apply)TomsModUtils.runAll((List<Runnable>) obj[1]);
-			return (Integer) obj[0];
+		if ((Integer) obj[0] > -1) {
+			if (apply)
+				TomsModUtils.runAll(((List<Runnable>) obj[1]).stream().filter(r -> !(r instanceof FillRunnable)).collect(Collectors.toList()));
+			return new Object[]{obj[0], obj};
 		}
-		return -1;
+		return new Object[]{-1};
 	}
+
 	public FluidTank getTankIn() {
 		return tankIn;
 	}
+
 	public FluidTank getTankIn2() {
 		return tankIn2;
 	}
+
 	public FluidTank getTankOut() {
 		return tankOut;
 	}
+
 	@Override
 	public ResourceLocation getFront() {
 		return new ResourceLocation("tomsmodfactory:textures/blocks/mixer.png");
@@ -169,22 +167,45 @@ public class TileEntityMixer extends TileEntityMachineBase implements ITileFluid
 	public int[] getInputSlots() {
 		return new int[]{0, 1, 2, 3};
 	}
+
 	@Override
 	public void pushOutput(EnumFacing side) {
-		if(tankOut.getFluidAmount() > 0){
-			TileEntity tile = worldObj.getTileEntity(pos.offset(side));
-			if(tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite())){
+		if (tankOut.getFluidAmount() > 0) {
+			TileEntity tile = world.getTileEntity(pos.offset(side));
+			if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite())) {
 				IFluidHandler t = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite());
-				if(t != null){
+				if (t != null) {
 					int filled = t.fill(tankOut.getFluid(), false);
-					if(filled > 0){
+					if (filled > 0) {
 						FluidStack drained = tankOut.drain(filled, false);
-						if(drained != null && drained.amount > 0){
+						if (drained != null && drained.amount > 0) {
 							int canDrain = Math.min(filled, Math.min(100, drained.amount));
 							t.fill(tankOut.drain(canDrain, true), true);
 						}
 					}
 				}
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void checkItems() {
+		if (((Integer) findRecipe(false)[0]) > -1) {
+			Object[] r = findRecipe(true);
+			progress = getMaxProgress();
+			setOut(0, ((List<ItemStackChecker>) ((Object[]) r[1])[2]).get(0));
+		}
+	}
+
+	@Override
+	public void finish() {
+		progress = -1;
+		ItemStackChecker c = getOutput(0);
+		if (c != null && c.getExtraF() != null) {
+			int f = tankOut.fillInternal(c.getExtraF(), false);
+			if (f == c.getExtraF().amount) {
+				tankOut.fillInternal(c.getExtraF(), true);
 			}
 		}
 	}

@@ -1,56 +1,69 @@
 package com.tom.handler;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.item.IScroller;
+import com.tom.api.item.IScroller.ScrollDirection;
+import com.tom.client.EventHandlerClient;
 import com.tom.core.CoreInit;
 import com.tom.core.Keybindings;
 import com.tom.lib.Keys;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageKey;
+import com.tom.network.messages.MessageProfiler;
+import com.tom.network.messages.MessageScroll;
 
 import com.tom.core.tileentity.TileEntityTabletController;
 
-public class KeyInputHandler{
+public class KeyInputHandler {
 	public static final KeyInputHandler instance = new KeyInputHandler();
+
 	@SideOnly(Side.CLIENT)
-	private Keybindings getPressedKey(){
-		if(Keys.isPressed(Keys.UP)){
+	private Keybindings getPressedKey() {
+		if (Keys.isPressed(Keys.UP)) {
 			return Keybindings.UP;
-		}else if(Keys.isPressed(Keys.DOWN)){
+		} else if (Keys.isPressed(Keys.DOWN)) {
 			return Keybindings.DOWN;
-		}else if(Keys.isPressed(Keys.LEFT)){
+		} else if (Keys.isPressed(Keys.LEFT)) {
 			return Keybindings.LEFT;
-		}else if(Keys.isPressed(Keys.RIGHT)){
+		} else if (Keys.isPressed(Keys.RIGHT)) {
 			return Keybindings.RIGHT;
-		}else if(Keys.isPressed(Keys.BACK)){
+		} else if (Keys.isPressed(Keys.BACK)) {
 			return Keybindings.BACK;
-		}else if(Keys.isPressed(Keys.ENTER)){
+		} else if (Keys.isPressed(Keys.ENTER)) {
 			return Keybindings.ENTER;
-		}else if(Keys.isPressed(Keys.INTERACT)){
+		} else if (Keys.isPressed(Keys.INTERACT)) {
 			return Keybindings.INTERACT;
-		}else if(Keys.isPressed(Keys.MENU)){
+		} else if (Keys.isPressed(Keys.MENU)) {
 			return Keybindings.MENU;
-		}
+		} else if (Keys.isPressed(Keys.PROFILE)) {
+			return Keybindings.PROFILE;
+		} else if (Keys.isPressed(Keys.SHOW_TETXURE_MAP)) { return Keybindings.TEXTURE_MAP; }
 		return Keybindings.UNKNOWN;
 	}
+
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void handleKeyInputEvent(InputEvent.KeyInputEvent event){
+	public void handleKeyInputEvent(InputEvent.KeyInputEvent event) {
 		Keybindings key = this.getPressedKey();
-		if(key != Keybindings.UNKNOWN) NetworkHandler.sendToServer(new MessageKey(key));
+		if (key != Keybindings.UNKNOWN)
+			NetworkHandler.sendToServer(new MessageKey(key));
 
 	}
-	public void handlerKeyServer(Keybindings key, EntityPlayer player){
-		switch(key){
+
+	public void handlerKeyServer(Keybindings key, EntityPlayer player) {
+		switch (key) {
 		case BACK:
 			this.handleTablet("back", player);
 			break;
@@ -75,22 +88,47 @@ public class KeyInputHandler{
 		case MENU:
 			this.handleTablet("menu", player);
 			break;
+		case PROFILE:
+			EventHandlerClient.getInstance().profile = !EventHandlerClient.getInstance().profile;
+			MessageProfiler.sendKey("", EventHandlerClient.getInstance().profile);
+			break;
+		case TEXTURE_MAP:
+			EventHandlerClient.getInstance().showTextureMap = !EventHandlerClient.getInstance().showTextureMap;
+			break;
 		default:
 			break;
 		}
 
 	}
-	private void handleTablet(String key, EntityPlayer player){
+
+	private void handleTablet(String key, EntityPlayer player) {
 		InventoryPlayer inv = player.inventory;
-		for(int i = 0;i<inv.getSizeInventory();i++){
+		for (int i = 0;i < inv.getSizeInventory();i++) {
 			ItemStack is = inv.getStackInSlot(i);
-			if(is != null && is.getItem() == CoreInit.Tablet){
-				if(is.getTagCompound() != null && is.getTagCompound().hasKey("x") && is.getTagCompound().hasKey("y") && is.getTagCompound().hasKey("z") && is.getTagCompound().hasKey("id")){
-					TileEntity tile = player.worldObj.getTileEntity(new BlockPos(is.getTagCompound().getInteger("x"), is.getTagCompound().getInteger("y"), is.getTagCompound().getInteger("z")));
-					if(tile instanceof TileEntityTabletController){
+			if (is != null && is.getItem() == CoreInit.Tablet) {
+				if (is.getTagCompound() != null && is.getTagCompound().hasKey("x") && is.getTagCompound().hasKey("y") && is.getTagCompound().hasKey("z") && is.getTagCompound().hasKey("id")) {
+					TileEntity tile = player.world.getTileEntity(new BlockPos(is.getTagCompound().getInteger("x"), is.getTagCompound().getInteger("y"), is.getTagCompound().getInteger("z")));
+					if (tile instanceof TileEntityTabletController) {
 						TileEntityTabletController te = (TileEntityTabletController) tile;
 						te.queueEvent("tablet_button", new Object[]{player.getName(), key});
 						return;
+					}
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void handleMouseInputEvent(MouseEvent event) {
+		if (Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().player.isSneaking()) {
+			if (event.getDwheel() != 0) {
+				int w = event.getDwheel();
+				ItemStack stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
+				if (stack.getItem() instanceof IScroller) {
+					if (((IScroller) stack.getItem()).canScroll(stack)) {
+						event.setCanceled(true);
+						NetworkHandler.sendToServer(new MessageScroll(w > 0 ? ScrollDirection.UP : ScrollDirection.DOWN));
 					}
 				}
 			}

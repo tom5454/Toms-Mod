@@ -1,22 +1,18 @@
 package mapwriterTm.util;
 
-public class VersionCheck implements Runnable
-{
+public class VersionCheck implements Runnable {
 	private static boolean isLatestVersion = true;
 	private static String latestVersion = "";
 	private static String updateURL = "";
 
 	/**
 	 * @author jabelar
-	 * @link
-	 *       http://jabelarminecraft.blogspot.nl/p/minecraft-forge-1721710-
-	 *       making
-	 *       -mod.html
+	 * @link http://jabelarminecraft.blogspot.nl/p/minecraft-forge-1721710-
+	 *       making -mod.html
 	 */
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		/*InputStream in = null;
 		try
 		{
@@ -28,7 +24,7 @@ public class VersionCheck implements Runnable
 		catch (IOException e)
 		{
 		}
-
+		
 		try
 		{
 			List<String> list = IOUtils.readLines(in);
@@ -41,19 +37,19 @@ public class VersionCheck implements Runnable
 					break;
 				}
 			}
-
+		
 			String version = list.get(index + 1);
 			version = version.replace("\"modVersion\":\"", "");
 			version = version.replace("\",", "");
 			version = version.replace(" ", "");
 			latestVersion = version;
-
+		
 			String updateURL = list.get(index + 3);
 			updateURL = updateURL.replace("\"updateURL\":\"", "");
 			updateURL = updateURL.replace("\",", "");
 			updateURL = updateURL.replace(" ", "");
 			VersionCheck.updateURL = updateURL;
-
+		
 			isLatestVersion = Reference.VERSION.equals(version);
 		}
 		catch (IOException e)
@@ -62,18 +58,15 @@ public class VersionCheck implements Runnable
 
 	}
 
-	public static boolean isLatestVersion()
-	{
+	public static boolean isLatestVersion() {
 		return isLatestVersion;
 	}
 
-	public static String getLatestVersion()
-	{
+	public static String getLatestVersion() {
 		return latestVersion;
 	}
 
-	public static String getUpdateURL()
-	{
+	public static String getUpdateURL() {
 		return updateURL;
 	}
 }

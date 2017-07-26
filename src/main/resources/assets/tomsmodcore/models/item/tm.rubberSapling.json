@@ -1,6 +1,6 @@
 {
         "parent": "item/generated",
     "textures":{
-        "layer0": "blocks/sapling_rubber"
+        "layer0": "tomsmodcore:blocks/sapling_rubber"
     }
 }

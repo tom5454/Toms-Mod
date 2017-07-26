@@ -1,0 +1,7 @@
+{
+	"parent": "tomsmodstorage:item/processor",
+	"textures":{
+		"top": "tomsmodstorage:blocks/basicprocessor",
+		"base": "tomsmodstorage:blocks/basicprocessortop"
+	}
+}

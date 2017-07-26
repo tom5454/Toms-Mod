@@ -2,11 +2,11 @@
     "parent": "block/cube",
     "textures": {
         "particle": "#front",
-        "down": "blocks/mbf",
-        "up": "blocks/mbf",
+        "down": "tomsmodfactory:blocks/mbf",
+        "up": "tomsmodfactory:blocks/mbf",
         "north": "#front",
-        "east": "blocks/mbf",
-        "south": "blocks/mbf",
-        "west": "blocks/mbf"
+        "east": "tomsmodfactory:blocks/mbf",
+        "south": "tomsmodfactory:blocks/mbf",
+        "west": "tomsmodfactory:blocks/mbf"
     }
 }

@@ -5,7 +5,6 @@ import net.minecraft.world.World;
 
 import com.tom.energy.tileentity.TileEntityLaserMK3;
 
-
 public class MK3Laser extends BlockLaserBase {
 
 	@Override

@@ -1,5 +1,8 @@
 {
     "variants": {
-        "normal": { "model": "tomsmodstorage:energyAcceptor"}
+        "energy=lv": { "model": "tomsmodstorage:energyAcceptor"},
+        "energy=mv": { "model": "tomsmodstorage:energyAcceptor"},
+        "energy=hv": { "model": "tomsmodstorage:energyAcceptor"},
+        "energy=force": { "model": "tomsmodstorage:energyAcceptor"}
     }
 }

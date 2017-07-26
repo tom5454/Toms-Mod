@@ -6,24 +6,27 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 
-public abstract class TileEntitySpecialRendererTomsMod<T extends TileEntity>
-extends TileEntitySpecialRenderer<T> {
+public abstract class TileEntitySpecialRendererTomsMod<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
 	protected Minecraft mc;
+
 	@Override
-	public void renderTileEntityAt(T te, double x, double y, double z,
-			float partialTicks, int destroyStage) {
+	public void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage) {
 		mc = Minecraft.getMinecraft();
-		if(te != null && te.hasWorldObj()){
+		mc.mcProfiler.startSection("[TM] " + getClass().getSimpleName());
+		if (te != null && te.hasWorld()) {
 			IBlockState state = te.getWorld().getBlockState(te.getPos());
-			if(state.getBlock() != Blocks.AIR){
+			if (state.getBlock() != Blocks.AIR) {
 				this.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage, state);
 			}
-		}else{
+		} else {
 			this.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage, getDefaultState());
 		}
+		mc.mcProfiler.endSection();
 	}
+
 	public abstract void renderTileEntityAt(T te, double x, double y, double z, float partialTicks, int destroyStage, IBlockState state);
-	protected IBlockState getDefaultState(){
+
+	protected IBlockState getDefaultState() {
 		return null;
 	}
 }

@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.Optional;
 
 import com.tom.api.tileentity.ILookDetector;
 import com.tom.api.tileentity.TileEntityCamoable;
+import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.core.entity.EntityCamera;
 import com.tom.lib.Configs;
@@ -30,17 +31,18 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityEnderSensor extends TileEntityCamoable implements
-IPeripheral, ILookDetector {
-	public String[] methods = {"listMethods","getPlayerDist","setActive","getActive"};
-	private List<IComputerAccess> computers = new ArrayList<IComputerAccess>();
-	public List<EntityPlayer> players = new ArrayList<EntityPlayer>();
+public class TileEntityEnderSensor extends TileEntityCamoable implements IPeripheral, ILookDetector {
+	public String[] methods = {"listMethods", "getPlayerDist", "setActive", "getActive"};
+	private List<IComputerAccess> computers = new ArrayList<>();
+	public List<EntityPlayer> players = new ArrayList<>();
 	public ItemStack camoStack = null;
 	public boolean active = true;
 	public boolean transparent = false;
 	private boolean connectedLastTickClient = false;
 	private static final float f = 1.0F;
+
 	@Override
 	public String getType() {
 		return "Ender_Player_Sensor";
@@ -52,39 +54,33 @@ IPeripheral, ILookDetector {
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
-			int method, Object[] a) throws LuaException,
-	InterruptedException {
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
 		int xCoord = pos.getX();
 		int yCoord = pos.getY();
 		int zCoord = pos.getZ();
-		if(method == 0){
+		if (method == 0) {
 			Object[] o = new Object[methods.length];
-			for(int i = 0;i<o.length;i++){
+			for (int i = 0;i < o.length;i++) {
 				o[i] = methods[i];
 			}
 			return o;
-		}else if(method == 1){
-			if(a.length > 0 && a[0] instanceof String){
+		} else if (method == 1) {
+			if (a.length > 0 && a[0] instanceof String) {
 				String p = (String) a[0];
-				for(EntityPlayer player : this.players){
-					if(player.getName().equals(p)){
-						return new Object[]{true,player.getDistance(xCoord, yCoord, zCoord)};
-					}
+				for (EntityPlayer player : this.players) {
+					if (player.getName().equals(p)) { return new Object[]{true, player.getDistance(xCoord, yCoord, zCoord)}; }
 				}
 				return new Object[]{false, -1};
-			}else{
+			} else {
 				throw new LuaException("Invalid Argument #1 string excepted");
 			}
-		}else if(method == 2){
-			if(a.length > 0 && a[0] instanceof Boolean){
+		} else if (method == 2) {
+			if (a.length > 0 && a[0] instanceof Boolean) {
 				this.active = (Boolean) a[0];
-			}else{
+			} else {
 				throw new LuaException("Invalid Argument #1 boolean excepted");
 			}
-		}else if(method == 3){
-			return new Object[]{this.active};
-		}
+		} else if (method == 3) { return new Object[]{this.active}; }
 		return null;
 	}
 
@@ -102,17 +98,18 @@ IPeripheral, ILookDetector {
 	public boolean equals(IPeripheral other) {
 		return other == this;
 	}
+
 	@Override
 	public void updateEntity() {
 		int xCoord = pos.getX();
 		int yCoord = pos.getY();
 		int zCoord = pos.getZ();
-		if(this.active){
+		if (this.active) {
 			int range = 15;
-			if(worldObj.isRemote){
+			if (world.isRemote) {
 				Minecraft mc = Minecraft.getMinecraft();
-				if(mc != null){
-					if(mc.getRenderViewEntity() instanceof EntityCamera && mc.getRenderViewEntity().getDistance(xCoord, yCoord, zCoord) <= range){
+				if (mc != null) {
+					if (mc.getRenderViewEntity() instanceof EntityCamera && mc.getRenderViewEntity().getDistance(xCoord, yCoord, zCoord) <= range) {
 						EntityCamera cam = (EntityCamera) mc.getRenderViewEntity();
 						float f1 = cam.prevRotationPitch + (cam.rotationPitch - cam.prevRotationPitch) * f;
 						float f2 = cam.prevRotationYaw + (cam.rotationYaw - cam.prevRotationYaw) * f;
@@ -128,31 +125,31 @@ IPeripheral, ILookDetector {
 						float f8 = f3 * f5;
 						double d3 = range;
 						Vec3d vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
-						RayTraceResult mpos = worldObj.rayTraceBlocks(vec3, vec31, true);
-						if(mpos != null){
+						RayTraceResult mpos = world.rayTraceBlocks(vec3, vec31, true);
+						if (mpos != null) {
 							BlockPos pos = mpos.getBlockPos();
-							if(pos != null && pos.getX() == xCoord && pos.getY() == yCoord && pos.getZ() == zCoord) {
+							if (pos != null && pos.getX() == xCoord && pos.getY() == yCoord && pos.getZ() == zCoord) {
 								this.connectedLastTickClient = true;
 								NetworkHandler.sendToServer(new MessageCamera(xCoord, yCoord, zCoord, true));
 							}
 						}
-					}else if(this.connectedLastTickClient){
+					} else if (this.connectedLastTickClient) {
 						this.connectedLastTickClient = false;
 						NetworkHandler.sendToServer(new MessageCamera(xCoord, yCoord, zCoord, false));
 					}
-				}//[
-			}else{
-				List<EntityPlayer> playersOld = new ArrayList<EntityPlayer>(this.players);
+				} // [
+			} else {
+				List<EntityPlayer> playersOld = new ArrayList<>(this.players);
 				this.players.clear();
-				List<?> players = worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(xCoord - range, yCoord - range, zCoord - range, xCoord + range, yCoord + range, zCoord + range));
-				for(Object o : players) {
-					//float f = 1.0F;
+				List<?> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(xCoord - range, yCoord - range, zCoord - range, xCoord + range, yCoord + range, zCoord + range));
+				for (Object o : players) {
+					// float f = 1.0F;
 					EntityPlayer player = (EntityPlayer) o;
 					float f1 = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * f;
 					float f2 = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * f;
 					double d0 = player.prevPosX + (player.posX - player.prevPosX) * f;
 					double d1 = player.prevPosY + (player.posY - player.prevPosY) * f;
-					if (!worldObj.isRemote && player instanceof EntityPlayer)
+					if (!world.isRemote && player instanceof EntityPlayer)
 						d1 += 1.62D;
 					double d2 = player.prevPosZ + (player.posZ - player.prevPosZ) * f;
 					Vec3d vec3 = new Vec3d(d0, d1, d2);
@@ -164,63 +161,67 @@ IPeripheral, ILookDetector {
 					float f8 = f3 * f5;
 					double d3 = range;
 					Vec3d vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
-					RayTraceResult mpos = worldObj.rayTraceBlocks(vec3, vec31, true);
-					if(mpos != null){
+					RayTraceResult mpos = world.rayTraceBlocks(vec3, vec31, true);
+					if (mpos != null) {
 						BlockPos pos = mpos.getBlockPos();
-						if(pos != null && pos.getX() == xCoord && pos.getY() == yCoord && pos.getZ() == zCoord) {
+						if (pos != null && pos.getX() == xCoord && pos.getY() == yCoord && pos.getZ() == zCoord) {
 							this.players.add(player);
-							if(playersOld.contains(player)){
+							if (playersOld.contains(player)) {
 								playersOld.remove(player);
-							}else{
-								for(IComputerAccess c : this.computers){
-									c.queueEvent("ender_sensor_look_"+player.getName(), new Object[]{player.getName(),player.getDistance(xCoord, yCoord, zCoord),player.posX, player.posY,player.posZ});
+							} else {
+								for (IComputerAccess c : this.computers) {
+									c.queueEvent("ender_sensor_look_" + player.getName(), new Object[]{player.getName(), player.getDistance(xCoord, yCoord, zCoord), player.posX, player.posY, player.posZ});
 								}
 							}
 						}
 					}
 				}
-				if(!playersOld.isEmpty()){
-					for(EntityPlayer p : playersOld){
-						for(IComputerAccess c : this.computers){
-							c.queueEvent("ender_sensor_look_stop_"+p.getName(), new Object[]{p.getName()});
+				if (!playersOld.isEmpty()) {
+					for (EntityPlayer p : playersOld) {
+						for (IComputerAccess c : this.computers) {
+							c.queueEvent("ender_sensor_look_stop_" + p.getName(), new Object[]{p.getName()});
 						}
 					}
 				}
 			}
 		}
 	}
+
 	@Override
-	public void writeToPacket(NBTTagCompound buf){
-		buf.setBoolean("t",transparent);
-		//ByteBufUtils.writeItemStack(buf, camoStack);
+	public void writeToPacket(NBTTagCompound buf) {
+		buf.setBoolean("t", transparent);
+		// ByteBufUtils.writeItemStack(buf, camoStack);
 		NBTTagCompound t = new NBTTagCompound();
-		if(camoStack != null)camoStack.writeToNBT(t);
+		if (camoStack != null)
+			camoStack.writeToNBT(t);
 		buf.setTag("c", t);
 	}
 
 	@Override
-	public void readFromPacket(NBTTagCompound buf){
+	public void readFromPacket(NBTTagCompound buf) {
 		this.transparent = buf.getBoolean("t");
-		this.camoStack = ItemStack.loadItemStackFromNBT(buf.getCompoundTag("c"));
+		this.camoStack = TomsModUtils.loadItemStackFromNBT(buf.getCompoundTag("c"));
 		int xCoord = pos.getX();
 		int yCoord = pos.getY();
 		int zCoord = pos.getZ();
-		this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		this.world.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 	}
+
 	@Override
-	public void readFromNBT(NBTTagCompound tag){
+	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		boolean camo = tag.getBoolean("camo");
-		this.camoStack = camo ? ItemStack.loadItemStackFromNBT(tag.getCompoundTag("camoStack")) : null;
+		this.camoStack = camo ? TomsModUtils.loadItemStackFromNBT(tag.getCompoundTag("camoStack")) : null;
 		this.transparent = tag.getBoolean("t");
 	}
+
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag){
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		if(this.camoStack != null){
+		if (this.camoStack != null) {
 			tag.setBoolean("camo", true);
 			tag.setTag("camoStack", this.camoStack.writeToNBT(new NBTTagCompound()));
-		}else{
+		} else {
 			tag.setBoolean("camo", false);
 		}
 		tag.setBoolean("t", this.transparent);
@@ -229,18 +230,18 @@ IPeripheral, ILookDetector {
 
 	@Override
 	public void setConnect(boolean mode, EntityPlayer player) {
-		if(mode && !this.players.contains(player)){
+		if (mode && !this.players.contains(player)) {
 			this.players.add(player);
 			int xCoord = pos.getX();
 			int yCoord = pos.getY();
 			int zCoord = pos.getZ();
-			for(IComputerAccess c : this.computers){
-				c.queueEvent("ender_sensor_look_out_"+player.getName(), new Object[]{player.getName(),player.getDistance(xCoord, yCoord, zCoord),player.posX, player.posY,player.posZ});
+			for (IComputerAccess c : this.computers) {
+				c.queueEvent("ender_sensor_look_out_" + player.getName(), new Object[]{player.getName(), player.getDistance(xCoord, yCoord, zCoord), player.posX, player.posY, player.posZ});
 			}
-		}else if(!mode && this.players.contains(player)){
+		} else if (!mode && this.players.contains(player)) {
 			this.players.remove(player);
-			for(IComputerAccess c : this.computers){
-				c.queueEvent("ender_sensor_look_out_stop_"+player.getName(), new Object[]{player.getName()});
+			for (IComputerAccess c : this.computers) {
+				c.queueEvent("ender_sensor_look_out_stop_" + player.getName(), new Object[]{player.getName()});
 			}
 		}
 	}
@@ -253,8 +254,9 @@ IPeripheral, ILookDetector {
 	@SuppressWarnings("deprecation")
 	@Override
 	public AxisAlignedBB getBounds() {
-		return blockType.getBoundingBox(worldObj.getBlockState(pos), worldObj, pos);
+		return blockType.getBoundingBox(world.getBlockState(pos), world, pos);
 	}
+
 	@Override
 	public boolean doRender() {
 		boolean isTransparent = camoStack != null && camoStack.getItem() == Item.getItemFromBlock(Blocks.GLASS) && transparent;

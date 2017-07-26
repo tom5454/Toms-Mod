@@ -21,38 +21,39 @@ import com.tom.api.energy.IEnergyContainerItem;
 import com.tom.apis.TomsModUtils;
 import com.tom.energy.EnergyInit;
 
-public class PortableSolarPanel extends Item implements IEnergyContainerItem{
+public class PortableSolarPanel extends Item implements IEnergyContainerItem {
 	@Override
 	public void onUpdate(ItemStack is, World world, Entity entity, int par4, boolean par5) {
 		long ticks = world.getWorldTime();
-		if(is.getTagCompound() == null) is.setTagCompound(new NBTTagCompound());
-		if(world.isDaytime()){
+		if (is.getTagCompound() == null)
+			is.setTagCompound(new NBTTagCompound());
+		if (world.isDaytime()) {
 			float biomeTemp = world.getBiomeForCoordsBody(new BlockPos(entity)).getTemperature();
 			int light = world.getLightFor(EnumSkyBlock.SKY, new BlockPos(entity));
 			int tier = is.getTagCompound().hasKey("tier") ? is.getTagCompound().getInteger("tier") : 0;
 			double e = ((tier + 1) * 20000) * (light / 15);
 			double tempPer = biomeTemp * 0.2;
 			e /= (0.8D + tempPer);
-			//long div = ticks / 12000;
+			// long div = ticks / 12000;
 			long ticksCR = ticks - 6000;
 			long ticksC = ticksCR < 0 ? -ticksCR : ticksCR;
 			double ticksM = (6000 / e) - (ticksC / e);
 			double energy = is.getTagCompound().hasKey("Energy") ? is.getTagCompound().getDouble("Energy") : 0;
-			if(energy < 1000){
+			if (energy < 1000) {
 				energy = Math.min(energy + ticksM, 1000);
 				is.getTagCompound().setDouble("Energy", energy);
 			}
 		}
-		if(entity instanceof EntityPlayer){
+		if (entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) entity;
 			InventoryPlayer inv = player.inventory;
-			for(int i = 0;i<inv.getSizeInventory();i++){
+			for (int i = 0;i < inv.getSizeInventory();i++) {
 				ItemStack itemStack = inv.getStackInSlot(i);
-				if(itemStack != null && itemStack.getItem() == EnergyInit.portableEnergyCell){
+				if (itemStack != null && itemStack.getItem() == EnergyInit.portableEnergyCell) {
 					PortableEnergyCell item = (PortableEnergyCell) itemStack.getItem();
 					double energy = is.getTagCompound().hasKey("Energy") ? is.getTagCompound().getDouble("Energy") : 0;
 					double receive = item.receiveEnergy(itemStack, Math.min(this.getMaxExtract(is), energy), true);
-					if(receive > 0){
+					if (receive > 0) {
 						item.receiveEnergy(itemStack, receive, false);
 						energy = energy - receive;
 						is.getTagCompound().setDouble("Energy", energy);
@@ -94,17 +95,14 @@ public class PortableSolarPanel extends Item implements IEnergyContainerItem{
 	}
 
 	@Override
-	public double receiveEnergy(ItemStack container, double maxReceive,
-			boolean simulate) {
+	public double receiveEnergy(ItemStack container, double maxReceive, boolean simulate) {
 		return 0;
 	}
 
 	@Override
 	public double extractEnergy(ItemStack container, double maxExtract, boolean simulate) {
 
-		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
-			return 0;
-		}
+		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) { return 0; }
 		double energy = container.getTagCompound().getDouble("Energy");
 
 		double energyExtracted = Math.min(energy, Math.min(this.getMaxExtract(container), maxExtract));
@@ -119,9 +117,7 @@ public class PortableSolarPanel extends Item implements IEnergyContainerItem{
 	@Override
 	public double getEnergyStored(ItemStack container) {
 
-		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
-			return 0;
-		}
+		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) { return 0; }
 		return container.getTagCompound().getDouble("Energy");
 	}
 
@@ -130,21 +126,21 @@ public class PortableSolarPanel extends Item implements IEnergyContainerItem{
 
 		return 1000;
 	}
+
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced)
-	{
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced) {
 		super.addInformation(itemStack, player, list, isAdvanced);
-		float biomeTemp = player.worldObj.getBiomeForCoordsBody(new BlockPos(player)).getTemperature();
-		long ticks = player.worldObj.getWorldTime();
-		if(player.worldObj.isDaytime()){
-			int light = player.worldObj.getLightFor(EnumSkyBlock.SKY, new BlockPos(player));
+		float biomeTemp = player.world.getBiomeForCoordsBody(new BlockPos(player)).getTemperature();
+		long ticks = player.world.getWorldTime();
+		if (player.world.isDaytime()) {
+			int light = player.world.getLightFor(EnumSkyBlock.SKY, new BlockPos(player));
 			int tier = itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tier") ? itemStack.getTagCompound().getInteger("tier") : 0;
 			double e = ((tier + 1) * 20000) * (light / 15);
 			double tempPer = biomeTemp * 0.2;
 			e /= (0.8D + tempPer);
-			//long div = ticks / 12000;
+			// long div = ticks / 12000;
 			long ticksCR = ticks - 6000;
 			long ticksC = ticksCR < 0 ? -ticksCR : ticksCR;
 			double ticksM = (6000 / e) - (ticksC / e);
@@ -153,16 +149,16 @@ public class PortableSolarPanel extends Item implements IEnergyContainerItem{
 				energy = Math.min(energy + ticksM, 1000);
 				itemStack.getTagCompound().setDouble("Energy", energy);
 			}*/
-			double ticksM2 = (ticksM/0.6D);
+			double ticksM2 = (ticksM / 0.6D);
 			double ticksM3 = Math.floor(ticksM2 * 1000) / 5;
 			double energy = Math.floor(this.getEnergyStored(itemStack) * 100) / 100;
 			double per = energy * 100 / 1000;
-			int p = MathHelper.floor_double(per);
-			list.add(I18n.format("tomsMod.tooltip.charge") + ": "+this.getMaxEnergyStored(itemStack)+"/"+energy+" "+p+"%");
+			int p = MathHelper.floor(per);
+			list.add(I18n.format("tomsMod.tooltip.charge") + ": " + this.getMaxEnergyStored(itemStack) + "/" + energy + " " + p + "%");
 			TomsModUtils.addActiveTag(list, true);
-			list.add(I18n.format("tomsMod.tooltip.tier")+": "+(tier+1));
-			list.add(I18n.format("tomsMod.tooltip.efficiency", ticksM3+"%"));
-		}else
+			list.add(I18n.format("tomsMod.tooltip.tier") + ": " + (tier + 1));
+			list.add(I18n.format("tomsMod.tooltip.efficiency", ticksM3 + "%"));
+		} else
 			TomsModUtils.addActiveTag(list, false);
 		/*double energy = this.getEnergyStored(itemStack);
 		long ticks = player.worldObj.getWorldTime();
@@ -197,13 +193,14 @@ public class PortableSolarPanel extends Item implements IEnergyContainerItem{
 		list.add(I18n.format("tomsMod.tooltip.tier")+": "+(tier+1));
 		list.add(I18n.format("tomsMod.tooltip.efficiency", ticksM3+"%"));*/
 	}
-	public int getMaxExtract(ItemStack is){
-		int tier = is.getTagCompound().hasKey("tier") ? is.getTagCompound().getInteger("tier")+1 : 1;
-		return 5*tier;
+
+	public int getMaxExtract(ItemStack is) {
+		int tier = is.getTagCompound().hasKey("tier") ? is.getTagCompound().getInteger("tier") + 1 : 1;
+		return 5 * tier;
 	}
+
 	@Override
-	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
-	{
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		return slotChanged;
 	}
 }

@@ -6,17 +6,12 @@
     	"connection":"tomsmodstorage:blocks/offline",
     	"front":"tomsmodstorage:blocks/patternTerminalPart"
     },
-    "uvlock": false
+    "uvlock": false,
+    "model": "tomsmodcore:null"
   },
    "variants": {
      "normal": [
        {}
-     ],
-     "inventory": [
-       {
-         "model": "terminalModel",
-         "transform": "forge:default-block"
-       }
      ],
      "state":{
      	"0": {}, "1": {

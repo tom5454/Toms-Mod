@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodenergy:blocks/largebatboxtop",
+        "down": "tomsmodenergy:blocks/largebatboxside",
+        "north": "tomsmodenergy:blocks/largebatboxside",
+        "east": "tomsmodenergy:blocks/largebatboxside",
+        "south": "tomsmodenergy:blocks/largebatboxfront",
+        "west": "tomsmodenergy:blocks/largebatboxside",
+        "particle": "tomsmodenergy:blocks/largebatboxside"
+    }
+}

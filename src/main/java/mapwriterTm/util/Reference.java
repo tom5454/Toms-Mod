@@ -9,8 +9,7 @@ import com.google.common.collect.Sets;
 
 import com.tom.lib.Configs;
 
-public final class Reference
-{
+public final class Reference {
 	public static final String MOD_ID = "mapwritertm";
 	public static final String MOD_ID_CAP = "MapWriterTm";
 	public static final String MOD_NAME = "MapWriter in Tom's Mod";
@@ -39,34 +38,14 @@ public final class Reference
 	public static final String blockColourSaveFileName = "MapWriterBlockColours.txt";
 	public static final String blockColourOverridesFileName = "MapWriterBlockColourOverrides.txt";
 
-	public static final ResourceLocation backgroundTexture = new ResourceLocation(
-			"mapwriterTm",
-			"textures/map/background.png");
-	public static final ResourceLocation roundMapTexture = new ResourceLocation(
-			"mapwriterTm",
-			"textures/map/border_round.png");
-	public static final ResourceLocation squareMapTexture = new ResourceLocation(
-			"mapwriterTm",
-			"textures/map/border_square.png");
-	public static final ResourceLocation playerArrowTexture = new ResourceLocation(
-			"mapwriterTm",
-			"textures/map/arrow_player.png");
-	public static final ResourceLocation northArrowTexture = new ResourceLocation(
-			"mapwriterTm",
-			"textures/map/arrow_north.png");
-	public static final ResourceLocation leftArrowTexture = new ResourceLocation(
-			"mapwriterTm",
-			"textures/map/arrow_text_left.png");
-	public static final ResourceLocation rightArrowTexture = new ResourceLocation(
-			"mapwriterTm",
-			"textures/map/arrow_text_right.png");
-	public static final ResourceLocation DummyMapTexture = new ResourceLocation(
-			"mapwriterTm",
-			"textures/map/dummy_map.png");
+	public static final ResourceLocation backgroundTexture = new ResourceLocation("mapwriterTm", "textures/map/background.png");
+	public static final ResourceLocation roundMapTexture = new ResourceLocation("mapwriterTm", "textures/map/border_round.png");
+	public static final ResourceLocation squareMapTexture = new ResourceLocation("mapwriterTm", "textures/map/border_square.png");
+	public static final ResourceLocation playerArrowTexture = new ResourceLocation("mapwriterTm", "textures/map/arrow_player.png");
+	public static final ResourceLocation northArrowTexture = new ResourceLocation("mapwriterTm", "textures/map/arrow_north.png");
+	public static final ResourceLocation leftArrowTexture = new ResourceLocation("mapwriterTm", "textures/map/arrow_text_left.png");
+	public static final ResourceLocation rightArrowTexture = new ResourceLocation("mapwriterTm", "textures/map/arrow_text_right.png");
+	public static final ResourceLocation DummyMapTexture = new ResourceLocation("mapwriterTm", "textures/map/dummy_map.png");
 
-	public static final HashSet<String> PROTOCOLS = Sets.newHashSet(new String[]
-			{
-					"http",
-					"https"
-			});
+	public static final HashSet<String> PROTOCOLS = Sets.newHashSet(new String[]{"http", "https"});
 }

@@ -1,6 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "up": "blocks/fusionGlassActive","down": "blocks/fusionPower","north": "blocks/fusionCase","east": "blocks/fusionCase","south": "blocks/fusionCase","west": "blocks/fusionCase","particle": "blocks/fusionCase"
+        "up": "tomsmodenergy:blocks/fusionGlassActive",
+        "down": "tomsmodenergy:blocks/fusionPower",
+        "north": "tomsmodenergy:blocks/fusionCase",
+        "east": "tomsmodenergy:blocks/fusionCase",
+        "south": "tomsmodenergy:blocks/fusionCase",
+        "west": "tomsmodenergy:blocks/fusionCase",
+        "particle": "tomsmodenergy:blocks/fusionCase"
     }
 }

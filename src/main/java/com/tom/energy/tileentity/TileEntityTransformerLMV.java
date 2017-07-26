@@ -18,10 +18,9 @@ import com.tom.api.tileentity.TileEntityTomsMod;
 
 import com.tom.energy.block.TransformerLM;
 
-public class TileEntityTransformerLMV extends TileEntityTomsMod implements
-IEnergyHandler, ICustomMultimeterInformation {
+public class TileEntityTransformerLMV extends TileEntityTomsMod implements IEnergyHandler, ICustomMultimeterInformation {
 
-	//private EnergyStorage energy = new EnergyStorage(10000);
+	// private EnergyStorage energy = new EnergyStorage(10000);
 	@Override
 	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
 		EnumFacing facing = this.getFacing();
@@ -34,41 +33,40 @@ IEnergyHandler, ICustomMultimeterInformation {
 	}
 
 	@Override
-	public double receiveEnergy(EnumFacing from, EnergyType type,
-			double maxReceive, boolean simulate) {
+	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive, boolean simulate) {
 		EnumFacing facing = this.getFacing();
-		if(type == LV && from == facing.getOpposite() && getMode()){
+		if (type == LV && from == facing.getOpposite() && getMode()) {
 			/*TileEntity receiver = worldObj.getTileEntity(pos.offset(facing));
 				if(receiver instanceof IEnergyReceiver) {
 					//System.out.println("send");
 					EnumFacing fOut = facing.getOpposite();
 					IEnergyReceiver recv = (IEnergyReceiver)receiver;*/
 			double maxLaser = MV.convertFrom(LV, maxReceive);
-			double push = MV.pushEnergyTo(worldObj, pos, facing.getOpposite(), maxLaser, 800, simulate);
+			double push = MV.pushEnergyTo(world, pos, facing.getOpposite(), maxLaser, 800, simulate);
 			double ret = LV.convertFrom(MV, push);
 			return ret;
-			//	}
-		}else if(type == MV && from == facing && !getMode()){
-			//TileEntity receiver = worldObj.getTileEntity(pos.offset(facing));
-			//if(receiver instanceof IEnergyReceiver) {
-			//System.out.println("send");
-			//EnumFacing fOut = facing.getOpposite();
-			//IEnergyReceiver recv = (IEnergyReceiver)receiver;
-			return MV.convertFrom(LV,LV.pushEnergyTo(worldObj, pos, facing, LV.convertFrom(MV, maxReceive), 1600,simulate));
+			// }
+		} else if (type == MV && from == facing && !getMode()) {
+			// TileEntity receiver = worldObj.getTileEntity(pos.offset(facing));
+			// if(receiver instanceof IEnergyReceiver) {
+			// System.out.println("send");
+			// EnumFacing fOut = facing.getOpposite();
+			// IEnergyReceiver recv = (IEnergyReceiver)receiver;
+			return MV.convertFrom(LV, LV.pushEnergyTo(world, pos, facing, LV.convertFrom(MV, maxReceive), 1600, simulate));
 			/*}else{
 					EnumFacing fOut = facing.getOpposite();
 					IMultipartContainer container = MultipartHelper.getPartContainer(worldObj, pos.offset(facing));
 					if (container == null) {
 						return 0;
 					}
-
+			
 					if (fOut != null) {
 						ISlottedPart part = container.getPartInSlot(PartSlot.getFaceSlot(fOut));
 						if (part instanceof IMicroblock.IFaceMicroblock && !((IMicroblock.IFaceMicroblock) part).isFaceHollow()) {
 							return 0;
 						}
 					}
-
+			
 					ISlottedPart part = container.getPartInSlot(PartSlot.CENTER);
 					try{
 						if (part instanceof PartDuct<?>) {
@@ -92,8 +90,7 @@ IEnergyHandler, ICustomMultimeterInformation {
 	}
 
 	@Override
-	public double extractEnergy(EnumFacing from, EnergyType type,
-			double maxExtract, boolean simulate) {
+	public double extractEnergy(EnumFacing from, EnergyType type, double maxExtract, boolean simulate) {
 		return 0;
 	}
 
@@ -106,23 +103,27 @@ IEnergyHandler, ICustomMultimeterInformation {
 	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return 0;
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		//this.energy.writeToNBT(tag);
+		// this.energy.writeToNBT(tag);
 		return tag;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		//this.energy.writeToNBT(tag);
+		// this.energy.writeToNBT(tag);
 	}
-	public EnumFacing getFacing(){
-		IBlockState state = worldObj.getBlockState(pos);
+
+	public EnumFacing getFacing() {
+		IBlockState state = world.getBlockState(pos);
 		return state.getValue(TransformerLM.FACING);
 	}
-	public boolean getMode(){
-		IBlockState state = worldObj.getBlockState(pos);
+
+	public boolean getMode() {
+		IBlockState state = world.getBlockState(pos);
 		return state.getValue(TransformerLM.MODE);
 	}
 

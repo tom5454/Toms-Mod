@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.energy.IEnergyContainerItem;
 import com.tom.api.energy.ItemEnergyContainer;
 import com.tom.api.item.ILinkContainer;
@@ -33,7 +33,7 @@ import com.tom.core.CoreInit;
 
 import com.tom.core.tileentity.TileEntityTabletController;
 
-public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer, IIconRegisterRequired {
+public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer, IModelRegisterRequired {
 	private static int[] access;
 	private static int[] Ant;
 	private static int[] antaccess;
@@ -42,42 +42,44 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 	private static int empty;
 	private static int itemIcon;
 	private static int i = 0;
-	public Tablet(){
+
+	public Tablet() {
 		this.setMaxStackSize(1);
 	}
-	public boolean connect(EntityPlayer player, World world, int x, int y, int z, int id, ItemStack is,int tier, boolean locked){
-		if(is.getTagCompound() != null){
+
+	public boolean connect(EntityPlayer player, World world, int x, int y, int z, int id, ItemStack is, int tier, boolean locked) {
+		if (is.getTagCompound() != null) {
 			NBTTagCompound tag = is.getTagCompound();
-			if(tag.hasKey("active")){
-				if(tag.getBoolean("active")){
-					if(id == 0){
+			if (tag.hasKey("active")) {
+				if (tag.getBoolean("active")) {
+					if (id == 0) {
 						TabletHandler tab = this.getTablet(is, world);
-						if(tab != null){
-							if(tier > 0 || locked){
+						if (tab != null) {
+							if (tier > 0 || locked) {
 								InventoryPlayer inv = player.inventory;
 								NBTTagCompound modemTag = null;
-								for(int i = 0;i<inv.getSizeInventory();i++){
+								for (int i = 0;i < inv.getSizeInventory();i++) {
 									ItemStack c = inv.getStackInSlot(i);
-									if(c != null && c.getItem() == CoreInit.connectionModem){
+									if (c != null && c.getItem() == CoreInit.connectionModem) {
 										modemTag = c.getTagCompound();
 										break;
 									}
 								}
-								if(modemTag != null){
+								if (modemTag != null) {
 									int t = modemTag.hasKey("tier") ? modemTag.getInteger("tier") : 0;
-									if(t >= tier && tab.apAntenna){
-										if(locked){
-											if(modemTag.hasKey("linkList")){
+									if (t >= tier && tab.apAntenna) {
+										if (locked) {
+											if (modemTag.hasKey("linkList")) {
 												NBTTagList list = (NBTTagList) modemTag.getTag("linkList");
 												boolean found = false;
-												for(int i = 0;i<list.tagCount();i++){
+												for (int i = 0;i < list.tagCount();i++) {
 													NBTTagCompound cTag = list.getCompoundTagAt(i);
-													if(cTag.getInteger("x") == x && cTag.getInteger("y") == y && cTag.getInteger("z") == z){
+													if (cTag.getInteger("x") == x && cTag.getInteger("y") == y && cTag.getInteger("z") == z) {
 														found = true;
 														break;
 													}
 												}
-												if(found){
+												if (found) {
 													boolean oldC = tab.connectedToAccessPoint;
 													int oldX = tab.apX;
 													int oldY = tab.apY;
@@ -86,13 +88,13 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 													tab.apX = x;
 													tab.apY = y;
 													tab.apZ = z;
-													if(oldX != x || oldY != y || oldZ != z || !oldC){
-														this.sendUpdates("tablet_connect_locked", is, player, world, tab,true);
+													if (oldX != x || oldY != y || oldZ != z || !oldC) {
+														this.sendUpdates("tablet_connect_locked", is, player, world, tab, true);
 													}
 													return ((oldX == x && oldY == y && oldZ == z) || !oldC) && !tab.isJammed;
 												}
 											}
-										}else{
+										} else {
 											boolean oldC = tab.connectedToAccessPoint;
 											int oldX = tab.apX;
 											int oldY = tab.apY;
@@ -101,14 +103,14 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 											tab.apX = x;
 											tab.apY = y;
 											tab.apZ = z;
-											if(oldX != x || oldY != y || oldZ != z || !oldC){
-												this.sendUpdates("tablet_connect_locked", is, player, world, tab,true);
+											if (oldX != x || oldY != y || oldZ != z || !oldC) {
+												this.sendUpdates("tablet_connect_locked", is, player, world, tab, true);
 											}
 											return ((oldX == x && oldY == y && oldZ == z) || !oldC) && !tab.isJammed;
 										}
 									}
 								}
-							}else{
+							} else {
 								boolean oldC = tab.connectedToAccessPoint;
 								int oldX = tab.apX;
 								int oldY = tab.apY;
@@ -117,15 +119,15 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 								tab.apX = x;
 								tab.apY = y;
 								tab.apZ = z;
-								if(oldX != x || oldY != y || oldZ != z || !oldC){
-									this.sendUpdates("tablet_connect", is, player, world, tab,true);
+								if (oldX != x || oldY != y || oldZ != z || !oldC) {
+									this.sendUpdates("tablet_connect", is, player, world, tab, true);
 								}
 								return ((oldX == x && oldY == y && oldZ == z) || !oldC) && !tab.isJammed;
 							}
 						}
-					}else if(id == 1){
+					} else if (id == 1) {
 						TabletHandler tab = this.getTablet(is, world);
-						if(tab != null && tab.antAntenna){
+						if (tab != null && tab.antAntenna) {
 							boolean oldC = tab.connectedToAntenna;
 							int oldX = tab.antX;
 							int oldY = tab.antY;
@@ -134,14 +136,14 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 							tab.antX = x;
 							tab.antY = y;
 							tab.antZ = z;
-							if((oldX != x || oldY != y || oldZ != z) && !oldC){
-								this.sendUpdates("tablet_connect_antenna", is, player, world, tab,true);
+							if ((oldX != x || oldY != y || oldZ != z) && !oldC) {
+								this.sendUpdates("tablet_connect_antenna", is, player, world, tab, true);
 							}
 							return ((oldX == x && oldY == y && oldZ == z) || !oldC) && !tab.isJammed;
 						}
-					}else if(id == 2){
+					} else if (id == 2) {
 						TabletHandler tab = this.getTablet(is, world);
-						if(tab != null){
+						if (tab != null) {
 							boolean oldJ = tab.isJammed;
 							int oldX = tab.jX;
 							int oldY = tab.jY;
@@ -158,8 +160,8 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 							tab.apX = x;
 							tab.apY = y;
 							tab.apZ = z;
-							if((oldX != x || oldY != y || oldZ != z) && !oldJ){
-								this.sendUpdates("tablet_jammed", is, player, world, tab,true);
+							if ((oldX != x || oldY != y || oldZ != z) && !oldJ) {
+								this.sendUpdates("tablet_jammed", is, player, world, tab, true);
 							}
 							return true;
 						}
@@ -169,18 +171,21 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 		}
 		return false;
 	}
-	public boolean connect(EntityPlayer player, World world, int x, int y, int z, int id, ItemStack is){
-		return this.connect(player, world, x, y, z, id, is, 0,false);
+
+	public boolean connect(EntityPlayer player, World world, int x, int y, int z, int id, ItemStack is) {
+		return this.connect(player, world, x, y, z, id, is, 0, false);
 	}
-	public void receive(World world,Object o, ItemStack is,EntityPlayer player){
+
+	public void receive(World world, Object o, ItemStack is, EntityPlayer player) {
 		TileEntityTabletController te = this.getTabletController(is, world);
-		if(te != null){
+		if (te != null) {
 			te.queueEvent("tablet_receive", new Object[]{player.getName(), o});
 		}
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(){
+	public void registerModels() {
 		itemIcon = regIcon("tomsmodcore:tablet/TabletOff", "inventory");
 		NoC = this.registerIconArray("TabNoC");
 		access = this.registerIconArray("TabletAPC");
@@ -189,59 +194,58 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 		Jammed = this.registerIconArray("TabletJ");
 		empty = regIcon("tomsmodcore:tablet/TabletEmpty", "inventory");
 	}
+
 	private static int regIcon(String string, String string2) {
 		i++;
-		CoreInit.registerRender(CoreInit.Tablet, i-1,string);
-		return i-1;
+		CoreInit.registerRender(CoreInit.Tablet, i - 1, string);
+		return i - 1;
 	}
-	public int getIcon(ItemStack is, int i){
-		if(is.getTagCompound() != null){
+
+	public int getIcon(ItemStack is, int i) {
+		if (is.getTagCompound() != null) {
 			NBTTagCompound tag = is.getTagCompound();
-			if(tag.hasKey("active")){
+			if (tag.hasKey("active")) {
 				boolean act = tag.getBoolean("active");
 				boolean bat = tag.hasKey("batEmpty") ? tag.getBoolean("batEmpty") : false;
-				if(bat){
+				if (bat) {
 					return empty;
-				}else if(act){
-					if(tag.hasKey("Energy")){
+				} else if (act) {
+					if (tag.hasKey("Energy")) {
 						double per = this.getEnergyStored(is) * 100 / this.getMaxEnergyStored(is);
-						int p = MathHelper.floor_double(per);
-						//System.out.println(per);
+						int p = MathHelper.floor(per);
+						// System.out.println(per);
 						boolean ant = tag.hasKey("ant") ? tag.getBoolean("ant") : false;
 						boolean ap = tag.hasKey("ap") ? tag.getBoolean("ap") : false;
 						boolean j = tag.hasKey("j") ? tag.getBoolean("j") : false;
 						int[] c = j ? Jammed : (ant ? (ap ? antaccess : Ant) : (ap ? access : NoC));
-						if(p > 80){
+						if (p > 80) {
 							return c[0];
-						}else if(p < 81 && p > 40){
+						} else if (p < 81 && p > 40) {
 							return c[1];
-						}else if(p > 30 && p < 41){
+						} else if (p > 30 && p < 41) {
 							return c[2];
-						}else if(p > 10 && p < 31){
+						} else if (p > 10 && p < 31) {
 							return c[3];
-						}else if(p < 11){
-							return c[4];
-						}
+						} else if (p < 11) { return c[4]; }
 					}
 					return itemIcon;
-				}else{
+				} else {
 					return itemIcon;
 				}
-			}else{
+			} else {
 				return itemIcon;
 			}
-		}else{
+		} else {
 			return itemIcon;
 		}
 	}
-	private int[] registerIconArray(String icon){
-		return new int[]{regIcon("tomsmodcore:tablet/"+icon+"Full", "inventory"), regIcon("tomsmodcore:tablet/"+icon+"75", "inventory"),
-				regIcon("tomsmodcore:tablet/"+icon+"50", "inventory"), regIcon("tomsmodcore:tablet/"+icon+"25", "inventory"),
-				regIcon("tomsmodcore:tablet/"+icon+"5", "inventory")};
+
+	private int[] registerIconArray(String icon) {
+		return new int[]{regIcon("tomsmodcore:tablet/" + icon + "Full", "inventory"), regIcon("tomsmodcore:tablet/" + icon + "75", "inventory"), regIcon("tomsmodcore:tablet/" + icon + "50", "inventory"), regIcon("tomsmodcore:tablet/" + icon + "25", "inventory"), regIcon("tomsmodcore:tablet/" + icon + "5", "inventory")};
 	}
+
 	@Override
-	public double receiveEnergy(ItemStack container, double maxReceive,
-			boolean simulate) {
+	public double receiveEnergy(ItemStack container, double maxReceive, boolean simulate) {
 		if (container.getTagCompound() == null) {
 			container.setTagCompound(new NBTTagCompound());
 		}
@@ -254,28 +258,29 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 		}
 		return energyReceived;
 	}
+
 	@Override
-	public double extractEnergy(ItemStack container, double maxExtract,
-			boolean simulate) {
+	public double extractEnergy(ItemStack container, double maxExtract, boolean simulate) {
 		return 0;
 	}
+
 	@Override
 	public double getEnergyStored(ItemStack container) {
-		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
-			return 0;
-		}
+		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) { return 0; }
 		return container.getTagCompound().getDouble("Energy");
 	}
+
 	@Override
 	public int getMaxEnergyStored(ItemStack container) {
 		return 1000000;
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean isAdvanced)
-	{
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> list, boolean isAdvanced) {
 		list.add(ItemEnergyContainer.getInfo(this, itemStack));
 	}
+
 	/*public boolean onItemUse(ItemStack is, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ){
 		this.onItemUse(is, player, world);
 		return false;
@@ -284,83 +289,84 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 		this.onItemUse(is, player, world);
 		return false;
 	}*/
-	private void onItemUse(ItemStack is, EntityPlayer player, World world){
-		if(is.getTagCompound() != null){
+	private void onItemUse(ItemStack is, EntityPlayer player, World world) {
+		if (is.getTagCompound() != null) {
 			NBTTagCompound tag = is.getTagCompound();
-			if(tag.hasKey("active")){
-				if(player.isSneaking()){
-					if(this.getEnergyStored(is) < 10){
+			if (tag.hasKey("active")) {
+				if (player.isSneaking()) {
+					if (this.getEnergyStored(is) < 10) {
 						is.getTagCompound().setBoolean("batEmpty", true);
 						is.getTagCompound().setInteger("batTim", 20);
-					}else{
+					} else {
 						is.getTagCompound().setBoolean("active", !tag.getBoolean("active"));
 					}
-				}else{
-					if(this.getEnergyStored(is) > 10 && !world.isRemote && tag.getBoolean("active")){
+				} else {
+					if (this.getEnergyStored(is) > 10 && !world.isRemote && tag.getBoolean("active")) {
 						/*player.openGui(CoreInit.modInstance, GuiHandler.GuiIDs.tablet.ordinal(), world, (int)player.posX, (int)player.posY, (int)player.posZ);
 						NetworkHandler.sendTo(new PacketTabletGui(this.getTablet(is, world)), (EntityPlayerMP)player);*/
 						this.activate(is, player, world, this.getTablet(is, world));
 					}
 				}
-			}else{
+			} else {
 				is.getTagCompound().setBoolean("active", true);
 			}
-		}else{
+		} else {
 			is.setTagCompound(new NBTTagCompound());
 			is.getTagCompound().setBoolean("batEmpty", true);
 			is.getTagCompound().setInteger("batTim", 20);
 		}
 	}
+
 	@Override
 	public void onUpdate(ItemStack is, World world, Entity entity, int par4, boolean par5) {
-		if(is.getTagCompound() != null && entity instanceof EntityPlayer){
+		if (is.getTagCompound() != null && entity instanceof EntityPlayer) {
 			NBTTagCompound tag = is.getTagCompound();
-			if(tag.hasKey("active")){
-				if(tag.getBoolean("active")){
+			if (tag.hasKey("active")) {
+				if (tag.getBoolean("active")) {
 					int energyEx = this.extract(is, 1, true);
-					if(energyEx == 1){
+					if (energyEx == 1) {
 						this.extract(is, 1, false);
 						TileEntityTabletController te = this.getTabletController(is, world);
 						TabletHandler tab = this.getTablet(te, is);
 						/*double x = entity.posX;
 						double y = entity.posY;
 						double z = entity.posZ;*/
-						if(!world.isRemote && tab != null){
+						if (!world.isRemote && tab != null) {
 							boolean update = false;
-							if(tab.connectedToAccessPoint){
+							if (tab.connectedToAccessPoint) {
 								TileEntity tile = world.getTileEntity(new BlockPos(tab.apX, tab.apY, tab.apZ));
-								if(!(tile instanceof TileEntityTabletAccessPointBase && ((TileEntityTabletAccessPointBase)tile).isActive()) || entity.getDistance(tab.apX, tab.apY, tab.apZ) > 5){
+								if (!(tile instanceof TileEntityTabletAccessPointBase && ((TileEntityTabletAccessPointBase) tile).isActive()) || entity.getDistance(tab.apX, tab.apY, tab.apZ) > 5) {
 									tab.connectedToAccessPoint = false;
 									update = true;
 								}
 							}
-							if(tab.connectedToAntenna){
+							if (tab.connectedToAntenna) {
 								TileEntity tile = world.getTileEntity(new BlockPos(tab.antX, tab.antY, tab.antZ));
-								if(!(tile instanceof TileEntityAntennaBase && ((TileEntityAntennaBase)tile).isActive()) || entity.getDistance(tab.antX, tab.antY, tab.antZ) > 64){
+								if (!(tile instanceof TileEntityAntennaBase && ((TileEntityAntennaBase) tile).isActive()) || entity.getDistance(tab.antX, tab.antY, tab.antZ) > 64) {
 									tab.connectedToAntenna = false;
 									update = true;
 								}
 							}
-							if(tab.isJammed){
+							if (tab.isJammed) {
 								TileEntity tile = world.getTileEntity(new BlockPos(tab.jX, tab.jY, tab.jZ));
-								if(!(tile instanceof TileEntityJammerBase && ((TileEntityJammerBase)tile).isActive()) || entity.getDistance(tab.jX, tab.jY, tab.jZ) > ((TileEntityJammerBase)tile).getRange()){
+								if (!(tile instanceof TileEntityJammerBase && ((TileEntityJammerBase) tile).isActive()) || entity.getDistance(tab.jX, tab.jY, tab.jZ) > ((TileEntityJammerBase) tile).getRange()) {
 									tab.isJammed = false;
 									update = true;
 								}
 							}
-							InventoryPlayer inv = ((EntityPlayer)entity).inventory;
+							InventoryPlayer inv = ((EntityPlayer) entity).inventory;
 							NBTTagCompound modemTag = null;
-							for(int i = 0;i<inv.getSizeInventory();i++){
+							for (int i = 0;i < inv.getSizeInventory();i++) {
 								ItemStack c = inv.getStackInSlot(i);
-								if(c != null && c.getItem() == CoreInit.connectionModem){
+								if (c != null && c.getItem() == CoreInit.connectionModem) {
 									modemTag = c.getTagCompound();
 									break;
 								}
 							}
-							if(modemTag != null){
+							if (modemTag != null) {
 								tab.modemTag = modemTag;
 								tab.hasModem = true;
-							}else{
+							} else {
 								tab.hasModem = false;
 							}
 							tab.playerName = entity.getName();
@@ -372,10 +378,11 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 								sList.appendTag(new NBTTagString(s.sound.replace(':', '|')));
 							}
 							is.getTagCompound().setTag("soundList", sList);*/
-							if(update) this.sendUpdates("tablet_update", is, (EntityPlayer) entity, world, tab,false);
+							if (update)
+								this.sendUpdates("tablet_update", is, (EntityPlayer) entity, world, tab, false);
 							is.getTagCompound().setTag("terminal", tab.term.writeToNBT());
 							this.sendUpdates("", is, (EntityPlayer) entity, world, tab, false);
-						}else if(world.isRemote){
+						} else if (world.isRemote) {
 							/*NBTTagList l = (NBTTagList) is.getTagCompound().getTag("soundList");
 							List<ISound> backup = new ArrayList<ISound>(GlobalFields.tabletSounds);
 							for(int i = 0;i<l.tagCount();i++){
@@ -408,27 +415,26 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 							}*/
 						}
 
-					}else{
+					} else {
 						is.getTagCompound().setBoolean("active", false);
-						this.sendUpdates("discharge", is, (EntityPlayer) entity, world, this.getTablet(is, world),true);
+						this.sendUpdates("discharge", is, (EntityPlayer) entity, world, this.getTablet(is, world), true);
 					}
 				}
 			}
-			if(is.getTagCompound().hasKey("batTim") && is.getTagCompound().hasKey("batEmpty") && is.getTagCompound().getBoolean("batEmpty")){
+			if (is.getTagCompound().hasKey("batTim") && is.getTagCompound().hasKey("batEmpty") && is.getTagCompound().getBoolean("batEmpty")) {
 				int t = is.getTagCompound().getInteger("batTim");
-				if(t > 0){
-					is.getTagCompound().setInteger("batTim", t-1);
-				}else{
+				if (t > 0) {
+					is.getTagCompound().setInteger("batTim", t - 1);
+				} else {
 					is.getTagCompound().setBoolean("batEmpty", false);
 				}
 			}
 		}
 		is.setItemDamage(this.getIcon(is, 0));
 	}
-	private int extract(ItemStack container, int maxExtract, boolean simulate){
-		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
-			return 0;
-		}
+
+	private int extract(ItemStack container, int maxExtract, boolean simulate) {
+		if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) { return 0; }
 		int energy = container.getTagCompound().getInteger("Energy");
 		int energyExtracted = Math.min(energy, Math.min(100, maxExtract));
 
@@ -438,10 +444,11 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 		}
 		return energyExtracted;
 	}
-	private TabletHandler getTablet(ItemStack is, World world){
-		if(is.getTagCompound() != null && is.getTagCompound().hasKey("x") && is.getTagCompound().hasKey("y") && is.getTagCompound().hasKey("z") && is.getTagCompound().hasKey("id")){
+
+	private TabletHandler getTablet(ItemStack is, World world) {
+		if (is.getTagCompound() != null && is.getTagCompound().hasKey("x") && is.getTagCompound().hasKey("y") && is.getTagCompound().hasKey("z") && is.getTagCompound().hasKey("id")) {
 			TileEntity tile = world.getTileEntity(new BlockPos(is.getTagCompound().getInteger("x"), is.getTagCompound().getInteger("y"), is.getTagCompound().getInteger("z")));
-			if(tile instanceof TileEntityTabletController){
+			if (tile instanceof TileEntityTabletController) {
 				TileEntityTabletController te = (TileEntityTabletController) tile;
 				int id = is.getTagCompound().getInteger("id");
 				return te.getTablet(id);
@@ -449,40 +456,39 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 		}
 		return null;
 	}
-	private TileEntityTabletController getTabletController(ItemStack is, World world){
-		if(is.getTagCompound() != null && is.getTagCompound().hasKey("x") && is.getTagCompound().hasKey("y") && is.getTagCompound().hasKey("z") && is.getTagCompound().hasKey("id")){
+
+	private TileEntityTabletController getTabletController(ItemStack is, World world) {
+		if (is.getTagCompound() != null && is.getTagCompound().hasKey("x") && is.getTagCompound().hasKey("y") && is.getTagCompound().hasKey("z") && is.getTagCompound().hasKey("id")) {
 			TileEntity tile = world.getTileEntity(new BlockPos(is.getTagCompound().getInteger("x"), is.getTagCompound().getInteger("y"), is.getTagCompound().getInteger("z")));
-			if(tile instanceof TileEntityTabletController){
+			if (tile instanceof TileEntityTabletController) {
 				TileEntityTabletController te = (TileEntityTabletController) tile;
-				//int id = is.getTagCompound().getInteger("id");
+				// int id = is.getTagCompound().getInteger("id");
 				return te;
 			}
 		}
 		return null;
 	}
-	private TabletHandler getTablet(TileEntityTabletController te,ItemStack is){
-		if(te != null){
+
+	private TabletHandler getTablet(TileEntityTabletController te, ItemStack is) {
+		if (te != null) {
 			int id = is.getTagCompound().getInteger("id");
 			return te.getTablet(id);
 		}
 		return null;
 
 	}
-	public int[] getConnected(int id,World world,ItemStack is){
-		if(is.getTagCompound() != null){
+
+	public int[] getConnected(int id, World world, ItemStack is) {
+		if (is.getTagCompound() != null) {
 			NBTTagCompound tag = is.getTagCompound();
-			if(tag.hasKey("active")){
-				if(tag.getBoolean("active")){
+			if (tag.hasKey("active")) {
+				if (tag.getBoolean("active")) {
 					TabletHandler tab = this.getTablet(is, world);
-					if(tab != null){
-						if(id == 0){
-							if(tab.connectedToAccessPoint){
-								return new int[]{1,tab.apX,tab.apY,tab.apZ};
-							}
-						}else if(id == 1){
-							if(tab.connectedToAntenna){
-								return new int[]{1,tab.antX,tab.antY,tab.antZ};
-							}
+					if (tab != null) {
+						if (id == 0) {
+							if (tab.connectedToAccessPoint) { return new int[]{1, tab.apX, tab.apY, tab.apZ}; }
+						} else if (id == 1) {
+							if (tab.connectedToAntenna) { return new int[]{1, tab.antX, tab.antY, tab.antZ}; }
 						}
 					}
 				}
@@ -490,48 +496,55 @@ public class Tablet extends Item implements IEnergyContainerItem, ILinkContainer
 		}
 		return new int[]{0};
 	}
-	private void activate(ItemStack is, EntityPlayer player, World world, TabletHandler tab){
-		this.sendUpdates("tablet_activate", is, player, world, tab,true);
-		//player.openGui(CoreInit.modInstance, GuiHandler.GuiIDs.tablet.ordinal(), world, (int)player.posX, (int)player.posY, (int)player.posZ);
+
+	private void activate(ItemStack is, EntityPlayer player, World world, TabletHandler tab) {
+		this.sendUpdates("tablet_activate", is, player, world, tab, true);
+		// player.openGui(CoreInit.modInstance,
+		// GuiHandler.GuiIDs.tablet.ordinal(), world, (int)player.posX,
+		// (int)player.posY, (int)player.posZ);
 	}
-	private void sendUpdates(String event, ItemStack is, EntityPlayer player, World world, TabletHandler tab,boolean force){
+
+	private void sendUpdates(String event, ItemStack is, EntityPlayer player, World world, TabletHandler tab, boolean force) {
 		TileEntityTabletController te = this.getTabletController(is, world);
-		if(te != null && tab != null && !world.isRemote){
+		if (te != null && tab != null && !world.isRemote) {
 			int energy = is.getTagCompound().getInteger("Energy");
 			double yaw = new Double(player.rotationYaw);
 			double pitch = new Double(player.rotationPitch);
-			tab.obj = new Object[]{player.getName(),tab.connectedToAccessPoint,tab.connectedToAntenna,tab.apX,tab.apY,tab.apZ,tab.antX,tab.antY,tab.antZ,player.posX,player.posY,player.posZ,yaw,pitch,energy,tab.isJammed,tab.jX,tab.jY,tab.jZ};
-			if(force) te.getUpdates(player.getName(),event);
+			tab.obj = new Object[]{player.getName(), tab.connectedToAccessPoint, tab.connectedToAntenna, tab.apX, tab.apY, tab.apZ, tab.antX, tab.antY, tab.antZ, player.posX, player.posY, player.posZ, yaw, pitch, energy, tab.isJammed, tab.jX, tab.jY, tab.jZ};
+			if (force)
+				te.getUpdates(player.getName(), event);
 		}
 	}
+
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn,
-			World worldIn, EntityPlayer playerIn, EnumHand hand) {
-		this.onItemUse(itemStackIn, playerIn, worldIn);
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+		this.onItemUse(playerIn.getHeldItem(hand), playerIn, worldIn);
+		return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}
+
 	@Override
-	public EnumActionResult onItemUseFirst(ItemStack stack,
-			EntityPlayer player, World world, BlockPos pos, EnumFacing side,
-			float hitX, float hitY, float hitZ, EnumHand hand) {
-		this.onItemUse(stack, player, world);
+	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+		this.onItemUse(player.getHeldItem(hand), player, world);
 		return EnumActionResult.SUCCESS;
 	}
+
 	@Override
-	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
-	{
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		return slotChanged || (oldStack != null && newStack != null && (oldStack.getMetadata() != newStack.getMetadata() || oldStack.getItem() != newStack.getItem()));
 	}
+
 	@Override
 	public Tablet setUnlocalizedName(String unlocalizedName) {
 		super.setUnlocalizedName(unlocalizedName);
 		return this;
 	}
+
 	@Override
 	public Tablet setCreativeTab(CreativeTabs tab) {
 		super.setCreativeTab(tab);
 		return this;
 	}
+
 	@Override
 	public boolean getShareTag() {
 		return true;

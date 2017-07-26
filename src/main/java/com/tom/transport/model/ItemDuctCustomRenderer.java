@@ -1,22 +1,21 @@
 package com.tom.transport.model;
 
-import com.tom.client.MultipartSpecialRendererTomsMod;
-import com.tom.transport.multipart.PartItemDuct;
-
-public class ItemDuctCustomRenderer extends
-MultipartSpecialRendererTomsMod<PartItemDuct> {
-	//	private static final RenderEntityItem RENDER_ITEM = new RenderEntityItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem()) {
-	//		@Override
-	//		public boolean shouldBob() {
-	//			return false;
-	//		}
+public class ItemDuctCustomRenderer /*extends
+									MultipartSpecialRendererTomsMod<PartItemDuct>*/ {
+	// private static final RenderEntityItem RENDER_ITEM = new
+	// RenderEntityItem(Minecraft.getMinecraft().getRenderManager(),
+	// Minecraft.getMinecraft().getRenderItem()) {
+	// @Override
+	// public boolean shouldBob() {
+	// return false;
+	// }
 	//
-	//		@Override
-	//		public boolean shouldSpreadItems() {
-	//			return false;
-	//		}
-	//	};
-	@Override
+	// @Override
+	// public boolean shouldSpreadItems() {
+	// return false;
+	// }
+	// };
+	/*	@Override
 	public void renderMultipartAtI(PartItemDuct part, double x, double y,
 			double z, float partialTicks, int destroyStage) {
 		//System.out.println(partialTicks);
@@ -42,6 +41,6 @@ MultipartSpecialRendererTomsMod<PartItemDuct> {
 				GL11.glPopMatrix();
 			}
 		}*/
-	}
+	// }
 
 }

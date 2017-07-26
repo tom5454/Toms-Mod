@@ -26,11 +26,12 @@ import com.tom.core.tileentity.TileEntityMagCardDevice;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+
 @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class MagCardDevice extends BlockContainerTomsMod implements
-IPeripheralProvider {
+public class MagCardDevice extends BlockContainerTomsMod implements IPeripheralProvider {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyInteger STATE = PropertyInteger.create("state", 0, 3);
+
 	/*@SideOnly(Side.CLIENT)
 	protected IIcon side;
 	@SideOnly(Side.CLIENT)
@@ -63,54 +64,59 @@ IPeripheralProvider {
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityMagCardDevice();
 	}
+
 	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
 		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityMagCardDevice ? (IPeripheral)te : null;
+		return te instanceof TileEntityMagCardDevice ? (IPeripheral) te : null;
 	}
+
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack heldItem = player.getHeldItem(hand);
 		TileEntityMagCardDevice te = (TileEntityMagCardDevice) world.getTileEntity(pos);
-		if(heldItem != null && heldItem.getItem() instanceof IMagCard) {
-			if(!world.isRemote){
+		if (heldItem != null && heldItem.getItem() instanceof IMagCard) {
+			if (!world.isRemote) {
 				te.activate(player, heldItem);
 			}
 			return true;
 		}
 		return false;
 	}
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState bs, EntityLivingBase entity, ItemStack itemstack){
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState bs, EntityLivingBase entity, ItemStack itemstack) {
 		EnumFacing f = TomsModUtils.getDirectionFacing(entity, false);
 		world.setBlockState(pos, bs.withProperty(FACING, f).withProperty(STATE, 0), 2);
 		TileEntity te = world.getTileEntity(pos);
 		TileEntityMagCardDevice te2 = (TileEntityMagCardDevice) te;
 		int d = f.ordinal();
-		if (d == 5) te2.direction = 4;
-		else if(d == 4) te2.direction = 5;
-		else if (d == 3) te2.direction = 2;
-		else if(d == 2) te2.direction = 3;
+		if (d == 5)
+			te2.direction = 4;
+		else if (d == 4)
+			te2.direction = 5;
+		else if (d == 3)
+			te2.direction = 2;
+		else if (d == 2)
+			te2.direction = 3;
 	}
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {FACING,STATE});
-	}
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		/*EnumFacing enumfacing = EnumFacing.getFront(meta % 4+2);
 
-        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
-            enumfacing = EnumFacing.NORTH;
-        }
-        //System.out.println("getState");
-        return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(STATE, meta / 4);*/
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{FACING, STATE});
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		/*EnumFacing enumfacing = EnumFacing.getFront(meta % 4+2);
+		
+		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+		{
+		    enumfacing = EnumFacing.NORTH;
+		}
+		//System.out.println("getState");
+		return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(STATE, meta / 4);*/
 		return TomsModUtils.getBlockStateFromMeta(meta, STATE, FACING, getDefaultState(), 3);
 	}
 
@@ -118,14 +124,13 @@ IPeripheralProvider {
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{//System.out.println("getMeta");
+	public int getMetaFromState(IBlockState state) {// System.out.println("getMeta");
 		/*EnumFacing enumfacing = state.getValue(FACING);
-    	if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
-            enumfacing = EnumFacing.NORTH;
-        }
-        return enumfacing.getIndex() * (state.getValue(STATE)+1);*/
+		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+		{
+		    enumfacing = EnumFacing.NORTH;
+		}
+		return enumfacing.getIndex() * (state.getValue(STATE)+1);*/
 		return TomsModUtils.getMetaFromState(state.getValue(FACING), state.getValue(STATE));
 	}
 }

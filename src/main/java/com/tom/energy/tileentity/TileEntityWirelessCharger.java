@@ -32,21 +32,21 @@ import com.tom.lib.Configs;
 
 import com.tom.energy.block.WirelessCharger;
 
-public class TileEntityWirelessCharger extends TileEntityTomsMod implements
-IEnergyReceiver, ILinkable {
-	private EnergyStorage energy = new EnergyStorage(10000000,10000,10000);
-	private List<Coords> linked = new ArrayList<Coords>();
+public class TileEntityWirelessCharger extends TileEntityTomsMod implements IEnergyReceiver, ILinkable {
+	private static final float RF = 0.9F;
+	private EnergyStorage energy = new EnergyStorage(10000000, 10000, 10000);
+	private List<Coords> linked = new ArrayList<>();
 	public boolean redstone = true;
 	public boolean active = false;
+	public boolean hasRF = false;
+
 	@Override
 	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
-		return type == getType(worldObj.getBlockState(pos));
+		return type == getType(world.getBlockState(pos));
 	}
 
 	@Override
-	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive,
-			boolean simulate) {
-		this.markDirty();
+	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive, boolean simulate) {
 		markBlockForUpdate(pos);
 		return this.canConnectEnergy(from, type) ? this.energy.receiveEnergy(maxReceive, simulate) : 0;
 	}
@@ -60,12 +60,13 @@ IEnergyReceiver, ILinkable {
 	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return this.energy.getMaxEnergyStored();
 	}
+
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag){
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		this.energy.writeToNBT(tag);
 		NBTTagList list = new NBTTagList();
-		for(Coords te : this.linked){
+		for (Coords te : this.linked) {
 			NBTTagCompound tagC = new NBTTagCompound();
 			tagC.setInteger("x", te.xCoord);
 			tagC.setInteger("y", te.yCoord);
@@ -74,29 +75,21 @@ IEnergyReceiver, ILinkable {
 			list.appendTag(tagC);
 		}
 		tag.setTag("link", list);
+		tag.setBoolean("rf", hasRF);
 		return tag;
 	}
+
 	public void writeToStackNBT(NBTTagCompound tag) {
 		energy.writeToNBT(tag);
-		NBTTagList list = new NBTTagList();
-		for(Coords te : this.linked){
-			NBTTagCompound tagC = new NBTTagCompound();
-			tagC.setInteger("x", te.xCoord);
-			tagC.setInteger("y", te.yCoord);
-			tagC.setInteger("z", te.zCoord);
-			tagC.setInteger("side", te.facing.ordinal());
-			list.appendTag(tagC);
-		}
-		tag.setTag("link", list);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tag){
+	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		this.energy.readFromNBT(tag);
 		NBTTagList list = (NBTTagList) tag.getTag("link");
 		this.linked.clear();
-		for(int i = 0;i<list.tagCount();i++){
+		for (int i = 0;i < list.tagCount();i++) {
 			NBTTagCompound tagC = list.getCompoundTagAt(i);
 			int x = tagC.getInteger("x");
 			int y = tagC.getInteger("y");
@@ -104,94 +97,90 @@ IEnergyReceiver, ILinkable {
 			int side = tagC.getInteger("side");
 			this.linked.add(new Coords(x, y, z).setFacing(EnumFacing.VALUES[side]));
 		}
+		hasRF = tag.getBoolean("rf");
 	}
+
 	@Override
-	public void updateEntity(IBlockState state){
+	public void updateEntity(IBlockState state) {
 		int xCoord = pos.getX();
 		int yCoord = pos.getY();
 		int zCoord = pos.getZ();
-		this.redstone = !(worldObj.isBlockIndirectlyGettingPowered(pos) > 0);
-		if(!this.worldObj.isRemote && this.redstone && this.energy.hasEnergy()){
-			/*List<Entity> entities = worldObj.getEntitiesWithinAABB(TileEntity.class, AxisAlignedBB.getBoundingBox(xCoord - 16, yCoord - 16, zCoord - 16, xCoord + 17, yCoord + 17, zCoord + 17));
-			//System.out.println(entities.toString());
-			for(Entity tile : entities){
-				if(tile instanceof IEnergyHandler){
-					IEnergyHandler te = (IEnergyHandler) tile;
-					double distance = tile.getDistance(xCoord, yCoord, zCoord);
-					int loss = MathHelper.floor_double(distance / Configs.wirelessChargerLoss);
-					int energySend = this.energy.extractEnergy(te.receiveEnergy(EnumFacing.DOWN, MathHelper.floor_double(10000 / distance / 10), true) + loss, true);
-					if(energySend > 0){
-						this.energy.extractEnergy(energySend, false);
-						te.receiveEnergy(EnumFacing.DOWN, energySend - loss, false);
-					}
-				}
-			}*/
-			if(!state.getValue(WirelessCharger.ACTIVE)){
-				TomsModUtils.setBlockState(worldObj, pos, state.withProperty(WirelessCharger.ACTIVE, true));
+		this.redstone = !(world.isBlockIndirectlyGettingPowered(pos) > 0);
+		if (!this.world.isRemote && this.redstone && this.energy.hasEnergy()) {
+			if (!state.getValue(WirelessCharger.ACTIVE)) {
+				TomsModUtils.setBlockState(world, pos, state.withProperty(WirelessCharger.ACTIVE, true));
 			}
-			for(int i = 0;i<linked.size();i++){
+			for (int i = 0;i < linked.size();i++) {
 				Coords c = linked.get(i);
-				TileEntity tile = this.worldObj.getTileEntity(new BlockPos(c.xCoord, c.yCoord, c.zCoord));
-				if(tile != null && tile instanceof IEnergyReceiver){
+				TileEntity tile = this.world.getTileEntity(new BlockPos(c.xCoord, c.yCoord, c.zCoord));
+				if (tile != null && tile instanceof IEnergyReceiver) {
 					IEnergyReceiver te = (IEnergyReceiver) tile;
 					double distance = tile.getPos().distanceSq(xCoord, yCoord, zCoord);
 					double loss = distance / Configs.wirelessChargerLoss;
-					double energySend = this.energy.extractEnergy(te.receiveEnergy(c.facing, getType(state), MathHelper.floor_double(10000 / distance), true) + loss, true);
-					if(energySend > 0 && loss < energySend){
+					double energySend = this.energy.extractEnergy(te.receiveEnergy(c.facing, getType(state), MathHelper.floor(10000 / distance), true) + loss, true);
+					if (energySend > 0 && loss < energySend) {
 						this.energy.extractEnergy(energySend, false);
 						te.receiveEnergy(c.facing, getType(state), energySend - loss, false);
 					}
-					if(!this.energy.hasEnergy())return;
-				}else{
+					if (!this.energy.hasEnergy())
+						return;
+				} else if (tile instanceof cofh.api.energy.IEnergyReceiver) {
+					if (hasRF) {
+						cofh.api.energy.IEnergyReceiver te = (cofh.api.energy.IEnergyReceiver) tile;
+						double distance = tile.getPos().distanceSq(xCoord, yCoord, zCoord);
+						double loss = distance / Configs.wirelessChargerLoss;
+						int rec = te.receiveEnergy(c.facing, MathHelper.floor(100000 / distance), true);
+						double energySend = energy.extractEnergy(EnergyType.fromRF(getType(state), rec, RF) + loss, true);
+						if (energySend > 0 && loss < energySend) {
+							this.energy.extractEnergy(energySend, false);
+							te.receiveEnergy(c.facing, EnergyType.toRF(getType(state), energySend - loss, RF), false);
+						}
+					}
+				} else {
 					this.linked.remove(c);
 				}
 			}
-			if(this.energy.hasEnergy()){
-				List<EntityPlayer> entities = worldObj.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - 64, pos.getY() - 64, pos.getZ() - 64, pos.getX() + 65, pos.getY() + 65, pos.getZ() + 65));
-				for(EntityPlayer player : entities){
-					if(player.getDistance(pos.getX(),pos.getY(),pos.getZ()) < 64){
+			if (this.energy.hasEnergy()) {
+				List<EntityPlayer> entities = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - 64, pos.getY() - 64, pos.getZ() - 64, pos.getX() + 65, pos.getY() + 65, pos.getZ() + 65));
+				for (EntityPlayer player : entities) {
+					if (player.getDistance(pos.getX(), pos.getY(), pos.getZ()) < 64) {
 						InventoryPlayer inv = player.inventory;
-						for(int i = 0;i<inv.getSizeInventory();i++){
+						for (int i = 0;i < inv.getSizeInventory();i++) {
 							ItemStack item = inv.getStackInSlot(i);
-							if(item != null && item.getItem() instanceof IEnergyContainerItem){
+							if (item != null && item.getItem() instanceof IEnergyContainerItem) {
 								IEnergyContainerItem c = (IEnergyContainerItem) item.getItem();
 								double received = c.receiveEnergy(item, LV.convertFrom(getType(state), energy.getEnergyStored()), true);
-								if(received > 0){
+								if (received > 0) {
 									c.receiveEnergy(item, LV.convertFrom(getType(state), energy.extractEnergy(getType(state).convertFrom(LV, received), false)), false);
 								}
 							}
-							if(!this.energy.hasEnergy())return;
+							if (hasRF && item.getItem() instanceof cofh.api.energy.IEnergyContainerItem) {
+								cofh.api.energy.IEnergyContainerItem c = (cofh.api.energy.IEnergyContainerItem) item.getItem();
+								int received = c.receiveEnergy(item, EnergyType.toRF(getType(state), energy.getEnergyStored(), RF), true);
+								if (received > 0) {
+									c.receiveEnergy(item, EnergyType.toRF(getType(state), energy.extractEnergy(EnergyType.fromRF(getType(state), received, RF), false), RF), false);
+								}
+							}
+							if (!this.energy.hasEnergy())
+								return;
 						}
 					}
 				}
 			}
-		}else{
-			if(!this.worldObj.isRemote){
-				if(state.getValue(WirelessCharger.ACTIVE)){
-					TomsModUtils.setBlockState(worldObj, pos, state.withProperty(WirelessCharger.ACTIVE, false));
+		} else {
+			if (!this.world.isRemote) {
+				if (state.getValue(WirelessCharger.ACTIVE)) {
+					TomsModUtils.setBlockState(world, pos, state.withProperty(WirelessCharger.ACTIVE, false));
 				}
 			}
 		}
 	}
-	//	@Override
-	//	public void writeToPacket(ByteBuf buf){
-	//		buf.writeBoolean(this.redstone && this.energy.getEnergyStored() > 1000);
-	//	}
-	//
-	//	@Override
-	//	public void readFromPacket(ByteBuf buf){
-	//		this.active = buf.readBoolean();
-	//		int xCoord = pos.getX();
-	//		int yCoord = pos.getY();
-	//		int zCoord = pos.getZ();
-	//		this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
-	//	}
 
 	@Override
 	public boolean link(int x, int y, int z, EnumFacing side, ExtraBlockHitInfo bhp, int dim) {
-		TileEntity tile = this.worldObj.getTileEntity(new BlockPos(x, y, z));
-		if(tile != null && tile instanceof IEnergyReceiver && !this.linked.contains(tile)){
-			this.linked.add(new Coords(x,y,z).setFacing(side));
+		TileEntity tile = this.world.getTileEntity(new BlockPos(x, y, z));
+		if (tile != null && (tile instanceof IEnergyReceiver || (hasRF && tile instanceof cofh.api.energy.IEnergyReceiver)) && !this.linked.contains(tile)) {
+			this.linked.add(new Coords(x, y, z).setFacing(side));
 			return true;
 		}
 		return false;
@@ -199,9 +188,18 @@ IEnergyReceiver, ILinkable {
 
 	@Override
 	public List<EnergyType> getValidEnergyTypes() {
-		return getType(worldObj.getBlockState(pos)).getList();
+		return getType(world.getBlockState(pos)).getList();
 	}
-	public EnergyType getType(IBlockState state){
+
+	public EnergyType getType(IBlockState state) {
 		return state.getValue(WirelessCharger.TYPE) ? MV : HV;
+	}
+
+	public boolean applyRF() {
+		if (!hasRF) {
+			hasRF = true;
+			return true;
+		}
+		return false;
 	}
 }

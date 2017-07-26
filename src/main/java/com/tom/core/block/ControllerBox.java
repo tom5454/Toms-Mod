@@ -26,6 +26,7 @@ public class ControllerBox extends BlockContainerTomsMod {
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
+
 	/*@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconregister){
 		this.blockIcon = iconregister.registerIcon("minecraft:tm/Gray");
@@ -33,7 +34,7 @@ public class ControllerBox extends BlockContainerTomsMod {
 	}
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
 		return this.side;
-
+	
 	}
 	public IIcon getIcon(int side, int meta){
 		return this.blockIcon;
@@ -42,27 +43,41 @@ public class ControllerBox extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityControllerBox();
 	}
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState bs, EntityLivingBase entity, ItemStack itemstack){
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState bs, EntityLivingBase entity, ItemStack itemstack) {
 		EnumFacing l = TomsModUtils.getDirectionFacing(entity, true);
 		TileEntityControllerBox te = (TileEntityControllerBox) world.getTileEntity(pos);
 		int d = l.ordinal();
 		te.d = l;
-		if (d == 5) te.direction = 4;
-		else if(d == 4) te.direction = 5;
-		else if (d == 3) te.direction = 2;
-		else if(d == 2) te.direction = 3;
-		else if(d == 0) te.direction = 1;
-		else if(d == 1) te.direction = 0;
-		//par1World.setBlockMetadataWithNotify(x, y, z, d, 3);
+		if (d == 5)
+			te.direction = 4;
+		else if (d == 4)
+			te.direction = 5;
+		else if (d == 3)
+			te.direction = 2;
+		else if (d == 2)
+			te.direction = 3;
+		else if (d == 0)
+			te.direction = 1;
+		else if (d == 1)
+			te.direction = 0;
+		// par1World.setBlockMetadataWithNotify(x, y, z, d, 3);
 	}
+
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		//EnumFacing dir = EnumFacing.getOrientation(blockAccess.getBlockMetadata(par2, par3, par4));
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		// EnumFacing dir =
+		// EnumFacing.getOrientation(blockAccess.getBlockMetadata(par2, par3,
+		// par4));
 		TileEntityControllerBox TE = (TileEntityControllerBox) source.getTileEntity(pos);
-		return setBlockBounds(0.5F - (5.5F/16F), 0.5F - (6F/16F), 0.0F, 0.5F + (5.5F/16F), 0.5F + (8F/16F), 6F/16F, TE != null ? TE.d.getOpposite() : EnumFacing.NORTH);
-		//setBlockBounds(dir.offsetX <= 0 ? 0 : 1F - (1/16), dir.offsetY <= 0 ? 0 : 1F - (1/16), dir.offsetZ <= 0 ? 0 : 1F - (1/16), dir.offsetX >= 0 ? 1 : (1/16), dir.offsetY >= 0 ? 1 : (1/16), dir.offsetZ >= 0 ? 1 : (1/16));
+		return setBlockBounds(0.5F - (5.5F / 16F), 0.5F - (6F / 16F), 0.0F, 0.5F + (5.5F / 16F), 0.5F + (8F / 16F), 6F / 16F, TE != null ? TE.d.getOpposite() : EnumFacing.NORTH);
+		// setBlockBounds(dir.offsetX <= 0 ? 0 : 1F - (1/16), dir.offsetY <= 0 ?
+		// 0 : 1F - (1/16), dir.offsetZ <= 0 ? 0 : 1F - (1/16), dir.offsetX >= 0
+		// ? 1 : (1/16), dir.offsetY >= 0 ? 1 : (1/16), dir.offsetZ >= 0 ? 1 :
+		// (1/16));
 	}
+
 	/*
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -76,34 +91,30 @@ public class ControllerBox extends BlockContainerTomsMod {
 		setBlockBounds(0.5F - (5.5F/16F), 0.5F - (6F/16F), 0.0F, 0.5F + (5.5F/16F), 0.5F + (8F/16F), 6F/16F);
 	}//*/
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
+	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
+
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		//if(player.capabilities.isCreativeMode){
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		// if(player.capabilities.isCreativeMode){
 		TileEntityControllerBox te = (TileEntityControllerBox) world.getTileEntity(pos);
-		te.onBlockActivated(player, heldItem);
+		te.onBlockActivated(player, player.getHeldItem(hand));
 		return true;
 	}
+
 	@Override
-	public int getRenderType()
-	{
+	public int getRenderType() {
 		return -1;
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state)
-	{
+	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
-	{
+	public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
 		return true;
 	}
 }

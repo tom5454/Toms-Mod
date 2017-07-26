@@ -13,8 +13,9 @@ import com.tom.core.CoreInit;
 public class TileEntityControllerBox extends TileEntityTabletAccessPointBase implements ICustomModelledTileEntity {
 	public boolean hasModem = false;
 	public boolean doorOpened = false;
+
 	@Override
-	public void writeToPacket(NBTTagCompound buf){
+	public void writeToPacket(NBTTagCompound buf) {
 		buf.setBoolean("c", connected);
 		buf.setInteger("dir", direction);
 		buf.setInteger("d", this.d.ordinal());
@@ -23,16 +24,20 @@ public class TileEntityControllerBox extends TileEntityTabletAccessPointBase imp
 		buf.setBoolean("do", doorOpened);
 		buf.setBoolean("m", hasModem);
 	}
-	public boolean onBlockActivated(EntityPlayer player, ItemStack is){
-		if(is != null && is.getItem() == CoreInit.wrenchA){
+
+	public boolean onBlockActivated(EntityPlayer player, ItemStack is) {
+		if (!is.isEmpty() && is.getItem() == CoreInit.wrenchA) {
 			this.doorOpened = !this.doorOpened;
-		}else if(is != null && is.getItem() == CoreInit.connectionBoxModem && !this.hasModem && this.doorOpened){
+		} else if (!is.isEmpty() && is.getItem() == CoreInit.connectionBoxModem && !this.hasModem && this.doorOpened) {
 			this.hasModem = true;
 			is.splitStack(1);
-		}else if(is == null && this.hasModem && this.doorOpened){
+		} else if (is.isEmpty() && this.hasModem && this.doorOpened) {
 			this.hasModem = false;
-			EntityItem itemEntity = new EntityItem(worldObj, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CoreInit.connectionBoxModem));
-			if(!worldObj.isRemote) worldObj.spawnEntityInWorld(itemEntity);
+			if (!player.inventory.addItemStackToInventory(new ItemStack(CoreInit.connectionBoxModem))) {
+				EntityItem itemEntity = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CoreInit.connectionBoxModem));
+				if (!world.isRemote)
+					world.spawnEntity(itemEntity);
+			}
 			/*player.inventory.setItemStack(new ItemStack(CoreInit.connectionBoxModem));
 			player.inventory.markDirty();*/
 		}
@@ -40,8 +45,9 @@ public class TileEntityControllerBox extends TileEntityTabletAccessPointBase imp
 		markBlockForUpdate(pos);
 		return true;
 	}
+
 	@Override
-	public void readFromPacket(NBTTagCompound buf){
+	public void readFromPacket(NBTTagCompound buf) {
 		this.connected = buf.getBoolean("c");
 		this.direction = buf.getInteger("dir");
 		this.d = EnumFacing.values()[buf.getInteger("d")];
@@ -49,27 +55,32 @@ public class TileEntityControllerBox extends TileEntityTabletAccessPointBase imp
 		this.tier = buf.getInteger("t");
 		this.doorOpened = buf.getBoolean("do");
 		this.hasModem = buf.getBoolean("m");
-		this.worldObj.markBlockRangeForRenderUpdate(pos.getX(), pos.getY(), pos.getZ(),pos.getX(), pos.getY(), pos.getZ());
+		this.world.markBlockRangeForRenderUpdate(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ());
 	}
+
 	@Override
-	public void readFromNBT(NBTTagCompound tag){
+	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		this.hasModem = tag.getBoolean("hasModem");
 	}
+
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag){
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		tag.setBoolean("hasModem", this.hasModem);
 		return tag;
 	}
+
 	@Override
-	public boolean canConnect(EntityPlayer player, ItemStack tabStack){
+	public boolean canConnect(EntityPlayer player, ItemStack tabStack) {
 		return this.hasModem;
 	}
+
 	@Override
 	public boolean isActive() {
 		return this.active && this.linked && this.hasModem;
 	}
+
 	@Override
 	public EnumFacing getFacing() {
 		return d;

@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "state=0": { "model": "tomsmodstorage:routerOff" },
+        "state=1": { "model": "tomsmodstorage:routerL"},
+        "state=2": { "model": "tomsmodstorage:routerOn"}
+    }
+}

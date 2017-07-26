@@ -1,6 +1,6 @@
 {
 	"parent":"block/hammer",
 	"textures":{
-		"block":"tomsmodcore:blocks/resources/blockadvAlloy"
+		"block":"tomsmodcore:blocks/resources/blockadvAlloymk2"
 	}
 }

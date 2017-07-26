@@ -12,9 +12,11 @@ import io.netty.buffer.ByteBuf;
 
 public class TerminalBase {
 	public List<TerminalObject> term = new ArrayList<TerminalObject>();
-	public void clear(){
+
+	public void clear() {
 		this.term.clear();
 	}
+
 	public boolean cursor = false;
 	public int curPosX = 0;
 	public int curPosY = 0;
@@ -23,19 +25,23 @@ public class TerminalBase {
 	public String name = "Terminal";
 	public String inputText = "";
 	public boolean writeMode = false;
-	public void print(String s, int color){
+
+	public void print(String s, int color) {
 		this.term.add(new TerminalObject(this.curPosX, this.curPosY, s, color));
 		this.curPosX = 1;
-		this.curPosY = this.curPosY+9;
+		this.curPosY = this.curPosY + 9;
 	}
-	public void write(String s, int color){
+
+	public void write(String s, int color) {
 		this.term.add(new TerminalObject(this.curPosX, this.curPosY, s, color));
 		this.curPosX = (this.curPosX + s.length() * 6) - 1;
 	}
-	public void renderPicture(String s){
+
+	public void renderPicture(String s) {
 		this.term.add(new TerminalObject(curPosX, curPosY, s));
 	}
-	public void writeToPacket(ByteBuf buf){
+
+	public void writeToPacket(ByteBuf buf) {
 		buf.writeBoolean(cursor);
 		buf.writeInt(curPosX);
 		buf.writeInt(curPosY);
@@ -43,12 +49,13 @@ public class TerminalBase {
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setString("n", this.name);
 		NBTTagList list = new NBTTagList();
-		for(TerminalObject tO : this.term)
+		for (TerminalObject tO : this.term)
 			list.appendTag(tO.exportToNBT());
-		tag.setTag("l",list);
+		tag.setTag("l", list);
 		ByteBufUtils.writeTag(buf, tag);
 	}
-	public void readFromPacket(ByteBuf buf){
+
+	public void readFromPacket(ByteBuf buf) {
 		this.cursor = buf.readBoolean();
 		this.curPosX = buf.readInt();
 		this.curPosY = buf.readInt();
@@ -56,7 +63,7 @@ public class TerminalBase {
 		NBTTagCompound tag = ByteBufUtils.readTag(buf);
 		this.name = tag.getString("n");
 		NBTTagList list = tag.getTagList("l", size);
-		for(int i = 0;i<list.tagCount();i++)
+		for (int i = 0;i < list.tagCount();i++)
 			this.term.add(new TerminalObject(list.getCompoundTagAt(i)));
 	}
 }

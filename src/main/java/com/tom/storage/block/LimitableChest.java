@@ -28,71 +28,70 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.api.block.IIconRegisterRequired;
+import com.tom.api.block.IModelRegisterRequired;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.storage.tileentity.TileEntityLimitableChest;
 
-public class LimitableChest extends BlockContainerTomsMod implements IIconRegisterRequired{
+public class LimitableChest extends BlockContainerTomsMod implements IModelRegisterRequired {
 	protected static final AxisAlignedBB field_185557_b = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
+
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityLimitableChest();//BlockChest
+		return new TileEntityLimitableChest();// BlockChest
 	}
+
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
-	public LimitableChest()
-	{
+	public LimitableChest() {
 		super(Material.WOOD);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 	}
 
 	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 * Used to determine ambient occlusion and culling when rebuilding chunks
+	 * for render
 	 */
 	@Override
-	public boolean isOpaqueCube(IBlockState s)
-	{
+	public boolean isOpaqueCube(IBlockState s) {
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState s)
-	{
+	public boolean isFullCube(IBlockState s) {
 		return false;
 	}
 
 	/**
-	 * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+	 * The type of render function called. 3 for standard block models, 2 for
+	 * TESR's, 1 for liquids, -1 is no render
 	 */
 	@Override
-	public int getRenderType()
-	{
+	public int getRenderType() {
 		return 2;
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-	{
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		return field_185557_b;
 	}
+
 	/**
-	 * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
-	 * IBlockstate
+	 * Called by ItemBlocks just before a block is actually set in the world, to
+	 * allow for adjustments to the IBlockstate
 	 */
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	{
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
 	}
 
 	/**
-	 * Called by ItemBlocks after a block is set in the world, to allow post-place logic
+	 * Called by ItemBlocks after a block is set in the world, to allow
+	 * post-place logic
 	 */
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-	{
-		EnumFacing enumfacing = EnumFacing.getHorizontal(MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3).getOpposite();
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		EnumFacing enumfacing = EnumFacing.getHorizontal(MathHelper.floor(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3).getOpposite();
 		state = state.withProperty(FACING, enumfacing);
 		BlockPos blockpos = pos.north();
 		BlockPos blockpos1 = pos.south();
@@ -103,69 +102,48 @@ public class LimitableChest extends BlockContainerTomsMod implements IIconRegist
 		boolean flag2 = this == worldIn.getBlockState(blockpos2).getBlock();
 		boolean flag3 = this == worldIn.getBlockState(blockpos3).getBlock();
 
-		if (!flag && !flag1 && !flag2 && !flag3)
-		{
+		if (!flag && !flag1 && !flag2 && !flag3) {
 			worldIn.setBlockState(pos, state, 3);
-		}
-		else if (enumfacing.getAxis() != EnumFacing.Axis.X || !flag && !flag1)
-		{
-			if (enumfacing.getAxis() == EnumFacing.Axis.Z && (flag2 || flag3))
-			{
-				if (flag2)
-				{
+		} else if (enumfacing.getAxis() != EnumFacing.Axis.X || !flag && !flag1) {
+			if (enumfacing.getAxis() == EnumFacing.Axis.Z && (flag2 || flag3)) {
+				if (flag2) {
 					worldIn.setBlockState(blockpos2, state, 3);
-				}
-				else
-				{
+				} else {
 					worldIn.setBlockState(blockpos3, state, 3);
 				}
 
 				worldIn.setBlockState(pos, state, 3);
 			}
-		}
-		else
-		{
-			if (flag)
-			{
+		} else {
+			if (flag) {
 				worldIn.setBlockState(blockpos, state, 3);
-			}
-			else
-			{
+			} else {
 				worldIn.setBlockState(blockpos1, state, 3);
 			}
 
 			worldIn.setBlockState(pos, state, 3);
 		}
 
-		if (stack.hasDisplayName())
-		{
+		if (stack.hasDisplayName()) {
 			TileEntity tileentity = worldIn.getTileEntity(pos);
 
-			if (tileentity instanceof TileEntityLimitableChest)
-			{
-				((TileEntityLimitableChest)tileentity).setCustomName(stack.getDisplayName());
+			if (tileentity instanceof TileEntityLimitableChest) {
+				((TileEntityLimitableChest) tileentity).setCustomName(stack.getDisplayName());
 			}
 		}
 	}
 
 	@SuppressWarnings("deprecation")
-	public IBlockState correctFacing(World worldIn, BlockPos pos, IBlockState state)
-	{
+	public IBlockState correctFacing(World worldIn, BlockPos pos, IBlockState state) {
 		EnumFacing enumfacing = null;
 
-		for (EnumFacing enumfacing1 : EnumFacing.Plane.HORIZONTAL)
-		{
+		for (EnumFacing enumfacing1 : EnumFacing.Plane.HORIZONTAL) {
 			IBlockState iblockstate = worldIn.getBlockState(pos.offset(enumfacing1));
 
-			if (iblockstate.getBlock() == this)
-			{
-				return state;
-			}
+			if (iblockstate.getBlock() == this) { return state; }
 
-			if (iblockstate.getBlock().isFullBlock(iblockstate))
-			{
-				if (enumfacing != null)
-				{
+			if (iblockstate.getBlock().isFullBlock(iblockstate)) {
+				if (enumfacing != null) {
 					enumfacing = null;
 					break;
 				}
@@ -174,26 +152,20 @@ public class LimitableChest extends BlockContainerTomsMod implements IIconRegist
 			}
 		}
 
-		if (enumfacing != null)
-		{
+		if (enumfacing != null) {
 			return state.withProperty(FACING, enumfacing.getOpposite());
-		}
-		else
-		{
+		} else {
 			EnumFacing enumfacing2 = state.getValue(FACING);
 
-			if (worldIn.getBlockState(pos.offset(enumfacing2)).getBlock().isFullBlock(state))
-			{
+			if (worldIn.getBlockState(pos.offset(enumfacing2)).getBlock().isFullBlock(state)) {
 				enumfacing2 = enumfacing2.getOpposite();
 			}
 
-			if (worldIn.getBlockState(pos.offset(enumfacing2)).getBlock().isFullBlock(state))
-			{
+			if (worldIn.getBlockState(pos.offset(enumfacing2)).getBlock().isFullBlock(state)) {
 				enumfacing2 = enumfacing2.rotateY();
 			}
 
-			if (worldIn.getBlockState(pos.offset(enumfacing2)).getBlock().isFullBlock(state))
-			{
+			if (worldIn.getBlockState(pos.offset(enumfacing2)).getBlock().isFullBlock(state)) {
 				enumfacing2 = enumfacing2.getOpposite();
 			}
 
@@ -202,115 +174,90 @@ public class LimitableChest extends BlockContainerTomsMod implements IIconRegist
 	}
 
 	/**
-	 * Called when a neighboring block was changed and marks that this state should perform any checks during a neighbor
-	 * change. Cases may include when redstone power is updated, cactus blocks popping off due to a neighboring solid
-	 * block, etc.
+	 * Called when a neighboring block was changed and marks that this state
+	 * should perform any checks during a neighbor change. Cases may include
+	 * when redstone power is updated, cactus blocks popping off due to a
+	 * neighboring solid block, etc.
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
-	{
-		super.neighborChanged(state, worldIn, pos, blockIn);
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+		super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
-		if (tileentity instanceof TileEntityLimitableChest)
-		{
+		if (tileentity instanceof TileEntityLimitableChest) {
 			tileentity.updateContainingBlockInfo();
 		}
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-	{
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
-		if (tileentity instanceof IInventory)
-		{
-			InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)tileentity);
+		if (tileentity instanceof IInventory) {
+			InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 
 		super.breakBlock(worldIn, pos, state);
 	}
+
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if (worldIn.isRemote)
-		{
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (worldIn.isRemote) {
 			return true;
-		}
-		else
-		{
+		} else {
 			ILockableContainer ilockablecontainer = this.getLockableContainer(worldIn, pos);
 
-			if (ilockablecontainer != null)
-			{
-				playerIn.openGui(CoreInit.modInstance, GuiIDs.limitableChest.ordinal(), worldIn, pos.getX(),pos.getY(),pos.getZ());
+			if (ilockablecontainer != null) {
+				playerIn.openGui(CoreInit.modInstance, GuiIDs.limitableChest.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 			}
 
 			return true;
 		}
 	}
 
-	public ILockableContainer getLockableContainer(World worldIn, BlockPos pos)
-	{
+	public ILockableContainer getLockableContainer(World worldIn, BlockPos pos) {
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
-		if (!(tileentity instanceof TileEntityLimitableChest))
-		{
+		if (!(tileentity instanceof TileEntityLimitableChest)) {
 			return null;
-		}
-		else
-		{
-			ILockableContainer ilockablecontainer = (TileEntityLimitableChest)tileentity;
+		} else {
+			ILockableContainer ilockablecontainer = (TileEntityLimitableChest) tileentity;
 
-			if (this.isBlocked(worldIn, pos))
-			{
+			if (this.isBlocked(worldIn, pos)) {
 				return null;
-			}
-			else
-			{
+			} else {
 				return ilockablecontainer;
 			}
 		}
 	}
 
-	private boolean isBlocked(World worldIn, BlockPos pos)
-	{
+	private boolean isBlocked(World worldIn, BlockPos pos) {
 		return this.isBelowSolidBlock(worldIn, pos) || this.isOcelotSittingOnChest(worldIn, pos);
 	}
 
-	private boolean isBelowSolidBlock(World worldIn, BlockPos pos)
-	{
+	private boolean isBelowSolidBlock(World worldIn, BlockPos pos) {
 		return worldIn.isSideSolid(pos.up(), EnumFacing.DOWN, false);
 	}
 
-	private boolean isOcelotSittingOnChest(World worldIn, BlockPos pos)
-	{
-		for (Entity entity : worldIn.getEntitiesWithinAABB(EntityOcelot.class, new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1)))
-		{
-			EntityOcelot entityocelot = (EntityOcelot)entity;
+	private boolean isOcelotSittingOnChest(World worldIn, BlockPos pos) {
+		for (Entity entity : worldIn.getEntitiesWithinAABB(EntityOcelot.class, new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1))) {
+			EntityOcelot entityocelot = (EntityOcelot) entity;
 
-			if (entityocelot.isSitting())
-			{
-				return true;
-			}
+			if (entityocelot.isSitting()) { return true; }
 		}
 
 		return false;
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(IBlockState s)
-	{
+	public boolean hasComparatorInputOverride(IBlockState s) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(IBlockState s, World worldIn, BlockPos pos)
-	{
+	public int getComparatorInputOverride(IBlockState s, World worldIn, BlockPos pos) {
 		return Container.calcRedstoneFromInventory(this.getLockableContainer(worldIn, pos));
 	}
 
@@ -318,12 +265,10 @@ public class LimitableChest extends BlockContainerTomsMod implements IIconRegist
 	 * Convert the given metadata into a BlockState for this Block
 	 */
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		EnumFacing enumfacing = EnumFacing.getFront(meta);
 
-		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-		{
+		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
 			enumfacing = EnumFacing.NORTH;
 		}
 
@@ -334,20 +279,18 @@ public class LimitableChest extends BlockContainerTomsMod implements IIconRegist
 	 * Convert the BlockState into the correct metadata value
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state)
-	{
+	public int getMetaFromState(IBlockState state) {
 		return state.getValue(FACING).getIndex();
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[] {FACING});
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[]{FACING});
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void registerIcons() {
+	public void registerModels() {
 		CoreInit.registerRender(Item.getItemFromBlock(this), 0, "tomsmodstorage:limitableChest");
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(this), 0, TileEntityLimitableChest.class);
 	}

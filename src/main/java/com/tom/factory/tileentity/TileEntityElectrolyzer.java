@@ -1,119 +1,121 @@
 package com.tom.factory.tileentity;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-import com.tom.api.tileentity.MultiblockPartList;
-import com.tom.api.tileentity.TileEntityControllerBase;
-import com.tom.recipes.handler.ElectrolyzerRecipesHandler;
+import com.tom.api.block.BlockMultiblockController;
+import com.tom.api.energy.EnergyStorage;
+import com.tom.api.energy.EnergyType;
+import com.tom.apis.TomsModUtils;
+import com.tom.factory.FactoryInit;
+import com.tom.recipes.handler.MachineCraftingHandler;
+import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
-public class TileEntityElectrolyzer extends TileEntityControllerBase {
-	protected TileEntityElectrolyzer(int w, int h) {
-		super(w, h);
+public class TileEntityElectrolyzer extends TileEntityMultiblockController {
+	public TileEntityElectrolyzer() {
+		super(false);
+		tankIn = new FluidTank(10000);
+		tankOut = new FluidTank(10000);
+		tankOut2 = new FluidTank(10000);
+		tankOut2.setCanFill(false);
 	}
-	public TileEntityElectrolyzer(){
-		this(3,4);
-		this.parts.add(MultiblockPartList.EnergyPort);
-		this.parts.add(MultiblockPartList.FluidPort);
-	}
-	protected List<MultiblockPartList> parts = new ArrayList<MultiblockPartList>();
+
+	private FluidTank tankIn;
+	private FluidTank tankOut;
+	private FluidTank tankOut2;
+	private EnergyStorage energy = new EnergyStorage(10000);
+	private ItemStackChecker processing;
+	protected int processTime = -1;
+	protected int processTimeMax;
+
 	@Override
-	public List<MultiblockPartList> parts() {
-		return this.parts;
-	}
-	
-	@Override
-	public void updateEntityI() {
-		int[][] tePartEnergy = this.getTileEntityList(MultiblockPartList.EnergyPort);
-		int m = 1;
-		TileEntityMBFluidPort fInPort = this.getTileEntityList(true);
-		int[][] fOutPort = this.getFluidOutput();
-		if(fInPort != null && fOutPort != null){
-			if(fInPort != null && fOutPort != null){
-				int[] c = tePartEnergy[0];
-				TileEntityMBEnergyPort te = (TileEntityMBEnergyPort) worldObj.getTileEntity(new BlockPos(c[0],c[1],c[2]));
-				int[][] fluids = fOutPort;
-				//System.out.println("updateO");
-				if (ElectrolyzerRecipesHandler.processable(fInPort.getFluidStack(), te.getEnergyStored(), /*fOutPort[0] != null ? fOutPort[0].getFluidStack() : null, fOutPort[1] != null ? fOutPort[1].getFluidStack() : null, fOutPort[2] != null ? fOutPort[2].getFluidStack() : null, fOutPort[3] != null ? fOutPort[3].getFluidStack() : null,*/fluids[0],fluids[1],fluids[2],fluids[3],m, this.worldObj)) {
-					//System.out.println("update");
-					/*if(fOutPort.getFluid() == null || fOutPort.getFluid() == CoreInit.Hydrogen){
-						if(tePartEnergy[0] != null){
-							int[] c = tePartEnergy[0];
-							TileEntityMBEnergyPort te = (TileEntityMBEnergyPort) worldObj.getTileEntity(c[0],c[1],c[2]);
-							if(te.getEnergyStored() > 20){
-								te.removeEnergy(20, false);
-								fInPort.drain(3);
-								if(fOutPort.getFluid() != null){
-									fOutPort.fill(2);
-								}else{
-									fOutPort.fill(2, CoreInit.Hydrogen);
-								}
-								this.active = true;
-							}else{
-								this.active = false;
-							}
-						}else{
-							this.active = false;
-						}
-					}else{
-						this.active = false;
-					}
-					FluidStack input = fInPort.getFluidStack();
-					ElectrolyzerRecipesHandler.get(input, 1);*/
-					FluidStack input = fInPort.getFluidStack();
-					int[] output = ElectrolyzerRecipesHandler.process(input, m, fluids[0],fluids[1],fluids[2],fluids[3], te.getEnergyStored(), true, this.worldObj);
-					Fluid[] outputFluid = ElectrolyzerRecipesHandler.getFluid(input);
-					fInPort.drain(output[0]);
-					te.removeEnergy(ElectrolyzerRecipesHandler.getEnergyUsage(input, m), false);
-					//System.out.println("process");
-					for(int i = 0;i<fOutPort.length && i<4;i++){
-						int[] currentCoords = fOutPort[i];
-						TileEntityMBFluidPort current = (TileEntityMBFluidPort) this.worldObj.getTileEntity(new BlockPos(currentCoords[0], currentCoords[1], currentCoords[2]));
-						if(current != null){
-							//System.out.println("process");
-							int a = output[i+1];
-							if(a > 0){
-								if(current.getFluidStack() != null) current.fill(a);
-								else current.fill(a, outputFluid[i]);
-							}
+	public void updateEntity(IBlockState state) {
+		if (!world.isRemote && getMultiblock(state)) {
+			boolean active = false;
+			if (energy.getEnergyStored() >= 10) {
+				if (this.processTime > 0) {
+					this.processTime--;
+					energy.extractEnergy(10, false);
+					active = true;
+				} else if (this.processTime == 0) {
+					tankOut.fillInternal(processing.getExtraF(), true);
+					tankOut2.fillInternal(processing.getExtraF2(), true);
+					processing = null;
+					processTime = -1;
+					active = true;
+				} else {
+					ItemStackChecker s = MachineCraftingHandler.getElectrolyzerOutput(tankIn.getFluid());
+					if (s != null) {
+						if (!s.getMode() || (tankOut.getFluidAmount() == 0 || tankOut.getFluid().isFluidEqual(s.getExtraF()))) {
+							processTime = processTimeMax = s.getExtra();
+							processing = s;
+							tankIn.drainInternal(s.getExtra2(), true);
+							active = true;
 						}
 					}
-				}else{
-					this.active = false;
 				}
-			}else{
-				this.active = false;
 			}
-		}else{
-			this.active = false;
+			TomsModUtils.setBlockStateWithCondition(world, pos, state, BlockMultiblockController.STATE, active ? 2 : 1);
 		}
 	}
 
 	@Override
-	public void validateI() {
-		
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		this.processTime = tag.getInteger("p");
+		this.processTimeMax = tag.getInteger("pmax");
+		energy.readFromNBT(tag);
+		tankIn.readFromNBT(tag.getCompoundTag("tankIn"));
+		tankOut.readFromNBT(tag.getCompoundTag("tankOut"));
+		tankOut2.readFromNBT(tag.getCompoundTag("tankOut2"));
+		processing = ItemStackChecker.load(tag.getCompoundTag("processing"));
 	}
 
 	@Override
-	public void receiveMessage(int x, int y, int z, byte msg) {
-		
-	}
-	@Override
-	public void formI(int mX, int mY, int mZ) {
-		
-	}
-	@Override
-	public void deFormI(int mX, int mY, int mZ) {
-		
-	}
-	@Override
-	public void updateEntity(boolean redstone) {
-		
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		tag.setInteger("p", this.processTime);
+		tag.setInteger("pmax", processTimeMax);
+		energy.writeToNBT(tag);
+		tag.setTag("tankIn", tankIn.writeToNBT(new NBTTagCompound()));
+		tag.setTag("tankOut", tankOut.writeToNBT(new NBTTagCompound()));
+		tag.setTag("tankOut2", tankOut2.writeToNBT(new NBTTagCompound()));
+		if (processing != null)
+			tag.setTag("processing", processing.writeToNew());
+		return tag;
 	}
 
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing, BlockPos from, int id) {
+		return id > 0 && (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (id == 3 || id == 4 || id == 7 || id == 8)) || (capability == EnergyType.ENERGY_HANDLER_CAPABILITY && id == 9);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing, BlockPos from, int id) {
+		return (T) (id > 0 ? capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? id == 3 || id == 7 ? tankIn : id == 4 || id == 8 ? tankOut : null : capability == EnergyType.ENERGY_HANDLER_CAPABILITY && id == 9 ? energy.toCapability(true, false, EnergyType.MV) : null : null);
+	}
+
+	@Override
+	public ItemStack getStack() {
+		return new ItemStack(FactoryInit.Electrolyzer);
+	}
+
+	@Override
+	public int[] getSlots(int id) {
+		return null;
+	}
+
+	@Override
+	public IInventory getInventory(int id) {
+		return null;
+	}
 }

@@ -17,9 +17,8 @@ import com.tom.model.IBaseModel;
 
 import com.tom.core.tileentity.TileEntityMonitorBase;
 
-public class ModelMonitor extends ModelBase implements IBaseModel
-{
-	//fields
+public class ModelMonitor extends ModelBase implements IBaseModel {
+	// fields
 	ModelRenderer Shape1;
 	ModelRenderer Shape2;
 	ModelRenderer Shape3;
@@ -27,8 +26,7 @@ public class ModelMonitor extends ModelBase implements IBaseModel
 	ModelRenderer Shape5;
 	ModelRenderer Shape6;
 
-	public ModelMonitor()
-	{
+	public ModelMonitor() {
 		textureWidth = 64;
 		textureHeight = 64;
 
@@ -71,10 +69,9 @@ public class ModelMonitor extends ModelBase implements IBaseModel
 	}
 
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-	{
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		super.render(entity, f, f1, f2, f3, f4, f5);
-		setRotationAngles(f, f1, f2, f3, f4, f5,entity);
+		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		Shape1.render(f5);
 		Shape2.render(f5);
 		Shape3.render(f5);
@@ -82,26 +79,27 @@ public class ModelMonitor extends ModelBase implements IBaseModel
 		Shape5.render(f5);
 	}
 
-	private void setRotation(ModelRenderer model, float x, float y, float z)
-	{
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
 	}
 
 	@Override
-	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5,Entity ent)
-	{
-		super.setRotationAngles(f, f1, f2, f3, f4, f5,ent);
+	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity ent) {
+		super.setRotationAngles(f, f1, f2, f3, f4, f5, ent);
 	}
 
 	@Override
 	public void renderStatic(float size, TileEntity te) {
-		if(te != null && te instanceof TileEntityMonitorBase){
+		if (te != null && te instanceof TileEntityMonitorBase) {
 			TileEntityMonitorBase tile = (TileEntityMonitorBase) te;
-			if(tile.renderer != null){
+			if (tile.needsReRender)
+				tile.draw();
+			if (tile.renderer != null) {
 				GlStateManager.callList(tile.renderer);
 			}
+			GlStateManager.color(1, 1, 1, 1);
 		}
 	}
 

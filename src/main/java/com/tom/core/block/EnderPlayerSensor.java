@@ -25,56 +25,58 @@ import com.tom.core.tileentity.TileEntityEnderSensor;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+
 @Optional.InterfaceList({@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT),
-/*@Optional.Interface(iface = "com.cricketcraft.chisel.api.IFacade", modid = Configs.CHISEL)*/})
-public class EnderPlayerSensor extends BlockContainerTomsMod implements
-IPeripheralProvider {
+		/*@Optional.Interface(iface = "com.cricketcraft.chisel.api.IFacade", modid = Configs.CHISEL)*/})
+public class EnderPlayerSensor extends BlockContainerTomsMod implements IPeripheralProvider {
 	public EnderPlayerSensor() {
 		super(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
+
 	/*@SideOnly(Side.CLIENT)
 	private IIcon tr;*/
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityEnderSensor();
 	}
+
 	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
 	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing f) {
 		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityEnderSensor ? (IPeripheral)te : null;
+		return te instanceof TileEntityEnderSensor ? (IPeripheral) te : null;
 	}
+
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!world.isRemote) {
-			TileEntityEnderSensor te = (TileEntityEnderSensor)world.getTileEntity(pos);
-			if(te.camoStack != null && heldItem != null && CoreInit.isWrench(heldItem,player)) {
-				if(player.isSneaking()){
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack heldItem = player.getHeldItem(hand);
+		if (!world.isRemote) {
+			TileEntityEnderSensor te = (TileEntityEnderSensor) world.getTileEntity(pos);
+			if (te.camoStack != null && heldItem != null && CoreInit.isWrench(player, hand)) {
+				if (player.isSneaking()) {
 					ItemStack camoStack = te.camoStack;
 					te.camoStack = null;
-					EntityItem itemEntity = new EntityItem(world, pos.getX(),pos.getY(),pos.getZ(), camoStack);
-					if(!player.capabilities.isCreativeMode) world.spawnEntityInWorld(itemEntity);
+					EntityItem itemEntity = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), camoStack);
+					if (!player.capabilities.isCreativeMode)
+						world.spawnEntity(itemEntity);
 					te.transparent = false;
-				}else{
-					if(te.camoStack.getItem() instanceof ItemBlock){
-						Block b = ((ItemBlock)te.camoStack.getItem()).block;
-						if(b == Blocks.GLASS){
+				} else {
+					if (te.camoStack.getItem() instanceof ItemBlock) {
+						Block b = ((ItemBlock) te.camoStack.getItem()).block;
+						if (b == Blocks.GLASS) {
 							te.transparent = !te.transparent;
 						}
 					}
 				}
-			} else if(te.camoStack == null){
-				if(heldItem != null && heldItem.getItem() instanceof ItemBlock) {
+			} else if (te.camoStack == null) {
+				if (heldItem != null && heldItem.getItem() instanceof ItemBlock) {
 					ItemStack camoStack = null;
-					if(player.capabilities.isCreativeMode){
+					if (player.capabilities.isCreativeMode) {
 						camoStack = heldItem.copy();
-						camoStack.stackSize = 1;
-					}else{
+						camoStack.setCount(1);
+					} else {
 						camoStack = heldItem.splitStack(1);
 					}
 					te.camoStack = camoStack;
@@ -88,71 +90,72 @@ IPeripheralProvider {
 	}
 
 	/*@Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
-    	TileEntityEnderSensor te = (TileEntityEnderSensor)world.getTileEntity(x, y, z);
-    	if(!te.transparent){
-    		ItemStack stack = te.camoStack;
-    		if(stack != null && stack.getItem() instanceof ItemBlock) {
-    			Block block = ((ItemBlock)stack.getItem()).field_150939_a;
-    			return block.getIcon(side, stack.getItemDamage());
-    		} else {
-    			return super.getIcon(world, x, y, z, side);
-    		}
-    	}else return this.tr;
-    }
-    @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
+		TileEntityEnderSensor te = (TileEntityEnderSensor)world.getTileEntity(x, y, z);
+		if(!te.transparent){
+			ItemStack stack = te.camoStack;
+			if(stack != null && stack.getItem() instanceof ItemBlock) {
+				Block block = ((ItemBlock)stack.getItem()).field_150939_a;
+				return block.getIcon(side, stack.getItemDamage());
+			} else {
+				return super.getIcon(world, x, y, z, side);
+			}
+		}else return this.tr;
+	}
+	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconregister){
 		this.tr = iconregister.registerIcon("minecraft:tm/transparent");
 		this.blockIcon = iconregister.registerIcon("minecraft:tm/enderSensor_blank");
 	}*/
 	@Override
-	public boolean isOpaqueCube(IBlockState s){
+	public boolean isOpaqueCube(IBlockState s) {
 		return false;
 	}
+
 	@Override
-	public boolean isSideSolid(IBlockState base_state, IBlockAccess world,
-			BlockPos pos, EnumFacing side) {
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
 	}
+
 	@Override
-	public int getRenderType(){
+	public int getRenderType() {
 		return 2;
 	}
 	/* @Optional.Method(modid = Configs.CHISEL)
 	@Override
 	public Block getFacade(IBlockAccess world, int x, int y, int z, int side) {
-    	TileEntityEnderSensor te = (TileEntityEnderSensor)world.getTileEntity(x, y, z);
-    	if(!te.transparent){
-    		ItemStack stack = te.camoStack;
-    		if(stack != null && stack.getItem() instanceof ItemBlock) {
-    			Block block = ((ItemBlock)stack.getItem()).field_150939_a;
-    			return block;
-    		}
-    	}
-    	return null;
+		TileEntityEnderSensor te = (TileEntityEnderSensor)world.getTileEntity(x, y, z);
+		if(!te.transparent){
+			ItemStack stack = te.camoStack;
+			if(stack != null && stack.getItem() instanceof ItemBlock) {
+				Block block = ((ItemBlock)stack.getItem()).field_150939_a;
+				return block;
+			}
+		}
+		return null;
 	}
-    @Optional.Method(modid = Configs.CHISEL)
+	@Optional.Method(modid = Configs.CHISEL)
 	@Override
 	public int getFacadeMetadata(IBlockAccess world, int x, int y, int z,
 			int side) {
-    	TileEntityEnderSensor te = (TileEntityEnderSensor)world.getTileEntity(x, y, z);
-    	if(!te.transparent){
-    		ItemStack stack = te.camoStack;
-    		if(stack != null && stack.getItem() instanceof ItemBlock) {
-    			return stack.getItemDamage();
-    		}
-    	}
+		TileEntityEnderSensor te = (TileEntityEnderSensor)world.getTileEntity(x, y, z);
+		if(!te.transparent){
+			ItemStack stack = te.camoStack;
+			if(stack != null && stack.getItem() instanceof ItemBlock) {
+				return stack.getItemDamage();
+			}
+		}
 		return 0;
 	}*/
 	/*public static class SmartBlockModel implements ISmartBlockModel{
-
+	
 		public SmartBlockModel(IBakedModel unCamouflagedModel, IBakedModel transparentModel)
 		{
 			modelWhenNotCamouflaged = unCamouflagedModel;
 			modelWhenTransparent = transparentModel;
 		}
-
+	
 		// create a tag (ModelResourceLocation) for our model.
 		public static final ModelResourceLocation modelResourceLocation
 		= new ModelResourceLocation("tomsmodcore:EnderPlayerSensor");
@@ -194,52 +197,52 @@ IPeripheralProvider {
 			}
 			return retval;
 		}
-
+	
 		private IBakedModel modelWhenNotCamouflaged;
 		private IBakedModel modelWhenTransparent;
-
+	
 		// getTexture is used directly when player is inside the block.  The game will crash if you don't use something
 		//   meaningful here.
 		@Override
 		public TextureAtlasSprite getParticleTexture() {
 			return modelWhenNotCamouflaged.getParticleTexture();
 		}
-
+	
 		// The methods below are all unused for CamouflageISmartBlockModelFactory because we always return a vanilla model
 		//  from handleBlockState.
-
+	
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		public List getFaceQuads(EnumFacing p_177551_1_) {
 			throw new UnsupportedOperationException();
 		}
-
+	
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		public List getGeneralQuads() {
 			throw new UnsupportedOperationException();
 		}
-
+	
 		@Override
 		public boolean isAmbientOcclusion() {
 			throw new UnsupportedOperationException();
 		}
-
+	
 		@Override
 		public boolean isGui3d() {
 			throw new UnsupportedOperationException();
 		}
-
+	
 		@Override
 		public boolean isBuiltInRenderer() {
 			throw new UnsupportedOperationException();
 		}
-
+	
 		@Override
 		public ItemCameraTransforms getItemCameraTransforms() {
 			throw new UnsupportedOperationException();
 		}
-
+	
 	}*/
 	/*public static class UnlistedPropertyBlockState implements IUnlistedProperty<IBlockState>
 	{
@@ -247,17 +250,17 @@ IPeripheralProvider {
 		public String getName() {
 			return "UnlistedPropertyBlockState";
 		}
-
+	
 		@Override
 		public boolean isValid(IBlockState value) {
 			return true;
 		}
-
+	
 		@Override
 		public Class<IBlockState> getType() {
 			return IBlockState.class;
 		}
-
+	
 		@Override
 		public String valueToString(IBlockState value) {
 			return value.toString();
@@ -269,23 +272,23 @@ IPeripheralProvider {
 		public String getName() {
 			return "UnlistedPropertyBlockState";
 		}
-
+	
 		@Override
 		public boolean isValid(Boolean value) {
 			return true;
 		}
-
+	
 		@Override
 		public Class<Boolean> getType() {
 			return Boolean.class;
 		}
-
+	
 		@Override
 		public String valueToString(Boolean value) {
 			return value.toString();
 		}
-
-
+	
+	
 	}
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -308,8 +311,8 @@ IPeripheralProvider {
 		return state;
 	}*/
 	/*@Override
-    @SideOnly(Side.CLIENT)
-    public EnumWorldBlockLayer getBlockLayer() {
-    	return EnumWorldBlockLayer.CUTOUT;
-    }*/
+	@SideOnly(Side.CLIENT)
+	public EnumWorldBlockLayer getBlockLayer() {
+		return EnumWorldBlockLayer.CUTOUT;
+	}*/
 }

@@ -1,6 +1,6 @@
 {
-    "parent": "block/cube",
-    "textures": {
-        "up": "blocks/oreTin","down": "blocks/oreTin","north": "blocks/oreTin","east": "blocks/oreTin","south": "blocks/oreTin","west": "blocks/oreTin","particle": "blocks/oreTin"
-    }
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "tomsmodcore:blocks/oretin"
+  }
 }

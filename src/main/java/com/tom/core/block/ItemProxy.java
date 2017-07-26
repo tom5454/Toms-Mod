@@ -34,6 +34,7 @@ public class ItemProxy extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityItemProxy();
 	}
+
 	/*public IIcon getIcon(int side,int meta){
 		if(side == 0){
 			return this.bottom;
@@ -48,21 +49,22 @@ public class ItemProxy extends BlockContainerTomsMod {
 		this.top = i.registerIcon("minecraft:tm/ItemProxyTop");
 		this.bottom = i.registerIcon("minecraft:tm/ItemProxyBottom");
 	}*/
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ){
-		TileEntityItemProxy te = (TileEntityItemProxy)world.getTileEntity(pos);
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+		TileEntityItemProxy te = (TileEntityItemProxy) world.getTileEntity(pos);
 		boolean playerAccess = te.isPlayerAccess(player);
-		if(!world.isRemote && playerAccess){
-			player.openGui(CoreInit.modInstance, GuiHandler.GuiIDs.itemProxy.ordinal(), world, pos.getX(),pos.getY(),pos.getZ());
-		}else if(world.isRemote && !playerAccess){
-			player.addChatMessage(new TextComponentString(TextFormatting.RED + I18n.format("tomsMod.accessDenied")));
+		if (!world.isRemote && playerAccess) {
+			player.openGui(CoreInit.modInstance, GuiHandler.GuiIDs.itemProxy.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+		} else if (world.isRemote && !playerAccess) {
+			player.sendMessage(new TextComponentString(TextFormatting.RED + I18n.format("tomsMod.accessDenied")));
 		}
 		return true;
 	}
+
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState bs, EntityLivingBase entity, ItemStack itemstack){
-		TileEntityItemProxy te = (TileEntityItemProxy)world.getTileEntity(pos);
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState bs, EntityLivingBase entity, ItemStack itemstack) {
+		TileEntityItemProxy te = (TileEntityItemProxy) world.getTileEntity(pos);
 		String pName = entity.getName();
-		//System.out.println(pName);
+		// System.out.println(pName);
 		te.owner = pName;
 	}
 }

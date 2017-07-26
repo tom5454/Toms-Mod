@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "type=0": { "model": "tomsmodcore:oregoldend"},
+        "type=1": { "model": "tomsmodcore:orediamondend"}
+    }
+}

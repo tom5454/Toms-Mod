@@ -9,6 +9,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,6 +28,7 @@ import com.tom.defense.tileentity.TileEntityForceFieldProjector;
 
 public class FieldProjector extends BlockContainerTomsMod {
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
+
 	public FieldProjector() {
 		super(Material.IRON);
 	}
@@ -35,26 +37,28 @@ public class FieldProjector extends BlockContainerTomsMod {
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityForceFieldProjector();
 	}
+
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntityForceFieldProjector te = (TileEntityForceFieldProjector) worldIn.getTileEntity(pos);
-		return te.onBlockActivated(playerIn, heldItem);
+		return te.onBlockActivated(playerIn, playerIn.getHeldItem(hand));
 	}
+
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this,ACTIVE);
+		return new BlockStateContainer(this, ACTIVE);
 	}
+
 	@Override
 	public int getMetaFromState(IBlockState state) {
 		return state.getValue(ACTIVE) ? 1 : 0;
 	}
+
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(ACTIVE, meta == 1);
 	}
+
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntityForceFieldProjector te = (TileEntityForceFieldProjector) worldIn.getTileEntity(pos);
@@ -68,26 +72,29 @@ public class FieldProjector extends BlockContainerTomsMod {
 		spawnAsEntity(worldIn, pos, stack);
 		super.breakBlock(worldIn, pos, state);
 	}
+
 	@Override
 	protected void dropInventory(World worldIn, BlockPos pos, IInventory te) {
 		ItemStack s = te.removeStackFromSlot(3);
-		if(s != null)spawnAsEntity(worldIn, pos, s);
+		if (!s.isEmpty())
+			spawnAsEntity(worldIn, pos, s);
 	}
+
 	@Override
-	public int quantityDropped(Random random)
-	{
+	public int quantityDropped(Random random) {
 		return 0;
 	}
 
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return null;
+		return Items.AIR;
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
-		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("stored")){
+		if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("stored")) {
 			tooltip.add(I18n.format("tomsMod.tooltip.itemsStored"));
 		}
 	}

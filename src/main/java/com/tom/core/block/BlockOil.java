@@ -9,7 +9,7 @@ import com.tom.core.CoreInit;
 public class BlockOil extends BlockFluidClassic {
 
 	public BlockOil() {
-		super(CoreInit.oil, Material.WATER);
+		super(CoreInit.oil.get(), Material.WATER);
 		setUnlocalizedName("tm.blockOil");
 	}
 

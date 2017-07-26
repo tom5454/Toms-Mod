@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import mapwriterTm.map.MapView;
 import mapwriterTm.map.mapmode.MapMode;
 
-public interface IMwDataProvider
-{
+public interface IMwDataProvider {
 	public ArrayList<IMwChunkOverlay> getChunksOverlay(int dim, double centerX, double centerZ, double minX, double minZ, double maxX, double maxZ);
 
 	// Returns what should be added to the status bar by the addon.

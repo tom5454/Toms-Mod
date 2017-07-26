@@ -7,9 +7,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -27,46 +27,45 @@ import com.tom.api.ITileFluidHandler.Helper;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.Checker.CheckerPredicate;
 import com.tom.apis.Checker.RunnableStorage;
+import com.tom.apis.MultiblockBlockChecker;
 import com.tom.apis.TomsModUtils;
-import com.tom.apis.WorldPos;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.CraftingMaterial;
-import com.tom.core.TMResource.SlabState;
 import com.tom.core.TMResource.Type;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockComponents.ComponentVariants;
 import com.tom.factory.block.PlasticProcessor;
 import com.tom.recipes.OreDict;
 
-import com.tom.core.tileentity.TileEntityHidden.ILinkableCapabilities;
+import com.tom.core.tileentity.TileEntityHidden.BlockProperties;
 
-public class TileEntityPlasticProcessor extends TileEntityTomsMod implements ILinkableCapabilities, IInventory, IEnergyReceiver {
-
-	private static final Object[][] CONFIG = new Object[][]{{'_', TMResource.STEEL.getSlab(SlabState.BOTTOM),
-		'H', getComponent(ComponentVariants.OUTPUT_HATCH) , 'F', getComponent(ComponentVariants.REFINERY_HEATER), 'E', getComponent(ComponentVariants.ENGINEERING_BLOCK), 'C', Blocks.CAULDRON.getDefaultState()},
-		{"@F", "H_"}, //1
-		{"EC", "EH"}, //2
+public class TileEntityPlasticProcessor extends TileEntityMultiblock implements IInventory, IEnergyReceiver {
+	private static final BlockProperties ROTOR = new BlockProperties().setTesrID(0);
+	private static final Object[][] CONFIG = new Object[][]{{'_', getComponent(ComponentVariants.MACHINE_BASE), 'H', new Object[]{getComponent(ComponentVariants.OUTPUT_HATCH), TileEntityRefinery.HATCH_PROPERTIES}, 'F', getComponent(ComponentVariants.REFINERY_HEATER), 'E', getComponent(ComponentVariants.ENGINEERING_BLOCK), 'C', new Object[]{Blocks.CAULDRON.getDefaultState(), ROTOR}, 'S', FactoryInit.steelBoiler}, {"@F", "H_"}, // 1
+			{"EC", "SH"}, // 2
 	};
 	private EnergyStorage energy = new EnergyStorage(100000);
+	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
+
 	public TileEntityPlasticProcessor() {
 		tankKerosene = new FluidTank(10000);
 		tankLPG = new FluidTank(10000);
 		tankCreosote = new FluidTank(10000);
 		tankWater = new FluidTank(20000);
-		handlers = new IFluidHandler[]{Helper.getFluidHandlerFromTanks(new FluidTank[]{tankKerosene, tankWater}, new Fluid[]{CoreInit.kerosene, FluidRegistry.WATER}, new boolean[]{true, true}, new boolean[]{false, false}), Helper.getFluidHandlerFromTanks(new FluidTank[]{tankLPG, tankCreosote}, new Fluid[]{CoreInit.lpg, CoreInit.creosoteOil}, new boolean[]{true, true}, new boolean[]{false, false})};
+		handlers = new IFluidHandler[]{Helper.getFluidHandlerFromTanks(new FluidTank[]{tankKerosene, tankWater}, new Fluid[]{CoreInit.kerosene.get(), FluidRegistry.WATER}, new boolean[]{true, true}, new boolean[]{false, false}), Helper.getFluidHandlerFromTanks(new FluidTank[]{tankLPG, tankCreosote}, new Fluid[]{CoreInit.lpg.get(), CoreInit.creosoteOil.get()}, new boolean[]{true, true}, new boolean[]{false, false})};
 	}
-	/**2 Fuel, 2 LPG, 1 Kerosene*/
+
+	/** 2 Fuel, 2 LPG, 1 Kerosene */
 	private FluidTank tankKerosene, tankLPG, tankCreosote, tankWater;
-	private static final FluidStack WATER = new FluidStack(FluidRegistry.WATER, 2000), KEROSENE = new FluidStack(CoreInit.kerosene, 100), LPG = new FluidStack(CoreInit.lpg, 50), CREOSOTE = new FluidStack(CoreInit.creosoteOil, 100);
+	private static final FluidStack WATER = new FluidStack(FluidRegistry.WATER, 2000),
+			KEROSENE = new FluidStack(CoreInit.kerosene.get(), 100), LPG = new FluidStack(CoreInit.lpg.get(), 50),
+			CREOSOTE = new FluidStack(CoreInit.creosoteOil.get(), 100);
 	private IFluidHandler[] handlers;
 	public static final int MAX_PROGRESS = 600;
-	public int clientEnergy, progress;
-	private ItemStack[] stack = new ItemStack[getSizeInventory()];
-	private static final Map<Character, CheckerPredicate<WorldPos>> materialMap = TomsModUtils.createMaterialMap(CONFIG, new ItemStack(FactoryInit.plasticProcessor));
+	public int clientEnergy, progress = -1;
+	private static final Map<Character, MultiblockBlockChecker> materialMap = TomsModUtils.createMaterialMap(CONFIG, new ItemStack(FactoryInit.plasticProcessor));
 	private static final ItemStack PLASTIC = CraftingMaterial.PLASTIC_SHEET.getStackNormal();
 	private RunnableStorage killList = new RunnableStorage(true);
 
@@ -78,55 +77,47 @@ public class TileEntityPlasticProcessor extends TileEntityTomsMod implements ILi
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing, BlockPos from, int id) {
-		if(id > 0){
-			if (id == 1 && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-				return this.<T>getInstance(itemHandlerSidedMap, facing, capability);
-			}
-			if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if (id > 0) {
+			if (id == 1 && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) { return this.<T>getInstance(capabilityMap.get(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY), facing, capability); }
+			if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 				id--;
 				return id < handlers.length ? (T) (handlers[id]) : null;
 			}
 		}
 		return null;
 	}
-	@SuppressWarnings("deprecation")
-	private static IBlockState getComponent(ComponentVariants variant){
-		return FactoryInit.components.getStateFromMeta(variant.ordinal());
-	}
-	private boolean getMultiblock(IBlockState state){
-		return TomsModUtils.getLayers(CONFIG, materialMap, worldObj, state.getValue(PlasticProcessor.FACING), pos, killList);
-	}
+
 	@Override
-	public void updateEntity(IBlockState state){
-		if(!worldObj.isRemote){
-			if(getMultiblock(state)){
-				if(energy.extractEnergy(20D, true) == 20D){
-					if(progress > 0){
+	public void updateEntity(IBlockState state) {
+		if (!world.isRemote) {
+			if (getMultiblock(state)) {
+				if (energy.extractEnergy(20D, true) == 20D) {
+					if (progress > 0) {
 						updateProgress();
-					}else if(progress == 0){
-						if(stack[2] != null){
-							if(TomsModUtils.areItemStacksEqual(stack[2], PLASTIC, true, true, false)){
-								stack[2].stackSize += PLASTIC.stackSize;
+					} else if (progress == 0) {
+						if (!inv.getStackInSlot(2).isEmpty()) {
+							if (TomsModUtils.areItemStacksEqual(inv.getStackInSlot(2), PLASTIC, true, true, false)) {
+								inv.getStackInSlot(2).grow(PLASTIC.getCount());
 								progress = -1;
 							}
-						}else{
+						} else {
 							progress = -1;
-							stack[2] = PLASTIC.copy();
+							inv.setInventorySlotContents(2, PLASTIC.copy());
 						}
 
-					}else{
-						if(stack[0] != null && stack[1] != null && ((OreDict.isOre(stack[0], CraftingMaterial.RUBBER.getName()) && OreDict.isOre(stack[1], TMResource.COAL.getStackName(Type.DUST)) ) || (OreDict.isOre(stack[1], CraftingMaterial.RUBBER.getName()) && OreDict.isOre(stack[0], TMResource.COAL.getStackName(Type.DUST)) )) && WATER.isFluidStackIdentical(tankWater.drainInternal(WATER, false)) && KEROSENE.isFluidStackIdentical(tankKerosene.drainInternal(KEROSENE, false)) && LPG.isFluidStackIdentical(tankLPG.drainInternal(LPG, false)) && CREOSOTE.isFluidStackIdentical(tankCreosote.drainInternal(CREOSOTE, false))){
-							if(stack[2] != null){
-								if(TomsModUtils.areItemStacksEqual(stack[2], PLASTIC, true, true, false) && stack[2].stackSize + PLASTIC.stackSize <= PLASTIC.getMaxStackSize() && stack[0].stackSize >= 1 && stack[1].stackSize >= 1){
+					} else {
+						if (!inv.getStackInSlot(0).isEmpty() && !inv.getStackInSlot(1).isEmpty() && ((OreDict.isOre(inv.getStackInSlot(0), CraftingMaterial.RUBBER.getName()) && OreDict.isOre(inv.getStackInSlot(1), TMResource.COAL.getStackName(Type.DUST))) || (OreDict.isOre(inv.getStackInSlot(1), CraftingMaterial.RUBBER.getName()) && OreDict.isOre(inv.getStackInSlot(0), TMResource.COAL.getStackName(Type.DUST)))) && WATER.isFluidStackIdentical(tankWater.drainInternal(WATER, false)) && KEROSENE.isFluidStackIdentical(tankKerosene.drainInternal(KEROSENE, false)) && LPG.isFluidStackIdentical(tankLPG.drainInternal(LPG, false)) && CREOSOTE.isFluidStackIdentical(tankCreosote.drainInternal(CREOSOTE, false))) {
+							if (!inv.getStackInSlot(2).isEmpty()) {
+								if (TomsModUtils.areItemStacksEqual(inv.getStackInSlot(2), PLASTIC, true, true, false) && inv.getStackInSlot(2).getCount() + PLASTIC.getCount() <= PLASTIC.getMaxStackSize() && inv.getStackInSlot(0).getCount() >= 1 && inv.getStackInSlot(1).getCount() >= 1) {
 									progress = MAX_PROGRESS;
 								}
-							}else{
+							} else {
 								progress = MAX_PROGRESS;
 							}
-						}else{
+						} else {
 							progress = -1;
 						}
-						if(progress > 0){
+						if (progress > 0) {
 							decrStackSize(0, 1);
 							decrStackSize(1, 1);
 							tankWater.drainInternal(WATER, true);
@@ -135,30 +126,29 @@ public class TileEntityPlasticProcessor extends TileEntityTomsMod implements ILi
 							tankCreosote.drainInternal(CREOSOTE, true);
 							energy.extractEnergy(5, false);
 						}
-						TomsModUtils.setBlockStateWithCondition(worldObj, pos, PlasticProcessor.STATE, progress > 0 ? 2 : 1);
+						TomsModUtils.setBlockStateWithCondition(world, pos, PlasticProcessor.STATE, progress > 0 ? 2 : 1);
 					}
-				}else{
-					TomsModUtils.setBlockStateWithCondition(worldObj, pos, PlasticProcessor.STATE, 1);
+				} else {
+					TomsModUtils.setBlockStateWithCondition(world, pos, PlasticProcessor.STATE, 1);
 				}
-			}else{
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, state, PlasticProcessor.STATE, 0);
+			} else {
+				TomsModUtils.setBlockStateWithCondition(world, pos, state, PlasticProcessor.STATE, 0);
 				killList.run();
 			}
 		}
 	}
-	private void updateProgress(){
-		int upgradeC = getSpeedUpgradeCount();
+
+	private void updateProgress() {
+		int upgradeC = TomsModUtils.getSpeedUpgradeCount(inv, 3, 4);
 		int p = upgradeC + 1 + (upgradeC / 2);
 		progress = Math.max(0, progress - p);
 		energy.extractEnergy(1D * p, false);
 	}
-	public int getSpeedUpgradeCount(){
-		int slot = 3;
-		return Math.min(slot < 0 ? 0 : stack[slot] != null && stack[slot].getItem() == FactoryInit.speedUpgrade ? stack[slot].stackSize : 0, 4);
-	}
+
 	public int getClientEnergyStored() {
-		return MathHelper.floor_double(energy.getEnergyStored());
+		return MathHelper.floor(energy.getEnergyStored());
 	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
@@ -174,20 +164,12 @@ public class TileEntityPlasticProcessor extends TileEntityTomsMod implements ILi
 		tankTag = new NBTTagCompound();
 		tankWater.writeToNBT(tankTag);
 		compound.setTag("water", tankTag);
-		NBTTagList tagList = new NBTTagList();
-		for (int i = 0; i < this.stack.length; i++) {
-			if (this.stack[i] != null) {
-				NBTTagCompound tagCompound1 = new NBTTagCompound();
-				tagCompound1.setByte("Slot", (byte) i);
-				this.stack[i].writeToNBT(tagCompound1);
-				tagList.appendTag(tagCompound1);
-			}
-		}
-		compound.setTag("Items", tagList);
+		compound.setTag("Items", TomsModUtils.saveAllItems(inv));
 		energy.writeToNBT(compound);
 		compound.setInteger("progress", progress);
 		return compound;
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
@@ -199,15 +181,7 @@ public class TileEntityPlasticProcessor extends TileEntityTomsMod implements ILi
 		tankLPG.readFromNBT(tankTag);
 		tankTag = compound.getCompoundTag("water");
 		tankWater.readFromNBT(tankTag);
-		NBTTagList tagList = compound.getTagList("Items", 10);
-		this.stack = new ItemStack[this.getSizeInventory()];
-		for (int i = 0; i < tagList.tagCount(); i++) {
-			NBTTagCompound tabCompound1 = tagList.getCompoundTagAt(i);
-			byte byte0 = tabCompound1.getByte("Slot");
-			if (byte0 >= 0 && byte0 < this.stack.length) {
-				this.stack[byte0] = ItemStack.loadItemStackFromNBT(tabCompound1);
-			}
-		}
+		TomsModUtils.loadAllItems(compound.getTagList("Items", 10), inv);
 		energy.readFromNBT(compound);
 		progress = compound.getInteger("progress");
 	}
@@ -228,51 +202,13 @@ public class TileEntityPlasticProcessor extends TileEntityTomsMod implements ILi
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int index) {
-		return stack[index];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int par2) {
-		if (this.stack[slot] != null) {
-			ItemStack itemstack;
-			if (this.stack[slot].stackSize <= par2) {
-				itemstack = this.stack[slot];
-				this.stack[slot] = null;
-				return itemstack;
-			} else {
-				itemstack = this.stack[slot].splitStack(par2);
-
-				if (this.stack[slot].stackSize == 0) {
-					this.stack[slot] = null;
-				}
-				return itemstack;
-			}
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		ItemStack s = stack[index];
-		stack[index] = null;
-		return s;
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		this.stack[index] = stack;
-	}
-
-	@Override
 	public int getInventoryStackLimit() {
 		return 64;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return TomsModUtils.isUseable(pos, player, worldObj, this);
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return TomsModUtils.isUsable(pos, player, world, this);
 	}
 
 	@Override
@@ -297,17 +233,13 @@ public class TileEntityPlasticProcessor extends TileEntityTomsMod implements ILi
 
 	@Override
 	public void setField(int id, int value) {
-		if(id == 0)progress = value;
+		if (id == 0)
+			progress = value;
 	}
 
 	@Override
 	public int getFieldCount() {
 		return 0;
-	}
-
-	@Override
-	public void clear() {
-		stack = new ItemStack[getSizeInventory()];
 	}
 
 	public FluidTank getTankKerosene() {
@@ -349,5 +281,58 @@ public class TileEntityPlasticProcessor extends TileEntityTomsMod implements ILi
 	@Override
 	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return energy.getMaxEnergyStored();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index) {
+		return inv.getStackInSlot(index);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+		return inv.decrStackSize(index, count);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return inv.removeStackFromSlot(index);
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		inv.setInventorySlotContents(index, stack);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return inv.isEmpty();
+	}
+
+	@Override
+	public void clear() {
+		inv.clear();
+	}
+
+	public boolean isActive() {
+		return world.getBlockState(pos).getValue(PlasticProcessor.STATE) == 2;
+	}
+
+	@Override
+	public Object[][] getConfig() {
+		return CONFIG;
+	}
+
+	@Override
+	public ItemStack getStack() {
+		return new ItemStack(FactoryInit.plasticProcessor);
+	}
+
+	@Override
+	public Map<Character, MultiblockBlockChecker> getMaterialMap() {
+		return materialMap;
+	}
+
+	@Override
+	protected void setMaterialMap(Map<Character, MultiblockBlockChecker> value) {
 	}
 }

@@ -32,6 +32,7 @@ public class MagCardReader extends BlockContainerTomsMod implements IRotatable {
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityMagCardReader();
 	}
+
 	/*@SideOnly(Side.CLIENT)
 	private IIcon side;
 	@SideOnly(Side.CLIENT)
@@ -41,32 +42,44 @@ public class MagCardReader extends BlockContainerTomsMod implements IRotatable {
 	}
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
 		return this.side;
-
+	
 	}
 	public IIcon getIcon(int side, int meta){
 		return this.blockIcon;
 	}*/
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos,IBlockState bs, EntityLivingBase entity, ItemStack itemstack){
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState bs, EntityLivingBase entity, ItemStack itemstack) {
 		EnumFacing l = TomsModUtils.getDirectionFacing(entity, true);
 		TileEntityMagCardReader te = (TileEntityMagCardReader) world.getTileEntity(pos);
 		int d = l.ordinal();
 		te.d = l;
-		if (d == 5) te.direction = 4;
-		else if(d == 4) te.direction = 5;
-		else if (d == 3) te.direction = 2;
-		else if(d == 2) te.direction = 3;
-		else if(d == 0) te.direction = 1;
-		else if(d == 1) te.direction = 0;
-		//System.out.println(d);
-		//par1World.setBlockMetadataWithNotify(x, y, z, d, 3);
+		if (d == 5)
+			te.direction = 4;
+		else if (d == 4)
+			te.direction = 5;
+		else if (d == 3)
+			te.direction = 2;
+		else if (d == 2)
+			te.direction = 3;
+		else if (d == 0)
+			te.direction = 1;
+		else if (d == 1)
+			te.direction = 0;
+		// System.out.println(d);
+		// par1World.setBlockMetadataWithNotify(x, y, z, d, 3);
 	}
+
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		//EnumFacing dir = EnumFacing.getOrientation(blockAccess.getBlockMetadata(par2, par3, par4));
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		// EnumFacing dir =
+		// EnumFacing.getOrientation(blockAccess.getBlockMetadata(par2, par3,
+		// par4));
 		TileEntityMagCardReader TE = (TileEntityMagCardReader) source.getTileEntity(pos);
-		return setBlockBounds(0.5F - (4F/16F), 0.5F - (5F/16F), 0.0F, 0.5F + (4F/16F), 0.5F + (5F/16F), 3F/16F, TE != null ? TE.d.getOpposite() : EnumFacing.NORTH);
-		//setBlockBounds(dir.offsetX <= 0 ? 0 : 1F - (1/16), dir.offsetY <= 0 ? 0 : 1F - (1/16), dir.offsetZ <= 0 ? 0 : 1F - (1/16), dir.offsetX >= 0 ? 1 : (1/16), dir.offsetY >= 0 ? 1 : (1/16), dir.offsetZ >= 0 ? 1 : (1/16));
+		return setBlockBounds(0.5F - (4F / 16F), 0.5F - (5F / 16F), 0.0F, 0.5F + (4F / 16F), 0.5F + (5F / 16F), 3F / 16F, TE != null ? TE.d.getOpposite() : EnumFacing.NORTH);
+		// setBlockBounds(dir.offsetX <= 0 ? 0 : 1F - (1/16), dir.offsetY <= 0 ?
+		// 0 : 1F - (1/16), dir.offsetZ <= 0 ? 0 : 1F - (1/16), dir.offsetX >= 0
+		// ? 1 : (1/16), dir.offsetY >= 0 ? 1 : (1/16), dir.offsetZ >= 0 ? 1 :
+		// (1/16));
 	}
 	/*
 	@SuppressWarnings("rawtypes")
@@ -81,21 +94,21 @@ public class MagCardReader extends BlockContainerTomsMod implements IRotatable {
 		setBlockBounds(0.5F - (4F/16F), 0.5F - (5F/16F), 0.0F, 0.5F + (4F/16F), 0.5F + (5F/16F), 3F/16F);
 	}//*/
 	/*@Override
-    public boolean renderAsNormalBlock(){
-        return false;
-    }*/
+	public boolean renderAsNormalBlock(){
+	    return false;
+	}*/
 
 	@Override
-	public boolean isOpaqueCube(IBlockState s){
+	public boolean isOpaqueCube(IBlockState s) {
 		return false;
 	}
+
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos,
-			IBlockState state, EntityPlayer player, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack heldItem = player.getHeldItem(hand);
 		TileEntityMagCardReader te = (TileEntityMagCardReader) world.getTileEntity(pos);
-		if(heldItem != null && heldItem.getItem() instanceof IMagCard && !world.isRemote) te.activate(player, heldItem);
+		if (heldItem != null && heldItem.getItem() instanceof IMagCard && !world.isRemote)
+			te.activate(player, heldItem);
 		return true;
 	}
 
@@ -105,20 +118,17 @@ public class MagCardReader extends BlockContainerTomsMod implements IRotatable {
 	}
 
 	@Override
-	public int getRenderType()
-	{
+	public int getRenderType() {
 		return -1;
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState s)
-	{
+	public boolean isFullCube(IBlockState s) {
 		return false;
 	}
 
 	@Override
-	public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
-	{
+	public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
 		return true;
 	}
 

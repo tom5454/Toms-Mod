@@ -55,51 +55,58 @@ public class TileEntityCharger extends TileEntityMachineBase {
 	public int getMaxProcessTimeNormal() {
 		return -1;
 	}
+
 	@Override
 	public void updateEntity() {
-		if(!worldObj.isRemote){
-			if(energy.hasEnergy() && canRun()){
-				if(stack[0] != null && stack[0].getItem() instanceof IEnergyContainerItem){
-					if(((IEnergyContainerItem) stack[0].getItem()).getEnergyStored(stack[0]) == ((IEnergyContainerItem) stack[0].getItem()).getMaxEnergyStored(stack[0])){
-						TomsModUtils.setBlockStateWithCondition(worldObj, pos, BlockCharger.ACTIVE, false);
-						if(stack[1] == null){
-							stack[1] = stack[0];
-							stack[0] = null;
+		if (!world.isRemote) {
+			if (energy.hasEnergy() && canRun()) {
+				if (!inv.getStackInSlot(0).isEmpty() && inv.getStackInSlot(0).getItem() instanceof IEnergyContainerItem) {
+					if (((IEnergyContainerItem) inv.getStackInSlot(0).getItem()).getEnergyStored(inv.getStackInSlot(0)) == ((IEnergyContainerItem) inv.getStackInSlot(0).getItem()).getMaxEnergyStored(inv.getStackInSlot(0))) {
+						TomsModUtils.setBlockStateWithCondition(world, pos, BlockCharger.ACTIVE, false);
+						if (inv.getStackInSlot(1).isEmpty()) {
+							inv.setInventorySlotContents(1, inv.getStackInSlot(0));
+							inv.setInventorySlotContents(0, ItemStack.EMPTY);
 						}
-					}else{
-						TomsModUtils.setBlockStateWithCondition(worldObj, pos, BlockCharger.ACTIVE, true);
+					} else {
+						TomsModUtils.setBlockStateWithCondition(world, pos, BlockCharger.ACTIVE, true);
 						double extract = energy.extractEnergy(Math.pow(10, (2 + (2 - getType()))), true);
-						if(extract > 0){
-							double receive = ((IEnergyContainerItem) stack[0].getItem()).receiveEnergy(stack[0], extract, true);
-							if(receive > 0){
-								((IEnergyContainerItem) stack[0].getItem()).receiveEnergy(stack[0], energy.extractEnergy(receive, false), false);
+						if (extract > 0) {
+							double receive = ((IEnergyContainerItem) inv.getStackInSlot(0).getItem()).receiveEnergy(inv.getStackInSlot(0), extract, true);
+							if (receive > 0) {
+								((IEnergyContainerItem) inv.getStackInSlot(0).getItem()).receiveEnergy(inv.getStackInSlot(0), energy.extractEnergy(receive, false), false);
 							}
 						}
 					}
 				}
-			}else{
-				TomsModUtils.setBlockStateWithCondition(worldObj, pos, BlockCharger.ACTIVE, false);
+			} else {
+				TomsModUtils.setBlockStateWithCondition(world, pos, BlockCharger.ACTIVE, false);
 			}
 		}
 	}
 
 	public int getClientEnergyStored() {
-		return MathHelper.ceiling_double_int(energy.getEnergyStored());
+		return MathHelper.ceil(energy.getEnergyStored());
 	}
+
 	@Override
 	public int getField(int id) {
 		return id == 0 ? getChargedPer() : 0;
 	}
+
 	public int p;
+
 	@Override
 	public void setField(int id, int value) {
-		if(id == 0)p = value;
+		if (id == 0)
+			p = value;
 	}
-	private int getChargedPer(){
-		if(stack[0] != null && stack[0].getItem() instanceof IEnergyContainerItem){
-			IEnergyContainerItem c = (IEnergyContainerItem) stack[0].getItem();
-			return MathHelper.ceiling_double_int((c.getEnergyStored(stack[0]) / c.getMaxEnergyStored(stack[0])) * 100);
-		}else return 0;
+
+	private int getChargedPer() {
+		if (!inv.getStackInSlot(0).isEmpty() && inv.getStackInSlot(0).getItem() instanceof IEnergyContainerItem) {
+			IEnergyContainerItem c = (IEnergyContainerItem) inv.getStackInSlot(0).getItem();
+			return MathHelper.ceil((c.getEnergyStored(inv.getStackInSlot(0)) / c.getMaxEnergyStored(inv.getStackInSlot(0))) * 100);
+		} else
+			return 0;
 	}
 
 	public int getMaxEnergyStored() {
@@ -119,5 +126,17 @@ public class TileEntityCharger extends TileEntityMachineBase {
 	@Override
 	public int[] getInputSlots() {
 		return new int[]{0};
+	}
+
+	@Override
+	public void checkItems() {
+	}
+
+	@Override
+	public void finish() {
+	}
+
+	@Override
+	public void updateProgress() {
 	}
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "tomsmodcore:item/platebase",
+  "textures": {
+    "block": "tomsmodcore:blocks/resources/blockbrass"
+  }
+}

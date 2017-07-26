@@ -24,12 +24,14 @@ public class BlockWireMill extends BlockMachineBase {
 	public TileEntityMachineBase createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityWireMill();
 	}
+
 	@Override
-	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if(!worldIn.isRemote)playerIn.openGui(CoreInit.modInstance, GuiIDs.wireMill.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+	public boolean onBlockActivatedI(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (!worldIn.isRemote)
+			playerIn.openGui(CoreInit.modInstance, GuiIDs.wireMill.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
+
 	@Override
 	protected void dropInventory(World worldIn, BlockPos pos, IInventory te) {
 		te.removeStackFromSlot(3);

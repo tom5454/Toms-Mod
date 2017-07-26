@@ -1,105 +1,90 @@
 package com.tom.storage.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.tom.api.block.BlockGridDevice;
-import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+
 import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.storage.multipart.StorageNetworkGrid;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
 import com.tom.storage.tileentity.TileEntityPatternTerminal;
 
-public class BlockPatternTerminal extends BlockGridDevice {
-	public static final PropertyDirection FACING = PropertyDirection.create("facing");
-	public BlockPatternTerminal() {
-		super(Material.GLASS);
+public class BlockPatternTerminal extends BlockTerminalBase {
+	public static final PropertyBool HAS_PATTERN = PropertyBool.create("has_pattern");
+
+	@Override
+	public TileEntityBasicTerminal createNewTileEntity(World worldIn, int meta) {
+		return new TileEntityPatternTerminal();
 	}
 
 	@Override
-	public TileEntityGridDeviceBase<StorageNetworkGrid> createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityPatternTerminal();
-	}
-	@SuppressWarnings("deprecation")
-	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos,
-			IBlockState state, EntityPlayer playerIn, EnumHand hand,
-			ItemStack heldItem, EnumFacing side, float hitX, float hitY,
-			float hitZ) {
-		if(!worldIn.isRemote && playerIn.isSneaking() && CoreInit.isWrench(heldItem, playerIn)){
-			spawnAsEntity(worldIn, pos, getItem(worldIn, pos, state));
-			worldIn.setBlockToAir(pos);
-			return true;
-		}
-		if(!worldIn.isRemote)playerIn.openGui(CoreInit.modInstance, GuiIDs.patternTerminal.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-		return true;
-	}
-	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos,
-			EnumFacing facing, float hitX, float hitY, float hitZ, int meta,
-			EntityLivingBase placer) {
-		return super
-				.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, TomsModUtils.getDirectionFacing(placer, true));
-	}
-	@Override
-	public boolean isOpaqueCube(IBlockState state){
-		return false;
-	}
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FACING).getIndex();
-	}
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta % 6));
-	}
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this,FACING);
-	}
-	@SuppressWarnings("deprecation")
-	@Override
-	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
-		Block block = world.getBlockState(pos).getBlock();
-		if (block != this)
-		{
-			return block.getLightValue(state, world, pos);
-		}
-		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileEntityBasicTerminal){
-			TileEntityBasicTerminal te = (TileEntityBasicTerminal) tile;
-			return te.poweredClient ? 11 : 0;
-		}
-		return getLightValue(state);
-	}
-	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntityPatternTerminal tile = (TileEntityPatternTerminal) worldIn.getTileEntity(pos);
-		InventoryHelper.dropInventoryItems(worldIn, pos, tile.patternInv);
-		InventoryHelper.dropInventoryItems(worldIn, pos, tile.upgradeInv);
+		InventoryHelper.dropInventoryItems(worldIn, pos, tile.getPatternInv());
+		InventoryHelper.dropInventoryItems(worldIn, pos, tile.getUpgradeInv());
 		super.breakBlock(worldIn, pos, state);
 	}
+
 	@Override
-	public boolean isFullBlock(IBlockState state) {
-		return false;
+	public int getGuiID() {
+		return GuiIDs.patternTerminal.ordinal();
 	}
+
 	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
+	public String getName() {
+		return "Pattern Terminal";
+	}
+
+	@Override
+	public boolean hasCustomFront() {
+		return true;
+	}
+
+	@Override
+	public int[][][] getImageIDs() {
+		return new int[][][]{{{1, 0, -30}, {2, 0, -10}, {3, 0, 0}}, {{0, 0, -30}, {1, 0, -50}, {2, 0, -100}, {3, 0, -10}, {4, 0, -70}, {5, 0, -10}, {6, 0}, {8, 0, -40}, {9, 0, -85}, {10, 0, 10}, {11}, {12, 0, 30}}};
+	}
+
+	@Override
+	public String getCategory() {
+		return "pattern";
+	}
+
+	@Override
+	public boolean mirrorModel(int state) {
+		return true;
+	}
+
+	@Override
+	public ResourceLocation getFrontModelMapper(int state, ResourceLocation loc) {
+		return state == 0 ? loc : new ResourceLocation(loc.getResourceDomain(), loc.getResourcePath() + "2");
+	}
+
+	@Override
+	public int getStates() {
+		return 2;
+	}
+
+	@Override
+	public int getState(IBlockState state) {
+		return state.getValue(HAS_PATTERN) ? 1 : 0;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new ExtendedBlockState(this, new IProperty[]{FACING, HAS_PATTERN}, new IUnlistedProperty[]{COLOR, STATE});
+	}
+
+	@Override
+	public IBlockState getExtendedState(IExtendedBlockState state, TileEntityBasicTerminal te) {
+		return state.withProperty(HAS_PATTERN, ((TileEntityPatternTerminal) te).pattern);
 	}
 }

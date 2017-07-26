@@ -11,15 +11,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class MwGuiTeleportDialog extends MwGuiTextDialog
-{
+public class MwGuiTeleportDialog extends MwGuiTextDialog {
 
 	final Mw mw;
 	final MapView mapView;
 	final int teleportX, teleportZ;
 
-	public MwGuiTeleportDialog(GuiScreen parentScreen, Mw mw, MapView mapView, int x, int y, int z)
-	{
+	public MwGuiTeleportDialog(GuiScreen parentScreen, Mw mw, MapView mapView, int x, int y, int z) {
 		super(parentScreen, I18n.format("mw.gui.mwguimarkerdialognew.title") + ":", Integer.toString(y), I18n.format("mw.gui.mwguimarkerdialognew.error"));
 		this.mw = mw;
 		this.mapView = mapView;
@@ -29,12 +27,10 @@ public class MwGuiTeleportDialog extends MwGuiTextDialog
 	}
 
 	@Override
-	public boolean submit()
-	{
+	public boolean submit() {
 		boolean done = false;
 		int height = this.getInputAsInt();
-		if (this.inputValid)
-		{
+		if (this.inputValid) {
 			height = Math.min(Math.max(0, height), 255);
 			Config.defaultTeleportHeight = height;
 			this.mw.teleportToMapPos(this.mapView, this.teleportX, height, this.teleportZ);

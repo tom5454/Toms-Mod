@@ -22,15 +22,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import com.tom.apis.TomsModUtils;
 import com.tom.config.Config;
 
-@Mod(modid = Reference.MOD_ID,
-name = Reference.MOD_NAME,
-version = Reference.VERSION,
-guiFactory = Reference.MOD_GUIFACTORY_CLASS,
-clientSideOnly = true,
-//updateJSON = Reference.ForgeVersionURL,
-acceptedMinecraftVersions="@ACCEPTED_MC_VERSION@")
-public class MwForge
-{
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory = Reference.MOD_GUIFACTORY_CLASS, clientSideOnly = true,
+		// updateJSON = Reference.ForgeVersionURL,
+		acceptedMinecraftVersions = "@ACCEPTED_MC_VERSION@")
+public class MwForge {
 
 	@Instance(Reference.MOD_ID)
 	public static MwForge instance;
@@ -41,37 +36,33 @@ public class MwForge
 	public static Logger logger = LogManager.getLogger(Reference.MOD_ID_CAP);
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		if(Config.enableMiniMap && TomsModUtils.isClient()){
+	public void preInit(FMLPreInitializationEvent event) {
+		if (Config.enableMiniMap && TomsModUtils.isClient()) {
 			MinecraftForge.EVENT_BUS.register(this);
 			proxy.preInit(event.getSuggestedConfigurationFile());
 		}
 	}
 
 	@EventHandler
-	public void load(FMLInitializationEvent event)
-	{
-		if(Config.enableMiniMap && TomsModUtils.isClient())proxy.load();
+	public void load(FMLInitializationEvent event) {
+		if (Config.enableMiniMap && TomsModUtils.isClient())
+			proxy.load();
 	}
 
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent event)
-	{
-		if(Config.enableMiniMap && TomsModUtils.isClient())proxy.postInit();
+	public void postInit(FMLPostInitializationEvent event) {
+		if (Config.enableMiniMap && TomsModUtils.isClient())
+			proxy.postInit();
 	}
 
 	@SubscribeEvent
-	public void onTick(TickEvent.ClientTickEvent event)
-	{
-		if (event.phase == TickEvent.Phase.START)
-		{
+	public void onTick(TickEvent.ClientTickEvent event) {
+		if (event.phase == TickEvent.Phase.START) {
 			// run the cleanup code when Mw is loaded and the player becomes
 			// null.
 			// a bit hacky, but simpler than checking if the connection has
 			// closed.
-			if ((Mw.getInstance().ready) && (Minecraft.getMinecraft().thePlayer == null))
-			{
+			if ((Mw.getInstance().ready) && (Minecraft.getMinecraft().player == null)) {
 				Mw.getInstance().close();
 			}
 		}

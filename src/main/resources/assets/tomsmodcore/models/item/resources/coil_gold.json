@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
+    "parent": "tomsmodcore:item/wirecoilbase",
     "textures": {
-        "layer0": "tomsmodcore:items/resources/coilgold"
+        "wire": "tomsmodcore:items/resources/wiregold"
     }
 }

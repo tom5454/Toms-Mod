@@ -18,8 +18,8 @@ public class EntityCamera extends EntityLivingBase {
 	public int contY;
 	public int contZ;
 	public TileEntityCamera te;
-	public EntityCamera(World world, double posX, double posY, double posZ, float yaw, float pitch, boolean eC, float yawMin,
-			float pitchMin, float yawMax, float pitchMax, int cX, int cY, int cZ, boolean eEsc, TileEntityCamera te) {
+
+	public EntityCamera(World world, double posX, double posY, double posZ, float yaw, float pitch, boolean eC, float yawMin, float pitchMin, float yawMax, float pitchMax, int cX, int cY, int cZ, boolean eEsc, TileEntityCamera te) {
 		super(world);
 		this.setLocationAndAngles(posX, posY, posZ, yaw, pitch);
 		this.setPositionAndRotation(posX, posY, posZ, yaw, pitch);
@@ -34,25 +34,30 @@ public class EntityCamera extends EntityLivingBase {
 		this.te = te;
 		this.eEsc = eEsc;
 	}
-	public EntityCamera(World world){
+
+	public EntityCamera(World world) {
 		super(world);
 	}
 
 	public void setCameraInfo(float yaw, float pitch) {
-		this.setAngles(yaw, pitch);
+		this.setLocationAndAngles(posX, posY, posZ, yaw, pitch);
 	}
+
 	@Override
 	public Iterable<ItemStack> getArmorInventoryList() {
 		return null;
 	}
+
 	@Override
 	public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) {
 		return null;
 	}
+
 	@Override
 	public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) {
 
 	}
+
 	@Override
 	public EnumHandSide getPrimaryHand() {
 		return EnumHandSide.RIGHT;

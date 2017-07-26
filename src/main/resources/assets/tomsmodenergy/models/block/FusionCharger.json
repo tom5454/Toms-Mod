@@ -1,6 +1,6 @@
 {
-    "parent": "block/cube",
+    "parent": "block/cube_all",
     "textures": {
-        "up": "blocks/fusionCase","down": "blocks/fusionCase","north": "blocks/fusionCase","east": "blocks/fusionCase","south": "blocks/fusionCase","west": "blocks/fusionCase","particle": "blocks/fusionCase"
+        "all": "tomsmodenergy:blocks/fusionCase"
     }
 }

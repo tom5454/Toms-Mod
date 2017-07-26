@@ -18,6 +18,38 @@
 				"textures":{
 					"all": "tomsmodfactory:blocks/engineeringBlock"
 				}
+			},
+			"machine_base":{
+				"model": "half_slab",
+				"textures":{
+					"bottom": "#all",
+					"top": "#all",
+					"side": "#all",
+					"all": "tomsmodcore:blocks/resources/blocksteel"
+				}
+			},
+			"steel_scaffolding":{
+				"model": "cube",
+				"textures":{
+					"particle": "#all",
+					"down": "tomsmodcore:blocks/resources/blocksteel",
+					"up": "tomsmodcore:blocks/resources/blocksteel",
+					"north": "#all",
+					"south": "#all",
+					"east": "#all",
+					"west": "#all",
+					"all": "tomsmodfactory:blocks/steelscaffolding"
+				}
+			},
+			"iron_sheets":{
+				"textures":{
+					"all": "tomsmodfactory:blocks/ironsheets"
+				}
+			},
+			"steel_sheets":{
+				"textures":{
+					"all": "tomsmodfactory:blocks/steelsheets"
+				}
 			}
 		}
 	}

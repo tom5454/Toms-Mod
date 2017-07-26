@@ -5,13 +5,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import com.tom.storage.multipart.PartExportBus;
 import com.tom.storage.tileentity.inventory.ContainerExportBus;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiExportBus extends GuiTomsMod {
+public class GuiExportBus extends GuiMultipartBase {
 
 	public GuiExportBus(PartExportBus bus, InventoryPlayer playerInv) {
-		super(new ContainerExportBus(bus, playerInv),"GuiImportBus");
+		super(new ContainerExportBus(bus, playerInv), "GuiImportBus", bus);
 	}
+
 	@Override
 	public void initGui() {
 		ySize = 176;

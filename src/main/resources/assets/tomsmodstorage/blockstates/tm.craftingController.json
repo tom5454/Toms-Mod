@@ -1,6 +1,16 @@
 {
-	"variants":{
-		"active=false":{ "model": "tomsmodstorage:crafting_controller"},
-		"active=true": { "model": "tomsmodstorage:crafting_controller_active"}
-	}
+	"variants": {
+        "facing=north,state=0": { "model": "tomsmodstorage:craftingcontroller_off" },
+        "facing=south,state=0": { "model": "tomsmodstorage:craftingcontroller_off", "y": 180 },
+        "facing=west,state=0":  { "model": "tomsmodstorage:craftingcontroller_off", "y": 270 },
+        "facing=east,state=0":  { "model": "tomsmodstorage:craftingcontroller_off", "y": 90 },
+        "facing=north,state=1": { "model": "tomsmodstorage:craftingcontroller_on" },
+        "facing=south,state=1": { "model": "tomsmodstorage:craftingcontroller_on", "y": 180 },
+        "facing=west,state=1":  { "model": "tomsmodstorage:craftingcontroller_on", "y": 270 },
+        "facing=east,state=1":  { "model": "tomsmodstorage:craftingcontroller_on", "y": 90 },
+        "facing=north,state=2": { "model": "tomsmodstorage:craftingcontroller_pr" },
+		"facing=south,state=2": { "model": "tomsmodstorage:craftingcontroller_pr", "y": 180 },
+		"facing=west,state=2":  { "model": "tomsmodstorage:craftingcontroller_pr", "y": 270 },
+		"facing=east,state=2":  { "model": "tomsmodstorage:craftingcontroller_pr", "y": 90 }
+    }
 }

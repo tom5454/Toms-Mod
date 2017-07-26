@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube_all",
+    "textures":{
+		"particle": "tomsmodfactory:blocks/steelscaffolding",
+		"down": "tomsmodcore:blocks/resources/blocksteel",
+		"up": "tomsmodcore:blocks/resources/blocksteel",
+		"north": "tomsmodfactory:blocks/steelscaffolding",
+		"south": "tomsmodfactory:blocks/steelscaffolding",
+		"east": "tomsmodfactory:blocks/steelscaffolding",
+		"west": "tomsmodfactory:blocks/steelscaffolding"
+	}
+}

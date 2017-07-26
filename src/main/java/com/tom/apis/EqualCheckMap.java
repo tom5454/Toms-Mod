@@ -24,8 +24,9 @@ public class EqualCheckMap<K, V> extends HashMap<K, V> {
 
 	@Override
 	public V get(Object key) {
-		for(java.util.Map.Entry<K, V> s : entrySet()){
-			if(s.getKey().equals(key))return s.getValue();
+		for (java.util.Map.Entry<K, V> s : entrySet()) {
+			if (s.getKey().equals(key))
+				return s.getValue();
 		}
 		return null;
 	}

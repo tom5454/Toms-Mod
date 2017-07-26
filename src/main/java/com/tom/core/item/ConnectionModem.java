@@ -12,15 +12,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ConnectionModem extends Item {
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced)
-	{
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced) {
 		super.addInformation(itemStack, player, list, isAdvanced);
 		if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("tier")) {
-			list.add(I18n.format("tomsMod.tooltip.tier")+": "+itemStack.getTagCompound().getInteger("tier"));
-		}else{
-			list.add(I18n.format("tomsMod.tooltip.tier")+": 0");
+			list.add(I18n.format("tomsMod.tooltip.tier") + ": " + itemStack.getTagCompound().getInteger("tier"));
+		} else {
+			list.add(I18n.format("tomsMod.tooltip.tier") + ": 0");
 		}
 	}
 }
