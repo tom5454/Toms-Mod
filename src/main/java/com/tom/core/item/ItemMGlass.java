@@ -17,8 +17,8 @@ import net.minecraft.world.World;
 
 import com.tom.api.research.IScanningInformation;
 import com.tom.api.research.IScanningInformation.ScanningInformation;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
+import com.tom.util.TomsModUtils;
 
 public class ItemMGlass extends Item {
 	@Override

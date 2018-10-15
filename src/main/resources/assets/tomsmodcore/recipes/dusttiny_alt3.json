@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:dusttiny",
+    "data": 32,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "dustSkyQuartz",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

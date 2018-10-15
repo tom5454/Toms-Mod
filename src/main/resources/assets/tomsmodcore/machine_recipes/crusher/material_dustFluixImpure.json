@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmodcore:material",
+    "data": 60,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:material",
+    "data": 61,
+    "count": 1
+  }
+}

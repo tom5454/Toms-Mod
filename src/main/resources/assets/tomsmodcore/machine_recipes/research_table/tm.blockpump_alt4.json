@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:pump"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.blockpump",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "ITI",
+      "BCB",
+      "IPI"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "id": "pump",
+        "type": "tomsmodcore:material"
+      },
+      "B": {
+        "item": "minecraft:bucket",
+        "data": 0
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "T": {
+        "item": "tomsmodstorage:tm.tank.basic",
+        "data": 0
+      },
+      "I": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:advboiler"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.advboiler",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PbP",
+      "PGP",
+      "BFB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "b": {
+        "item": "tomsmodfactory:tm.steelboiler",
+        "data": 0
+      },
+      "F": {
+        "item": "minecraft:furnace",
+        "data": 0
+      },
+      "G": {
+        "item": "tomsmodfactory:tm.basicboiler",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 500
+}

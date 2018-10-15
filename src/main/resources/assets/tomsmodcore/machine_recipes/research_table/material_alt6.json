@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:basicturbine"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:material",
+      "data": 45,
+      "count": 1
+    },
+    "pattern": [
+      "TCI",
+      "CRC",
+      "ICT"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "item": "minecraft:redstone",
+        "data": 0
+      },
+      "C": {
+        "ore": "cableCopper",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "ore": "cableTin",
+        "type": "forge:ore_dict"
+      },
+      "I": {
+        "ore": "rodIron",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 500
+}

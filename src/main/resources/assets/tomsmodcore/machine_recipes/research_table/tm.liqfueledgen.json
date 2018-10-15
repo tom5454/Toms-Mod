@@ -1,0 +1,48 @@
+{
+  "researches": [
+    "tomsmodcore:liquidfueledgenerator"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:tm.liqfueledgen",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PIP",
+      "BCG",
+      "PEP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "tomsmodfactory:tm.advfluidboiler",
+        "data": 0
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "G": {
+        "id": "generator",
+        "type": "tomsmodcore:material"
+      },
+      "I": {
+        "ore": "blockIron",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1800
+}

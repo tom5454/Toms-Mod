@@ -19,12 +19,11 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import com.tom.api.grid.GridEnergyStorage;
-import com.tom.api.grid.IGridDevice;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.client.ICustomModelledTileEntity;
+import com.tom.lib.api.grid.IGridDevice;
 import com.tom.storage.block.BlockStorageNetworkController;
 import com.tom.storage.handler.NetworkState;
 import com.tom.storage.handler.StorageData;
@@ -36,6 +35,7 @@ import com.tom.storage.handler.StorageNetworkGrid.IController;
 import com.tom.storage.handler.StorageNetworkGrid.IControllerTile;
 import com.tom.storage.handler.StorageNetworkGrid.IRouter;
 import com.tom.storage.handler.StorageNetworkGrid.IRouterTile;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityStorageNetworkController extends TileEntityTomsMod implements IControllerTile, ICustomModelledTileEntity, INBTPacketReceiver, ICustomMultimeterInformation {
 	private GridEnergyStorage energy = new GridEnergyStorage(1000, 0);

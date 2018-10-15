@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:rubberprocessing"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.rubberboiler",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      " - ",
+      "-B-",
+      "PPP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "tomsmodfactory:tm.steelboiler",
+        "data": 0
+      },
+      "-": {
+        "ore": "pipeSteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 800
+}

@@ -8,15 +8,12 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-
-import com.tom.core.CoreInit;
 
 public class CustomModelLoader implements ICustomModelLoader {
 	protected IResourceManager manager;
@@ -27,7 +24,6 @@ public class CustomModelLoader implements ICustomModelLoader {
 
 	private CustomModelLoader() {
 	}// OBJLoader
-	// private boolean loading = false;
 
 	public static void addOverride(ResourceLocation loc, IModel model) {
 		log.info("Adding resource override: " + loc.toString());
@@ -37,17 +33,11 @@ public class CustomModelLoader implements ICustomModelLoader {
 	@Override
 	public void onResourceManagerReload(IResourceManager manager) {
 		this.manager = manager;
-		// cache.clear();
 	}
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation) {
-		// if(modelLocation instanceof ModelResourceLocation &&
-		// (((ModelResourceLocation)modelLocation).getResourcePath().startsWith("fluid")))log.info(((ModelResourceLocation)modelLocation).toString());
-		/*boolean isIgnored = CoreInit.ignoredLocations.contains(modelLocation.getResourcePath());
-		return (modelLocation.getResourceDomain().startsWith("tomsmod")) && !isIgnored && VariantLoader.INSTANCE.accepts(modelLocation);*/
-		boolean isIgnored = CoreInit.ignoredLocations.contains(modelLocation.getResourcePath());
-		return overrides.containsKey(modelLocation) || overrides.containsKey(new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath())) || (modelLocation.getResourceDomain().startsWith("tomsmod")) && VariantL.accepts(modelLocation) && !isIgnored;
+		return overrides.containsKey(modelLocation) || overrides.containsKey(new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath()));
 	}
 
 	@Override
@@ -57,37 +47,7 @@ public class CustomModelLoader implements ICustomModelLoader {
 		ResourceLocation file = new ResourceLocation(modelLocation.getResourceDomain().replace("|", ""), modelLocation.getResourcePath());
 		if (overrides.containsKey(file))
 			return overrides.get(file);
-		String variant = modelLocation instanceof ModelResourceLocation ? ((ModelResourceLocation) modelLocation).getVariant() : "inventory";
-		IModel model = null;
-		ModelResourceLocation modelL = new ModelResourceLocation(/*variant.equalsIgnoreCase("inventory") ? file.getResourceDomain() + ":models/item/" + file.getResourcePath() : */file.toString(), variant);
-		boolean exceptionCaught = false;
-		try {
-			model = VariantL.loadModel(modelL);
-		} catch (Exception e) {
-			exceptionCaught = true;
-			try {
-				model = VariantL.loadModelV(modelL);
-			} catch (Exception e2) {
-				String exc = "Could not load model definition for variant " + modelL.toString() + ". Exceptions: " + e.toString() + ", " + e2.toString();
-				exceptions.add(exc);
-				throw e;
-			}
-		}
-		if ((model == null || model == ModelLoaderRegistry.getMissingModel() || model.getDependencies().contains(new ResourceLocation("builtin/missing"))) && !exceptionCaught) {
-			try {
-				model = VariantL.loadModelV(modelL);
-			} catch (Exception e) {
-				try {
-					model = VariantL.loadModelV(new ModelResourceLocation(modelL.getResourceDomain() + ":blockstates/" + modelL.getResourcePath(), modelL.getVariant()));
-				} catch (Exception e2) {
-					String exc = "Could not load model definition for variant " + modelL.toString() + ". Exceptions: " + e.toString() + ", " + e2.toString();
-					exceptions.add(exc);
-					throw e;
-				}
-			}
-		}
-		model = model == null || model == ModelLoaderRegistry.getMissingModel() ? ModelLoaderRegistry.getModelOrMissing(file) : model;
-		return model;
+		throw new RuntimeException("Invalid model: " + modelLocation);
 	}
 
 	public static CustomModelLoader getInstance() {

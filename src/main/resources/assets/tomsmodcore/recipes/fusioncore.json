@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodenergy:fusioncore",
+    "data": 0,
+    "count": 2
+  },
+  "pattern": [
+    "CBC",
+    "BTB",
+    "CBC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "B": {
+      "ore": "ingotBlueMetal",
+      "type": "forge:ore_dict"
+    },
+    "C": {
+      "ore": "plateChrome",
+      "type": "forge:ore_dict"
+    },
+    "T": {
+      "ore": "plateTitanium",
+      "type": "forge:ore_dict"
+    }
+  }
+}

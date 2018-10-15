@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 15,
+    "count": 1
+  },
+  "pattern": [
+    " H ",
+    "III",
+    "III"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "H": {
+      "ore": "itemHammer_lvl0",
+      "type": "forge:ore_dict"
+    },
+    "I": {
+      "id": "hotCopper",
+      "type": "tomsmodcore:material"
+    }
+  }
+}

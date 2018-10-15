@@ -3,9 +3,10 @@ package com.tom.core.item;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import com.tom.api.item.IFuelRod;
 import com.tom.core.CoreInit;
@@ -35,7 +36,7 @@ public class UraniumRod extends Item implements IFuelRod {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		tooltip.add(I18n.format("item.durability", new Object[]{Integer.valueOf(stack.getMaxDamage() - stack.getItemDamage()), Integer.valueOf(stack.getMaxDamage())}));
 	}
 }

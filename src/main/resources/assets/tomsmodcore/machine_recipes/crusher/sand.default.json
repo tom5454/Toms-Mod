@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "minecraft:cobblestone",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "minecraft:sand",
+    "data": 0,
+    "count": 1
+  }
+}

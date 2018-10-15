@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:nugget",
+    "data": 35,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "ingotTungstensteel",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

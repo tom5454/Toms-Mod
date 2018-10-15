@@ -4,13 +4,14 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -58,7 +59,7 @@ public class ItemRAM extends Item implements IModelRegisterRequired, IMemoryItem
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		if (GuiScreen.isShiftKeyDown()) {
 			tooltip.add(I18n.format("tomsMod.tooltip.memory.tier", get(stack).tier));
 			tooltip.add(I18n.format("tomsMod.tooltip.memory.memory", get(stack).memory));
@@ -69,10 +70,11 @@ public class ItemRAM extends Item implements IModelRegisterRequired, IMemoryItem
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		for (RamTypes t : RamTypes.VALUES) {
-			subItems.add(new ItemStack(this, 1, t.ordinal()));
-		}
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))
+			for (RamTypes t : RamTypes.VALUES) {
+				subItems.add(new ItemStack(this, 1, t.ordinal()));
+			}
 	}
 
 	@Override

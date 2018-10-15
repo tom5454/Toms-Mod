@@ -14,12 +14,12 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.inventory.InventorySection;
-import com.tom.apis.TomsModUtils;
-import com.tom.apis.TomsModUtils.FillRunnable;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.Type;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.TomsModUtils;
+import com.tom.util.TomsModUtils.FillRunnable;
 
 public class TileEntitySteamMixer extends TileEntitySteamMachine {
 	private FluidTank tankIn = new FluidTank(10000);

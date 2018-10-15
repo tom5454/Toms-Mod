@@ -21,10 +21,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntityAdvBoiler;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 
 public class AdvBoiler extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);

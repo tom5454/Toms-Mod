@@ -1,0 +1,40 @@
+{
+  "researches": [
+    "tomsmodcore:basiclvmachines"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.crusher",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "SHS",
+      "ECE",
+      "SES"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "H": {
+        "ore": "componentCrusher",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

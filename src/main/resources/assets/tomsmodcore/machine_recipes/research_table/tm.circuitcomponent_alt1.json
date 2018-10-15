@@ -1,0 +1,43 @@
+{
+  "researches": [
+    "tomsmodcore:mvcircuit"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "nbt": {
+        "id": "normal"
+      },
+      "item": "tomsmodcore:tm.circuitcomponent",
+      "data": 1,
+      "count": 1
+    },
+    "pattern": [
+      "-E-",
+      "SSS",
+      "R-R"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "ore": "plateRedAlloy",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "plateSilicon",
+        "type": "forge:ore_dict"
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "-": {
+        "ore": "cableElectrum",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1200
+}

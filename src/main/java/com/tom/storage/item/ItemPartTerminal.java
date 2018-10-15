@@ -25,7 +25,6 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import com.tom.api.block.IMethod.IClientMethod;
 import com.tom.api.block.IRegisterRequired;
 import com.tom.api.multipart.PartModule;
-import com.tom.apis.TomsModUtils;
 import com.tom.client.CustomModelLoader;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
@@ -34,6 +33,7 @@ import com.tom.storage.client.TerminalPartModel;
 import com.tom.storage.multipart.PartTerminal;
 import com.tom.storage.multipart.block.BlockChannelModule;
 import com.tom.storage.tileentity.TileEntityBasicTerminal.TerminalFacing;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.api.container.IPartInfo;
 

@@ -10,11 +10,11 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-import com.tom.apis.MultiBlockPos;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntityMultiblockController;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.MultiBlockPos;
+import com.tom.util.TomsModUtils;
 
 public abstract class BlockMultiblockController2 extends BlockMultiblockController {
 

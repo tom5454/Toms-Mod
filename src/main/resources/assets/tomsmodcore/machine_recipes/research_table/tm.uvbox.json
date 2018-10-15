@@ -1,0 +1,40 @@
+{
+  "researches": [
+    "tomsmodcore:uvlightbox"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.uvbox",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "ILI",
+      "EFE",
+      "III"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "F": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "I": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      },
+      "L": {
+        "id": "uvLamp",
+        "type": "tomsmodcore:material"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

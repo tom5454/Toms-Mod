@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "up": "tomsmodtransport:blocks/opencrate_side",
+        "down": "tomsmodtransport:blocks/opencrate_bottom",
+        "north": "tomsmodtransport:blocks/opencrate_side",
+         "east": "tomsmodtransport:blocks/opencrate_side",
+        "south": "tomsmodtransport:blocks/opencrate_side",
+         "west": "tomsmodtransport:blocks/opencrate_side",
+        "particle": "tomsmodtransport:blocks/opencrate_side"
+    }
+}

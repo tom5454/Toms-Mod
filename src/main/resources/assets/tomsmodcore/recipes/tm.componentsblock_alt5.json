@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "tomsmodfactory:tm.componentsblock",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "S-S",
+    "A A",
+    "SLS"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "A": {
+      "ore": "plateAluminum",
+      "type": "forge:ore_dict"
+    },
+    "S": {
+      "ore": "plateSteel",
+      "type": "forge:ore_dict"
+    },
+    "L": {
+      "item": "minecraft:lava_bucket",
+      "data": 0
+    },
+    "-": {
+      "ore": "pipeSteel",
+      "type": "forge:ore_dict"
+    }
+  }
+}

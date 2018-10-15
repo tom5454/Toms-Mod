@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import com.tom.api.tileentity.AccessType;
 import com.tom.api.tileentity.ISecuredTileEntity;
 import com.tom.api.tileentity.ISecurityStation;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 public class WrenchHandler {
 	public static boolean use(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c, EnumHand hand) {

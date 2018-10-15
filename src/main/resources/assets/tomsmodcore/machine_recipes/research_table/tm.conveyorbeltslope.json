@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:conveyorbelts"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodtransport:tm.conveyorbeltslope",
+      "data": 1,
+      "count": 2
+    },
+    "pattern": [
+      "T  ",
+      "PC ",
+      "PPC"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateCopper",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodtransport:tm.conveyorbeltfast",
+        "data": 0
+      },
+      "T": {
+        "ore": "plateTin",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 100
+}

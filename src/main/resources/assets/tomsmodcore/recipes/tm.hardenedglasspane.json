@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodcore:tm.hardenedglasspane",
+    "data": 0,
+    "count": 16
+  },
+  "pattern": [
+    "GGG",
+    "GGG"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "ore": "glassHardened",
+      "type": "forge:ore_dict"
+    }
+  }
+}

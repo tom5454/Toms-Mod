@@ -102,6 +102,11 @@ public class WorldGenOilLake extends WorldGenerator {
 								if (rnd < 30 && rnd % 2 == 0) {
 									worldIn.setBlockState(blockpos, CoreInit.oreOil.getStateFromMeta(1), 2);
 								}
+							} else if (WorldGen.RED_SAND.test(checkState)) {
+								int rnd = rand.nextInt(40);
+								if (rnd < 30 && rnd % 2 == 0) {
+									worldIn.setBlockState(blockpos, CoreInit.oreOil.getStateFromMeta(2), 2);
+								}
 							}
 						}
 					}
@@ -124,6 +129,11 @@ public class WorldGenOilLake extends WorldGenerator {
 							int rnd = rand.nextInt(40);
 							if (rnd < 30) {
 								worldIn.setBlockState(blockpos, CoreInit.oreOil.getStateFromMeta(1), 2);
+							}
+						} else if (WorldGen.RED_SAND.test(checkState)) {
+							int rnd = rand.nextInt(40);
+							if (rnd < 30) {
+								worldIn.setBlockState(blockpos, CoreInit.oreOil.getStateFromMeta(2), 2);
 							}
 						}
 					}

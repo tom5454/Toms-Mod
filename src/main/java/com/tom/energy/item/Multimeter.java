@@ -28,12 +28,12 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyStorageTile;
-import com.tom.api.grid.IGridDevice;
 import com.tom.api.multipart.PartDuct;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
+import com.tom.lib.api.grid.IGridDevice;
 import com.tom.storage.multipart.PartStorageNetworkCable;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.RayTraceHelper;
 import mcmultipart.api.container.IMultipartContainer;
@@ -60,7 +60,7 @@ public class Multimeter extends Item {
 					for (int i = 0;i < eL.size();i++) {
 						EnergyType c = eL.get(i);
 						double energyStored = s.getEnergyStored(side, c);
-						int maxEnergyStored = s.getMaxEnergyStored(side, c);
+						long maxEnergyStored = s.getMaxEnergyStored(side, c);
 						chatText.add(new TextComponentTranslation("tomsMod.chat.energyStored", new TextComponentString(c.toString()).setStyle(new Style().setColor(c.getColor())), energyStored, maxEnergyStored));
 						// chatText.add(new TextComponentString((energyStored /
 						// maxEnergyStored * 100) + "%"));

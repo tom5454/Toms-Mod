@@ -14,20 +14,19 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.tileentity.AccessType;
-import com.tom.apis.TomsModUtils;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.item.IdentityCard;
 import com.tom.defense.tileentity.TileEntitySecurityStation;
 import com.tom.defense.tileentity.inventory.ContainerSecurityStation;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiSecurityStation extends GuiTomsMod {
+public class GuiSecurityStation extends GuiTomsLib {
 	private GuiButtonRedstoneMode buttonRedstone;
 	private GuiSecurityButton buttonBlockModification, buttonConfiguration, buttonFieldTransport, buttonStayInArea,
-			buttonHaveInventory, buttonSwitch, buttonRightsModification;
+	buttonHaveInventory, buttonSwitch, buttonRightsModification;
 	private GuiButton buttonCopy;
 	private TileEntitySecurityStation te;
 
@@ -212,7 +211,7 @@ public class GuiSecurityStation extends GuiTomsMod {
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

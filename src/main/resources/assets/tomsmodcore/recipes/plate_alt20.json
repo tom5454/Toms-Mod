@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:plate",
+    "data": 3,
+    "count": 1
+  },
+  "pattern": [
+    "H",
+    "I",
+    "I"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "H": {
+      "ore": "itemHammer_lvl1",
+      "type": "forge:ore_dict"
+    },
+    "I": {
+      "ore": "ingotTin",
+      "type": "forge:ore_dict"
+    }
+  }
+}

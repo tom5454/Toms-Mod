@@ -2,8 +2,6 @@ package com.tom.config;
 
 import java.util.List;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -19,6 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.IConfigurable.SecurityCardInventory;
 import com.tom.client.GuiButtonSelection;
+import com.tom.lib.utils.RenderUtil;
 
 public final class ConfigurationOptionSide implements IConfigurable.IConfigurationOption {
 	public byte sideConfig;
@@ -49,19 +48,19 @@ public final class ConfigurationOptionSide implements IConfigurable.IConfigurati
 	@SideOnly(Side.CLIENT)
 	public void renderBackground(Minecraft mc, int xP, int yP) {
 		mc.renderEngine.bindTexture(sideTexLoc[2]);
-		Render.drawTexturedRect(xP + 17, yP + 17, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 17, yP + 17, 16, 16);
 		mc.renderEngine.bindTexture(sideTexLoc[1]);
-		Render.drawTexturedRect(xP + 17, yP, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 17, yP, 16, 16);
 		mc.renderEngine.bindTexture(sideTexLoc[0]);
-		Render.drawTexturedRect(xP + 17, yP + 34, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 17, yP + 34, 16, 16);
 		mc.renderEngine.bindTexture(sideTexLoc[4]);
-		Render.drawTexturedRect(xP, yP + 17, 16, 16);
+		RenderUtil.drawTexturedRect(xP, yP + 17, 16, 16);
 		mc.renderEngine.bindTexture(sideTexLoc[5]);
-		Render.drawTexturedRect(xP + 34, yP + 17, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 34, yP + 17, 16, 16);
 		mc.renderEngine.bindTexture(sideTexLoc[3]);
-		Render.drawTexturedRect(xP + 34, yP + 34, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 34, yP + 34, 16, 16);
 		mc.renderEngine.bindTexture(securitySlotLocation);
-		Render.drawTexturedRect(xP - 1, yP - 1, 18, 18);
+		RenderUtil.drawTexturedRect(xP - 1, yP - 1, 18, 18);
 	}
 
 	@Override
@@ -89,27 +88,27 @@ public final class ConfigurationOptionSide implements IConfigurable.IConfigurati
 	public void renderForeground(Minecraft mc, int xP, int yP, int mouseX, int mouseY) {
 		if (contains(EnumFacing.DOWN)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 17, yP + 34, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 17, yP + 34, 16, 16);
 		}
 		if (contains(EnumFacing.UP)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 17, yP, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 17, yP, 16, 16);
 		}
 		if (contains(EnumFacing.NORTH)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 17, yP + 17, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 17, yP + 17, 16, 16);
 		}
 		if (contains(EnumFacing.SOUTH)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 34, yP + 34, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 34, yP + 34, 16, 16);
 		}
 		if (contains(EnumFacing.WEST)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP, yP + 17, 16, 16);
+			RenderUtil.drawTexturedRect(xP, yP + 17, 16, 16);
 		}
 		if (contains(EnumFacing.EAST)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 34, yP + 17, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 34, yP + 17, 16, 16);
 		}
 
 	}

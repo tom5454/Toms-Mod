@@ -30,13 +30,13 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import com.tom.api.block.BlockGridDevice;
 import com.tom.api.block.IMethod.IClientMethod;
 import com.tom.api.block.IRegisterRequired;
-import com.tom.apis.TomsModUtils;
 import com.tom.client.CustomModelLoader;
 import com.tom.core.CoreInit;
 import com.tom.storage.client.TerminalBlockModel;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
 import com.tom.storage.tileentity.TileEntityBasicTerminal.TerminalColor;
 import com.tom.storage.tileentity.TileEntityBasicTerminal.TerminalFacing;
+import com.tom.util.TomsModUtils;
 
 public abstract class BlockTerminalBase extends BlockGridDevice implements IRegisterRequired, IClientMethod {
 	public static final PropertyEnum<TerminalFacing> FACING = PropertyEnum.create("facing", TerminalFacing.class);

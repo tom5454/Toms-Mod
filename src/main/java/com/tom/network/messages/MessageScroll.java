@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import com.tom.api.item.IScroller;
 import com.tom.api.item.IScroller.ScrollDirection;
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;
 

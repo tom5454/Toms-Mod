@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:ingot",
+    "data": 10,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "blockGreenium",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

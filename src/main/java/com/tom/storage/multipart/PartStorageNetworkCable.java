@@ -15,12 +15,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.grid.IDenseGridDevice;
-import com.tom.api.grid.IGridDevice;
 import com.tom.api.multipart.IDuctModule;
 import com.tom.api.multipart.PartDuct;
 import com.tom.api.tileentity.ISecuredTileEntity;
 import com.tom.client.EventHandlerClient;
-import com.tom.handler.WorldHandler;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.handler.WorldHandler;
 import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.storage.handler.StorageNetworkGrid.Channel;
 import com.tom.storage.handler.StorageNetworkGrid.IAdvRouterTile;
@@ -67,7 +67,7 @@ public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implem
 
 	@Override
 	public boolean isValidConnection(EnumFacing side, TileEntity tile) {// ((IControllerTile)
-																		// te).getControllerOnSide(d.getOpposite())
+		// te).getControllerOnSide(d.getOpposite())
 		if (type != StorageNetworkCable.CableType.DENSE && tile instanceof IGridDevice && !(tile instanceof IDuctModule<?>) && ((IGridDevice<?>) tile).getGrid().getClass() == this.grid.getClass())
 			return true;
 		if (tile instanceof IControllerTile)
@@ -294,7 +294,7 @@ public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implem
 		boolean hasEnergy = grid.getData().isFullyActive();
 		for (int i = 0;i < EnumFacing.VALUES.length;i++)
 			bytes[i] = hasEnergy ? getChannel(EnumFacing.VALUES[i]).getValue() : 0;
-		return bytes;
+			return bytes;
 	}
 
 	private boolean loadChannels(byte[] ch) {

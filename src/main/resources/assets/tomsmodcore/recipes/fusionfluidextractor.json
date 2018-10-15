@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodenergy:fusionfluidextractor",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "CCC",
+    "BPB",
+    "CCC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "id": "pump",
+      "type": "tomsmodcore:material"
+    },
+    "B": {
+      "ore": "ingotBlueMetal",
+      "type": "forge:ore_dict"
+    },
+    "C": {
+      "ore": "plateChrome",
+      "type": "forge:ore_dict"
+    }
+  }
+}

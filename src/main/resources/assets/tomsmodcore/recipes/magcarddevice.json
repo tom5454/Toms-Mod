@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:magcarddevice",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "III",
+    "RIR",
+    "IBI"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "B": {
+      "ore": "ingotBlueMetal",
+      "type": "forge:ore_dict"
+    },
+    "I": {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    }
+  }
+}

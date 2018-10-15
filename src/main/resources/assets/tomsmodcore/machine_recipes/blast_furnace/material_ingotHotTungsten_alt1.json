@@ -1,0 +1,19 @@
+{
+  "heat": 2200,
+  "time": 6000,
+  "in2": {
+    "item": "tomsmodcore:dusttiny",
+    "data": 31,
+    "count": 3
+  },
+  "in1": {
+    "item": "tomsmodcore:material",
+    "data": 38,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:material",
+    "data": 39,
+    "count": 1
+  }
+}

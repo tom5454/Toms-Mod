@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 44,
+    "count": 1
+  },
+  "pattern": [
+    "PHP",
+    "NIN",
+    "PNP"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "item": "tomsmodcore:plate",
+      "data": 3
+    },
+    "H": {
+      "ore": "itemHammer_lvl2",
+      "type": "forge:ore_dict"
+    },
+    "I": {
+      "ore": "ingotTin",
+      "type": "forge:ore_dict"
+    },
+    "N": {
+      "ore": "nuggetTin",
+      "type": "forge:ore_dict"
+    }
+  }
+}

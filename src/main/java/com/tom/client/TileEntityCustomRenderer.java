@@ -9,8 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.model.IBaseModel;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityCustomRenderer<T extends TileEntity> extends TileEntitySpecialRendererTomsMod<T> {
 	public TileEntityCustomRenderer(IBaseModel model) {

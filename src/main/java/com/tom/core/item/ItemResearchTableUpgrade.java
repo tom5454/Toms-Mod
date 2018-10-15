@@ -24,11 +24,13 @@ public class ItemResearchTableUpgrade extends Item implements IModelRegisterRequ
 	}
 
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		subItems.add(new ItemStack(itemIn, 1, 0));
-		subItems.add(new ItemStack(itemIn, 1, 1));
-		subItems.add(new ItemStack(itemIn, 1, 2));
-		subItems.add(new ItemStack(itemIn, 1, 3));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab)){
+			subItems.add(new ItemStack(this, 1, 0));
+			subItems.add(new ItemStack(this, 1, 1));
+			subItems.add(new ItemStack(this, 1, 2));
+			subItems.add(new ItemStack(this, 1, 3));
+		}
 	}
 
 	@Override

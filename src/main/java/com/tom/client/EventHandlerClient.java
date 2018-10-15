@@ -16,15 +16,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -41,6 +39,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -58,14 +57,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.google.common.collect.Maps;
 
 import com.tom.api.inventory.ITooltipSlot;
-import com.tom.apis.EmptyEntry;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.handler.EventHandler;
-import com.tom.lib.Configs;
 import com.tom.lib.GlobalFields;
+import com.tom.lib.utils.EmptyEntry;
+import com.tom.lib.utils.RenderUtil;
 import com.tom.network.messages.MessageProfiler;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.gui.GuiCamera;
 
@@ -79,7 +78,7 @@ public class EventHandlerClient {
 	// = new HashMap<>();
 	private Map<Item, Entry<String, String>> tooltipOverrideFast = new HashMap<>();
 	private static final List<String> TOOLTIP = TomsModUtils.getStringList("Tom's Mod TextureMap display", "1: Scale Width", "2: Scale Height", "3: Move Sprite Horizontally.", "4: Move Sprite Vertically", "5: Scale Width & Height", "6: Reset", "Hold Sneak to invert effect");
-	private Minecraft mc = Minecraft.getMinecraft();
+	private static Minecraft mc = Minecraft.getMinecraft();
 	public static FontRenderer lcdFont;
 	public static int textureIns = 0;
 	public static int textMapW = 512, textMapH = 256, textMapX = 0, textMapY = 0;
@@ -100,7 +99,7 @@ public class EventHandlerClient {
 		if (event.getType() == ElementType.TEXT && showTextureMap) {
 			GlStateManager.color(1, 1, 1);
 			mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			Render.drawTexturedRect(textMapX, textMapY, textMapW, textMapH);
+			RenderUtil.drawTexturedRect(textMapX, textMapY, textMapW, textMapH);
 			ScaledResolution res = event.getResolution();
 			drawString(TOOLTIP, res, 0xFFFFFF);
 		}
@@ -146,7 +145,7 @@ public class EventHandlerClient {
 	public void onRegisterTexture(TextureStitchEvent.Pre event) {
 		TMLogger.info("Adding fluid textures");
 		loadedLocations.clear();
-		lcdFont = new LCDFontRenderer(mc.gameSettings, Configs.lcdFont, mc.renderEngine, false);
+		//lcdFont = new LCDFontRenderer(mc.gameSettings, Configs.lcdFont, mc.renderEngine, false);
 		TextureMap map = event.getMap();
 		for (Entry<String, Fluid> entry : CoreInit.fluidList.entrySet()) {
 			if (!loadedLocations.contains(entry.getValue().getFlowing())) {
@@ -269,7 +268,7 @@ public class EventHandlerClient {
 			GlStateManager.glLineWidth(1.0F);
 			GlStateManager.disableTexture2D();
 			Tessellator tessellator = Tessellator.getInstance();
-			VertexBuffer vertexbuffer = tessellator.getBuffer();
+			BufferBuilder vertexbuffer = tessellator.getBuffer();
 			int j = mc.displayWidth - 160 - 10;
 			int k = mc.displayHeight - 320;
 			GlStateManager.enableBlend();
@@ -291,30 +290,30 @@ public class EventHandlerClient {
 				vertexbuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
 				int j1 = profiler$result1.getColor();
 				int k1 = j1 >> 16 & 255;
-				int l1 = j1 >> 8 & 255;
-				int i2 = j1 & 255;
-				vertexbuffer.pos(j, k, 0.0D).color(k1, l1, i2, 255).endVertex();
+			int l1 = j1 >> 8 & 255;
+			int i2 = j1 & 255;
+			vertexbuffer.pos(j, k, 0.0D).color(k1, l1, i2, 255).endVertex();
 
-				for (int j2 = i1;j2 >= 0;--j2) {
-					float f = (float) ((d0 + profiler$result1.usePercentage * j2 / i1) * (Math.PI * 2D) / 100.0D);
-					float f1 = MathHelper.sin(f) * 160.0F;
-					float f2 = MathHelper.cos(f) * 160.0F * 0.5F;
-					vertexbuffer.pos(j + f1, k - f2, 0.0D).color(k1, l1, i2, 255).endVertex();
-				}
+			for (int j2 = i1;j2 >= 0;--j2) {
+				float f = (float) ((d0 + profiler$result1.usePercentage * j2 / i1) * (Math.PI * 2D) / 100.0D);
+				float f1 = MathHelper.sin(f) * 160.0F;
+				float f2 = MathHelper.cos(f) * 160.0F * 0.5F;
+				vertexbuffer.pos(j + f1, k - f2, 0.0D).color(k1, l1, i2, 255).endVertex();
+			}
 
-				tessellator.draw();
-				vertexbuffer.begin(5, DefaultVertexFormats.POSITION_COLOR);
+			tessellator.draw();
+			vertexbuffer.begin(5, DefaultVertexFormats.POSITION_COLOR);
 
-				for (int i3 = i1;i3 >= 0;--i3) {
-					float f3 = (float) ((d0 + profiler$result1.usePercentage * i3 / i1) * (Math.PI * 2D) / 100.0D);
-					float f4 = MathHelper.sin(f3) * 160.0F;
-					float f5 = MathHelper.cos(f3) * 160.0F * 0.5F;
-					vertexbuffer.pos(j + f4, k - f5, 0.0D).color(k1 >> 1, l1 >> 1, i2 >> 1, 255).endVertex();
-					vertexbuffer.pos(j + f4, k - f5 + 10.0F, 0.0D).color(k1 >> 1, l1 >> 1, i2 >> 1, 255).endVertex();
-				}
+			for (int i3 = i1;i3 >= 0;--i3) {
+				float f3 = (float) ((d0 + profiler$result1.usePercentage * i3 / i1) * (Math.PI * 2D) / 100.0D);
+				float f4 = MathHelper.sin(f3) * 160.0F;
+				float f5 = MathHelper.cos(f3) * 160.0F * 0.5F;
+				vertexbuffer.pos(j + f4, k - f5, 0.0D).color(k1 >> 1, l1 >> 1, i2 >> 1, 255).endVertex();
+				vertexbuffer.pos(j + f4, k - f5 + 10.0F, 0.0D).color(k1 >> 1, l1 >> 1, i2 >> 1, 255).endVertex();
+			}
 
-				tessellator.draw();
-				d0 += profiler$result1.usePercentage;
+			tessellator.draw();
+			d0 += profiler$result1.usePercentage;
 			}
 
 			DecimalFormat decimalformat = new DecimalFormat("##0.00");
@@ -430,19 +429,19 @@ public class EventHandlerClient {
 				this.charWidth[i] = 8;
 				/*int j1 = i % 16;
 				int k1 = i / 16;
-				
+
 				if (i == 32)
 				{
 					this.charWidth[i] = 4 * 8;
 				}
-				
+
 				int l1;
-				
+
 				for (l1 = imgWidth16 - 1; l1 >= 0; --l1)
 				{
 					int i2 = j1 * imgWidth16 + l1;
 					boolean flag1 = true;
-				
+
 					for (int j2 = 0; j2 < imgHeight16 && flag1; ++j2)
 					{
 						int k2 = (k1 * imgWidth16 + j2) * imgWidth;
@@ -452,13 +451,13 @@ public class EventHandlerClient {
 							flag1 = false;
 						}
 					}
-				
+
 					if (!flag1)
 					{
 						break;
 					}
 				}
-				
+
 				++l1;
 				this.charWidth[i] = (int)(0.5D + l1 * field) + 1 * 8;*/
 			}
@@ -490,5 +489,13 @@ public class EventHandlerClient {
 
 	public static void addTooltipOverride(Item tool, String string, TextFormatting textformatting) {
 		addTooltipOverride(tool, string, textformatting.toString());
+	}
+
+	public static void drawString(String s, int x, int y, int color) {
+		mc.fontRenderer.drawString(s, x, y, color);
+	}
+	@SubscribeEvent
+	public void registerModels(ModelRegistryEvent event) {
+		CoreInit.registerItemRenders();
 	}
 }

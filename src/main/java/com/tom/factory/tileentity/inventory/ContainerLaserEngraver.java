@@ -14,7 +14,8 @@ import com.tom.api.inventory.SlotOutput;
 import com.tom.api.inventory.SlotSpeedUpgrade;
 import com.tom.factory.tileentity.TileEntityLaserEngraver;
 import com.tom.network.messages.MessageProgress;
-import com.tom.recipes.handler.MachineCraftingHandler;
+
+import com.tom.core.item.ItemBlueprint;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
@@ -26,7 +27,7 @@ public class ContainerLaserEngraver extends ContainerTomsMod {
 	public ContainerLaserEngraver(InventoryPlayer playerInv, TileEntityLaserEngraver te) {
 		this.te = te;
 		addSlotToContainer(new Slot(te, 0, 44, 35));
-		addSlotToContainer(new Slot(te, 4, 44, 53));
+		//addSlotToContainer(new Slot(te, 4, 44, 53));
 		addSlotToContainer(new SlotOutput(te, 1, 130, 36));
 		addSlotToContainer(new SlotBlueprint(te, 2, 44, 16));
 		addSlotToContainer(new SlotSpeedUpgrade(te, 3, 152, 63, 24));
@@ -77,7 +78,7 @@ public class ContainerLaserEngraver extends ContainerTomsMod {
 
 		@Override
 		public boolean isItemValid(ItemStack stack) {
-			return MachineCraftingHandler.blueprints.stream().anyMatch(stack::isItemEqual);
+			return stack.getItem() instanceof ItemBlueprint;
 		}
 	}
 }

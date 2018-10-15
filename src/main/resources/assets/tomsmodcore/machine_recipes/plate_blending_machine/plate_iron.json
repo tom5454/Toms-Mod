@@ -1,0 +1,13 @@
+{
+  "tier": 2,
+  "in": {
+    "item": "minecraft:iron_ingot",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:plate",
+    "data": 11,
+    "count": 1
+  }
+}

@@ -3,6 +3,7 @@ package com.tom.storage.multipart.block;
 import static com.tom.api.recipes.RecipeHelper.addRecipe;
 import static com.tom.api.recipes.RecipeHelper.addShapelessRecipe;
 
+import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
@@ -40,9 +41,9 @@ import com.tom.api.item.MultipartItem;
 import com.tom.api.multipart.BlockDuctBase;
 import com.tom.api.multipart.ICustomPartBounds;
 import com.tom.api.multipart.PartDuct;
-import com.tom.apis.EmptyEntry;
 import com.tom.client.CustomModelLoader;
 import com.tom.core.CoreInit;
+import com.tom.lib.utils.EmptyEntry;
 import com.tom.recipes.OreDict;
 import com.tom.storage.StorageInit;
 import com.tom.storage.client.CableModel;
@@ -76,7 +77,7 @@ public class StorageNetworkCable extends BlockDuctBase implements IModelRegister
 		private CableColor(int meta, String unlocalizedName) {
 			int color = 0;
 			if (meta != -1) {
-				color = EnumDyeColor.byMetadata(meta).getMapColor().colorValue;
+				color = getMapColor(EnumDyeColor.byMetadata(meta));
 			}
 			this.meta = meta;
 			this.unlocalizedName = unlocalizedName;
@@ -94,7 +95,7 @@ public class StorageNetworkCable extends BlockDuctBase implements IModelRegister
 		private CableColor(int meta, String unlocalizedName, boolean unused, int alt) {
 			int color = 0;
 			if (meta != -1) {
-				color = EnumDyeColor.byMetadata(meta).getMapColor().colorValue;
+				color = getMapColor(EnumDyeColor.byMetadata(meta));
 			}
 			this.meta = meta;
 			this.unlocalizedName = unlocalizedName;
@@ -125,6 +126,10 @@ public class StorageNetworkCable extends BlockDuctBase implements IModelRegister
 
 		public static CableColor get(int i) {
 			return VALUES[Math.abs(i % VALUES.length)];
+		}
+		public static int getMapColor(EnumDyeColor dye){
+			float[] f = dye.getColorComponentValues();
+			return new Color(f[0], f[1], f[2]).getRGB();
 		}
 	}
 
@@ -242,12 +247,13 @@ public class StorageNetworkCable extends BlockDuctBase implements IModelRegister
 			 */
 			@Override
 			@SideOnly(Side.CLIENT)
-			public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-				for (int t = 0;t < StorageNetworkCable.CableType.VALUES.length;t++) {
-					for (int c = 0;c < CableColor.VALUES.length;c++) {
-						subItems.add(new ItemStack(itemIn, 1, t * CableColor.VALUES.length + c));
+			public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+				if (this.isInCreativeTab(tab))
+					for (int t = 0;t < StorageNetworkCable.CableType.VALUES.length;t++) {
+						for (int c = 0;c < CableColor.VALUES.length;c++) {
+							subItems.add(new ItemStack(this, 1, t * CableColor.VALUES.length + c));
+						}
 					}
-				}
 			}
 
 			@Override

@@ -15,9 +15,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.transport.block.ConveyorBeltBase;
 import com.tom.transport.block.ConveyorBeltSlope;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityConveyorBeltSlope extends TileEntityTomsMod implements ISidedInventory, IConveyorSlope {
 	private static final ResourceLocation TEXTURE = new ResourceLocation("tomsmodtransport:textures/models/conveyormodel.png");

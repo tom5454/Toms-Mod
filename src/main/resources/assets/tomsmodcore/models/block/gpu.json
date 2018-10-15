@@ -1,6 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "up": "blocks/gpuTop","down": "blocks/gpuBottom","north": "blocks/gpuFront","east": "blocks/gpuFront","south": "blocks/gpuFront","west": "blocks/gpuFront","particle": "blocks/gpuBottom"
+        "up": "tomsmodcore:blocks/gpuTop",
+        "down": "tomsmodcore:blocks/gpuBottom",
+        "north": "tomsmodcore:blocks/gpuFront",
+        "east": "tomsmodcore:blocks/gpuFront",
+        "south": "tomsmodcore:blocks/gpuFront",
+        "west": "tomsmodcore:blocks/gpuFront",
+        "particle": "tomsmodcore:blocks/gpuBottom"
     }
 }

@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 17,
+    "count": 1
+  },
+  "pattern": [
+    "IGI",
+    "IPI",
+    "IRI"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "ore": "paneGlassColorless",
+      "type": "forge:ore_dict"
+    },
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "G": {
+      "id": "chargedGlowstone",
+      "type": "tomsmodcore:material"
+    },
+    "I": {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    }
+  }
+}

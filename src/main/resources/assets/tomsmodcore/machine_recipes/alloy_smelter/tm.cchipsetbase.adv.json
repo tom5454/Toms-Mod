@@ -1,0 +1,17 @@
+{
+  "in2": {
+    "item": "tomsmodcore:dust",
+    "data": 12,
+    "count": 1
+  },
+  "in1": {
+    "item": "tomsmodcore:material",
+    "data": 32,
+    "count": 2
+  },
+  "out": {
+    "item": "tomsmodcore:tm.cchipsetbase",
+    "data": 2,
+    "count": 1
+  }
+}

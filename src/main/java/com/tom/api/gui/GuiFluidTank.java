@@ -1,15 +1,15 @@
 package com.tom.api.gui;
 
-import static com.tom.core.tileentity.gui.GuiTomsMod.LIST_TEXTURE;
+import static com.tom.api.gui.GuiTomsLib.LIST_TEXTURE;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -23,37 +23,63 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.apis.TomsModUtils.GuiRenderRunnable;
-
-import com.tom.core.tileentity.gui.GuiTomsMod;
+import com.tom.lib.utils.TomsUtils.GuiRenderRunnable;
 
 @SideOnly(value = Side.CLIENT)
 public class GuiFluidTank extends Gui implements GuiRenderRunnable {
 	private static final int TEX_WIDTH = 16;
 	private static final int TEX_HEIGHT = 16;
 	private static final int MIN_FLUID_HEIGHT = 1;
-	private static final int TANK_WIDTH = 20;
-	private static final int TANK_HEIGHT = 55;
+	private static final int TANK_WIDTH = 18;
+	private static final int TANK_HEIGHT = 60;
 	private Minecraft mc = Minecraft.getMinecraft();
-	public int posX, posY, u, v;
-	public boolean hasUV = false;
-	private GuiTomsMod gui;
+	public int posX, posY, u, v, padding, w, h, u2, v2;
+	private GuiTomsLib gui;
+	private ResourceLocation tankTex, tankTex2;
 	public String name;
 	public FluidTank tank;
 
-	public GuiFluidTank(GuiTomsMod gui, String name, int xPos, int yPos, FluidTank tank) {
+	public GuiFluidTank(GuiTomsLib gui, String name, int xPos, int yPos, FluidTank tank) {
 		this.gui = gui;
 		this.name = name;
 		this.tank = tank;
 		this.posX = xPos;
 		this.posY = yPos;
+		padding = 1;
+		w = TANK_WIDTH;
+		h = TANK_HEIGHT;
+		tankTex = LIST_TEXTURE;
+		tankTex2 = LIST_TEXTURE;
+		u = 78;
+		v = 120;
+		u2 = 96;
+		v2 = 120;
 		gui.tanks.add(this);
 	}
 
 	public GuiFluidTank setUV(int u, int v) {
 		this.u = u;
 		this.v = v;
-		hasUV = true;
+		tankTex = gui.getBackgroundTexture();
+		return this;
+	}
+	public GuiFluidTank setUV2(int u, int v) {
+		this.u2 = u;
+		this.v2 = v;
+		return this;
+	}
+	public GuiFluidTank setPaddingAndSize(int padding, int width, int height){
+		this.padding = padding;
+		w = width;
+		h = height;
+		return this;
+	}
+	public GuiFluidTank setTankBackground(ResourceLocation tankTex) {
+		this.tankTex = tankTex;
+		return this;
+	}
+	public GuiFluidTank setTankTexForground(ResourceLocation tankTex2) {
+		this.tankTex2 = tankTex2;
 		return this;
 	}
 
@@ -71,26 +97,26 @@ public class GuiFluidTank extends Gui implements GuiRenderRunnable {
 		if (fluidStillSprite == null) {
 			fluidStillSprite = textureMapBlocks.getMissingSprite();
 		}
-
+		int padding = this.padding*2;
 		int fluidColor = fluid.getColor(fluidStack);
 
-		int scaledAmount = (fluidStack.amount * (TANK_HEIGHT - 8)) / capacityMb;
+		int scaledAmount = (fluidStack.amount * (h - padding)) / capacityMb;
 		if (fluidStack.amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
 			scaledAmount = MIN_FLUID_HEIGHT;
 		}
-		if (scaledAmount > (TANK_HEIGHT - 8)) {
-			scaledAmount = (TANK_HEIGHT - 8);
+		if (scaledAmount > (h - padding)) {
+			scaledAmount = (h - padding);
 		}
 
 		mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		setGLColorFromInt(fluidColor);
 
-		final int xTileCount = (TANK_WIDTH - 8) / TEX_WIDTH;
-		final int xRemainder = (TANK_WIDTH - 8) - (xTileCount * TEX_WIDTH);
+		final int xTileCount = (w - padding) / TEX_WIDTH;
+		final int xRemainder = (w - padding) - (xTileCount * TEX_WIDTH);
 		final int yTileCount = scaledAmount / TEX_HEIGHT;
 		final int yRemainder = scaledAmount - (yTileCount * TEX_HEIGHT);
 
-		final int yStart = yPosition + (TANK_HEIGHT - 8);
+		final int yStart = yPosition + (h - padding);
 
 		for (int xTile = 0;xTile <= xTileCount;xTile++) {
 			for (int yTile = 0;yTile <= yTileCount;yTile++) {
@@ -125,7 +151,7 @@ public class GuiFluidTank extends Gui implements GuiRenderRunnable {
 		vMax = vMax - (maskTop / 16.0 * (vMax - vMin));
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexBuffer = tessellator.getBuffer();
+		BufferBuilder vertexBuffer = tessellator.getBuffer();
 		vertexBuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 		vertexBuffer.pos(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
 		vertexBuffer.pos(xCoord + 16 - maskRight, yCoord + 16, zLevel).tex(uMax, vMax).endVertex();
@@ -163,39 +189,17 @@ public class GuiFluidTank extends Gui implements GuiRenderRunnable {
 	private final void drawFluidTank() {
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1, 1, 1, 1);
-		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();
-		mc.getTextureManager().bindTexture(LIST_TEXTURE);
-		drawTexturedModalRect(posX, posY, 78, 120, TANK_WIDTH, TANK_HEIGHT);
-		drawFluid(posX + 4, posY + 4, tank.getFluid(), tank.getCapacity());
+		mc.getTextureManager().bindTexture(tankTex);
+		drawTexturedModalRect(posX, posY, u, v, w, h);
+		GlStateManager.disableBlend();
+		drawFluid(posX + padding, posY + padding, tank.getFluid(), tank.getCapacity());
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.enableBlend();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0, 200);
-		mc.getTextureManager().bindTexture(LIST_TEXTURE);
-		drawTexturedModalRect(posX, posY, 98, 120, TANK_WIDTH, TANK_HEIGHT);
-		GlStateManager.popMatrix();
-		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
-		GlStateManager.popMatrix();
-	}
-
-	private final void drawFluidTank(int texX, int texY) {
-		GlStateManager.pushMatrix();
-		GlStateManager.color(1, 1, 1, 1);
-		GlStateManager.enableAlpha();
-		if (texX > -1) {
-			mc.getTextureManager().bindTexture(gui.getBackgroundTexture());
-			drawTexturedModalRect(posX, posY, texX, texY, TANK_WIDTH, TANK_HEIGHT);
-		}
-		GlStateManager.disableBlend();
-		drawFluid(posX + 4, posY + 4, tank.getFluid(), tank.getCapacity());
-		GlStateManager.color(1, 1, 1, 1);
-		GlStateManager.enableBlend();
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 0, 200);
-		mc.getTextureManager().bindTexture(LIST_TEXTURE);
-		drawTexturedModalRect(posX, posY, 98, 120, TANK_WIDTH, TANK_HEIGHT);
+		mc.getTextureManager().bindTexture(tankTex2);
+		drawTexturedModalRect(posX, posY, u2, v2, w, h);
 		GlStateManager.popMatrix();
 		GlStateManager.disableBlend();
 		GlStateManager.disableAlpha();
@@ -204,10 +208,7 @@ public class GuiFluidTank extends Gui implements GuiRenderRunnable {
 
 	@Override
 	public void run(int mouseX, int mouseY) {
-		if (hasUV)
-			drawFluidTank(u, v);
-		else
-			drawFluidTank();
+		drawFluidTank();
 	}
 
 	public void drawTooltip(int mouseX, int mouseY) {
@@ -222,6 +223,6 @@ public class GuiFluidTank extends Gui implements GuiRenderRunnable {
 	}
 
 	public boolean isUnderMouse(int mouseX, int mouseY) {
-		return gui.isPointInRegion(posX, posY, TANK_WIDTH, TANK_HEIGHT, mouseX + gui.getGuiLeft(), mouseY + gui.getGuiTop());
+		return gui.isPointInRegion(posX, posY, w, h, mouseX + gui.getGuiLeft(), mouseY + gui.getGuiTop());
 	}
 }

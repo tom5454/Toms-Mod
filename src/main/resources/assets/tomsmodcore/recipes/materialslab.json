@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "tomsmodcore:materialslab",
+    "data": 0,
+    "count": 6
+  },
+  "pattern": [
+    "GGG"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "ore": "blockSteel",
+      "type": "forge:ore_dict"
+    }
+  }
+}

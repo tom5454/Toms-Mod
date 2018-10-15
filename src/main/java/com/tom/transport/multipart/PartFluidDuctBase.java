@@ -13,9 +13,9 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
-import com.tom.api.grid.IGridUpdateListener;
 import com.tom.api.multipart.ICustomPartBounds;
 import com.tom.api.multipart.PartDuct;
+import com.tom.lib.api.grid.IGridUpdateListener;
 
 public class PartFluidDuctBase extends PartDuct<FluidGrid> implements ICustomPartBounds, ITileFluidHandler, IGridUpdateListener {
 	private final AxisAlignedBB connectionBox;

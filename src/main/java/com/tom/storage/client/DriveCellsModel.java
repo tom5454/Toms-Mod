@@ -9,9 +9,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -382,12 +379,6 @@ public class DriveCellsModel extends ModelBase implements IBaseModel {
 		ModelRenderer[] typesFull = new ModelRenderer[]{baseTypesFull5, baseTypesFull10, baseTypesFull4, baseTypesFull9, baseTypesFull3, baseTypesFull8, baseTypesFull2, baseTypesFull7, baseTypesFull1, baseTypesFull6};
 		ModelRenderer[] booting = new ModelRenderer[]{baseBooting5, baseBooting10, baseBooting4, baseBooting9, baseBooting3, baseBooting8, baseBooting2, baseBooting7, baseBooting1, baseBooting6};
 		ModelRenderer[] green = new ModelRenderer[]{baseOn5, baseOn10, baseOn4, baseOn9, baseOn3, baseOn8, baseOn2, baseOn7, baseOn1, baseOn6};
-		/*for(int i = 0;i<10;i++){
-		  full[i].setTextureOffset(0, 3);
-		  typesFull[i].setTextureOffset(0, 9);
-		  booting[i].setTextureOffset(0, 12);
-		  green[i].setTextureOffset(0, 6);
-		}*/
 		rendererArray = new ModelRenderer[][]{new ModelRenderer[10], {base5, base10, base4, base9, base3, base8, base2, base7, base1, base6}, green, typesFull, full, booting};
 	}
 
@@ -436,75 +427,9 @@ public class DriveCellsModel extends ModelBase implements IBaseModel {
 		for (int i = 0;i < 10;i++) {
 			int slot = slots[i];
 			ModelRenderer r = rendererArray[slot][i];
-			/*switch(slot){
-			case 0:
-			  continue;
-			case 1:
-			  GL11.glPushMatrix();
-			  GL11.glScalef(1.0F, -1F, -1F);
-			  float scale = 1F / 16F;
-			  //GL11.glEnable(GL11.GL_TEXTURE_2D);
-			  GL11.glTranslatef(0,(-13/16F)-1,0.5001F);
-			  GL11.glScalef(scale,scale,scale);
-			  GL11.glRotatef(180, 0, 1, 0);
-			  GlStateManager.color(1, 1, 1, 1);
-			  GL11.glEnable(GL11.GL_TEXTURE_2D);
-			  GL11.glEnable(GL11.GL_BLEND);
-			  GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			  //GL11.glDisable(GL11.GL_LIGHTING);
-			  //drawTexturedModalRect(0, 0, 0, 5, 5, 2);
-			  drawTexturedModalRect(MathHelper.floor_double(r.rotationPointX), MathHelper.floor_double(r.rotationPointY), 0, 5, 5, 2);
-			  GL11.glPopMatrix();
-			  break;
-			case 2:
-			  GL11.glPushMatrix();
-			  //drawTexturedModalRect(MathHelper.floor_double(r.rotationPointX), MathHelper.floor_double(r.rotationPointY), 0, 7, 5, 2);
-			  GL11.glPopMatrix();
-			  break;
-			case 3:
-			  GL11.glPushMatrix();
-			  //drawTexturedModalRect(MathHelper.floor_double(r.rotationPointX), MathHelper.floor_double(r.rotationPointY), 0, 3, 5, 2);
-			  GL11.glPopMatrix();
-			  break;
-			case 4:
-			  GL11.glPushMatrix();
-			  //drawTexturedModalRect(MathHelper.floor_double(r.rotationPointX), MathHelper.floor_double(r.rotationPointY), 0, 9, 5, 2);
-			  GL11.glPopMatrix();
-			  break;
-			}*/
 			if (r != null)
 				r.render(size);
 		}
-		/*if(slot1 != 0){
-		  base5.render(size);
-		}
-		if(slot2 != 0){
-		  base4.render(size);
-		}
-		if(slot3 != 0){
-		  base3.render(size);
-		}
-		if(slot4 != 0){
-		  base2.render(size);
-		}
-		if(slot5 != 0){
-		  base1.render(size);
-		}
-		if(slot6 != 0){
-		  base10.render(size);
-		}
-		if(slot7 != 0){
-		  base9.render(size);
-		}
-		if(slot8 != 0){
-		  base8.render(size);
-		}
-		if(slot9 != 0){
-		  base7.render(size);
-		}
-		if(slot10 != 0){
-		  base6.render(size);
-		}*/
 	}
 
 	@Override
@@ -520,23 +445,5 @@ public class DriveCellsModel extends ModelBase implements IBaseModel {
 	@Override
 	public boolean rotateModelBasedOnBlockMeta() {
 		return true;
-	}
-
-	/**
-	 * Draws a textured rectangle at the stored z-value. Args: x, y, u, v,
-	 * width, height
-	 */
-	public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
-		float f = 0.00390625F;
-		float f1 = 0.00390625F;
-		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer worldrenderer = tessellator.getBuffer();
-		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		double zLevel = 0;
-		worldrenderer.pos(x + 0, y + height, zLevel).tex((textureX + 0) * f, (textureY + height) * f1).endVertex();
-		worldrenderer.pos(x + width, y + height, zLevel).tex((textureX + width) * f, (textureY + height) * f1).endVertex();
-		worldrenderer.pos(x + width, y + 0, zLevel).tex((textureX + width) * f, (textureY + 0) * f1).endVertex();
-		worldrenderer.pos(x + 0, y + 0, zLevel).tex((textureX + 0) * f, (textureY + 0) * f1).endVertex();
-		tessellator.draw();
 	}
 }

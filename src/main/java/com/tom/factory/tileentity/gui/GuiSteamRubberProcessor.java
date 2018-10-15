@@ -6,13 +6,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.apis.TomsModUtils;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntitySteamRubberProcessor;
 import com.tom.factory.tileentity.inventory.ContainerSteamRubberProcessor;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiSteamRubberProcessor extends GuiTomsMod {
+public class GuiSteamRubberProcessor extends GuiTomsLib {
 	private TileEntitySteamRubberProcessor te;
 
 	public GuiSteamRubberProcessor(InventoryPlayer playerInv, TileEntitySteamRubberProcessor te) {
@@ -50,6 +49,6 @@ public class GuiSteamRubberProcessor extends GuiTomsMod {
 	public void initGui() {
 		labelList.clear();
 		super.initGui();
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 8, guiTop + 15, te.getTankIn()).setUV(176, 0), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 8, guiTop + 15, te.getTankIn()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
 	}
 }

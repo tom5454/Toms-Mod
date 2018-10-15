@@ -3,12 +3,11 @@ package com.tom.factory.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntitySteamAlloySmelter;
 import com.tom.factory.tileentity.inventory.ContainerSteamAlloySmelter;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiSteamAlloySmelter extends GuiTomsMod {
+public class GuiSteamAlloySmelter extends GuiTomsLib {
 	private TileEntitySteamAlloySmelter te;
 
 	public GuiSteamAlloySmelter(InventoryPlayer playerInv, TileEntitySteamAlloySmelter te) {

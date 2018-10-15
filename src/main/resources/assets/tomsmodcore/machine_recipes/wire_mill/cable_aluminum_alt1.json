@@ -1,0 +1,13 @@
+{
+  "tier": 1,
+  "in": {
+    "item": "tomsmodcore:ingot",
+    "data": 29,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:cable",
+    "data": 29,
+    "count": 2
+  }
+}

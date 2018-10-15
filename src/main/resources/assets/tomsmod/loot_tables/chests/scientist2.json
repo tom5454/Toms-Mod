@@ -20,7 +20,7 @@
                 },
                 {
                     "type": "item",
-                    "name": "tomsmod|core:material",
+                    "name": "tomsmodcore:material",
                     "weight": 7,
                     "functions": [
                         {
@@ -41,7 +41,7 @@
                 },
                 {
                     "type": "item",
-                    "name": "tomsmod|core:ingot",
+                    "name": "tomsmodcore:ingot",
                     "weight": 11,
                     "functions": [
                         {
@@ -59,7 +59,7 @@
                 },
                 {
                     "type": "item",
-                    "name": "tomsmod|core:gem",
+                    "name": "tomsmodcore:gem",
                     "weight": 9,
                     "functions": [
                         {

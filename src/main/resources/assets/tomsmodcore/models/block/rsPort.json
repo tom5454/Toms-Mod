@@ -1,6 +1,6 @@
 {
-    "parent": "block/cube",
+    "parent": "block/cube_all",
     "textures": {
-        "up": "blocks/rsPort","down": "blocks/rsPort","north": "blocks/rsPort","east": "blocks/rsPort","south": "blocks/rsPort","west": "blocks/rsPort","particle": "blocks/rsPort"
+        "all": "tomsmodcore:blocks/rsPort"
     }
 }

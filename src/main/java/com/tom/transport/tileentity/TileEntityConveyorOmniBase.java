@@ -13,8 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.transport.block.ConveyorBeltOmniBase;
+import com.tom.util.TomsModUtils;
 
 public abstract class TileEntityConveyorOmniBase extends TileEntityTomsMod implements ISidedInventory {
 	public EnumFacing facing = EnumFacing.DOWN;

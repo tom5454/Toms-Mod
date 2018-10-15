@@ -10,9 +10,10 @@ import com.tom.core.CoreInit;
 
 public class ItemFieldUpgrade extends Item implements IModelRegisterRequired {
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		for (int i = 0;i < UpgradeType.VALUES.length;i++)
-			subItems.add(new ItemStack(itemIn, 1, i));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))
+			for (int i = 0;i < UpgradeType.VALUES.length;i++)
+				subItems.add(new ItemStack(this, 1, i));
 	}
 
 	@Override

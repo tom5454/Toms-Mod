@@ -1,0 +1,19 @@
+{
+  "heat": 1020,
+  "time": 25000,
+  "in2": {
+    "item": "tomsmodcore:dust",
+    "data": 31,
+    "count": 18
+  },
+  "in1": {
+    "item": "minecraft:iron_block",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:materialstorage2",
+    "data": 2,
+    "count": 1
+  }
+}

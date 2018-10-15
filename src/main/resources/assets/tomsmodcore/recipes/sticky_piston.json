@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "minecraft:sticky_piston",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "R",
+    "P"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:piston",
+      "data": 0
+    },
+    "R": {
+      "id": "bottleRubber",
+      "type": "tomsmodcore:material"
+    }
+  }
+}

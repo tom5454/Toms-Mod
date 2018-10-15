@@ -11,10 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.tom.api.grid.GridEnergyStorage;
-import com.tom.api.grid.IGridDevice;
-import com.tom.api.grid.IGridUpdateListener;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridUpdateListener;
 import com.tom.storage.block.StorageSystemRouter;
 import com.tom.storage.handler.NetworkState;
 import com.tom.storage.handler.StorageData;
@@ -23,6 +22,7 @@ import com.tom.storage.handler.StorageNetworkGrid.IChannelLoadListener;
 import com.tom.storage.handler.StorageNetworkGrid.IChannelSource;
 import com.tom.storage.handler.StorageNetworkGrid.IRouter;
 import com.tom.storage.handler.StorageNetworkGrid.IRouterTile;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityRouter extends TileEntityTomsMod implements IRouterTile {
 	private GridEnergyStorage energy = new GridEnergyStorage(100, 0);

@@ -5,9 +5,9 @@ import java.io.IOException;
 import net.minecraft.client.gui.GuiScreen;
 
 import com.tom.api.terminal.GuiPartList;
-import com.tom.apis.BigEntry;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageTabGuiAction;
+import com.tom.util.BigEntry;
 
 public class GuiEmpty extends GuiScreen {
 	public GuiPartList gui;

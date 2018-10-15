@@ -6,13 +6,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.tileentity.TileEntityForceCapacitor;
 import com.tom.defense.tileentity.inventory.ContainerForceCapacitor;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiForceCapacitor extends GuiTomsMod {
+public class GuiForceCapacitor extends GuiTomsLib {
 	private TileEntityForceCapacitor te;
 	private GuiButtonRedstoneMode buttonRedstone;
 

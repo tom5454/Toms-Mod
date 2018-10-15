@@ -36,9 +36,9 @@ public class BlockComponents extends Block implements IModelRegisterRequired, IC
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
 		for (int i = 0;i < ComponentVariants.VALUES.length;i++)
-			list.add(new ItemStack(itemIn, 1, i));
+			list.add(new ItemStack(this, 1, i));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class BlockComponents extends Block implements IModelRegisterRequired, IC
 	}
 
 	public static enum ComponentVariants implements IStringSerializable {
-		REFINERY_HEATER(FULL_BLOCK_AABB), OUTPUT_HATCH(FULL_BLOCK_AABB), ENGINEERING_BLOCK(FULL_BLOCK_AABB), MACHINE_BASE(HALF), STEEL_SCAFFOLDING(CUBE), IRON_SHEETS(FULL_BLOCK_AABB), STEEL_SHEETS(FULL_BLOCK_AABB),;
+		REFINERY_HEATER(FULL_BLOCK_AABB), OUTPUT_HATCH(FULL_BLOCK_AABB), ENGINEERING_BLOCK(FULL_BLOCK_AABB), MACHINE_BASE(HALF), STEEL_SCAFFOLDING(CUBE), IRON_SHEETS(FULL_BLOCK_AABB), STEEL_SHEETS(FULL_BLOCK_AABB), ALU_SHEETS(FULL_BLOCK_AABB);
 		public static final ComponentVariants[] VALUES = values();
 		private final AxisAlignedBB bb;
 

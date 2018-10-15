@@ -13,9 +13,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.tileentity.IPatternTerminal;
-import com.tom.apis.TomsModUtils;
 import com.tom.storage.item.ItemCard.CardType;
 import com.tom.storage.tileentity.inventory.ContainerPatternTerminal;
+import com.tom.util.TomsModUtils;
 
 @SideOnly(Side.CLIENT)
 public class GuiPatternTerminal extends GuiTerminalBase {
@@ -80,7 +80,7 @@ public class GuiPatternTerminal extends GuiTerminalBase {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -105,7 +105,7 @@ public class GuiPatternTerminal extends GuiTerminalBase {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -131,7 +131,7 @@ public class GuiPatternTerminal extends GuiTerminalBase {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (e < 0)
 				visible = false;
 			if (this.visible) {
@@ -162,7 +162,7 @@ public class GuiPatternTerminal extends GuiTerminalBase {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(LIST_TEXTURE);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

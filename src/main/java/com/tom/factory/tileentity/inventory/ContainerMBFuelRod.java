@@ -7,8 +7,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import com.tom.api.item.IFuelRod;
-import com.tom.apis.TomsModUtils;
 import com.tom.factory.tileentity.TileEntityMultiblockController;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 

@@ -3,9 +3,7 @@ package com.tom.core.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import mapwriterTm.Mw;
-import mapwriterTm.map.Marker.RenderType;
-
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.INpc;
@@ -26,13 +24,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.energy.ItemEnergyContainer;
+import com.tom.api.map.RenderType;
 import com.tom.api.tileentity.TileEntityJammerBase;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.Minimap;
+import com.tom.core.CoreInit;
+import com.tom.core.map.MapHandler;
 import com.tom.lib.GlobalFields;
+import com.tom.util.TomsModUtils;
 
-public class ItemEntityTracker extends ItemEnergyContainer {
+public class ItemEntityTracker extends ItemEnergyContainer implements IModelRegisterRequired {
 	public ItemEntityTracker() {
 		super(1000000);
 	}
@@ -44,9 +45,8 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 	private static final int updateRate = 20;
 
 	@Override
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced) {
+	public void addInformation(ItemStack itemStack, World player, List<String> list, ITooltipFlag isAdvanced) {
 		boolean active = itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("active") ? itemStack.getTagCompound().getBoolean("active") : false;
 		list.add(getInfo(itemStack));
 		TomsModUtils.addActiveTag(list, active);
@@ -98,21 +98,21 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 								int1+">";*/
 					// System.out.println(a);
 					// System.out.println();
-					Minimap.deleteWayPoint("animals", a);
+					MapHandler.deleteWayPoint("animals", a);
 				}
 				for (String a : GlobalFields.mobs) {
 					/*int int1 = GlobalFields.mobs.indexOf(a);
 					String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 							+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 								int1+">";*/
-					Minimap.deleteWayPoint("enemies", a);
+					MapHandler.deleteWayPoint("enemies", a);
 				}
 				for (String a : GlobalFields.other) {
 					/*int int1 = GlobalFields.other.indexOf(a);
 					String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 							+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 								int1+">";*/
-					Minimap.deleteWayPoint("other", a);
+					MapHandler.deleteWayPoint("other", a);
 				}
 				GlobalFields.animals.clear();
 				GlobalFields.mobs.clear();
@@ -121,19 +121,19 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 					for (EntityAnimal a : animals) {
 						int int1 = animals.indexOf(a);
 						String name = a.hasCustomName() ? a.getCustomNameTag() : a.getName() + "<" + a.getMaxHealth() + "HP/" + a.getHealth() + "HP, " + (Math.floor(a.posX * 100D) / 100D) + ", " + (Math.floor(a.posY * 100D) / 100D) + ", " + (Math.floor(a.posZ * 100D) / 100D) + ", " + int1 + ">";
-						Minimap.createTexturedWayPoint("animals", MathHelper.floor(a.posX), MathHelper.floor(a.posY), MathHelper.floor(a.posZ), a.dimension, name, "tm:minimap/entityFriendly", 0, RenderType.NONE, RenderType.NONE, false, "");
+						MapHandler.createTexturedWayPoint("animals", MathHelper.floor(a.posX), MathHelper.floor(a.posY), MathHelper.floor(a.posZ), a.dimension, name, "tm:minimap/entityFriendly", 0, RenderType.NONE, RenderType.NONE, false, "");
 						GlobalFields.animals.add(name);
 					}
 					for (EntityMob a : mobs) {
 						int int1 = mobs.indexOf(a);
 						String name = a.hasCustomName() ? a.getCustomNameTag() : a.getName() + "<" + a.getMaxHealth() + "HP/" + a.getHealth() + "HP, " + (Math.floor(a.posX * 100D) / 100D) + ", " + (Math.floor(a.posY * 100D) / 100D) + ", " + (Math.floor(a.posZ * 100D) / 100D) + ", " + int1 + ">";
-						Minimap.createTexturedWayPoint("enemies", MathHelper.floor(a.posX), MathHelper.floor(a.posY), MathHelper.floor(a.posZ), a.dimension, name, "tm:minimap/entityEnemy", 0, RenderType.NONE, RenderType.NONE, false, "");
+						MapHandler.createTexturedWayPoint("enemies", MathHelper.floor(a.posX), MathHelper.floor(a.posY), MathHelper.floor(a.posZ), a.dimension, name, "tm:minimap/entityEnemy", 0, RenderType.NONE, RenderType.NONE, false, "");
 						GlobalFields.mobs.add(name);
 					}
 					for (EntityLiving a : other) {
 						int int1 = other.indexOf(a);
 						String name = a.hasCustomName() ? a.getCustomNameTag() : a.getName() + "<" + a.getMaxHealth() + "HP/" + a.getHealth() + "HP, " + (Math.floor(a.posX * 100D) / 100D) + ", " + (Math.floor(a.posY * 100D) / 100D) + ", " + (Math.floor(a.posZ * 100D) / 100D) + ", " + int1 + ">";
-						Minimap.createTexturedWayPoint("other", MathHelper.floor(a.posX), MathHelper.floor(a.posY), MathHelper.floor(a.posZ), a.dimension, name, "tm:minimap/entityVillager", 0, RenderType.NONE, RenderType.NONE, false, "");
+						MapHandler.createTexturedWayPoint("other", MathHelper.floor(a.posX), MathHelper.floor(a.posY), MathHelper.floor(a.posZ), a.dimension, name, "tm:minimap/entityVillager", 0, RenderType.NONE, RenderType.NONE, false, "");
 						GlobalFields.other.add(name);
 					}
 				} else {
@@ -142,7 +142,7 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 					int jy = is.getTagCompound().hasKey("jy") ? is.getTagCompound().getInteger("jy") : 0;
 					int jz = is.getTagCompound().hasKey("jz") ? is.getTagCompound().getInteger("jz") : 0;
 					int jd = is.getTagCompound().hasKey("jd") ? is.getTagCompound().getInteger("jd") : 0;
-					Minimap.createTexturedWayPoint("other", jx, jy, jz, jd, name, "tm:minimap/entityUnknown", 0, RenderType.NONE, RenderType.NONE, false, "");
+					MapHandler.createTexturedWayPoint("other", jx, jy, jz, jd, name, "tm:minimap/entityUnknown", 0, RenderType.NONE, RenderType.NONE, false, "");
 					GlobalFields.other.add(name);
 				}
 				/*GlobalFields.animals = new ArrayList<EntityAnimal>(animals);
@@ -168,24 +168,23 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 							int1+">";*/
 				// System.out.println(a);
 				// System.out.println();
-				Minimap.deleteWayPoint("animals", a);
+				MapHandler.deleteWayPoint("animals", a);
 			}
 			for (String a : GlobalFields.mobs) {
 				/*int int1 = GlobalFields.mobs.indexOf(a);
 				String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 						+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 							int1+">";*/
-				Minimap.deleteWayPoint("enemies", a);
+				MapHandler.deleteWayPoint("enemies", a);
 			}
 			for (String a : GlobalFields.other) {
 				/*int int1 = GlobalFields.other.indexOf(a);
 				String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 						+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 							int1+">";*/
-				Minimap.deleteWayPoint("other", a);
+				MapHandler.deleteWayPoint("other", a);
 			}
-			Mw.getInstance().markerManager.setVisibleGroupName("all");
-			Mw.getInstance().markerManager.update();
+			MapHandler.update();
 		} else if (powered && active) {
 			tag.setInteger("timer", i + 1);
 		}
@@ -216,24 +215,23 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 											int1+">";*/
 								// System.out.println(a);
 								// System.out.println();
-								Minimap.deleteWayPoint("animals", a);
+								MapHandler.deleteWayPoint("animals", a);
 							}
 							for (String a : GlobalFields.mobs) {
 								/*int int1 = GlobalFields.mobs.indexOf(a);
 								String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 										+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 											int1+">";*/
-								Minimap.deleteWayPoint("enemies", a);
+								MapHandler.deleteWayPoint("enemies", a);
 							}
 							for (String a : GlobalFields.other) {
 								/*int int1 = GlobalFields.other.indexOf(a);
 								String name = a.hasCustomNameTag() ? a.getCustomNameTag() : a.getName() + "<"+a.getMaxHealth()+"HP/"+a.getHealth()+"HP, "
 										+(Math.floor(a.posX*100D)/100D)+", "+(Math.floor(a.posY*100D)/100D)+", "+(Math.floor(a.posZ*100D)/100D)+", "+
 											int1+">";*/
-								Minimap.deleteWayPoint("other", a);
+								MapHandler.deleteWayPoint("other", a);
 							}
-							Mw.getInstance().markerManager.setVisibleGroupName("all");
-							Mw.getInstance().markerManager.update();
+							MapHandler.update();
 						}
 					}
 				}
@@ -267,4 +265,11 @@ public class ItemEntityTracker extends ItemEnergyContainer {
 	 * NBTTagCompound tag = is.getTagCompound(); if(tag.hasKey("active")){
 	 * if(tag.getBoolean("active")){
 	 */
+
+	@Override
+	public void registerModels() {
+		CoreInit.registerRender(this, 0, "tomsmodcore:radarOff");
+		CoreInit.registerRender(this, 1, "tomsmodcore:radarActive");
+		CoreInit.registerRender(this, 2, "tomsmodcore:radarJammed");
+	}
 }

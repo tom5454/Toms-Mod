@@ -6,13 +6,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.apis.TomsModUtils;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityElectricalRubberProcessor;
 import com.tom.factory.tileentity.inventory.ContainerElectricalRubberProcessor;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiElectricalRubberProcessor extends GuiTomsMod {
+public class GuiElectricalRubberProcessor extends GuiTomsLib {
 	private TileEntityElectricalRubberProcessor te;
 
 	public GuiElectricalRubberProcessor(InventoryPlayer playerInv, TileEntityElectricalRubberProcessor te) {
@@ -53,7 +52,7 @@ public class GuiElectricalRubberProcessor extends GuiTomsMod {
 	public void initGui() {
 		labelList.clear();
 		super.initGui();
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 21, guiTop + 15, te.getTankIn()).setUV(176, 87), labelList);
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 36, guiTop + 15, te.getTankCresin()).setUV(176, 87), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 21, guiTop + 15, te.getTankIn()).setUV(176, 87).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 36, guiTop + 15, te.getTankCresin()).setUV(176, 87).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
 	}
 }

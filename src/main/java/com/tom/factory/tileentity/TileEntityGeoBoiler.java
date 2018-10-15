@@ -16,11 +16,11 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.IHeatSource;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockGeoBoiler;
 import com.tom.lib.Configs;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityGeoBoiler extends TileEntityTomsMod implements ITileFluidHandler, IHeatSource {
 	private FluidTank tankWater = new FluidTank(MathHelper.floor(Configs.BASIC_TANK_SIZE * 2.5D));

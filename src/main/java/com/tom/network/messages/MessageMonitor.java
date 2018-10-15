@@ -2,7 +2,7 @@ package com.tom.network.messages;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;
 

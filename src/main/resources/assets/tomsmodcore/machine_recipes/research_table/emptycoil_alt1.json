@@ -1,0 +1,26 @@
+{
+  "researches": [
+    "tomsmodcore:wireprocessinglv"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:emptycoil",
+      "data": 0,
+      "count": 6
+    },
+    "pattern": [
+      "III",
+      " I ",
+      "III"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "I": {
+        "ore": "plateTin",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 110
+}

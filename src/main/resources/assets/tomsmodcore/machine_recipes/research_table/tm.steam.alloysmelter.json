@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:bronzealloysmelter"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.steam.alloysmelter",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PPP",
+      "FCF",
+      "B-B"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebronze",
+        "data": 0
+      },
+      "F": {
+        "item": "minecraft:furnace",
+        "data": 0
+      },
+      "-": {
+        "ore": "pipeBronze",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 350
+}

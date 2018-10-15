@@ -3,7 +3,7 @@ package com.tom.api.terminal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tom.apis.BigEntry;
+import com.tom.util.BigEntry;
 
 public class GuiPartList {
 	public List<BigEntry<String, Integer, Integer, Integer, Integer>> hitboxes = new ArrayList<BigEntry<String, Integer, Integer, Integer, Integer>>();

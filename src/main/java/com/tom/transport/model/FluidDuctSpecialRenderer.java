@@ -4,9 +4,9 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -21,7 +21,7 @@ import com.tom.transport.multipart.PartFluidDuctBase;
 public class FluidDuctSpecialRenderer extends TileEntitySpecialRendererTomsMod<PartFluidDuctBase> {
 	private static void draw(PartFluidDuctBase part, double x, double y, double z, TextureAtlasSprite s, double yPer) {
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		// x+0.5-part.getSize() x+0.5+part.getSize()
 		double yPos = y + 0.5 - (part.getSize() * 1.1) + yPer;
 		{
@@ -76,7 +76,7 @@ public class FluidDuctSpecialRenderer extends TileEntitySpecialRendererTomsMod<P
 
 	private static void drawUp(PartFluidDuctBase part, double x, double y, double z, TextureAtlasSprite s, double yPer) {
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		double w = ((part.getSize() * 1.1) * yPer) * 2;
 		double w2 = 0.15 - w;
 		double yPos = (y + 0.839 - (part.getSize() * 0.9));
@@ -117,7 +117,7 @@ public class FluidDuctSpecialRenderer extends TileEntitySpecialRendererTomsMod<P
 
 	private static void drawDown(PartFluidDuctBase part, double x, double y, double z, TextureAtlasSprite s, double yPer) {
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer vertexbuffer = tessellator.getBuffer();
+		BufferBuilder vertexbuffer = tessellator.getBuffer();
 		double w = ((part.getSize() * 1.1) * yPer) * 2;
 		double w2 = 0.15 - w;
 		double yPos = (y + 0.815 - (part.getSize() * 0.9));

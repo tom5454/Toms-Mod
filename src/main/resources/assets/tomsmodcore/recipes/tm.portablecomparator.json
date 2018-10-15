@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "tomsmodtoolsandcombat:tm.portablecomparator",
+    "data": 0,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:comparator",
+      "data": 0
+    },
+    {
+      "item": "minecraft:redstone",
+      "data": 0
+    },
+    {
+      "item": "minecraft:compass",
+      "data": 0
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

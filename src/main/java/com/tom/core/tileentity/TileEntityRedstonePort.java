@@ -3,20 +3,11 @@ package com.tom.core.tileentity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.lib.Configs;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityRedstonePort extends TileEntityTomsMod implements IPeripheral {
-	// private List<IComputerAccess> computers = new
-	// ArrayList<IComputerAccess>();
+public class TileEntityRedstonePort extends TileEntityTomsMod implements ITMCompatPeripheral {
+	// private List<IComputerAccess> computers = new ArrayList<IComputerAccess>();
 	public boolean redstone = false;
 	public int compRedstone = 0;
 
@@ -31,7 +22,7 @@ public class TileEntityRedstonePort extends TileEntityTomsMod implements IPeriph
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+	public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 		if (method == 0) {
 			if (a.length > 0 && a[0] instanceof Boolean) {
 				this.redstone = (Boolean) a[0];
@@ -65,18 +56,13 @@ public class TileEntityRedstonePort extends TileEntityTomsMod implements IPeriph
 	}
 
 	@Override
-	public void attach(IComputerAccess computer) {
+	public void attach(IComputer computer) {
 		// computers.add(computer);
 	}
 
 	@Override
-	public void detach(IComputerAccess computer) {
+	public void detach(IComputer computer) {
 		// computers.remove(computer);
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		return other == this;
 	}
 
 	public int getComparatorOutput() {

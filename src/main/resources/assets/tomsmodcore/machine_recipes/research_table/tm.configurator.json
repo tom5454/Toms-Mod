@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:configurator"
+  ],
+  "level": "tomsMod.craftingLevel.esoldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:tm.configurator",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "IGI",
+      "RDR",
+      "IBI"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "item": "tomsmodenergy:battery",
+        "data": 0
+      },
+      "R": {
+        "item": "minecraft:redstone",
+        "data": 0
+      },
+      "D": {
+        "id": "display",
+        "type": "tomsmodcore:material"
+      },
+      "G": {
+        "ore": "paneGlass",
+        "type": "forge:ore_dict"
+      },
+      "I": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1700
+}

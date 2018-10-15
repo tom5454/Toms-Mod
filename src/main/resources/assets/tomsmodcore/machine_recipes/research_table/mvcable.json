@@ -1,0 +1,30 @@
+{
+  "researches": [
+    "tomsmodcore:mvcable"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:mvcable",
+      "data": 0,
+      "count": 2
+    },
+    "pattern": [
+      "RRR",
+      "---",
+      "RRR"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "ore": "itemRubber",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "cableElectrum",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1200
+}

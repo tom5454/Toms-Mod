@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:gem",
+    "data": 32,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "blockSkyQuartz",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

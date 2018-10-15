@@ -6,35 +6,26 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-
-import net.minecraftforge.fml.common.Optional;
 
 import com.tom.api.tileentity.ILinkable;
 import com.tom.api.tileentity.IWirelessPeripheralController;
 import com.tom.api.tileentity.TileEntityTabletAccessPointBase;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.ExtraBlockHitInfo;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
-import com.tom.lib.Configs;
+import com.tom.lib.api.CapabilityPeripheral;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
+import com.tom.util.ExtraBlockHitInfo;
+import com.tom.util.TomsModUtils;
 
-import dan200.computercraft.api.filesystem.IMount;
-import dan200.computercraft.api.filesystem.IWritableMount;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements IPeripheral, ILinkable, IWirelessPeripheralController {
-	private List<IComputerAccess> computers = new ArrayList<>();
+public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements ITMCompatPeripheral, ILinkable, IWirelessPeripheralController {
+	private List<IComputer> computers = new ArrayList<>();
 	public String pName = "tm_wirelessPeripheral";
 	public String[] methods = {"listMethods", "call", "getName", "link", "splitString"};
-	private IPeripheral current;
+	private ITMPeripheralCap current;
 	public int posX = 0;
 	public int posY = 0;
 	public int posZ = 0;
@@ -42,41 +33,11 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 	public EnumFacing linkedSide = EnumFacing.DOWN;
 	public boolean linked = false;
 	private boolean fs = true;
-	protected IComputerAccess computerAccess = new IComputerAccess() {
-
-		@Override
-		public String mount(String desiredLocation, IMount mount) {
-			return "null";
-		}
-
-		@Override
-		public String mount(String desiredLocation, IMount mount, String driveName) {
-			return "null";
-		}
-
-		@Override
-		public String mountWritable(String desiredLocation, IWritableMount mount) {
-			return "null";
-		}
-
-		@Override
-		public String mountWritable(String desiredLocation, IWritableMount mount, String driveName) {
-			return "null";
-		}
-
-		@Override
-		public void unmount(String location) {
-
-		}
-
-		@Override
-		public int getID() {
-			return -1;
-		}
+	protected IComputer computerAccess = new IComputer() {
 
 		@Override
 		public void queueEvent(String event, Object[] arguments) {
-			for (IComputerAccess c : computers) {
+			for (IComputer c : computers) {
 				c.queueEvent(event, arguments);
 			}
 		}
@@ -84,6 +45,16 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 		@Override
 		public String getAttachmentName() {
 			return "WirelessPeripheral";
+		}
+
+		@Override
+		public Object[] map(Object[] in) {
+			return in;
+		}
+
+		@Override
+		public Object[] pullEvent(String string) throws LuaException {
+			return null;
 		}
 
 	};
@@ -99,7 +70,7 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+	public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 		if (method == 0) {
 			Object[] o = new Object[methods.length];
 			for (int i = 0;i < o.length;i++) {
@@ -124,7 +95,7 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 								for (int j = 0;j < args.length;j++) {
 									args[j] = a[j + 1];
 								}
-								return current.callMethod(computer, context, i, args);
+								return current.call(computer, m, args);
 							}
 						}
 						throw new LuaException("Method not found");
@@ -162,18 +133,13 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 	}
 
 	@Override
-	public void attach(IComputerAccess computer) {
+	public void attach(IComputer computer) {
 		computers.add(computer);
 	}
 
 	@Override
-	public void detach(IComputerAccess computer) {
+	public void detach(IComputer computer) {
 		computers.remove(computer);
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		return other == this;
 	}
 
 	@Override
@@ -189,9 +155,9 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 		// System.out.println("Link"+block);
 		if (s && this.current != null)
 			this.current.detach(computerAccess);
-		if (block instanceof IPeripheralProvider) {
-			IPeripheralProvider peripheralProvider = (IPeripheralProvider) block;
-			IPeripheral p = peripheralProvider.getPeripheral(TomsModUtils.getWorld(dim), new BlockPos(x, y, z), this.linkedSide);
+		TileEntity tile = TomsModUtils.getTileEntity(world, new BlockPos(x, y, z), dim);
+		if(tile != null && tile.hasCapability(CapabilityPeripheral.PERIPHERAL, this.linkedSide)){
+			ITMPeripheralCap p = tile.getCapability(CapabilityPeripheral.PERIPHERAL, this.linkedSide);
 			if (p == null)
 				return false;
 			else {
@@ -207,14 +173,14 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 			}
 		} else if (block == CoreInit.TabletAccessPoint || block == CoreInit.ControllerBox) {
 			if (!s) {
-				TileEntityTabletAccessPointBase tilee = (TileEntityTabletAccessPointBase) TomsModUtils.getTileEntity(world, new BlockPos(x, y, z), dim);
+				TileEntityTabletAccessPointBase tilee = (TileEntityTabletAccessPointBase) tile;
 				tilee.link(xCoord, yCoord, zCoord);
 				this.posX = x;
 				this.posY = y;
 				this.posZ = z;
 				this.linked = true;
 				final TileEntityTabletAccessPointBase te = tilee;
-				this.current = new IPeripheral() {
+				this.current = new TMPeripheralCap(new ITMCompatPeripheral() {
 
 					@Override
 					public String getType() {
@@ -227,7 +193,7 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 					}
 
 					@Override
-					public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+					public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 						if (method == 0) {
 							return new Object[]{te.active};
 						} else if (method == 1) {
@@ -239,33 +205,18 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 						} else if (method == 2) { return new Object[]{te.connected}; }
 						return null;
 					}
-
-					@Override
-					public void attach(IComputerAccess computer) {
-
-					}
-
-					@Override
-					public void detach(IComputerAccess computer) {
-
-					}
-
-					@Override
-					public boolean equals(IPeripheral other) {
-						return false;
-					}
-				};
+				});
 			}
 			return true;
 		} else if (block == CoreInit.Camera) {
-			TileEntityCamera tilee = (TileEntityCamera) TomsModUtils.getTileEntity(world, new BlockPos(x, y, z), dim);
+			TileEntityCamera tilee = (TileEntityCamera) tile;
 			tilee.link(xCoord, yCoord, zCoord);
 			this.posX = x;
 			this.posY = y;
 			this.posZ = z;
 			this.linked = true;
 			final TileEntityCamera te = tilee;
-			this.current = new IPeripheral() {
+			this.current = new TMPeripheralCap(new ITMCompatPeripheral() {
 
 				@Override
 				public String getType() {
@@ -278,7 +229,7 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 				}
 
 				@Override
-				public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+				public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 					if (method == 0) {
 						if (a.length > 0 && a[0] instanceof String) {
 							String pName = (String) a[0];
@@ -331,32 +282,17 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 					return null;
 				}
 
-				@Override
-				public void attach(IComputerAccess computer) {
-
-				}
-
-				@Override
-				public void detach(IComputerAccess computer) {
-
-				}
-
-				@Override
-				public boolean equals(IPeripheral other) {
-					return false;
-				}
-
-			};
+			});
 			return true;
 		} else if (block == CoreInit.MagCardReader) {
-			TileEntityMagCardReader tilee = (TileEntityMagCardReader) TomsModUtils.getTileEntity(world, new BlockPos(x, y, z), dim);
+			TileEntityMagCardReader tilee = (TileEntityMagCardReader) tile;
 			tilee.link(xCoord, yCoord, zCoord);
 			this.posX = x;
 			this.posY = y;
 			this.posZ = z;
 			this.linked = true;
 			final TileEntityMagCardReader te = tilee;
-			this.current = new IPeripheral() {
+			this.current = new TMPeripheralCap(new ITMCompatPeripheral() {
 
 				@Override
 				public String getType() {
@@ -369,7 +305,7 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 				}
 
 				@Override
-				public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+				public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 					if (method == 0) {
 						return new Object[]{te.isCodeMode};
 					} else if (method == 1) {
@@ -388,22 +324,7 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 					return null;
 				}
 
-				@Override
-				public void attach(IComputerAccess computer) {
-
-				}
-
-				@Override
-				public void detach(IComputerAccess computer) {
-
-				}
-
-				@Override
-				public boolean equals(IPeripheral other) {
-					return false;
-				}
-
-			};
+			});
 			return true;
 		} else
 			return false;
@@ -444,7 +365,7 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 					this.current = p;
 				}
 				}else if(block == CoreInit.TabletAccessPoint || block == CoreInit.ControllerBox){
-				
+
 				}
 				else this.current = null;*/
 				this.linked = this.link(posX, posY, posZ, true, lDim);
@@ -465,7 +386,7 @@ public class TileEntityWirelessPeripheral extends TileEntityTomsMod implements I
 		for (int i = 0;i < args.length;i++) {
 			a[i + 1] = args[i];
 		}
-		for (IComputerAccess c : computers) {
+		for (IComputer c : computers) {
 			a[0] = c.getAttachmentName();
 			c.queueEvent(event, a);
 		}

@@ -27,9 +27,9 @@ import com.google.common.collect.ImmutableMap;
 
 import com.tom.api.block.IMethod;
 import com.tom.api.block.IMethod.IClientMethod;
-import com.tom.apis.EmptyEntry;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
+import com.tom.lib.utils.EmptyEntry;
 
 public class ToolGroup {
 	protected Map<String, Item> items;
@@ -93,7 +93,7 @@ public class ToolGroup {
 	protected static class Axe extends ItemAxe {
 
 		public Axe(ToolMaterial material, float attackSpeed) {
-			super(material, material.getDamageVsEntity() * 1.1F, attackSpeed);
+			super(material, material.getAttackDamage() * 1.1F, attackSpeed);
 		}
 	}
 
@@ -147,8 +147,8 @@ public class ToolGroup {
 		 */
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-			meta.keySet().forEach(m -> subItems.add(new ItemStack(itemIn, 1, m)));
+		public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+			if (this.isInCreativeTab(tab))meta.keySet().forEach(m -> subItems.add(new ItemStack(this, 1, m)));
 		}
 
 		@Override

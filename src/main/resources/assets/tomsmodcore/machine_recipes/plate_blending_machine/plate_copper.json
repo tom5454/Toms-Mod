@@ -1,0 +1,13 @@
+{
+  "tier": 1,
+  "in": {
+    "item": "tomsmodcore:ingot",
+    "data": 2,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:plate",
+    "data": 2,
+    "count": 1
+  }
+}

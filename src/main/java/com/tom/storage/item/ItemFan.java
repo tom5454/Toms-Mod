@@ -31,10 +31,11 @@ public class ItemFan extends Item implements IFan, IModelRegisterRequired {
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		for (FanType t : FanType.VALUES) {
-			subItems.add(new ItemStack(this, 1, t.ordinal()));
-		}
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))
+			for (FanType t : FanType.VALUES) {
+				subItems.add(new ItemStack(this, 1, t.ordinal()));
+			}
 	}
 
 	public static enum FanType implements IStringSerializable {

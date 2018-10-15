@@ -1,0 +1,19 @@
+{
+  "heat": 3000,
+  "time": 4000,
+  "in2": {
+    "item": "minecraft:air",
+    "data": 0,
+    "count": 0
+  },
+  "in1": {
+    "item": "tomsmodcore:dust",
+    "data": 35,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:material",
+    "data": 40,
+    "count": 1
+  }
+}

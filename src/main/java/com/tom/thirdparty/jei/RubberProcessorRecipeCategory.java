@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.fluids.FluidStack;
@@ -21,8 +20,9 @@ import com.tom.thirdparty.jei.RubberProcessorRecipeCategory.RubberProcessorRecip
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public class RubberProcessorRecipeCategory implements IRecipeCategory<RubberProcessorRecipeJEI> {
 	public static List<RubberProcessorRecipeJEI> get() {
@@ -31,23 +31,19 @@ public class RubberProcessorRecipeCategory implements IRecipeCategory<RubberProc
 		return recipes;
 	}
 
-	public static class RubberProcessorRecipeJEI extends BlankRecipeWrapper {
+	public static class RubberProcessorRecipeJEI implements IRecipeWrapper {
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInput(ItemStack.class, CraftingMaterial.VULCANIZING_AGENTS.getStackNormal());
-			ingredients.setOutput(ItemStack.class, CraftingMaterial.RUBBER.getStackNormal());
-			ingredients.setInput(FluidStack.class, new FluidStack(CoreInit.concentratedResin.get(), 200));
+			ingredients.setInput(VanillaTypes.ITEM, CraftingMaterial.VULCANIZING_AGENTS.getStackNormal());
+			ingredients.setOutput(VanillaTypes.ITEM, CraftingMaterial.RUBBER.getStackNormal());
+			ingredients.setInput(VanillaTypes.FLUID, new FluidStack(CoreInit.concentratedResin.get(), 200));
 		}
 
 	}
 
 	@Nonnull
-	private IDrawable background = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/jei/jeiCrusher.png"), 1, 5, 85, 50);
-	@Nonnull
-	private final IDrawable tankOverlay = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/resSelect.png"), 102, 124, 12, 47);
-	@Nonnull
-	private final IDrawable tankBackground = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/resSelect.png"), 78, 120, 20, 55);
+	private IDrawable background = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/jei/jeiCrusher.png"), 130, 32, 100, 50);
 
 	@Override
 	public String getUid() {
@@ -71,18 +67,18 @@ public class RubberProcessorRecipeCategory implements IRecipeCategory<RubberProc
 
 	@Override
 	public void drawExtras(Minecraft minecraft) {
-		tankBackground.draw(minecraft, -20, -4);
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, RubberProcessorRecipeJEI recipeWrapper, IIngredients ingredients) {
-		int x = 6;
+		int x = 21;
 		int y = 21;
 		recipeLayout.getItemStacks().init(0, true, x, y);
 		recipeLayout.getItemStacks().init(1, false, x + 55, y);
-		recipeLayout.getIngredientsGroup(ItemStack.class).set(0, CraftingMaterial.VULCANIZING_AGENTS.getStackNormal());
-		recipeLayout.getIngredientsGroup(ItemStack.class).set(1, CraftingMaterial.RUBBER.getStackNormal());
-		recipeLayout.getFluidStacks().init(0, true, -16, 0, 12, 47, 1000, true, tankOverlay);
+		recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(0, CraftingMaterial.VULCANIZING_AGENTS.getStackNormal());
+		recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(1, CraftingMaterial.RUBBER.getStackNormal());
+		recipeLayout.getFluidStacks().init(0, true, 0, 0, 16, 58, 1000, true, JEIHandler.tankOverlay);
+		recipeLayout.getFluidStacks().setBackground(0, JEIHandler.tankBackground);
 		recipeLayout.getFluidStacks().set(0, new FluidStack(CoreInit.concentratedResin.get(), 200));
 	}
 

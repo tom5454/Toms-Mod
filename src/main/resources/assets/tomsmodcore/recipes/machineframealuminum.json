@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:machineframealuminum",
+    "data": 0,
+    "count": 4
+  },
+  "pattern": [
+    "CCC",
+    "CHC",
+    "CCC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "C": {
+      "ore": "plateAluminum",
+      "type": "forge:ore_dict"
+    },
+    "H": {
+      "ore": "itemHammer_lvl3",
+      "type": "forge:ore_dict"
+    }
+  }
+}

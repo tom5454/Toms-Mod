@@ -11,8 +11,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -188,18 +186,6 @@ public class LimitableChest extends BlockContainerTomsMod implements IModelRegis
 		if (tileentity instanceof TileEntityLimitableChest) {
 			tileentity.updateContainingBlockInfo();
 		}
-	}
-
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		TileEntity tileentity = worldIn.getTileEntity(pos);
-
-		if (tileentity instanceof IInventory) {
-			InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
-			worldIn.updateComparatorOutputLevel(pos, this);
-		}
-
-		super.breakBlock(worldIn, pos, state);
 	}
 
 	@Override

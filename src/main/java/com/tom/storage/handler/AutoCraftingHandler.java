@@ -21,13 +21,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.base.Function;
 
-import com.tom.api.grid.IGridUpdateListener;
 import com.tom.api.inventory.StoredItemStack;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
+import com.tom.lib.api.grid.IGridUpdateListener;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageCraftingReportSync;
 import com.tom.network.messages.MessageCraftingReportSync.MessageType;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
 import com.tom.network.messages.MessageNBT;
 
 public class AutoCraftingHandler {

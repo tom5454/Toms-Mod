@@ -1,0 +1,48 @@
+{
+  "secondary": {
+    "nbt": {
+      "damage": 3.0
+    },
+    "item": "tomsmodcore:tm.chalk",
+    "data": 0,
+    "count": 1
+  },
+  "researches": [
+    "tomsmodcore:soldering"
+  ],
+  "level": "tomsMod.craftingLevel.mv",
+  "recipe": {
+    "result": {
+      "nbt": {
+        "id": "advcirc"
+      },
+      "item": "tomsmodcore:tm.blueprint",
+      "data": 0,
+      "count": 2
+    },
+    "pattern": [
+      "BBP",
+      "BBb",
+      "B  "
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "item": "tomsmodcore:tm.chalk",
+        "data": 0
+      },
+      "B": {
+        "id": "blueprintPaperBig",
+        "type": "tomsmodcore:material"
+      },
+      "b": {
+        "nbt": {
+          "id": "advcirc"
+        },
+        "item": "tomsmodcore:tm.blueprint",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 500
+}

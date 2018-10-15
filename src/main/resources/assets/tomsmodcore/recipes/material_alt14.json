@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 53,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "ingotUranium235",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

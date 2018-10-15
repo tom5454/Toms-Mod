@@ -35,7 +35,7 @@ public class TileEntitySolarPanel extends TileEntityTomsMod implements IEnergyPr
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return energy.getMaxEnergyStored();
 	}
 
@@ -57,15 +57,15 @@ public class TileEntitySolarPanel extends TileEntityTomsMod implements IEnergyPr
 		if (!world.isRemote) {
 			if (world.isDaytime()) {
 				int light = world.getLightFor(EnumSkyBlock.SKY, pos.up());
-				float biomeTemp = world.getBiomeForCoordsBody(pos).getTemperature();
+				float biomeTemp = world.getBiomeForCoordsBody(pos).getDefaultTemperature();
 				double e = (light / 15) * 20000;
 				double tempPer = biomeTemp * 0.2;
 				e /= (0.8D + tempPer);
 				// long div = ticks / 12000;
-				long ticksCR = world.getWorldTime() - 6000;
+				long ticksCR = (world.getWorldTime()) % 28000 - 6000;
 				long ticksC = ticksCR < 0 ? -ticksCR : ticksCR;
 				double ticksM = (6000 / e) - (ticksC / e);
-				energy.receiveEnergy(ticksM * 5, false);
+				energy.receiveEnergy(Math.abs(ticksM * .4), false);
 			}
 			EnergyType.LV.pushEnergyTo(world, pos, EnumFacing.UP, energy, false);
 		}

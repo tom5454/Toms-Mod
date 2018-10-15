@@ -9,11 +9,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import com.tom.api.research.IScanningInformation.OredictScanningInformation;
 import com.tom.api.research.IScanningInformation.ScanningInformation;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 public class Research extends IForgeRegistryEntry.Impl<Research> {
 	private final String name;

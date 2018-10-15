@@ -1,0 +1,17 @@
+{
+  "in2": {
+    "item": "tomsmodcore:dust",
+    "data": 16,
+    "count": 1
+  },
+  "in1": {
+    "item": "tomsmodcore:dust",
+    "data": 17,
+    "count": 2
+  },
+  "out": {
+    "item": "tomsmodcore:tm.hardenedglass",
+    "data": 0,
+    "count": 1
+  }
+}

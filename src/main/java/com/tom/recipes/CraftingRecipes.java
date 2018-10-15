@@ -1,18 +1,10 @@
 package com.tom.recipes;
 
-import static com.tom.api.recipes.RecipeHelper.addRecipe;
-import static com.tom.api.recipes.RecipeHelper.addShapelessRecipe;
-import static com.tom.api.recipes.RecipeHelper.patchShapedRecipe;
-
-import java.util.ArrayList;
-import java.util.List;
+import static com.tom.api.recipes.RecipeHelper.*;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
@@ -31,7 +23,7 @@ import com.tom.transport.TransportInit;
 public class CraftingRecipes {// OreDictionary AdvancedCraftingRecipes OreDict
 	// ResearchLoader
 	public static void init() {
-		int machineFrameAmount = Config.enableHardRecipes ? 2 : 4;
+		int machineFrameAmount = /*Config.enableHardRecipes ? 2 : */4;
 		addRecipe(CraftingMaterial.BIG_REDSTONE.getStackNormal(), new Object[]{"RR", 'R', Items.REDSTONE});
 		addRecipe(CraftingMaterial.BIG_GLOWSTONE.getStackNormal(), new Object[]{"GG", 'G', Items.GLOWSTONE_DUST});
 		addRecipe(CraftingMaterial.BIG_ENDER_PEARL.getStackNormal(), new Object[]{"EE", 'E', Items.ENDER_PEARL});
@@ -176,8 +168,8 @@ public class CraftingRecipes {// OreDictionary AdvancedCraftingRecipes OreDict
 		addShapelessRecipe(new ItemStack(CoreInit.circuitDrawingPen), new Object[]{CoreInit.acidResistantInkBottle, CoreInit.circuitDrawingPen.getDamaged()});
 		addRecipe(CraftingMaterial.RAW_CHALK.getStackNormal(), new Object[]{" BB", "BCB", "CB ", 'C', Items.CLAY_BALL, 'B', "dyeWhite"});
 		addRecipe(CraftingMaterial.TIN_CAN.getStackNormal(2), new Object[]{" T ", "T T", " T ", 'T', TMResource.TIN.getStackName(Type.PLATE)});
-		addShapelessRecipe(CraftingMaterial.PHOTOACTIVE_BASIC_CIRCUIT_PLATE.getStackNormal(3), new Object[]{CraftingMaterial.BASIC_CIRCUIT_PLATE.getStack(), CraftingMaterial.BASIC_CIRCUIT_PLATE.getStack(), CraftingMaterial.BASIC_CIRCUIT_PLATE.getStack(), CoreInit.photoactiveMaterialCan});
-		addShapelessRecipe(CraftingMaterial.PHOTOACTIVE_ADVANCED_CIRCUIT_PLATE.getStackNormal(), new Object[]{CraftingMaterial.ADVANCED_CIRCUIT_PLATE.getStack(), CoreInit.photoactiveMaterialCan});
+		addShapelessRecipe(AdvancedCraftingRecipes.PHOTOACTIVE_BASIC_CIRCUIT_PLATE.getStackNormal(3), new Object[]{AdvancedCraftingRecipes.BASIC_CIRCUIT_PLATE.get(), AdvancedCraftingRecipes.BASIC_CIRCUIT_PLATE.get(), AdvancedCraftingRecipes.BASIC_CIRCUIT_PLATE.get(), CoreInit.photoactiveMaterialCan});
+		addShapelessRecipe(AdvancedCraftingRecipes.PHOTOACTIVE_ADVANCED_CIRCUIT_PLATE.getStackNormal(1), new Object[]{AdvancedCraftingRecipes.ADVANCED_CIRCUIT_PLATE.get(), CoreInit.photoactiveMaterialCan});
 		addRecipe(new ItemStack(CoreInit.hardenedGlassPane, 16), new Object[]{"GGG", "GGG", 'G', "glassHardened"});
 		addShapelessRecipe(new ItemStack(CoreInit.photoactiveMaterialCan), new Object[]{CraftingMaterial.PHOTOACTIVE_CAN.getStack()});
 		((StorageNetworkCable) StorageInit.cable).loadRecipes();
@@ -192,16 +184,33 @@ public class CraftingRecipes {// OreDictionary AdvancedCraftingRecipes OreDict
 		addRecipe(new ItemStack(FactoryInit.components, machineFrameAmount, ComponentVariants.STEEL_SHEETS.ordinal()), new Object[]{"SS", "SS", 'S', TMResource.STEEL.getStackName(Type.PLATE)});
 		addShapelessWrenchRecipe(new ItemStack(TransportInit.conveyorBeltSlope, 1, 1), new ItemStack(TransportInit.conveyorBeltSlope));
 		addShapelessWrenchRecipe(new ItemStack(TransportInit.conveyorBeltSlope), new ItemStack(TransportInit.conveyorBeltSlope, 1, 1));
-		addRecipe(new ItemStack(TransportInit.steamDuct, Config.enableHardRecipes ? 6 : 12), new Object[]{"B B", "PHP", "B B", 'B', TMResource.BRONZE.getStackName(Type.PLATE), 'P', TMResource.BRASS.getStackName(Type.PLATE), 'H', "itemHammer_lvl2"});
+		addRecipe(new ItemStack(TransportInit.steamDuct, /*Config.enableHardRecipes ? 6 : */12), new Object[]{"B B", "PHP", "B B", 'B', TMResource.BRONZE.getStackName(Type.PLATE), 'P', TMResource.BRASS.getStackName(Type.PLATE), 'H', "itemHammer_lvl2"});
 		addShapelessWrenchRecipe(new ItemStack(CoreInit.buildGuide), Items.BOOK);
+		addRecipe(CraftingMaterial.URANIUM238.getStackNormal(), new Object[]{"NNN", "NNN", "NNN", 'N', CraftingMaterial.URANIUM238_NUGGET.getStack()});
+		addShapelessRecipe(CraftingMaterial.URANIUM238_NUGGET.getStackNormal(9), new Object[]{CraftingMaterial.URANIUM235.getStack()});
+		addRecipe(new ItemStack(FactoryInit.components, machineFrameAmount, ComponentVariants.ALU_SHEETS.ordinal()), new Object[]{"SS", "SS", 'S', TMResource.ALUMINUM.getStackName(Type.PLATE)});
+		addRecipe(new ItemStack(CoreInit.enderMemory, 1), new Object[]{"BRB", "RCR", "BRB", 'B', TMResource.BLUE_METAL.getOreDictName(Type.INGOT), 'R', Items.REDSTONE, 'C', CraftingMaterial.CHARGED_ENDER.getStack()});
+		addRecipe(new ItemStack(CoreInit.WirelessPeripheral, 1), new Object[]{"IEI", "ERE", "IEI", 'E', CraftingMaterial.CHARGED_ENDER.getStack(), 'R', CraftingMaterial.CHARGED_REDSTONE.getStack(), 'I', "ingotIron"});
+		addRecipe(new ItemStack(CoreInit.holotape, 1), new Object[]{"IPI", "IBI", "RRR", 'I', "ingotIron", 'B', TMResource.BLUE_METAL.getOreDictName(Type.INGOT), 'R', CraftingMaterial.CHARGED_REDSTONE.getStack(), 'P', Items.PAPER});
+		addRecipe(new ItemStack(CoreInit.holotapeWriter, 1), new Object[]{"III", "BRB", "IBI", 'I', "ingotIron", 'B', TMResource.BLUE_METAL.getOreDictName(Type.INGOT), 'R', CraftingMaterial.CHARGED_REDSTONE.getStack()});
+		addRecipe(new ItemStack(CoreInit.holotapeReader, 1), new Object[]{"III", "IRI", "IBI", 'I', "ingotIron", 'B', TMResource.BLUE_METAL.getOreDictName(Type.INGOT), 'R', CraftingMaterial.CHARGED_REDSTONE.getStack()});
+		addRecipe(new ItemStack(CoreInit.magCard, 1), new Object[]{"IR", "PP", 'I', "ingotIron", 'P', Items.PAPER, 'R', CraftingMaterial.CHARGED_REDSTONE.getStack()});
+		addRecipe(new ItemStack(CoreInit.MagCardDevice, 1), new Object[]{"III", "RIR", "IBI", 'I', "ingotIron", 'R', CraftingMaterial.CHARGED_REDSTONE.getStack(), 'B', TMResource.BLUE_METAL.getOreDictName(Type.INGOT)});
+		addRecipe(new ItemStack(CoreInit.MagCardReader, 1), new Object[]{"RI", "RI", "BI", 'I', "ingotIron", 'R', CraftingMaterial.CHARGED_REDSTONE.getStack(), 'B', TMResource.BLUE_METAL.getStackName(Type.PLATE)});
+		if (Config.enableAdventureItems)addRecipe(new ItemStack(CoreInit.TabletHouse, 1), new Object[]{"IDI", "IGI", "IBI", 'I', "ingotIron", 'D', new ItemStack(Items.DYE, 1, 0), 'G', "paneGlassColorless", 'B', Blocks.STONE_BUTTON});
+		addRecipe(new ItemStack(CoreInit.entityTracker, 1), new Object[]{"BGB", "RPR", "BSB", 'G', TMResource.GREENIUM.getOreDictName(Type.INGOT), 'B', TMResource.BLUE_METAL.getStackName(Type.PLATE), 'R', CraftingMaterial.CHARGED_REDSTONE.getStack(), 'S', "blockPlatinum", 'P', "paneGlassColorless"});
 	}
 
-	public static List<IRecipe> customRecipes = new ArrayList<>();
+	//public static List<IRecipe> customRecipes = new ArrayList<>();
 
 	private static void addShapelessWrenchRecipe(ItemStack stack, Object... recipe) {
-		IRecipe r = new WrenchShapelessCraftingRecipe(stack, recipe);
+		/*IRecipe r = new WrenchShapelessCraftingRecipe(stack, recipe);
 		customRecipes.add(r);
-		GameRegistry.addRecipe(r);
+		RecipeHelper.register(r);*/
+		Object[] r = new Object[recipe.length+1];
+		System.arraycopy(recipe, 0, r, 0, recipe.length);
+		r[recipe.length] = "tomsmodwrench";
+		addShapelessRecipe(stack, r);
 	}
 
 	public static void patchRecipes() {

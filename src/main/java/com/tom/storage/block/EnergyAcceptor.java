@@ -8,6 +8,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -94,7 +95,7 @@ public class EnergyAcceptor extends BlockGridDevice implements IModelRegisterReq
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		tooltip.add(I18n.format("tomsMod.tooltip.accepts", EnergyType.get(stack.getMetadata()).toTooltip()));
 	}
 
@@ -114,9 +115,9 @@ public class EnergyAcceptor extends BlockGridDevice implements IModelRegisterReq
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack(itemIn, 1, 0));
-		list.add(new ItemStack(itemIn, 1, 1));
-		list.add(new ItemStack(itemIn, 1, 2));
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		list.add(new ItemStack(this, 1, 0));
+		list.add(new ItemStack(this, 1, 1));
+		list.add(new ItemStack(this, 1, 2));
 	}
 }

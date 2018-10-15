@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
@@ -34,11 +35,8 @@ import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
-import com.google.common.base.Function;
-
-import com.tom.apis.EmptyEntry;
-import com.tom.apis.TomsModUtils;
 import com.tom.client.CustomModelLoader;
+import com.tom.lib.utils.EmptyEntry;
 import com.tom.storage.block.BasicTerminal;
 import com.tom.storage.block.BlockTerminalBase;
 import com.tom.storage.client.TerminalBlockModel.TerminalBakedModel.Builder;
@@ -46,6 +44,7 @@ import com.tom.storage.multipart.block.StorageNetworkCable.CableColor;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
 import com.tom.storage.tileentity.TileEntityBasicTerminal.TerminalColor;
 import com.tom.storage.tileentity.TileEntityBasicTerminal.TerminalFacing;
+import com.tom.util.TomsModUtils;
 
 public class TerminalBlockModel implements IModel {
 	protected final List<ResourceLocation> textures;

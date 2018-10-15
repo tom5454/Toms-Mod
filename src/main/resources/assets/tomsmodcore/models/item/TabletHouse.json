@@ -1,6 +1,6 @@
 {
         "parent": "item/generated",
     "textures":{
-        "layer0": "tomsmodcore:items/tablet/TabletOff"
+        "layer0": "tomsmodcore:items/tablet/tablet_front_off"
     }
 }

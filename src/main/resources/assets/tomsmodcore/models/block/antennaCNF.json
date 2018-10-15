@@ -3,10 +3,10 @@
     "textures": {
         "up": "tomsmodcore:blocks/Gray",
         "down": "tomsmodcore:blocks/Gray",
-        "north": "blocks/tm/AntennaSideCContNF",
-         "east": "blocks/tm/AntennaSideCContNF",
-        "south": "blocks/tm/AntennaSideCContNF",
-         "west": "blocks/tm/AntennaSideCContNF",
+        "north": "tomsmodcore:blocks/AntennaSideCContNF",
+         "east": "tomsmodcore:blocks/AntennaSideCContNF",
+        "south": "tomsmodcore:blocks/AntennaSideCContNF",
+         "west": "tomsmodcore:blocks/AntennaSideCContNF",
         "particle": "tomsmodcore:blocks/Gray"
     }
 }

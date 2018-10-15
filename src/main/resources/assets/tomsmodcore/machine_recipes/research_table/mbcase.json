@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:multiblockcomponents"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:mbcase",
+      "data": 0,
+      "count": 6
+    },
+    "pattern": [
+      "APA",
+      "SCS",
+      "AEA"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateChrome",
+        "type": "forge:ore_dict"
+      },
+      "A": {
+        "ore": "plateAluminum",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframealuminum",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "normalecirc",
+        "type": "tomsmodcore:circuit"
+      }
+    }
+  },
+  "crafting_time": 1800
+}

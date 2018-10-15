@@ -7,8 +7,6 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,13 +24,15 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.network.INBTPacketReceiver;
-import com.tom.apis.TomsModUtils;
+import com.tom.lib.utils.RenderUtil;
 import com.tom.network.messages.MessageCraftingReportSync.MessageType;
 import com.tom.storage.handler.AutoCraftingHandler;
 import com.tom.storage.handler.StorageNetworkGrid.ICraftingReportScreen;
 import com.tom.storage.handler.StorageNetworkGrid.IStorageTerminalGui;
 import com.tom.storage.tileentity.gui.GuiTerminalBase.GuiButtonTermMode;
+import com.tom.util.TomsModUtils;
 
 @SideOnly(Side.CLIENT)
 public class GuiCraftingReport extends GuiScreen implements INBTPacketReceiver, ICraftingReportScreen {
@@ -334,8 +334,8 @@ public class GuiCraftingReport extends GuiScreen implements INBTPacketReceiver, 
 		if (stack != null) {
 			boolean hasBg = mouseX >= x - 1 && mouseY >= y - 1 && mouseX < x + 17 && mouseY < y + 17;
 			if (hasBg) {
-				Render.setColourWithAlphaPercent(color, 50);
-				Render.drawRect(x, y, 16, 16);
+				RenderUtil.setColourWithAlphaPercent(color, 50);
+				RenderUtil.drawRect(x, y, 16, 16);
 			}
 			GlStateManager.translate(0.0F, 0.0F, 32.0F);
 			this.zLevel = 100.0F;
@@ -351,7 +351,7 @@ public class GuiCraftingReport extends GuiScreen implements INBTPacketReceiver, 
 			this.zLevel = 0.0F;
 			this.itemRender.zLevel = 0.0F;
 			if (hasBg) {
-				List<String> list = stack.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips);
+				List<String> list = stack.getTooltip(mc.player, GuiTomsLib.getTooltipFlag());
 				// list.add(I18n.format("tomsmod.gui.amount", stack.stackSize));
 				if (extraInfo != null && extraInfo.length > 0) {
 					list.addAll(TomsModUtils.getStringList(extraInfo));

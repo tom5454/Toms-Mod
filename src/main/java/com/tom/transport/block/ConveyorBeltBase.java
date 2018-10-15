@@ -14,8 +14,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.transport.tileentity.TileEntityConveyorBase;
+import com.tom.util.TomsModUtils;
 
 public abstract class ConveyorBeltBase extends BlockContainerTomsMod {
 	public static final AxisAlignedBB BB = new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 6F / 16F, 1);

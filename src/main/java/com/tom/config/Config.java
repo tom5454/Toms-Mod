@@ -1,20 +1,14 @@
 package com.tom.config;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.UUID;
 import java.util.function.Predicate;
 
-import mapwriterTm.util.Reference;
-
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import net.minecraftforge.common.config.Configuration;
@@ -23,19 +17,18 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import com.tom.api.energy.EnergyType;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.handler.FuelHandler;
 import com.tom.thirdparty.waila.WailaHandler;
+import com.tom.util.TMLogger;
 import com.tom.worldgen.WorldGen.OreGenEntry;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaRegistrar;
 
 public class Config {
-	public static Configuration configCore, configMinimap, configTransport, configDefense, configEnergy, configWorldGen,
-			configStorage, configTools, configFluidFuels, configFactory;
+	public static Configuration configCore, configTransport, configDefense, configEnergy, configWorldGen,
+	configStorage, configTools, configFluidFuels, configFactory;
 	private static final String CATEGORY_RECIPES = "recipes";
 	private static final String CATEGORY_ENERGY_VALUES = "energy_values";
 	public static final String[] CATEGORIES = new String[]{Configuration.CATEGORY_GENERAL};
@@ -43,45 +36,36 @@ public class Config {
 			CATEGORY_STORAGE_SYSTEM = "storageSystem", CATEGORY_ENDERIO = "Ender IO", CATEGORY_RAILCRAFT = "Railcraft";
 	public static final String RUBBER_TREES_FEATURE = "rubberTrees", OIL_LAKE = "oilLakes", BROKEN_TREE = "brokenTrees";
 	public static boolean enableAdventureItems;
-	public static boolean enableHardModeStarting, enableHardRecipes, enableDefenseSystem, enableResearchSystem,
-			logOredictNames, easyPlates;
+	public static boolean enableHardModeStarting, enableDefenseSystem, enableResearchSystem,
+	logOredictNames, easyPlates;
 	public static boolean disableWoodenTools, disableStoneTools, disableIronTools, disableGoldTools,
-			disableDiamondTools, changeDiamondToolsRecipe, hardToolRecipes, diamondToolsNeedCraftingTable,
-			diamondToolHeadsCraftable, toolsNeedHammer, driveKeepInv;
+	disableDiamondTools, changeDiamondToolsRecipe, hardToolRecipes, diamondToolsNeedCraftingTable,
+	diamondToolHeadsCraftable, toolsNeedHammer, driveKeepInv;
 	public static String[] nerfedTools;
-	// public static boolean enable18AdvMode;
-	// public static boolean enableFlintAxe;
 	public static boolean enableGrassDrops;
 	public static boolean enableCommandExecutor;
-	public static boolean enableMiniMap;
-	// public static boolean enableMineCamera;
 	public static double holotapeSpeed, storageSystemUsage;
-	public static double markerUnloadDist;
 	public static boolean enableConveyorBeltAnimation;
 	public static double forceMultipier, defenseStationUsageDivider;
 	public static int minecartMaxStackSize;
 	public static boolean saveDeathPoints;
-	public static UUID tomsmodFakePlayerUUID;
-	// public static String minecameraCommand;
-	public static int commandFillMaxSize, scientistHouseWeight, placedBlockLifespan, maxTaskCount;
+	public static int commandFillMaxSize, scientistHouseWeight, placedBlockLifespan;
 	public static boolean commandFillLogging, wailaUsesMultimeterForce, logConfigWarnings, addUnbreakableElytraRecipe,
-			enableTickSpeeding, enableChannels, enableProcessors, genScientistHouse, disableScanning;
+	enableTickSpeeding, enableChannels, enableProcessors, genScientistHouse, disableScanning;
 	public static List<String> warnMessages = new ArrayList<>();
 	public static List<Integer> notOverworld, notNether, notEnd;
 	public static int[] lvPower, mvPower, hvPower, NOT_OVERWORLD_DEF = new int[]{-1, 1};
 	public static int[] max_speed_upgrades = new int[3];
+	public static boolean enableHammerOreMining, researchTableRequiresOpenUI;
 
 	public static void init(File configFile) {
 		CoreInit.log.info("Init Configuration");
+		new File(configFile, "fonts").mkdirs();
+		new File(configFile, "recipes/research_table").mkdirs();
 		File coreConfigFile = new File(configFile.getAbsolutePath(), "Core.cfg");
 		if (configCore == null) {
 			configCore = new Configuration(coreConfigFile);
 			configCore.load(); // get the actual data from the file.
-		}
-		File minimapConfigFile = new File(configFile.getAbsolutePath(), "minimap.cfg");
-		if (configMinimap == null) {
-			configMinimap = new Configuration(minimapConfigFile);
-			configMinimap.load(); // get the actual data from the file.
 		}
 		File transportConfigFile = new File(configFile.getAbsolutePath(), "transport.cfg");
 		if (configTransport == null) {
@@ -150,23 +134,9 @@ public class Config {
 		enableCommandExecutor = property.getBoolean(true);
 		property.setRequiresMcRestart(true);
 
-		property = configMinimap.get(Configuration.CATEGORY_GENERAL, "Enable Mini Map", true);
-		enableMiniMap = property.getBoolean(true);
-		property.setRequiresMcRestart(true);
-
 		property = configCore.get(Configuration.CATEGORY_GENERAL, "Holotape Speed", 1D);
 		property.setComment("Speed of the Holotape Writer. How many characters does the writer write in 1 tick. Default 1");
 		holotapeSpeed = property.getDouble(1);
-
-		if (enableMiniMap) {
-			property = configMinimap.get(Reference.catOptions, "Marker Unload Distance", 128D);
-			property.setComment("Marker Unload Distance in the Minimap (in blocks). Default: 128");
-			markerUnloadDist = property.getDouble(128);
-
-			property = configMinimap.get(Reference.catOptions, "Save Death Points", false);
-			property.setComment("Save Markers which was created on Deaths");
-			saveDeathPoints = property.getBoolean(false);
-		}
 
 		property = configDefense.get(Configuration.CATEGORY_GENERAL, "Force Power Convert Multipier", 2);
 		property.setComment("Force Converter Multiplier calculation: HV / multiplier. Default: 2");
@@ -175,22 +145,6 @@ public class Config {
 
 		property = configTransport.get(CATEGORY_MINECRAFT, "Max Stack Size of Minecarts", 3);
 		minecartMaxStackSize = property.getInt();
-		property.setRequiresMcRestart(true);
-
-		UUID randomUUID = MathHelper.getRandomUUID();
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setUniqueId("uuid", randomUUID);
-		property = configCore.get(Configuration.CATEGORY_GENERAL, "Tom's Mod Fake Player UUID", tag.toString());
-		String uuid = property.getString();
-		property.setComment("!!! DO NOT MODIFY THIS IF YOU DON'T KNOW WHAT YOU ARE DOING !!! CAN CORRUPT SAVED WORLDS, because it may break codes which saves UUID !!! Also this code is in JSON format DO NOT brake the format, it will lead to an exception which CAN CORRUPT SAVES, a new UUID will get generated.");
-		try {
-			tomsmodFakePlayerUUID = readUUID(uuid);
-		} catch (NBTException e) {
-			catchException(e, randomUUID, property, tag, uuid);
-		} catch (NoSuchFieldException e) {
-			catchException(e, randomUUID, property, tag, uuid);
-		}
-		TomsModUtils.constructFakePlayer();
 		property.setRequiresMcRestart(true);
 
 		configCore.addCustomCategoryComment(CATEGORY_RECIPES, "All recipes related configurations are here.");
@@ -225,10 +179,6 @@ public class Config {
 		property = configCore.get(Configuration.CATEGORY_GENERAL, "Enable Tick Speeding", true);
 		property.setComment("Allow external devices to speed up the machines ticks");
 		enableTickSpeeding = property.getBoolean(true);
-
-		property = configCore.get(CATEGORY_RECIPES, "Decreased item outputs", false);
-		property.setComment("Decrease crafting outputs.");
-		enableHardRecipes = property.getBoolean(false);
 
 		property = configDefense.get(Configuration.CATEGORY_GENERAL, "Enable Defense System", true);
 		property.setComment("Enable Base Defense Items And Blocks");
@@ -379,21 +329,21 @@ public class Config {
 			logWarn("****************************************");
 		}
 
-		maxTaskCount = configCore.getInt("Max tasks per tick", "server", 2000, -1, Integer.MAX_VALUE, "Max tasks to process on every server tick. The handler skips all the tasks above this limit to the next tick.");
-
-		easyPlates = configCore.getBoolean("Loseless Plates", CATEGORY_RECIPES, false, "");
+		//easyPlates = configCore.getBoolean("Loseless Plates", CATEGORY_RECIPES, false, "");
 
 		String cat = "electric_machines" + Configuration.CATEGORY_SPLITTER + "max_speed_upgrades";
 		max_speed_upgrades[2] = configFactory.getInt("lv", cat, 8, 1, 64, "");
 		max_speed_upgrades[1] = configFactory.getInt("mv", cat, 16, 1, 64, "");
 		max_speed_upgrades[0] = configFactory.getInt("hv", cat, 32, 1, 64, "");
 
+		enableHammerOreMining = configCore.getBoolean("Enable Hammer Ore Mining", CATEGORY_RECIPES, true, "Enable Curshed Ore Drops From blocks");
+
+		researchTableRequiresOpenUI = configCore.getBoolean("researchTableRequiresOpenUI", Configuration.CATEGORY_GENERAL, true, "Research Table Requires Open GUI to process research and crafting");
 	}
 
 	public static void save() {
 		CoreInit.log.info("Saving configuration");
 		configCore.save();
-		configMinimap.save();
 		configTransport.save();
 		configDefense.save();
 		configEnergy.save();
@@ -415,21 +365,6 @@ public class Config {
 		TMLogger.info("Updating configs...");
 	}
 
-	private static UUID readUUID(String uuid) throws NBTException, NoSuchFieldException {
-		NBTTagCompound readTag = JsonToNBT.getTagFromJson(uuid);
-		if (readTag.hasUniqueId("uuid")) {
-			return readTag.getUniqueId("uuid");
-		} else {
-			throw new NoSuchFieldException("Missing field in the Json: uuid");
-		}
-	}
-
-	private static void catchException(Exception e, UUID randomUUID, Property property, NBTTagCompound tag, String uuid) {
-		TMLogger.bigCatching(e, "SOMEONE EDITED THE CONFIG FILE AND CORRUPTED THE UUID!!! A NEW ONE WILL GET GENERATED. Errored UUID Json: " + uuid);
-		property.set(tag.toString());
-		tomsmodFakePlayerUUID = randomUUID;
-	}
-
 	public static boolean isWailaUsesMultimeter(IWailaConfigHandler config) {
 		return wailaUsesMultimeterForce ? true : config.getConfig(WailaHandler.ENERGY_HANDLER_ID);
 	}
@@ -446,7 +381,7 @@ public class Config {
 		int yEnd = configWorldGen.getInt("Y End " + name.name, "ore_generation_adv", name.yStart + name.ySize, 1, 255, "Generate " + name.name + " below set value", name.name + ".yend");
 		name.yStart = Math.min(yEnd, yStart);
 		yEnd = Math.max(yEnd, yStart);
-		name.yStart = yEnd - name.yStart;
+		name.ySize = yEnd - name.yStart;
 		name.maxAmount = configWorldGen.getInt("Max Per Chunk " + name.name, "ore_generation_adv", name.maxAmount, 1, 128, "Max Ore per Chunk " + name.name, name.name + ".maxamount");
 		name.veinSize = configWorldGen.getInt("Vein Size Per Chunk " + name.name, "ore_generation_adv", name.veinSize, 1, 128, "Vein Size per Chunk " + name.name, name.name + ".veinsize");
 		return ret;
@@ -469,6 +404,10 @@ public class Config {
 	public static void logWarn(String msg) {
 		warnMessages.add(msg);
 		TMLogger.warn(msg);
+	}
+	public static void logErr(String msg) {
+		warnMessages.add(msg);
+		TMLogger.error(msg);
 	}
 
 	private static Map<String, Predicate<World>> features = new HashMap<>();
@@ -548,4 +487,19 @@ public class Config {
 	public static boolean changeRecipe(String name) {
 		return configCore.getBoolean("O " + name, CATEGORY_RECIPES, true, "Overwrite " + name + " recipe");
 	}
+
+	public static void error(String msg, Throwable e) {
+		logErr("****************************************");
+		warnMessages.add(msg);
+		e.printStackTrace(ERRORSTREAM);
+		TMLogger.error(msg, e);
+		logErr("****************************************");
+	}
+	private static PrintStream ERRORSTREAM = new PrintStream(System.err){
+		@Override
+		public void println(Object x) {
+			String s = String.valueOf(x);
+			warnMessages.add(s);
+		}
+	};
 }

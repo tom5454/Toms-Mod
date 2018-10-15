@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodtransport:tm.steamduct",
+    "data": 0,
+    "count": 12
+  },
+  "pattern": [
+    "B B",
+    "PHP",
+    "B B"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "ore": "plateBrass",
+      "type": "forge:ore_dict"
+    },
+    "B": {
+      "ore": "plateBronze",
+      "type": "forge:ore_dict"
+    },
+    "H": {
+      "ore": "itemHammer_lvl2",
+      "type": "forge:ore_dict"
+    }
+  }
+}

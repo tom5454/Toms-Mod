@@ -1,0 +1,33 @@
+{
+  "result": {
+    "nbt": {
+      "damage": 6.0
+    },
+    "item": "tomsmodcore:tm.hammer",
+    "data": 2,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "id": "copperHammerHead",
+      "type": "tomsmodcore:material"
+    },
+    {
+      "item": "minecraft:stick",
+      "data": 0
+    },
+    {
+      "item": "minecraft:stick",
+      "data": 0
+    },
+    {
+      "item": "minecraft:stick",
+      "data": 0
+    },
+    {
+      "item": "minecraft:flint",
+      "data": 0
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

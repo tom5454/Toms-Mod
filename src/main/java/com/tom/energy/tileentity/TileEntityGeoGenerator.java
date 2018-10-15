@@ -5,23 +5,28 @@ import static com.tom.api.energy.EnergyType.LV;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
+import com.tom.api.block.IItemTile;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyProvider;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.block.GeoGenerator;
 
-public class TileEntityGeoGenerator extends TileEntityTomsMod implements ITileFluidHandler, IEnergyProvider {
+public class TileEntityGeoGenerator extends TileEntityTomsMod implements ITileFluidHandler, IEnergyProvider, IItemTile {
 	private EnergyStorage energy = new EnergyStorage(20000, 200);
 	private FluidTank tank = new FluidTank(10000);
 
@@ -46,7 +51,7 @@ public class TileEntityGeoGenerator extends TileEntityTomsMod implements ITileFl
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return canConnectEnergy(from, type) ? energy.getMaxEnergyStored() : 0;
 	}
 
@@ -101,5 +106,16 @@ public class TileEntityGeoGenerator extends TileEntityTomsMod implements ITileFl
 	public void writeToStackNBT(NBTTagCompound tag) {
 		energy.writeToNBT(tag);
 		tag.setTag("tankS", tank.writeToNBT(new NBTTagCompound()));
+	}
+
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		ItemStack s = new ItemStack(state.getBlock());
+		s.setTagCompound(new NBTTagCompound());
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToStackNBT(tag);
+		s.getTagCompound().setTag("BlockEntityTag", tag);
+		s.getTagCompound().setBoolean("stored", true);
+		drops.add(s);
 	}
 }

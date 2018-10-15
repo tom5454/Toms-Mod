@@ -4,13 +4,14 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,8 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.item.IProcessor;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
+import com.tom.util.TomsModUtils;
 
 public class ItemProcessor extends Item implements IModelRegisterRequired, IProcessor {
 	public ItemProcessor() {
@@ -41,7 +42,7 @@ public class ItemProcessor extends Item implements IModelRegisterRequired, IProc
 	public static enum ProcessorTypes implements IStringSerializable {
 		BASIC(1, 10, 2048, 0.1, 0.04, 1, 0, 128, 0, 0, 0, 262144, 0.1),;
 		public final int tier, maxMemory, cores, maxTowers, maxChannels, maxProcessintPower, maxAutoCrafting,
-				maxOperations, maxStorage, maxAutoCraftingStorage;
+		maxOperations, maxStorage, maxAutoCraftingStorage;
 		public final double power, powerPerOp, heat;
 		public static final ProcessorTypes[] VALUES = values();
 
@@ -113,7 +114,7 @@ public class ItemProcessor extends Item implements IModelRegisterRequired, IProc
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		if (GuiScreen.isShiftKeyDown()) {
 			tooltip.add(I18n.format("tomsMod.tooltip.processor.tier", getProcessorTier(stack)));
 			tooltip.add(I18n.format("tomsMod.tooltip.processor.cores", getCoreCount(stack)));
@@ -133,10 +134,11 @@ public class ItemProcessor extends Item implements IModelRegisterRequired, IProc
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		for (ProcessorTypes t : ProcessorTypes.VALUES) {
-			subItems.add(new ItemStack(this, 1, t.ordinal()));
-		}
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))
+			for (ProcessorTypes t : ProcessorTypes.VALUES) {
+				subItems.add(new ItemStack(this, 1, t.ordinal()));
+			}
 	}
 
 	@Override

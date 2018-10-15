@@ -18,10 +18,10 @@ import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.ElectricFurnace;
 import com.tom.recipes.handler.MachineCraftingHandler;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityElectricFurnaceAdv extends TileEntityTomsMod implements ISidedInventory, IEnergyReceiver {
 	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
@@ -130,7 +130,7 @@ public class TileEntityElectricFurnaceAdv extends TileEntityTomsMod implements I
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return energy.getMaxEnergyStored();
 	}
 
@@ -199,7 +199,7 @@ public class TileEntityElectricFurnaceAdv extends TileEntityTomsMod implements I
 		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
 

@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:ultimatetank"
+  ],
+  "level": "tomsMod.craftingLevel.mv",
+  "recipe": {
+    "result": {
+      "item": "tomsmodstorage:tm.tank.ultimate",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PGP",
+      "GTG",
+      "PGP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateEnderium",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "item": "tomsmodstorage:tm.tank.elite",
+        "data": 0
+      },
+      "G": {
+        "ore": "glassEnder",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 4000
+}

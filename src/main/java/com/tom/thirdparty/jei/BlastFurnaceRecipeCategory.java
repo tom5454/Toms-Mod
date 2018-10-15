@@ -12,17 +12,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
-import com.tom.apis.RecipeData;
 import com.tom.lib.Configs;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.thirdparty.jei.BlastFurnaceRecipeCategory.BlastFurnaceRecipeJEI;
+import com.tom.util.RecipeData;
 
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public class BlastFurnaceRecipeCategory implements IRecipeCategory<BlastFurnaceRecipeJEI> {
 
@@ -35,7 +37,7 @@ public class BlastFurnaceRecipeCategory implements IRecipeCategory<BlastFurnaceR
 			// data.itemstack3, data.itemstack4, data.itemstack5,
 			// data.itemstack6, data.itemstack7, data.itemstack8,
 			// data.itemstack9};
-			BlastFurnaceRecipeJEI cr = new BlastFurnaceRecipeJEI(data.itemstack0, data.itemstack1, data.itemstack2, data.energy, data.processTime);
+			BlastFurnaceRecipeJEI cr = new BlastFurnaceRecipeJEI(data.itemstack0, data.itemstack1, data.itemstack2, data.energy, data.processTime, data.id);
 			recipes.add(cr);
 		}
 		return recipes;
@@ -65,29 +67,29 @@ public class BlastFurnaceRecipeCategory implements IRecipeCategory<BlastFurnaceR
 	}
 
 	/*public static class BlastFurnaceHandler implements IRecipeHandler<BlastFurnaceRecipeJEI>{
-	
+
 		@Override
 		public Class<BlastFurnaceRecipeJEI> getRecipeClass() {
 			return BlastFurnaceRecipeJEI.class;
 		}
-	
+
 		@Override
 		public IRecipeWrapper getRecipeWrapper(BlastFurnaceRecipeJEI recipe) {
 			return recipe;
 		}
-	
+
 		@Override
 		public boolean isRecipeValid(BlastFurnaceRecipeJEI recipe) {
 			return recipe.input1 != null && recipe.output != null;
 		}
-	
+
 		@Override
 		public String getRecipeCategoryUid(BlastFurnaceRecipeJEI recipe) {
 			return JEIConstants.BLAST_FURNACE_ID;
 		}
-	
+
 	}*/
-	public static class BlastFurnaceRecipeJEI extends BlankRecipeWrapper {
+	public static class BlastFurnaceRecipeJEI implements IRecipeWrapper {
 		@Nullable
 		private final ItemStack input1;
 		@Nonnull
@@ -96,13 +98,15 @@ public class BlastFurnaceRecipeCategory implements IRecipeCategory<BlastFurnaceR
 		private final ItemStack input2;
 		private final int heat;
 		private final int time;
+		private final String id;
 
-		public BlastFurnaceRecipeJEI(ItemStack input1, ItemStack input2, ItemStack output, int heat, int time) {
+		public BlastFurnaceRecipeJEI(ItemStack input1, ItemStack input2, ItemStack output, int heat, int time, String id) {
 			this.input1 = input1;
 			this.output = output;
 			this.input2 = input2;
 			this.heat = heat;
 			this.time = time;
+			this.id = id;
 		}
 
 		@Override
@@ -119,8 +123,8 @@ public class BlastFurnaceRecipeCategory implements IRecipeCategory<BlastFurnaceR
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setOutput(ItemStack.class, output);
-			ingredients.setInputs(ItemStack.class, Arrays.asList(new ItemStack[]{input1, input2}));
+			ingredients.setOutput(VanillaTypes.ITEM, output);
+			ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(new ItemStack[]{input1, input2}));
 		}
 	}
 
@@ -139,6 +143,12 @@ public class BlastFurnaceRecipeCategory implements IRecipeCategory<BlastFurnaceR
 		recipeLayout.getItemStacks().set(0, recipe.input1);
 		recipeLayout.getItemStacks().set(1, recipe.input2);
 		recipeLayout.getItemStacks().set(2, recipe.output);
+		recipeLayout.getItemStacks().addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+			if (slotIndex == 2) {
+				if(Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
+					tooltip.add(TextFormatting.GRAY + recipe.id);
+			}
+		});
 	}
 
 	@Override

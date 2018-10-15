@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.vecmath.Matrix4f;
 
@@ -25,8 +26,6 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
-
-import com.google.common.base.Function;
 
 import com.tom.client.CustomModelLoader;
 import com.tom.storage.StorageInit;
@@ -281,7 +280,10 @@ public class AdvRouterModel implements IModel {
 				if (c != null)
 					conn = c;
 			}
-			return models[state.getValue(AdvStorageSystemRouter.STATE)][conn];
+			if(state == null)
+				return models[2][conn];
+			else
+				return models[state.getValue(AdvStorageSystemRouter.STATE)][conn];
 		}
 
 		@Override

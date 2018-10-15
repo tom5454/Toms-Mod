@@ -19,7 +19,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.MultiBlockPos;
+import com.tom.util.MultiBlockPos;
 
 import com.tom.core.tileentity.TileEntityHidden;
 
@@ -49,8 +49,8 @@ public class BlockHidden extends BlockContainerTomsMod {
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntityHidden te = (TileEntityHidden) worldIn.getTileEntity(pos);
-		if (te.drop != null)
-			spawnAsEntity(worldIn, pos, te.drop);
+		/*if (te.drop != null)
+			spawnAsEntity(worldIn, pos, te.drop);*/
 		if (te.master != null && !te.killed) {
 			IBlockState masterState = worldIn.getBlockState(te.master);
 			if (masterState.getBlock() instanceof IBreakingDetector) {

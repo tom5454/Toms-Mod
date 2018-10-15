@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:tm.wirecutters",
+    "data": 25,
+    "count": 1
+  },
+  "pattern": [
+    "PHP",
+    " P ",
+    "S S"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "ore": "plateEnderium",
+      "type": "forge:ore_dict"
+    },
+    "S": {
+      "ore": "rodIron",
+      "type": "forge:ore_dict"
+    },
+    "H": {
+      "ore": "itemHammer_lvl2",
+      "type": "forge:ore_dict"
+    }
+  }
+}

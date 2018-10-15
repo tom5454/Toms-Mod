@@ -25,30 +25,29 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.multipart.IGuiMultipart;
 import com.tom.api.network.INBTPacketReceiver;
-import com.tom.apis.TomsModUtils;
-import com.tom.handler.PlayerHandler;
+import com.tom.client.GuiButtonTransparent;
+import com.tom.handler.TMPlayerHandler;
 import com.tom.storage.StorageInit;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.ITerminal;
 import com.tom.storage.handler.StorageNetworkGrid.ControllMode;
 import com.tom.storage.handler.StorageNetworkGrid.IStorageTerminalGui;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
-import com.tom.storage.tileentity.gui.GuiCraftingAmountSelection.GuiButtonHidden;
 import com.tom.storage.tileentity.inventory.ContainerTerminalBase;
 import com.tom.storage.tileentity.inventory.ContainerTerminalBase.SlotAction;
 import com.tom.thirdparty.jei.JEIHandler;
-
-import com.tom.core.tileentity.gui.GuiTomsMod;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.container.IPartInfo;
 import mcmultipart.api.multipart.MultipartHelper;
 import mcmultipart.api.slot.IPartSlot;
 
-public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, IStorageTerminalGui {
+public class GuiTerminalBase extends GuiTomsLib implements INBTPacketReceiver, IStorageTerminalGui {
 	/** Amount scrolled in Creative mode inventory (0 = top, 1 = bottom) */
 	protected float currentScroll;
 	/** True if the scrollbar is being dragged */
@@ -69,7 +68,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 	protected GuiButtonSortingDir buttonDirection;
 	protected GuiButtonSearchType buttonSearchType;
 	protected GuiButtonViewType buttonViewType;
-	protected GuiButtonHidden buttonCraftings;
+	protected GuiButtonTransparent buttonCraftings;
 	protected GuiButtonControllMode buttonCtrlMode;
 	protected GuiButtonTermMode buttonMode;
 	public final int textureSlotCount, guiHeight, slotStartX, slotStartY;
@@ -96,7 +95,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				FontRenderer fontrenderer = mc.fontRenderer;
 				mc.getTextureManager().bindTexture(LIST_TEXTURE);
@@ -112,7 +111,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 				// / 2, this.height);
 				this.mouseDragged(mc, mouseX, mouseY);
 				/*int j = 14737632;
-				
+
 				if (packedFGColour != 0)
 				{
 				    j = packedFGColour;
@@ -144,7 +143,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(LIST_TEXTURE);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -173,7 +172,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(LIST_TEXTURE);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -202,7 +201,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(LIST_TEXTURE);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -231,7 +230,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(LIST_TEXTURE);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -260,7 +259,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(LIST_TEXTURE);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -298,8 +297,8 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 				}
 			}
 			jeiSync = searchBoxType > 1;
-			ICraftable.CraftableSorting type = PlayerHandler.getSortingType(data);
-			comparator = type.getComparator(PlayerHandler.getSortingDir(data));
+			ICraftable.CraftableSorting type = TMPlayerHandler.getSortingType(data);
+			comparator = type.getComparator(TMPlayerHandler.getSortingDir(data));
 			sortData = data;
 			searchType = searchBoxType;
 			byte termMode = message.getByte("cm");
@@ -353,7 +352,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		buttonList.add(buttonSearchType);
 		buttonViewType = new GuiButtonViewType(3, guiLeft - 18, guiTop + 3 * 18 + 5);
 		buttonList.add(buttonViewType);
-		buttonCraftings = new GuiButtonHidden(4, guiLeft + 172, guiTop - 2, 18, 18);
+		buttonCraftings = new GuiButtonTransparent(4, guiLeft + 172, guiTop - 2, 18, 18);
 		buttonList.add(buttonCraftings);
 		buttonCtrlMode = new GuiButtonControllMode(5, guiLeft - 18, guiTop + 4 * 18 + 5);
 		buttonList.add(buttonCtrlMode);
@@ -389,8 +388,8 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 			}
 		}
 		super.updateScreen();
-		buttonDirection.dir = PlayerHandler.getSortingDir(sortData);
-		buttonSortingType.type = PlayerHandler.getSortingType(sortData).ordinal();
+		buttonDirection.dir = TMPlayerHandler.getSortingDir(sortData);
+		buttonSortingType.type = TMPlayerHandler.getSortingType(sortData).ordinal();
 		buttonSearchType.type = searchType;
 		buttonViewType.type = getContainer().terminalType;
 		powered = te.getTerminalState();
@@ -592,7 +591,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 					notDone = false;
 				}
 				if (notDone) {
-					for (String lp : is.getStack().getTooltip(mc.player, mc.gameSettings.advancedItemTooltips)) {
+					for (String lp : is.getStack().getTooltip(mc.player, getTooltipFlag())) {
 						if (m.matcher(lp).find()) {
 							addStackToClientList(is);
 							notDone = false;
@@ -623,13 +622,13 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			ICraftable.CraftableSorting type = ICraftable.CraftableSorting.get(PlayerHandler.getSortingType(sortData).ordinal() + 1);
-			boolean dir = PlayerHandler.getSortingDir(sortData);
-			sendButtonUpdate(0, PlayerHandler.getItemSortingMode(type, dir));
+			ICraftable.CraftableSorting type = ICraftable.CraftableSorting.get(TMPlayerHandler.getSortingType(sortData).ordinal() + 1);
+			boolean dir = TMPlayerHandler.getSortingDir(sortData);
+			sendButtonUpdate(0, TMPlayerHandler.getItemSortingMode(type, dir));
 		} else if (button.id == 1) {
-			ICraftable.CraftableSorting type = PlayerHandler.getSortingType(sortData);
-			boolean dir = !PlayerHandler.getSortingDir(sortData);
-			sendButtonUpdate(0, PlayerHandler.getItemSortingMode(type, dir));
+			ICraftable.CraftableSorting type = TMPlayerHandler.getSortingType(sortData);
+			boolean dir = !TMPlayerHandler.getSortingDir(sortData);
+			sendButtonUpdate(0, TMPlayerHandler.getItemSortingMode(type, dir));
 		} else if (button.id == 2) {
 			sendButtonUpdate(1, searchType + 1);
 		} else if (button.id == 3) {

@@ -1,7 +1,9 @@
 package com.tom.core.item;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.core.CoreInit;
@@ -43,5 +45,12 @@ public class ItemCircuitDrawingPen extends Item implements IModelRegisterRequire
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
 		return super.getUnlocalizedName(stack) + (stack.getMetadata() > 0 ? "_empty" : "");
+	}
+	@Override
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+		if (this.isInCreativeTab(tab)){
+			items.add(new ItemStack(this, 1, 0));
+			items.add(new ItemStack(this, 1, 1));
+		}
 	}
 }

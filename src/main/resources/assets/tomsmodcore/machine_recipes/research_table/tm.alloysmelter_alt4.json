@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:lvalloysmelter"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.alloysmelter",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "IHI",
+      "EFE",
+      "IPI"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "blockPiston",
+        "type": "forge:ore_dict"
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "F": {
+        "item": "tomsmodfactory:tm.electricfurnace",
+        "data": 2
+      },
+      "H": {
+        "id": "heatingCoilCupronickel",
+        "type": "tomsmodcore:material"
+      },
+      "I": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

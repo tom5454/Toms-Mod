@@ -10,17 +10,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.lib.Configs;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityMonitor extends TileEntityMonitorBase implements IPeripheral {
+public class TileEntityMonitor extends TileEntityMonitorBase implements ITMCompatPeripheral {
 	private int posX = 0;
 	private int posY = 0;
 	private int posZ = 0;
@@ -31,7 +24,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 
 	public int color;
 	public String pName = "tm_basicMonitor";
-	private List<IComputerAccess> computers = new ArrayList<>();
+	private List<IComputer> computers = new ArrayList<>();
 	public String[] methods = {"fill", "filledRectangle", "rectangle", "listMethods", "setSize", "getSize", "sync", "clear", "addText", "addTexture"};
 
 	@Override
@@ -45,7 +38,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+	public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 		Object[] ret = new Object[1];
 		ret[0] = false;
 		if (method == 0) {
@@ -58,8 +51,8 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 				throw new LuaException("Bad argument #1 (expected number)");
 			}
 			if (color >= 0) {
-				for (int i = 0;i < sizeX;i++) {
-					for (int j = 0;j < sizeY;j++) {
+				for (int i = 0;i < getSize();i++) {
+					for (int j = 0;j < getSize();j++) {
 						this.screen[i][j] = color;
 					}
 				}
@@ -93,9 +86,9 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 				int yStart = MathHelper.floor((Double) a[1]) - 1;
 				int xStop = xStart + MathHelper.floor((Double) a[2]);
 				int yStop = yStart + MathHelper.floor((Double) a[3]);
-				if (xStart < sizeX + 1 && yStart < sizeY + 1 && xStart >= 0 && yStart >= 0) {
-					xStop = xStop > sizeX ? sizeX : xStop;
-					yStop = yStop > sizeY ? sizeY : yStop;
+				if (xStart < getSize() + 1 && yStart < getSize() + 1 && xStart >= 0 && yStart >= 0) {
+					xStop = xStop > getSize() ? getSize() : xStop;
+					yStop = yStop > getSize() ? getSize() : yStop;
 					for (int i = xStart;i < xStop;i++) {
 						for (int y = yStart;y < yStop;y++) {
 							this.screen[y][i] = color;
@@ -132,9 +125,9 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 				int yStart = MathHelper.floor((Double) a[1]) - 1;
 				int xStop = xStart + MathHelper.floor((Double) a[2]);
 				int yStop = yStart + MathHelper.floor((Double) a[3]);
-				if (xStart < sizeX + 1 && yStart < sizeY + 1 && xStart >= 0 && yStart >= 0) {
-					xStop = xStop > sizeX ? sizeX : xStop;
-					yStop = yStop > sizeY ? sizeY : yStop;
+				if (xStart < getSize() + 1 && yStart < getSize() + 1 && xStart >= 0 && yStart >= 0) {
+					xStop = xStop > getSize() ? getSize() : xStop;
+					yStop = yStop > getSize() ? getSize() : yStop;
 					for (int i = xStart;i < xStop;i++) {
 						for (int y = yStart;y < yStop;y++) {
 							this.screen[i][y] = (i == xStart || i == xStop - 1) ? color : ((y == yStart || y == yStop - 1) ? color : this.screen[i][y]);
@@ -158,11 +151,10 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 			if (s > Configs.monitorSize)
 				throw new LuaException("Bad Argument #1, (too big number (" + s + ") maximum value is " + Configs.monitorSize + " )");
 			this.screen = new int[s][s];
-			this.sizeX = s;
-			this.sizeY = s;
+			this.setSize(s);
 			ret[0] = true;
 		} else if (method == 5) {
-			return new Object[]{this.sizeX, this.sizeY};
+			return new Object[]{this.getSize(), this.getSize()};
 		} else if (method == 6) {
 			this.markDirty();
 			markBlockForUpdate(pos);
@@ -178,7 +170,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 				int c = a.length > 3 && a[3] instanceof Double ? MathHelper.floor((Double) a[3]) : 0xFFFFFF;
 				String s = a[2].toString();
 				LuaText t = new LuaText(x, y, c, s, 0, 1);
-				this.textList.add(t);
+				this.textList.put(t);
 				return new Object[]{true, t};
 			} else {
 				throw new LuaException("Invalid Arguments, excepted (number,number,String,[number])");
@@ -190,7 +182,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 				int c = a.length > 3 && a[3] instanceof Double ? MathHelper.floor((Double) a[3]) : 0xFFFFFFFF;
 				String s = a[2].toString();
 				LuaTexture t = new LuaTexture(x, y, c, s, 0, false, 1, 1);
-				this.textureList.add(t);
+				this.textureList.put(t);
 				return new Object[]{true, t};
 			} else {
 				throw new LuaException("Invalid Arguments, excepted (number,number,String,[number])");
@@ -294,7 +286,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 				}
 			}
 		}else if (method == 3){
-		
+
 		}
 		if ((Boolean) ret[0]){
 			//this.write(screenS, this.getRow(xCoord, yCoord, zCoord));
@@ -303,20 +295,15 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 	}
 
 	@Override
-	public void attach(IComputerAccess computer) {
+	public void attach(IComputer computer) {
 		computers.add(computer);
 
 	}
 
 	@Override
-	public void detach(IComputerAccess computer) {
+	public void detach(IComputer computer) {
 		computers.remove(computer);
 
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		return false;
 	}
 
 	@Override
@@ -366,7 +353,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		//}
 		return TomsMathHelper.toInt(table);
 	}
-	
+
 	/*public void writeToPacket(ByteBuf buf){
 		buf.writeInt(this.color);
 		int[][] current = TomsMathHelper.compressInt(this.read(this.getRow(xCoord, yCoord, zCoord)));
@@ -376,7 +363,7 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		}
 		//System.out.println("write to packet");
 	}
-	
+
 	public void readFromPacket(ByteBuf buf){
 		this.color = buf.readInt();
 		int[][] current = {};
@@ -395,19 +382,19 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		//System.out.println("update");
 		this.register(xCoord, yCoord, zCoord);
 	}
-	
+
 	public void setMeta(int meta){
 		this.blockMetadata = meta;
 	}
-	
+
 	public void setColor(int color) {
 		this.color = color;
 	}
-	
+
 	/*public void onBlockPlaced(World world, int x, int y, int z){
 		this.register(x, y, z);
 	}
-	
+
 	private void register(int x, int y, int z){
 		int[] list = TomsMathHelper.find(screen, x, y, z, color);
 		boolean found = list[0] == 1;
@@ -428,11 +415,11 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 			screen[last] = current;
 		}
 	}
-	
+
 	private void write(int[][] table, int pos){
 		screen[pos][1] = table;
 	}
-	
+
 	private boolean[] read(int pos, int line){
 		boolean[] ret = new boolean[15];
 		for(int part = 0;part<16;part++){
@@ -445,12 +432,12 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		}
 		return ret;
 	}
-	
+
 	private int getRow(int x, int y, int z){
 		int[] list = TomsMathHelper.find(screen, x, y, z, color);
 		return list[1];
 	}
-	
+
 	private boolean[] fill(boolean mode){
 		boolean[] current = new boolean[15];
 		for(int i=0;i<current.length;i++){
@@ -458,15 +445,15 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		}
 		return current;
 	}
-	
+
 	private int[][] read(int pos){
 		return screen[pos][1];
 	}
-	
+
 	public int[][] getScreen(){
 		return screenS;
 	}
-	
+
 	public int[] getProperties() {
 		return this.properties;
 	}*/
@@ -480,8 +467,8 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 					float xPos = x == this.THICKNESS ? z : x;
 					if (this.direction % 2 == 1)
 						xPos = 1F - xPos;
-					int xP = MathHelper.floor(xPos * this.sizeX);
-					int yP = MathHelper.floor(yPos * this.sizeY);
+					int xP = MathHelper.floor(xPos * this.getSize());
+					int yP = MathHelper.floor(yPos * this.getSize());
 					int xCoord = pos.getX();
 					int yCoord = pos.getY();
 					int zCoord = pos.getZ();
@@ -502,4 +489,5 @@ public class TileEntityMonitor extends TileEntityMonitorBase implements IPeriphe
 		this.posZ = z;
 		return this;
 	}
+
 }

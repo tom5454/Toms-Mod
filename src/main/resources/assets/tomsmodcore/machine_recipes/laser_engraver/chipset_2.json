@@ -1,0 +1,15 @@
+{
+  "blueprint": "advchip",
+  "in": {
+    "item": "tomsmodcore:tm.cchipsetbase",
+    "data": 2,
+    "count": 1
+  },
+  "level": 1,
+  "time": 500,
+  "out": {
+    "item": "tomsmodcore:tm.cchipset",
+    "data": 2,
+    "count": 1
+  }
+}

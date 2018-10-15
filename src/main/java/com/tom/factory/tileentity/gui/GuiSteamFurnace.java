@@ -3,12 +3,11 @@ package com.tom.factory.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntitySteamFurnace;
 import com.tom.factory.tileentity.inventory.ContainerSteamFurnace;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiSteamFurnace extends GuiTomsMod {
+public class GuiSteamFurnace extends GuiTomsLib {
 	private TileEntitySteamFurnace te;
 
 	public GuiSteamFurnace(InventoryPlayer playerInv, TileEntitySteamFurnace te) {

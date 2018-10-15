@@ -24,14 +24,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.terminal.GuiPartList;
-import com.tom.apis.BigEntry;
-import com.tom.apis.EmptyBigEntry;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.lib.GlobalFields;
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 import com.tom.network.NetworkHandler;
+import com.tom.util.BigEntry;
+import com.tom.util.EmptyBigEntry;
 
 import com.tom.core.item.TabletHandler;
 
@@ -310,11 +308,7 @@ public class MessageTabGuiAction extends MessageBase<MessageTabGuiAction> {
 
 	@Override
 	public void handleClientSide(MessageTabGuiAction message, EntityPlayer player) {
-		if (TomsModUtils.isClient())
-			handle(message, player);
-		else {
-			TMLogger.bigError("Trying to call handleClientSide method on the SERVER side. This SHOULDN'T happen!");
-		}
+		handle(message, player);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -403,7 +397,7 @@ public class MessageTabGuiAction extends MessageBase<MessageTabGuiAction> {
 				if (is != null && is.getItem() == CoreInit.Tablet) {
 					if (is.getTagCompound() != null && is.getTagCompound().hasKey("x") && is.getTagCompound().hasKey("y") && is.getTagCompound().hasKey("z") && is.getTagCompound().hasKey("id")) {
 						TileEntity tile = player.world.getTileEntity(new BlockPos(is.getTagCompound().getInteger("x"), is.getTagCompound().getInteger("y"), is.getTagCompound().getInteger("z")));
-						NBTTagCompound tabTag = is.getTagCompound();
+						//NBTTagCompound tabTag = is.getTagCompound();
 						if (tile instanceof TileEntityTabletController) {
 							TileEntityTabletController te = (TileEntityTabletController) tile;
 							if (this.id == 0) {
@@ -413,15 +407,15 @@ public class MessageTabGuiAction extends MessageBase<MessageTabGuiAction> {
 							} else if (this.id == 3) {
 								te.queueEvent("tablet_input", new Object[]{player.getName(), message.text, message.x, message.y});
 							} else if (this.id == 6) {
-								int id = tabTag.getInteger("id");
-								TabletHandler tab = te.getTablet(id);
+								//long id = tabTag.getLong("tabid");
+								TabletHandler tab = te.getTablet(player.getName());
 								if (tab != null) {
-									tab.term.inputText = message.text;
+									//tab.term.inputText = message.text;
 									te.queueEvent("tab_textBoxReceive", new Object[]{player.getName()});
 								}
 							} else if (this.id == 9) {
-								int id = tabTag.getInteger("id");
-								TabletHandler tab = te.getTablet(id);
+								//long id = tabTag.getInteger("tabid");
+								TabletHandler tab = te.getTablet(player.getName());
 								if (tab != null) {
 									tab.cursorX = message.x;
 									tab.cursorY = message.y;
@@ -440,8 +434,8 @@ public class MessageTabGuiAction extends MessageBase<MessageTabGuiAction> {
 									tab.cHitBox = message.in ? message.text : null;
 								}
 							} else if (this.id == 10) {
-								int id = tabTag.getInteger("id");
-								TabletHandler tab = te.getTablet(id);
+								//int id = tabTag.getInteger("id");
+								TabletHandler tab = te.getTablet(player.getName());
 								if (tab != null) {
 									tab.cursorX = message.x;
 									tab.cursorY = message.y;
@@ -457,6 +451,7 @@ public class MessageTabGuiAction extends MessageBase<MessageTabGuiAction> {
 							}
 						}
 					}
+					break;
 				}
 			}
 		} else if (id == 7 && player.inventory.getStackInSlot(button) != null) {

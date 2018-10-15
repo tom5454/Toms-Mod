@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodcore:uraniumrod",
+    "data": 0,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "tomsmodcore:fuelrodempty",
+      "data": 0
+    },
+    {
+      "ore": "ingotUranium",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

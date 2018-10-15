@@ -19,8 +19,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import com.tom.client.EventHandlerClient;
-import com.tom.handler.PlayerHandler;
-import com.tom.network.MessageBase;
+import com.tom.handler.TMPlayerHandler;
+import com.tom.lib.network.MessageBase;
 import com.tom.network.NetworkHandler;
 
 import io.netty.buffer.ByteBuf;
@@ -176,7 +176,7 @@ public class MessageProfiler extends MessageBase<MessageProfiler> {
 
 		@Override
 		public void handleServerSide(MessageProfilerS message, EntityPlayer player) {
-			PlayerHandler p = PlayerHandler.getPlayerHandler(player);
+			TMPlayerHandler p = TMPlayerHandler.getPlayerHandler(player);
 			p.profiling = message.p;
 			p.setProfiler(message.s);
 		}

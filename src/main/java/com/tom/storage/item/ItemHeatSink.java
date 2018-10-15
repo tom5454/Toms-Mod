@@ -31,10 +31,11 @@ public class ItemHeatSink extends Item implements IModelRegisterRequired, IHeatS
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		for (HeatSinkType t : HeatSinkType.VALUES) {
-			subItems.add(new ItemStack(this, 1, t.ordinal()));
-		}
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))
+			for (HeatSinkType t : HeatSinkType.VALUES) {
+				subItems.add(new ItemStack(this, 1, t.ordinal()));
+			}
 	}
 
 	public static enum HeatSinkType implements IStringSerializable {

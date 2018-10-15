@@ -50,6 +50,11 @@
 				"textures":{
 					"all": "tomsmodfactory:blocks/steelsheets"
 				}
+			},
+			"alu_sheets":{
+				"textures":{
+					"all": "tomsmodfactory:blocks/alusheets"
+				}
 			}
 		}
 	}

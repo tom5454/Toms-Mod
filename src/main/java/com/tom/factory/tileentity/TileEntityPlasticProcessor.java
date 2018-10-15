@@ -27,9 +27,6 @@ import com.tom.api.ITileFluidHandler.Helper;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
-import com.tom.apis.Checker.RunnableStorage;
-import com.tom.apis.MultiblockBlockChecker;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.CraftingMaterial;
@@ -38,13 +35,16 @@ import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockComponents.ComponentVariants;
 import com.tom.factory.block.PlasticProcessor;
 import com.tom.recipes.OreDict;
+import com.tom.util.Checker.RunnableStorage;
+import com.tom.util.MultiblockBlockChecker;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.TileEntityHidden.BlockProperties;
 
 public class TileEntityPlasticProcessor extends TileEntityMultiblock implements IInventory, IEnergyReceiver {
 	private static final BlockProperties ROTOR = new BlockProperties().setTesrID(0);
 	private static final Object[][] CONFIG = new Object[][]{{'_', getComponent(ComponentVariants.MACHINE_BASE), 'H', new Object[]{getComponent(ComponentVariants.OUTPUT_HATCH), TileEntityRefinery.HATCH_PROPERTIES}, 'F', getComponent(ComponentVariants.REFINERY_HEATER), 'E', getComponent(ComponentVariants.ENGINEERING_BLOCK), 'C', new Object[]{Blocks.CAULDRON.getDefaultState(), ROTOR}, 'S', FactoryInit.steelBoiler}, {"@F", "H_"}, // 1
-			{"EC", "SH"}, // 2
+		{"EC", "SH"}, // 2
 	};
 	private EnergyStorage energy = new EnergyStorage(100000);
 	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
@@ -279,7 +279,7 @@ public class TileEntityPlasticProcessor extends TileEntityMultiblock implements 
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return energy.getMaxEnergyStored();
 	}
 

@@ -12,8 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.tom.api.tileentity.TileEntityTomsModNoTicking;
-import com.tom.apis.BlockData;
 import com.tom.core.CoreInit;
+import com.tom.util.BlockData;
 
 public class TileEntityTemplate extends TileEntityTomsModNoTicking {
 	private BlockData data;

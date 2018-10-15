@@ -1,0 +1,33 @@
+{
+  "researches": [
+    "tomsmodcore:configurablechest"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodstorage:limitablechest",
+      "data": 0,
+      "count": 1
+    },
+    "ingredients": [
+      {
+        "ore": "chest",
+        "type": "forge:ore_dict"
+      },
+      {
+        "item": "minecraft:trapdoor",
+        "data": 0
+      },
+      {
+        "item": "minecraft:lever",
+        "data": 0
+      },
+      {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      }
+    ],
+    "type": "forge:ore_shapeless"
+  },
+  "crafting_time": 200
+}

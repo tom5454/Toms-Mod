@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:gem",
+    "data": 13,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "blockRedDiamond",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

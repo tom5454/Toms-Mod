@@ -3,26 +3,23 @@ package com.tom.energy.tileentity;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
-import net.minecraftforge.fml.common.Optional;
-
+import com.tom.api.block.IItemTile;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyHandler;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.lib.Configs;
+import com.tom.lib.api.tileentity.ITMPeripheral;
 
 import com.tom.energy.block.BlockEnergyStorage;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityEnergyStorage extends TileEntityTomsMod implements IEnergyHandler, IPeripheral {
+public class TileEntityEnergyStorage extends TileEntityTomsMod implements IEnergyHandler, ITMPeripheral, IItemTile {
 	private EnergyType energyType;
 	private String name;
 
@@ -60,7 +57,7 @@ public class TileEntityEnergyStorage extends TileEntityTomsMod implements IEnerg
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return energy.getMaxEnergyStored();
 	}
 
@@ -78,40 +75,21 @@ public class TileEntityEnergyStorage extends TileEntityTomsMod implements IEnerg
 	}
 
 	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	public String getType() {
 		return name;
 	}
 
 	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	public String[] getMethodNames() {
 		return new String[]{"getEnergyStored", "getMaxEnergyStored"};
 	}
 
 	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
-		if (method == 0) {
+	public Object[] call(IComputer c, String method, Object[] arguments) throws LuaException {
+		if (method.equals("getEnergyStored")) {
 			return new Object[]{energy.getEnergyStored()};
-		} else if (method == 1) { return new Object[]{energy.getMaxEnergyStored()}; }
+		} else if (method.equals("getMaxEnergyStored")) { return new Object[]{energy.getMaxEnergyStored()}; }
 		return null;
-	}
-
-	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public void attach(IComputerAccess computer) {
-	}
-
-	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public void detach(IComputerAccess computer) {
-	}
-
-	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public boolean equals(IPeripheral other) {
-		return other == this;
 	}
 
 	@Override
@@ -133,7 +111,17 @@ public class TileEntityEnergyStorage extends TileEntityTomsMod implements IEnerg
 		return energy.getEnergyStored();
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
+	}
+
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		ItemStack stack = new ItemStack(state.getBlock());
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToStackNBT(tag);
+		stack.setTagCompound(new NBTTagCompound());
+		stack.getTagCompound().setTag("BlockEntityTag", tag);
+		drops.add(stack);
 	}
 }

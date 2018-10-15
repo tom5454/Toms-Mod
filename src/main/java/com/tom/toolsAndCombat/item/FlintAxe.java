@@ -6,7 +6,7 @@ public class FlintAxe extends ItemAxe {
 
 	public FlintAxe(ToolMaterial mat, float attackSpeed) {
 		super(ToolMaterial.WOOD);
-		this.damageVsEntity = mat.getDamageVsEntity();
+		this.attackDamage = mat.getAttackDamage();
 		this.attackSpeed = attackSpeed;
 		toolMaterial = mat;
 	}

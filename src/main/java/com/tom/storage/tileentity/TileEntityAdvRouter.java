@@ -8,13 +8,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.storage.block.AdvStorageSystemRouter;
 import com.tom.storage.handler.StorageData;
 import com.tom.storage.handler.StorageNetworkGrid.IAdvRouterTile;
 import com.tom.storage.handler.StorageNetworkGrid.IChannelSource;
 import com.tom.storage.handler.StorageNetworkGrid.IController;
 import com.tom.storage.handler.StorageNetworkGrid.IControllerTile;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityAdvRouter extends TileEntityTomsMod implements IAdvRouterTile {
 	public static class ChannelSource extends com.tom.storage.tileentity.TileEntityStorageNetworkController.ChannelSource {

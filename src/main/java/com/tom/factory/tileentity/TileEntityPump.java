@@ -28,8 +28,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityPump extends TileEntityMachineBase implements ITileFluidHandler, ICustomMultimeterInformation {
 	private EnergyStorage energy = new EnergyStorage(5000, 20);
@@ -150,7 +149,7 @@ public class TileEntityPump extends TileEntityMachineBase implements ITileFluidH
 						int extra = Math.min(tank.getFluidAmount(), 100);
 						IFluidHandler t = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f);
 						if (t != null) {
-							int filled = t.fill(new FluidStack(CoreInit.steam.get(), extra), false);
+							int filled = t.fill(new FluidStack(tank.getFluid(), extra), false);
 							if (filled > 0) {
 								FluidStack drained = tank.drain(filled, false);
 								if (drained != null && drained.amount > 0) {
@@ -206,8 +205,8 @@ public class TileEntityPump extends TileEntityMachineBase implements ITileFluidH
 					IFluidHandler h = FluidUtil.getFluidHandler(world, pos, EnumFacing.UP);
 					if (h != null) {
 						FluidStack drained = h.drain(1000, false);
-						int temp = drained.getFluid().getTemperature(world, pos);
 						if (drained != null && drained.amount > 0) {
+							int temp = drained.getFluid().getTemperature(world, pos);
 							if (tank.fillInternal(drained, false) == 1000) {
 								tank.fillInternal(h.drain(1000, true), true);
 								energy.extractEnergy(1, false);

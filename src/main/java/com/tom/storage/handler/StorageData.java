@@ -16,11 +16,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import com.tom.api.energy.IEnergyStorage;
-import com.tom.api.grid.IGridDevice;
 import com.tom.api.inventory.IStorageInventory;
-import com.tom.apis.Storage;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
+import com.tom.lib.api.grid.IGridDevice;
 import com.tom.storage.handler.StorageNetworkGrid.IControllerTile;
 import com.tom.storage.handler.StorageNetworkGrid.ICraftingController;
 import com.tom.storage.handler.StorageNetworkGrid.IDevice;
@@ -28,6 +25,9 @@ import com.tom.storage.handler.StorageNetworkGrid.IGridEnergyStorage;
 import com.tom.storage.handler.StorageNetworkGrid.IGridInputListener;
 import com.tom.storage.handler.StorageNetworkGrid.IPowerDrain;
 import com.tom.storage.handler.StorageNetworkGrid.PriorityComparator;
+import com.tom.util.Storage;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
 
 public class StorageData implements IEnergyStorage {
 	protected List<IStorageInventory> inventories = new ArrayList<>();
@@ -369,7 +369,7 @@ public class StorageData implements IEnergyStorage {
 	}
 	@Override
 	public void setField(int id, int value) {
-	
+
 	}
 	@Override
 	public int getFieldCount() {
@@ -706,7 +706,7 @@ public class StorageData implements IEnergyStorage {
 	}
 
 	@Override
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return powerCache.getMaxEnergyStored();
 	}
 

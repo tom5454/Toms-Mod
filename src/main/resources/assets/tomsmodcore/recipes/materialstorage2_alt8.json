@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:materialstorage2",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "GGG",
+    "GGG",
+    "GGG"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "ore": "gemRedDiamond",
+      "type": "forge:ore_dict"
+    }
+  }
+}

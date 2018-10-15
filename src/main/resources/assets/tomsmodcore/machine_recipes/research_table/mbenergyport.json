@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:multiblockcomponents"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:mbenergyport",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "MRM",
+      "R-R",
+      "MRM"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "id": "chargedRedstone",
+        "type": "tomsmodcore:material"
+      },
+      "M": {
+        "item": "tomsmodfactory:mbcase",
+        "data": 0
+      },
+      "-": {
+        "ore": "cableElectrum",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1800
+}

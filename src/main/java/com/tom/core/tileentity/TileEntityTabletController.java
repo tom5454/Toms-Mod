@@ -1,42 +1,33 @@
 package com.tom.core.tileentity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-import net.minecraftforge.fml.common.Optional;
-
+import com.tom.api.tileentity.IConnector;
 import com.tom.api.tileentity.IReceivable;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.BigEntry;
-import com.tom.apis.EmptyBigEntry;
-import com.tom.lib.Configs;
+import com.tom.handler.TMPlayerHandler;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageTabGuiAction;
+import com.tom.util.BigEntry;
+import com.tom.util.EmptyBigEntry;
+import com.tom.util.IDList;
 
 import com.tom.core.item.TabletHandler;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.ILuaObject;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityTabletController extends TileEntityTomsMod implements IPeripheral {
-	public List<TabletHandler> tablets = new ArrayList<>();
-	private List<IComputerAccess> computers = new ArrayList<>();
-	public int lastId = 0;
-	private boolean firstStart = true;
+public class TileEntityTabletController extends TileEntityTomsMod implements ITMCompatPeripheral {
+	//public Set<Long> tablets = new HashSet<>();
+	private List<IComputer> computers = new ArrayList<>();
 	public String[] methods = {"listMethods", "sendTo", "getModemStats", "setAntenna", "setAccessPointAntenna", "getAntennas", "getStats", "openGui", "closeGui", "getHitbox", "splitString", "getCursorPosition", "getResolution", "playSound", "stopAllSounds", "translate", "replaceString",
 			// "print","clear","setCursorBlink","getCursorBlink","setCursorPos","getCursorPos","write","drawPicture","setTermName",
-			/*"getTermName","setTermCursor","getTermCursor","setWriteMode","getWriteMode","getCurrentText"*/};
+	/*"getTermName","setTermCursor","getTermCursor","setWriteMode","getWriteMode","getCurrentText"*/};
 
 	@Override
 	public String getType() {
@@ -49,7 +40,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+	public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 		int plus = 8;
 		int xCoord = pos.getX();
 		int yCoord = pos.getY();
@@ -68,19 +59,20 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 					TabletHandler tab = this.getTablet(pName);
 					if (tab != null) {
 						if (name.equalsIgnoreCase("ant") || name.equalsIgnoreCase("antenna")) {
-							if (tab.antAntenna && tab.connectedToAntenna) {
-								TileEntity tile = world.getTileEntity(new BlockPos(tab.antX, tab.antY, tab.antZ));
-								if (tile != null && tile instanceof IReceivable) {
-									((IReceivable) tile).receiveMsg(pName, a[3]);
-									return new Object[]{true};
-								}
+							if (tab.antAntenna && tab.connectedAntenna != null) {
+								((IReceivable) tab.connectedAntenna).receiveMsg(pName, a[3]);
+								return new Object[]{true};
+							}else{
 							}
 						} else if (name.equalsIgnoreCase("ap") || name.equalsIgnoreCase("accesspoint")) {
-							if (tab.apAntenna && tab.connectedToAccessPoint) {
-								TileEntity tile = world.getTileEntity(new BlockPos(tab.apX, tab.apY, tab.apZ));
-								if (tile != null && tile instanceof IReceivable) {
-									((IReceivable) tile).receiveMsg(pName, a[3]);
+							if (tab.apAntenna && !tab.connectedAccessPoints.isEmpty()) {
+								String accName = (String) a[2];
+								java.util.Optional<IConnector> ap = tab.connectedAccessPoints.stream().filter(p -> p.getName().equals(accName)).findFirst();
+								if(ap.isPresent()){
+									ap.get().receiveMsg(pName, a[3]);
 									return new Object[]{true};
+								}else{
+									throw new LuaException("Access Point not found: " + accName);
 								}
 							}
 						}
@@ -93,7 +85,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 					throw new LuaException("Invalid device at name: " + a[0]);
 				}
 			} else {
-				throw new LuaException("Invalid arguments, excepted (String,String,Object)");
+				throw new LuaException("Invalid arguments, excepted (String,String,String,Object)");
 			}
 		} else if (method == 2) {
 			if (a.length > 0 && a[0] instanceof String) {
@@ -134,7 +126,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		} else if (method == 5) {
 			if (a.length > 0 && a[0] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
-				if (tab != null) { return new Object[]{tab.antAntenna, tab.apAntenna, tab.connectedToAntenna, tab.connectedToAccessPoint}; }
+				//if (tab != null) { return new Object[]{tab.antAntenna, tab.apAntenna, tab.connectedToAntenna, tab.connectedToAccessPoint}; }
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String)");
 			}
@@ -154,7 +146,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 					List<BigEntry<String, Integer, Integer, Integer, Integer>> hitboxes = new ArrayList<>();
 					if (hitboxS != null) {
 						LuaHitbox hitbox = new LuaHitbox(hitboxS);
-						for (LuaEntry c : hitbox.hitboxes)
+						for (LuaEntry c : hitbox.hitboxes.values())
 							hitboxes.add(new EmptyBigEntry<>(c.name, c.x, c.y, c.width, c.height));
 					}
 					NetworkHandler.sendTo(new MessageTabGuiAction(xCoord, yCoord, zCoord, hitboxes, eEsc), (EntityPlayerMP) player);
@@ -189,7 +181,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 				EntityPlayer player = world.getPlayerEntityByName((String) a[0]);
 				if (player != null) {
 					NetworkHandler.sendTo(MessageTabGuiAction.getResolutionMessage(), (EntityPlayerMP) player);
-					return context.pullEvent("player_resulution_info_" + player.getName());
+					return computer.pullEvent("player_resulution_info_" + player.getName());
 				}
 			}
 		} else if (method == 13) {
@@ -207,7 +199,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 0 && a[0] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.sounds.clear();
+					//tab.sounds.clear();
 				}
 			}
 		} else if (method == 15) {
@@ -215,7 +207,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 				EntityPlayer player = world.getPlayerEntityByName((String) a[0]);
 				if (player != null) {
 					NetworkHandler.sendTo(MessageTabGuiAction.getTranslationMessage((String) a[1]), (EntityPlayerMP) player);
-					return context.pullEvent("player_translation_" + player.getName());
+					return computer.pullEvent("player_translation_" + player.getName());
 				}
 			}
 		} else if (method == 16) {
@@ -224,7 +216,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 2 && a[0] instanceof String && a[1] instanceof String && a[2] instanceof Double) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.term.print((String) a[1], MathHelper.floor((Double) a[2]));
+					//tab.term.print((String) a[1], MathHelper.floor((Double) a[2]));
 				}
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String, String, Number)");
@@ -233,7 +225,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 0 && a[0] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.term.clear();
+					//tab.term.clear();
 				}
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String)");
@@ -242,7 +234,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 1 && a[0] instanceof String && a[1] instanceof Boolean) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.term.cursor = (Boolean) a[1];
+					//tab.term.cursor = (Boolean) a[1];
 				}
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String, Boolean)");
@@ -250,7 +242,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		} else if (method == 12 + plus) {
 			if (a.length > 0 && a[0] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
-				if (tab != null) { return new Object[]{tab.term.cursor}; }
+				//if (tab != null) { return new Object[]{tab.term.cursor}; }
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String)");
 			}
@@ -258,8 +250,8 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 2 && a[0] instanceof String && a[1] instanceof Double && a[2] instanceof Double) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.term.curPosX = MathHelper.floor((Double) a[1]);
-					tab.term.curPosY = MathHelper.floor((Double) a[2]);
+					//tab.term.curPosX = MathHelper.floor((Double) a[1]);
+					//tab.term.curPosY = MathHelper.floor((Double) a[2]);
 				}
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String, Number, Number)");
@@ -267,7 +259,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		} else if (method == 14 + plus) {
 			if (a.length > 0 && a[0] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
-				if (tab != null) { return new Object[]{tab.term.curPosX, tab.term.curPosY}; }
+				//if (tab != null) { return new Object[]{tab.term.curPosX, tab.term.curPosY}; }
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String)");
 			}
@@ -275,7 +267,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 2 && a[0] instanceof String && a[1] instanceof String && a[2] instanceof Double) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.term.write((String) a[1], MathHelper.floor((Double) a[2]));
+					//tab.term.write((String) a[1], MathHelper.floor((Double) a[2]));
 				}
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String, String, Number)");
@@ -284,7 +276,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 1 && a[0] instanceof String && a[1] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.term.renderPicture((String) a[1]);
+					//tab.term.renderPicture((String) a[1]);
 				}
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String, String)");
@@ -293,7 +285,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 1 && a[0] instanceof String && a[1] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.term.name = (String) a[1];
+					//tab.term.name = (String) a[1];
 				}
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String, String)");
@@ -301,7 +293,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		} else if (method == 18 + plus) {
 			if (a.length > 0 && a[0] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
-				if (tab != null) { return new Object[]{tab.term.name}; }
+				//if (tab != null) { return new Object[]{tab.term.name}; }
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String)");
 			}
@@ -309,8 +301,8 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 2 && a[0] instanceof String && a[1] instanceof Double && a[2] instanceof Double) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.term.curPosWX = MathHelper.floor((Double) a[1]);
-					tab.term.curPosWY = MathHelper.floor((Double) a[2]);
+					//tab.term.curPosWX = MathHelper.floor((Double) a[1]);
+					//tab.term.curPosWY = MathHelper.floor((Double) a[2]);
 				}
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String, Number, Number)");
@@ -318,7 +310,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		} else if (method == 20 + plus) {
 			if (a.length > 0 && a[0] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
-				if (tab != null) { return new Object[]{tab.term.curPosWX, tab.term.curPosWY}; }
+				//if (tab != null) { return new Object[]{tab.term.curPosWX, tab.term.curPosWY}; }
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String)");
 			}
@@ -326,7 +318,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			if (a.length > 1 && a[0] instanceof String && a[1] instanceof Boolean) {
 				TabletHandler tab = this.getTablet((String) a[0]);
 				if (tab != null) {
-					tab.term.writeMode = (Boolean) a[1];
+					//tab.term.writeMode = (Boolean) a[1];
 				}
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String, Boolean)");
@@ -334,7 +326,7 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		} else if (method == 22 + plus) {
 			if (a.length > 0 && a[0] instanceof String) {
 				TabletHandler tab = this.getTablet((String) a[0]);
-				if (tab != null) { return new Object[]{tab.term.writeMode}; }
+				//if (tab != null) { return new Object[]{tab.term.writeMode}; }
 			} else {
 				throw new LuaException("Invalid arguments, excepted (String)");
 			}
@@ -347,11 +339,11 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 						NetworkHandler.sendTo(new MessageTabGuiAction(), (EntityPlayerMP) user);
 						int i = 0;
 						while (true) {
-							Object[] o = context.pullEvent("tab_textBoxReceive");
+							Object[] o = computer.pullEvent("tab_textBoxReceive");
 							String pName = o.length > 0 ? (String) o[0] : "";
-							if (pName.equals(tab.playerName)) { return new Object[]{tab.term.inputText}; }
+							//if (pName.equals(tab.playerName)) { return new Object[]{tab.term.inputText}; }
 							i = i + 1;
-							if (i == 5) { return new Object[]{tab.term.inputText}; }
+							//if (i == 5) { return new Object[]{tab.term.inputText}; }
 						}
 					}
 				}
@@ -363,62 +355,38 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 	}
 
 	@Override
-	public void attach(IComputerAccess computer) {
+	public void attach(IComputer computer) {
 		computers.add(computer);
 	}
 
 	@Override
-	public void detach(IComputerAccess computer) {
+	public void detach(IComputer computer) {
 		computers.remove(computer);
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		return this == other;
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		tag.setInteger("lastId", this.lastId);
 		return tag;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		this.lastId = tag.getInteger("lastId");
-	}
-
-	public int connectNewTablet() {
-		this.lastId = this.lastId + 1;
-		this.tablets.add(new TabletHandler(lastId));
-		return this.lastId;
-	}
-
-	public TabletHandler getTablet(int id) {
-		if (this.tablets.size() >= id && this.tablets.size() != 0) { return this.tablets.get(id - 1); }
-		return null;
 	}
 
 	@Override
 	public void updateEntity() {
-		if (this.firstStart && !this.world.isRemote) {
-			this.firstStart = false;
-			for (int i = 0;i < this.lastId;i++) {
-				this.tablets.add(new TabletHandler(i));
-			}
-		}
 	}
 
 	public void queueEvent(String event, Object[] a) {
-		for (IComputerAccess c : this.computers) {
+		for (IComputer c : this.computers) {
 			c.queueEvent(event, a);
 		}
 	}
 
-	private TabletHandler getTablet(String pName) {
-		for (TabletHandler tab : this.tablets) {
+	public TabletHandler getTablet(String pName) {
+		for (TabletHandler tab : TMPlayerHandler.getTablets(pos)) {
 			if (tab.playerName.equals(pName)) { return tab; }
 		}
 		return null;
@@ -431,11 +399,13 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		}
 	}
 
-	private class LuaEntry implements ILuaObject {
+	private class LuaEntry implements ITMLuaObject {
 		public int x = 0, y = 0, width = 0, height = 0;
 		public String name = "nil";
+		private LuaHitbox box;
 
-		public LuaEntry(String sIn) throws LuaException {
+		public LuaEntry(LuaHitbox box, String sIn) throws LuaException {
+			this.box = box;
 			String[] s = sIn.split(":");
 			if (s.length < 4)
 				throw new LuaException("Invalid Entry");
@@ -454,16 +424,14 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			}
 		}
 
-		public LuaEntry() {
+		public LuaEntry(LuaHitbox box) {
+			this.box = box;
 		}
 
 		@Override
-		public String[] getMethodNames() {
-			return new String[]{"setX", "setY", "setWidth", "setHeight", "setName", "getX", "getY", "getWidth", "getHeight", "getName", "export"};
-		}
+		public Object[] call(IComputer computer, String methodIn, Object[] a) throws LuaException {
+			int method = Arrays.binarySearch(getMethodNames(), methodIn);
 
-		@Override
-		public Object[] callMethod(ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
 			if (method == 0) {
 				if (a.length > 0 && a[0] instanceof Double) {
 					this.x = MathHelper.floor((Double) a[0]);
@@ -496,6 +464,12 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 				return new Object[]{this.name};
 			} else if (method == 10) { return new Object[]{this.toString()}; }
 			return null;
+
+		}
+
+		@Override
+		public String[] getMethodNames() {
+			return new String[]{"setX", "setY", "setWidth", "setHeight", "setName", "getX", "getY", "getWidth", "getHeight", "getName", "export"};
 		}
 
 		@Override
@@ -503,9 +477,14 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			return this.x + ":" + this.y + ":" + this.width + ":" + this.height + ":" + this.name.replace(":", "|");
 		}
 
+		@Override
+		public long getID() {
+			return box.hitboxes.getIDFor(this);
+		}
+
 	}
 
-	private class LuaHitbox implements ILuaObject {
+	private class LuaHitbox implements ITMLuaObject {
 		public LuaHitbox() {
 		}
 
@@ -513,11 +492,11 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 			String[] split = sIn.split("$");
 			for (String s : split) {
 				if (!s.equals("$"))
-					this.hitboxes.add(new LuaEntry(s));
+					this.hitboxes.put(new LuaEntry(this, s));
 			}
 		}
 
-		public List<LuaEntry> hitboxes = new ArrayList<>();
+		public IDList<LuaEntry> hitboxes = new IDList<>();
 
 		@Override
 		public String[] getMethodNames() {
@@ -525,12 +504,13 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		}
 
 		@Override
-		public Object[] callMethod(ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+		public Object[] call(IComputer context, String methodIn, Object[] a) throws LuaException {
+			int method = Arrays.binarySearch(getMethodNames(), methodIn);
 			if (method == 0) {
-				return new Object[]{new LuaEntry()};
+				return new Object[]{new LuaEntry(this)};
 			} else if (method == 1) {
 				if (a.length > 0) {
-					hitboxes.add(new LuaEntry(a[0].toString()));
+					hitboxes.put(new LuaEntry(this, a[0].toString()));
 					return new Object[]{hitboxes.size()};
 				} else {
 					// System.out.println(a[0]);
@@ -559,14 +539,19 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		@Override
 		public String toString() {
 			String ret = "";
-			for (LuaEntry e : this.hitboxes) {
+			for (LuaEntry e : this.hitboxes.values()) {
 				ret = ret + "$" + e.toString();
 			}
 			return ret.substring(1);
 		}
+
+		@Override
+		public long getID() {
+			return -1;//TODO
+		}
 	}
 
-	public class LuaSound implements ILuaObject {
+	public class LuaSound implements ITMLuaObject {
 		public LuaSound(EntityPlayer player, String sound) {
 			this.player = player;
 			this.sound = sound;
@@ -582,14 +567,19 @@ public class TileEntityTabletController extends TileEntityTomsMod implements IPe
 		}
 
 		@Override
-		public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+		public Object[] call(IComputer context, String method, Object[] arguments) throws LuaException {
 			if (!this.isValid)
 				throw new LuaException("This object is already deleted");
-			if (method == 0) {
+			if (method.equals("stop")) {
 				NetworkHandler.sendTo(new MessageTabGuiAction(this, false, 0.0F), (EntityPlayerMP) player);
 				this.isValid = false;
 			}
 			return null;
+		}
+
+		@Override
+		public long getID() {
+			return -1;//TODO
 		}
 
 	}

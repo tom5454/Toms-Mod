@@ -7,9 +7,14 @@ import java.util.function.BiFunction;
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
-import com.tom.apis.TMLogger;
+import com.tom.api.research.Research;
+import com.tom.config.Config;
 import com.tom.core.CoreInit;
+import com.tom.core.TMResource.CraftingMaterial;
+import com.tom.core.research.ResearchHandler;
+import com.tom.energy.EnergyInit;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.tileentity.gui.GuiAdvBoiler;
 import com.tom.factory.tileentity.gui.GuiAdvElectricFurnace;
@@ -18,9 +23,11 @@ import com.tom.factory.tileentity.gui.GuiAlloySmelter;
 import com.tom.factory.tileentity.gui.GuiBasicBoiler;
 import com.tom.factory.tileentity.gui.GuiBlastFurnace;
 import com.tom.factory.tileentity.gui.GuiCoiler;
+import com.tom.factory.tileentity.gui.GuiCokeOven;
 import com.tom.factory.tileentity.gui.GuiCrusher;
 import com.tom.factory.tileentity.gui.GuiElectricFurnace;
 import com.tom.factory.tileentity.gui.GuiIndustrialBlastFurnace;
+import com.tom.factory.tileentity.gui.GuiLaserEngraver;
 import com.tom.factory.tileentity.gui.GuiMixer;
 import com.tom.factory.tileentity.gui.GuiPlasticProcessor;
 import com.tom.factory.tileentity.gui.GuiPlateBlendingMachine;
@@ -32,6 +39,7 @@ import com.tom.factory.tileentity.gui.GuiSteamMixer;
 import com.tom.factory.tileentity.gui.GuiSteamPlateBlender;
 import com.tom.factory.tileentity.gui.GuiSteamRubberProcessor;
 import com.tom.factory.tileentity.gui.GuiSteamSolderingStation;
+import com.tom.factory.tileentity.gui.GuiUVLightbox;
 import com.tom.factory.tileentity.gui.GuiWireMill;
 import com.tom.factory.tileentity.inventory.ContainerAdvBoiler;
 import com.tom.factory.tileentity.inventory.ContainerAdvElectricFurnace;
@@ -49,30 +57,37 @@ import com.tom.factory.tileentity.inventory.ContainerSteamFurnace;
 import com.tom.factory.tileentity.inventory.ContainerSteamPlateBlender;
 import com.tom.factory.tileentity.inventory.ContainerSteamSolderingStation;
 import com.tom.factory.tileentity.inventory.ContainerWireMill;
-import com.tom.recipes.CraftingRecipes;
-import com.tom.recipes.WrenchShapelessCraftingRecipe;
 import com.tom.storage.StorageInit;
+import com.tom.util.TMLogger;
+
+import com.tom.core.item.ItemBlueprint;
+import com.tom.core.item.ItemCircuit;
 
 import com.tom.core.tileentity.gui.GuiResearchTable;
 import com.tom.core.tileentity.inventory.ContainerResearchTable;
 
-import mezz.jei.api.BlankModPlugin;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IJeiRuntime;
+import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
+import mezz.jei.api.ISubtypeRegistry;
+import mezz.jei.api.ISubtypeRegistry.ISubtypeInterpreter;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiIngredient;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IModIngredientRegistration;
+import mezz.jei.api.ingredients.VanillaTypes;
+import mezz.jei.api.recipe.IIngredientType;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.api.recipe.IRecipeWrapperFactory;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
+import mezz.jei.config.Constants;
 
 @JEIPlugin
-public class JEIHandler extends BlankModPlugin {
+public class JEIHandler implements IModPlugin {
 	protected static final BiFunction<IRecipeLayout, Boolean, ItemStack[]> directTransfer = new BiFunction<IRecipeLayout, Boolean, ItemStack[]>() {
 
 		@Override
@@ -106,19 +121,35 @@ public class JEIHandler extends BlankModPlugin {
 	public static IJeiHelpers jeiHelper;
 	public static IJeiRuntime jeiRuntime;
 	public static MixerRecipeCategory mixerRecipeCategory;
+	public static ResearchRenderer researchRenderer;
+	public static final IIngredientType<Research> RESEARCH = () -> Research.class;
+	@Nonnull
+	public static IDrawable tankOverlay;
+	@Nonnull
+	public static IDrawable tankBackground;
 
 	@Override
 	public void register(@Nonnull IModRegistry registry) {
 		TMLogger.info("Loading JEI Handler...");
 		long time = System.currentTimeMillis();
 		jeiHelper = registry.getJeiHelpers();
-		registry.addRecipes(CustomCraftingRecipeCategory.get(), JEIConstants.CUSTOM_CRAFTING_ID);
-		registry.addRecipeClickArea(GuiResearchTable.class, 167, 71, 23, 15, JEIConstants.CUSTOM_CRAFTING_ID);
+		ResourceLocation backgroundTexture = Constants.RECIPE_BACKGROUND;
+		tankBackground = jeiHelper.getGuiHelper().drawableBuilder(backgroundTexture, 220, 196, 18, 60)
+				.addPadding(-1, -1, -1, -1)
+				.build();
+		tankOverlay = jeiHelper.getGuiHelper().drawableBuilder(backgroundTexture, 238, 196, 18, 60)
+				.addPadding(-1, -1, -1, -1)
+				.build();
+		if(Config.enableResearchSystem){
+			registry.addRecipes(CustomCraftingRecipeCategory.get(), JEIConstants.CUSTOM_CRAFTING_ID);
+			registry.addRecipeClickArea(GuiResearchTable.class, 167, 71, 23, 15, JEIConstants.CUSTOM_CRAFTING_ID);
+			registry.addRecipes(ResearchCategory.get(), JEIConstants.RESEARCH);
+		}
+		researchRenderer.renderer = registry.getIngredientRegistry().getIngredientRenderer(VanillaTypes.ITEM);
 		registry.addRecipes(CrusherRecipeCategory.get(), JEIConstants.CRUSHER_ID);
 		registry.addRecipeClickArea(GuiCrusher.class, 65, 34, 52, 17, JEIConstants.CRUSHER_ID);
 		IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerCrusher.class, JEIConstants.CRUSHER_ID, 0, 1, 3, 36);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerResearchTable.class, JEIConstants.CUSTOM_CRAFTING_ID, 7, 9, 19, 36);
 		registry.addRecipes(WireMillRecipeCategory.get(), JEIConstants.WIREMILL_ID);
 		registry.addRecipeClickArea(GuiWireMill.class, 75, 35, 28, 17, JEIConstants.WIREMILL_ID);
 		registry.addRecipes(PlateBlenderRecipeCategory.get(), JEIConstants.PLATE_BLENDER_ID);
@@ -130,6 +161,10 @@ public class JEIHandler extends BlankModPlugin {
 		registry.addRecipes(PlasticRecipeCategory.get(), JEIConstants.PLASTIC);
 		registry.addRecipes(RubberBoilerRecipeCategory.get(), JEIConstants.RUBBER_BOILER);
 		registry.addRecipes(RubberProcessorRecipeCategory.get(), JEIConstants.RUBBER_PROCESSOR);
+		registry.addRecipes(UVBoxCategory.get(), JEIConstants.UV_BOX);
+		registry.addRecipes(LaserEngraverCategory.get(), JEIConstants.LASER_ENGRAVER);
+		registry.addRecipes(InWorldCraftingCategory.get(), JEIConstants.IN_WORLD);
+		registry.addRecipes(CokeOvenCategory.get(), JEIConstants.COKE_OVEN_ID);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerWireMill.class, JEIConstants.WIREMILL_ID, 0, 1, 4, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerPlateBlendingMachine.class, JEIConstants.PLATE_BLENDER_ID, 0, 1, 4, 36);
 		registry.addRecipeClickArea(GuiSteamCrusher.class, 65, 34, 52, 17, JEIConstants.CRUSHER_ID);
@@ -158,8 +193,6 @@ public class JEIHandler extends BlankModPlugin {
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.plateBlendingMachine), JEIConstants.PLATE_BLENDER_ID);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamPlateBlender), JEIConstants.PLATE_BLENDER_ID);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.wireMill), JEIConstants.WIREMILL_ID);
-		registry.addRecipeCatalyst(new ItemStack(StorageInit.assembler), VanillaRecipeCategoryUid.CRAFTING, JEIConstants.CUSTOM_CRAFTING_ID);
-		registry.addRecipeCatalyst(new ItemStack(CoreInit.researchTable), JEIConstants.CUSTOM_CRAFTING_ID);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerAlloySmelter.class, JEIConstants.ALLOY_SMELTER_ID, 0, 2, 4, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamAlloySmelter.class, JEIConstants.ALLOY_SMELTER_ID, 0, 2, 3, 36);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.alloySmelter), JEIConstants.ALLOY_SMELTER_ID);
@@ -168,18 +201,24 @@ public class JEIHandler extends BlankModPlugin {
 		registry.addRecipeClickArea(GuiSteamAlloySmelter.class, 65, 34, 52, 17, JEIConstants.ALLOY_SMELTER_ID);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.basicBoiler), VanillaRecipeCategoryUid.FUEL);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.advBoiler), VanillaRecipeCategoryUid.FUEL);
-		// registry.addRecipeCatalyst(new ItemStack(EnergyInit.Generator),
-		// VanillaRecipeCategoryUid.FUEL);
+		registry.addRecipeCatalyst(new ItemStack(EnergyInit.Generator), VanillaRecipeCategoryUid.FUEL);
 		CraftingTerminalTransferHandler.registerClickAreas(registry);
 		CraftingTerminalTransferHandler.registerTransferHandlers(recipeTransferRegistry);
 		registry.addRecipeCatalyst(new ItemStack(StorageInit.craftingTerminal), VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeCatalyst(new ItemStack(StorageInit.partCraftingTerminal), VanillaRecipeCategoryUid.CRAFTING);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamSolderingStation.class, JEIConstants.CUSTOM_CRAFTING_ID, 0, 9, 12, 36);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamSolderingStation), JEIConstants.CUSTOM_CRAFTING_ID);
-		registry.addRecipeClickArea(GuiSteamSolderingStation.class, 65, 34, 52, 17, JEIConstants.CUSTOM_CRAFTING_ID);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerSolderingStation.class, JEIConstants.CUSTOM_CRAFTING_ID, 0, 9, 13, 36);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.solderingStation), JEIConstants.CUSTOM_CRAFTING_ID);
-		registry.addRecipeClickArea(GuiSolderingStation.class, 79, 46, 52, 17, JEIConstants.CUSTOM_CRAFTING_ID);
+		if(Config.enableResearchSystem){
+			recipeTransferRegistry.addRecipeTransferHandler(ContainerResearchTable.class, JEIConstants.CUSTOM_CRAFTING_ID, 7, 9, 19, 36);
+			registry.addRecipeCatalyst(new ItemStack(CoreInit.researchTable), JEIConstants.CUSTOM_CRAFTING_ID);
+			registry.addRecipeCatalyst(new ItemStack(StorageInit.assembler), VanillaRecipeCategoryUid.CRAFTING, JEIConstants.CUSTOM_CRAFTING_ID);
+			recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamSolderingStation.class, JEIConstants.CUSTOM_CRAFTING_ID, 0, 9, 12, 36);
+			registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamSolderingStation), JEIConstants.CUSTOM_CRAFTING_ID);
+			registry.addRecipeClickArea(GuiSteamSolderingStation.class, 65, 34, 52, 17, JEIConstants.CUSTOM_CRAFTING_ID);
+			recipeTransferRegistry.addRecipeTransferHandler(ContainerSolderingStation.class, JEIConstants.CUSTOM_CRAFTING_ID, 0, 9, 13, 36);
+			registry.addRecipeCatalyst(new ItemStack(FactoryInit.solderingStation), JEIConstants.CUSTOM_CRAFTING_ID);
+			registry.addRecipeClickArea(GuiSolderingStation.class, 79, 46, 52, 17, JEIConstants.CUSTOM_CRAFTING_ID);
+			registry.addRecipeCatalyst(new ItemStack(CoreInit.researchTable), JEIConstants.RESEARCH);
+			registry.addRecipeCatalyst(new ItemStack(CoreInit.blueprint), JEIConstants.RESEARCH);
+		}
 		registry.addRecipeClickArea(GuiBlastFurnace.class, 65, 34, 52, 17, JEIConstants.BLAST_FURNACE_ID);
 		registry.addRecipeClickArea(GuiIndustrialBlastFurnace.class, 60, 45, 52, 17, JEIConstants.BLAST_FURNACE_ID);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.blastFurnace), JEIConstants.BLAST_FURNACE_ID);
@@ -199,15 +238,12 @@ public class JEIHandler extends BlankModPlugin {
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.rubberProcessor), JEIConstants.RUBBER_PROCESSOR);
 		registry.addRecipeClickArea(GuiSteamRubberProcessor.class, 65, 34, 52, 17, JEIConstants.RUBBER_PROCESSOR);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.rubberBoiler), JEIConstants.RUBBER_BOILER);
-		registry.addRecipes(CraftingRecipes.customRecipes, VanillaRecipeCategoryUid.CRAFTING);
-		registry.handleRecipes(WrenchShapelessCraftingRecipe.class, new IRecipeWrapperFactory<WrenchShapelessCraftingRecipe>() {
-			@Override
-			public IRecipeWrapper getRecipeWrapper(WrenchShapelessCraftingRecipe recipe) {
-				return new WrenchShapelessRecipeWrapper(jeiHelper, recipe);
-			}
-		}, VanillaRecipeCategoryUid.CRAFTING);
-		// jeiHelper.getIngredientBlacklist().addIngredientToBlacklist(new
-		// ItemStack(CoreInit.modelledItem));
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.uvLightbox), JEIConstants.UV_BOX);
+		registry.addRecipeClickArea(GuiUVLightbox.class, 118, 19, 31, 17, JEIConstants.UV_BOX);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.laserEngraver), JEIConstants.LASER_ENGRAVER);
+		registry.addRecipeClickArea(GuiLaserEngraver.class, 118, 19, 31, 17, JEIConstants.LASER_ENGRAVER);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.cokeOven), JEIConstants.COKE_OVEN_ID);
+		registry.addRecipeClickArea(GuiCokeOven.class, 118, 19, 31, 17, JEIConstants.COKE_OVEN_ID);
 		long tM = System.currentTimeMillis() - time;
 		TMLogger.info("JEI Handler: Load Complete in " + tM + " miliseconds.");
 	}
@@ -235,7 +271,39 @@ public class JEIHandler extends BlankModPlugin {
 
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registry) {
+		TMLogger.info("Registering JEI Categories");
 		jeiHelper = registry.getJeiHelpers();
-		registry.addRecipeCategories(new IRecipeCategory[]{new CustomCraftingRecipeCategory(), new CrusherRecipeCategory(), new WireMillRecipeCategory(), new PlateBlenderRecipeCategory(), new AlloySmelterRecipeCategory(), new BlastFurnaceRecipeCategory(), new CoilerRecipeCategory(), mixerRecipeCategory = new MixerRecipeCategory(), new PlasticRecipeCategory(), new RubberBoilerRecipeCategory(), new RubberProcessorRecipeCategory(),});
+		if(Config.enableResearchSystem)registry.addRecipeCategories(new CustomCraftingRecipeCategory(), new ResearchCategory());
+		registry.addRecipeCategories(new IRecipeCategory[]{new CrusherRecipeCategory(), new WireMillRecipeCategory(),
+				new PlateBlenderRecipeCategory(), new AlloySmelterRecipeCategory(), new BlastFurnaceRecipeCategory(),
+				new CoilerRecipeCategory(), mixerRecipeCategory = new MixerRecipeCategory(), new PlasticRecipeCategory(),
+				new RubberBoilerRecipeCategory(), new RubberProcessorRecipeCategory(), new LaserEngraverCategory(),
+				new UVBoxCategory(), new InWorldCraftingCategory(), new CokeOvenCategory(),
+
+		});
+	}
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
+		TMLogger.info("Registering JEI Item Subtypes");
+		subtypeRegistry.registerSubtypeInterpreter(CoreInit.craftingMaterial, itemStack -> {
+			return "tomsmodmaterial_" + CraftingMaterial.get(itemStack.getMetadata()).getName();
+		});
+		subtypeRegistry.registerSubtypeInterpreter(CoreInit.circuit, itemStack -> {
+			return "tomsmodcircuit_" + ItemCircuit.getType(itemStack);
+		});
+		subtypeRegistry.registerSubtypeInterpreter(CoreInit.circuitRaw, itemStack -> {
+			return "tomsmodcircuitraw_" + ItemCircuit.getType(itemStack);
+		});
+		subtypeRegistry.registerSubtypeInterpreter(CoreInit.circuitUnassembled, itemStack -> {
+			return "tomsmodcircuitua_" + ItemCircuit.getType(itemStack);
+		});
+		subtypeRegistry.registerSubtypeInterpreter(CoreInit.blueprint, itemStack -> {
+			return ItemBlueprint.isResearch(itemStack) ? ISubtypeInterpreter.NONE : "tmblueprint_" + itemStack.getTagCompound().getString("id");
+		});
+	}
+	@Override
+	public void registerIngredients(IModIngredientRegistration registry) {
+		TMLogger.info("Registering JEI Ingredients");
+		registry.register(RESEARCH, ResearchHandler.getAllResearches(), new ResearchHelper(), researchRenderer = new ResearchRenderer());
 	}
 }

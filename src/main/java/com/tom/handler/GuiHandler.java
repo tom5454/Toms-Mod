@@ -11,8 +11,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import com.tom.api.multipart.IGuiMultipart;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
 import com.tom.defense.item.ItemMultiTool;
 import com.tom.defense.tileentity.TileEntityDefenseStation;
 import com.tom.defense.tileentity.TileEntityForceCapacitor;
@@ -154,19 +152,18 @@ import com.tom.storage.tileentity.inventory.ContainerDrive;
 import com.tom.storage.tileentity.inventory.ContainerLimitableChest;
 import com.tom.storage.tileentity.inventory.ContainerPatternOptions;
 import com.tom.storage.tileentity.inventory.ContainerPatternTerminal;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.TileEntityItemProxy;
 import com.tom.core.tileentity.TileEntityResearchTable;
 import com.tom.core.tileentity.TileEntityTabletCrafter;
 import com.tom.core.tileentity.gui.GuiConfigurator;
 import com.tom.core.tileentity.gui.GuiConfigurator.GuiConfiguratorChoose;
-import com.tom.core.tileentity.gui.GuiItemProxy;
 import com.tom.core.tileentity.gui.GuiResearchTable;
 import com.tom.core.tileentity.gui.GuiTablet;
 import com.tom.core.tileentity.gui.GuiTabletCrafter;
 import com.tom.core.tileentity.inventory.ContainerConfigurator;
 import com.tom.core.tileentity.inventory.ContainerConfigurator.ContainerConfiguratorChoose;
-import com.tom.core.tileentity.inventory.ContainerItemProxy;
 import com.tom.core.tileentity.inventory.ContainerResearchTable;
 import com.tom.core.tileentity.inventory.ContainerTablet;
 import com.tom.core.tileentity.inventory.ContainerTabletCrafter;
@@ -184,7 +181,17 @@ import mcmultipart.api.slot.EnumFaceSlot;
 public class GuiHandler implements IGuiHandler {
 
 	public enum GuiIDs {
-		tabletCrafter, tablet, itemProxy, researchTable, limitableChest, forceCapacitor, configurator, securityStation, multitoolWriter, projectorLensConfigMain, projectorLensConfig, forceFieldProjector, defenseStation, basicTerminalBlock, drive, multipartMid, multipartUp, multipartDown, multipartNorth, multipartSouth, multipartEast, multipartWest, blockInterface, patternTerminal, crusher, plateBlendingMachine, wireMill, coilerPlant, basicBoiler, advBoiler, steamCrusher, steamFurnace, steamPlateBlender, steamFurnaceAdv, electricFurnace, alloySmelter, steamAlloySmelter, electricFurnaceAdv, blockCraftingTerminal, patternOptions, steamSolderingStation, cokeOven, blastFurnace, solderingStation, fluidTransposer, industrialBlastFurnace, refinery, charger, geoBoiler, fluidBoiler, advFluidBoiler, uvLightbox, plasticProcessor, steamMixer, mixer, laserEngraver, mbfuelrod, storageNetworkController, configuratorChoose, rubberBoiler, patternOptionsPart, rubberProcessor, craftingProgress, eRubberProcessor,
+		tabletCrafter, tablet, /*itemProxy, */researchTable, limitableChest, forceCapacitor,
+		configurator, securityStation, multitoolWriter, projectorLensConfigMain, projectorLensConfig,
+		forceFieldProjector, defenseStation, basicTerminalBlock, drive, multipartMid, multipartUp,
+		multipartDown, multipartNorth, multipartSouth, multipartEast, multipartWest, blockInterface,
+		patternTerminal, crusher, plateBlendingMachine, wireMill, coilerPlant, basicBoiler, advBoiler,
+		steamCrusher, steamFurnace, steamPlateBlender, steamFurnaceAdv, electricFurnace, alloySmelter,
+		steamAlloySmelter, electricFurnaceAdv, blockCraftingTerminal, patternOptions, steamSolderingStation,
+		cokeOven, blastFurnace, solderingStation, fluidTransposer, industrialBlastFurnace, refinery, charger,
+		geoBoiler, fluidBoiler, advFluidBoiler, uvLightbox, plasticProcessor, steamMixer, mixer, laserEngraver,
+		mbfuelrod, storageNetworkController, configuratorChoose, rubberBoiler, patternOptionsPart, rubberProcessor,
+		craftingProgress, eRubberProcessor,
 
 		;
 		private static final GuiIDs[] VALUES = values();
@@ -201,8 +208,8 @@ public class GuiHandler implements IGuiHandler {
 			return new ContainerTabletCrafter(player.inventory, (TileEntityTabletCrafter) world.getTileEntity(new BlockPos(x, y, z)));
 		case tablet:
 			return new ContainerTablet(player.getHeldItemMainhand(), world, player);
-		case itemProxy:
-			return new ContainerItemProxy(player.inventory, (TileEntityItemProxy) world.getTileEntity(new BlockPos(x, y, z)));
+			/*case itemProxy:
+			return new ContainerItemProxy(player.inventory, (TileEntityItemProxy) world.getTileEntity(new BlockPos(x, y, z)));*/
 		case researchTable:
 			return new ContainerResearchTable(player.inventory, (TileEntityResearchTable) world.getTileEntity((new BlockPos(x, y, z))));
 		case limitableChest:
@@ -349,8 +356,8 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiTabletCrafter(player.inventory, (TileEntityTabletCrafter) world.getTileEntity(new BlockPos(x, y, z)));
 		case tablet:
 			return new GuiTablet(player.getHeldItemMainhand(), world, player);
-		case itemProxy:
-			return new GuiItemProxy(player.inventory, (TileEntityItemProxy) world.getTileEntity(new BlockPos(x, y, z)));
+			/*case itemProxy:
+			return new GuiItemProxy(player.inventory, (TileEntityItemProxy) world.getTileEntity(new BlockPos(x, y, z)));*/
 		case researchTable:
 			return new GuiResearchTable(player.inventory, (TileEntityResearchTable) world.getTileEntity((new BlockPos(x, y, z))));
 		case limitableChest:

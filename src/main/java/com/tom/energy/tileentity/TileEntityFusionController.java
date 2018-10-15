@@ -19,13 +19,13 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 
-import com.tom.api.tileentity.IChunkLoader;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.energy.EnergyInit;
 import com.tom.lib.Configs;
+import com.tom.lib.api.tileentity.IChunkLoader;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.block.FusionController;
 

@@ -16,12 +16,11 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 
-import com.tom.api.energy.EnergyType;
-import com.tom.api.grid.IGrid;
-import com.tom.api.grid.IGridDevice;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.ISecuredTileEntity;
-import com.tom.apis.TMLogger;
+import com.tom.lib.api.grid.IGrid;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.util.TMLogger;
 
 public class Capabilities {
 	@CapabilityInject(ISecuredTileEntity.class)
@@ -34,7 +33,6 @@ public class Capabilities {
 	@SuppressWarnings("rawtypes")
 	public static void init() {
 		TMLogger.info("Loading Capabilities");
-		EnergyType.init();
 		CapabilityManager.INSTANCE.register(ISecuredTileEntity.class, new IStorage<ISecuredTileEntity>() {
 
 			@Override

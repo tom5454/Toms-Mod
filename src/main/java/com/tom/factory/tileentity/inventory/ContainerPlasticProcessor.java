@@ -11,10 +11,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.inventory.SlotOutput;
 import com.tom.api.inventory.SlotSpeedUpgrade;
-import com.tom.apis.TomsModUtils;
 import com.tom.factory.tileentity.TileEntityPlasticProcessor;
 import com.tom.network.messages.MessageFluidStackSync;
 import com.tom.network.messages.MessageFluidStackSync.IFluidContainer;
+import com.tom.util.TomsModUtils;
 import com.tom.network.messages.MessageProgress;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;

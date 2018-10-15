@@ -1,0 +1,17 @@
+{
+  "blueprint": "basiccirc",
+  "in": {
+    "item": "tomsmodcore:item.tm.circuitpanelph",
+    "data": 0,
+    "count": 1
+  },
+  "time": 40,
+  "out": {
+    "nbt": {
+      "id": "basicecirc"
+    },
+    "item": "tomsmodcore:tm.circuitraw",
+    "data": 0,
+    "count": 1
+  }
+}

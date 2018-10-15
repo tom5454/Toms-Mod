@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:rsdoor",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "III",
+    "IDI",
+    "RRR"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "D": {
+      "item": "minecraft:wooden_door",
+      "data": 0
+    },
+    "I": {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    }
+  }
+}

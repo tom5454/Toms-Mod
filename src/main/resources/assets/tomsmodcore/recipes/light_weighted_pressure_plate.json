@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "minecraft:light_weighted_pressure_plate",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "GGH"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "ore": "plateGold",
+      "type": "forge:ore_dict"
+    },
+    "H": {
+      "ore": "itemHammer_lvl2",
+      "type": "forge:ore_dict"
+    }
+  }
+}

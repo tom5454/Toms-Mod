@@ -8,16 +8,16 @@ import net.minecraft.world.World;
 
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyStorageHandler;
+import com.tom.api.energy.IEnergyStorageHandlerCapability;
 import com.tom.api.grid.GridBase;
-import com.tom.api.grid.IGridDevice;
-import com.tom.api.grid.IGridUpdateListener;
 import com.tom.api.multipart.MultipartTomsMod;
 import com.tom.config.Config;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridUpdateListener;
 
 public class EnergyGrid extends GridBase<EnergyStorage, EnergyGrid> {
 	private EnergyStorage energy;
-	public List<IEnergyStorageHandler> rec = new ArrayList<>();
+	public List<IEnergyStorageHandlerCapability> rec = new ArrayList<>();
 	private EnergyType type;
 
 	public EnergyGrid(EnergyType etype) {

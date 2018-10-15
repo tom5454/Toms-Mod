@@ -9,8 +9,8 @@ import net.minecraft.util.ResourceLocation;
 
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.client.CustomModelLoader;
-import com.tom.client.ModelledItemModel;
 import com.tom.core.CoreInit;
+import com.tom.core.model.ModelledItemModel;
 
 public class ModelledItem extends Item implements IModelRegisterRequired {
 	private int nextID = 0;

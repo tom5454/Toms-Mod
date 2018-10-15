@@ -18,7 +18,7 @@ import com.tom.core.item.Tablet;
 
 import com.tom.core.tileentity.TileEntityWirelessPeripheral;
 
-public class TileEntityTabletAccessPointBase extends TileEntityTomsMod implements IReceivable {
+public class TileEntityTabletAccessPointBase extends TileEntityTomsMod implements IReceivable, IConnector {
 
 	public boolean connected = false;
 	public int posX = 0;
@@ -57,7 +57,7 @@ public class TileEntityTabletAccessPointBase extends TileEntityTomsMod implement
 							if (held != null && held.getItem() == CoreInit.Tablet) {
 								Tablet tab = (Tablet) held.getItem();
 								if (this.canConnect(player, held)) {
-									boolean connect = tab.connect(player, world, xCoord, yCoord, zCoord, 0, held, this.tier, this.locked);
+									boolean connect = tab.connect(player, held, this);
 									// if(this.debug)
 									// System.out.println("Detect");
 									if (connect) {
@@ -78,7 +78,7 @@ public class TileEntityTabletAccessPointBase extends TileEntityTomsMod implement
 							if (held != null && held.getItem() == CoreInit.Tablet) {
 								Tablet tab = (Tablet) held.getItem();
 								if (this.canConnect(player, held)) {
-									boolean connect = tab.connect(player, world, xCoord, yCoord, zCoord, 0, held, this.tier, this.locked);
+									boolean connect = tab.connect(player, held, this);
 									// if(this.debug)
 									// System.out.println("Detect");
 									if (connect) {
@@ -103,8 +103,8 @@ public class TileEntityTabletAccessPointBase extends TileEntityTomsMod implement
 					te.queueEvent("TabletDetach", new Object[]{p.getName()});
 				}
 			}
-			this.markDirty();
-			markBlockForUpdate(pos);
+			//this.markDirty();
+			//markBlockForUpdate(pos);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class TileEntityTabletAccessPointBase extends TileEntityTomsMod implement
 		int xCoord = pos.getX();
 		int yCoord = pos.getY();
 		int zCoord = pos.getZ();
-		this.world.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		//this.world.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -211,5 +211,20 @@ public class TileEntityTabletAccessPointBase extends TileEntityTomsMod implement
 
 	public boolean canConnect(EntityPlayer player, ItemStack tabStack) {
 		return true;
+	}
+
+	@Override
+	public boolean isValid() {
+		return !isInvalid();
+	}
+
+	@Override
+	public boolean isAccessible(double x, double y, double z) {
+		return isValid() && pos.distanceSqToCenter(x, y, z) <= 5*5;
+	}
+
+	@Override
+	public String getName() {
+		return "AccessPoint[" + pos.getX() + "," + pos.getY() + "," + pos.getZ() + "]";
 	}
 }

@@ -11,11 +11,11 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.grid.GridBase;
-import com.tom.api.grid.IGridDevice;
-import com.tom.api.grid.IGridUpdateListener;
 import com.tom.api.multipart.MultipartTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.lib.Configs;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridUpdateListener;
+import com.tom.util.TomsModUtils;
 
 public class FluidGrid extends GridBase<FluidTank, FluidGrid> {
 	private FluidTank tank = new FluidTank(TANK_SIZE);

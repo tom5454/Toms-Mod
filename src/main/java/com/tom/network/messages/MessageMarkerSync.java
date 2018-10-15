@@ -1,19 +1,16 @@
 package com.tom.network.messages;
 
-import mapwriterTm.Mw;
-import mapwriterTm.map.Marker;
-import mapwriterTm.map.Marker.RenderType;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.core.CoreInit;
-import com.tom.core.Minimap;
-import com.tom.network.MessageBase;
+import com.tom.api.map.Marker;
+import com.tom.api.map.RenderType;
+import com.tom.core.map.MapHandler;
+import com.tom.lib.network.MessageBase;
 import com.tom.network.NetworkHandler;
+import com.tom.util.TomsModUtils;
 
 import io.netty.buffer.ByteBuf;
 
@@ -97,17 +94,11 @@ public class MessageMarkerSync extends MessageBase<MessageMarkerSync> {
 
 	@Override
 	public void handleClientSide(final MessageMarkerSync m, EntityPlayer player) {
-		Mw.addRunnable(new Runnable() {
-
-			@Override
-			public void run() {
-				if (m.type == 2 || m.type == 3) {
-					Mw.getInstance().markerManager.markerListServer.put(m.id, new Marker(m.markerName, m.group, m.mx, m.my, m.mz, m.dim, m.icon, m.color, m.beam, m.label, m.beamTexture, false));
-					if (m.type == 3)
-						Mw.getInstance().markerManager.update();
-				}
-			}
-		});
+		if (m.type == 2 || m.type == 3) {
+			MapHandler.putSyncedMarker(m.id, new Marker(m.markerName, m.group, m.mx, m.my, m.mz, m.dim, m.icon, m.color, m.beam, m.label, m.beamTexture, false));
+			if (m.type == 3)
+				MapHandler.update();
+		}
 	}
 
 	@Override
@@ -118,10 +109,8 @@ public class MessageMarkerSync extends MessageBase<MessageMarkerSync> {
 	}
 
 	public static void sendSyncMessageTo(EntityPlayer player) {
-		if (CoreInit.isMapEnabled) {
-			for (int i = 0;i < Minimap.markerManagerServer.markerList.size();i++) {
-				NetworkHandler.sendTo(new MessageMarkerSync(Minimap.markerManagerServer.markerList.get(i), i, i + 1 == Minimap.markerManagerServer.markerList.size()), (EntityPlayerMP) player);
-			}
+		for (int i = 0;i < MapHandler.markerManagerServer.markerList.size();i++) {
+			NetworkHandler.sendTo(new MessageMarkerSync(MapHandler.markerManagerServer.markerList.get(i), i, i + 1 == MapHandler.markerManagerServer.markerList.size()), (EntityPlayerMP) player);
 		}
 	}
 

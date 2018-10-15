@@ -2,9 +2,9 @@ package com.tom.core.item;
 
 import java.util.List;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -24,8 +24,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.ItemEnergyContainer;
 import com.tom.api.item.IConfigurator;
-import com.tom.apis.TomsModUtils;
 import com.tom.handler.ConfiguratorHandler;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.tileentity.TileEntityBatteryBox;
 
@@ -77,7 +77,7 @@ public class Configurator extends ItemEnergyContainer implements IConfigurator {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		tooltip.add(getInfo(stack));
 	}
 
@@ -87,13 +87,15 @@ public class Configurator extends ItemEnergyContainer implements IConfigurator {
 	}
 
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		subItems.add(new ItemStack(itemIn, 1, 0));
-		ItemStack is = new ItemStack(itemIn, 1, 0);
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setDouble("Energy", capacity);
-		is.setTagCompound(tag);
-		subItems.add(is);
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab)){
+			subItems.add(new ItemStack(this, 1, 0));
+			ItemStack is = new ItemStack(this, 1, 0);
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setDouble("Energy", capacity);
+			is.setTagCompound(tag);
+			subItems.add(is);
+		}
 	}
 
 	@Override

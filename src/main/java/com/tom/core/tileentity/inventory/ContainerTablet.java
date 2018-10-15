@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import com.tom.handler.TMPlayerHandler;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageTabletGui;
 
@@ -23,9 +24,9 @@ public class ContainerTablet extends ContainerTomsMod {
 		if (is.getTagCompound() != null && is.getTagCompound().hasKey("x") && is.getTagCompound().hasKey("y") && is.getTagCompound().hasKey("z") && is.getTagCompound().hasKey("id")) {
 			TileEntity tile = world.getTileEntity(new BlockPos(is.getTagCompound().getInteger("x"), is.getTagCompound().getInteger("y"), is.getTagCompound().getInteger("z")));
 			if (tile instanceof TileEntityTabletController) {
-				TileEntityTabletController te = (TileEntityTabletController) tile;
-				int id = is.getTagCompound().getInteger("id");
-				this.tab = te.getTablet(id);
+				//TileEntityTabletController te = (TileEntityTabletController) tile;
+				//int id = is.getTagCompound().getInteger("id");
+				this.tab = TMPlayerHandler.getPlayerHandler(player).tabletHandler;
 			} else {
 				this.tab = null;
 			}

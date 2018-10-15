@@ -5,13 +5,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.apis.TomsModUtils;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityFluidBoiler;
 import com.tom.factory.tileentity.inventory.ContainerFluidBoiler;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiFluidBoiler extends GuiTomsMod {
+public class GuiFluidBoiler extends GuiTomsLib {
 	private TileEntityFluidBoiler te;
 
 	public GuiFluidBoiler(InventoryPlayer playerInv, TileEntityFluidBoiler te) {
@@ -49,8 +48,8 @@ public class GuiFluidBoiler extends GuiTomsMod {
 		ySize = 176;
 		labelList.clear();
 		super.initGui();
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 8, guiTop + 20, te.getTankWater()).setUV(176, 0), labelList);
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 100, guiTop + 20, te.getTankSteam()).setUV(176, 0), labelList);
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 30, guiTop + 20, te.getTankFuel()).setUV(176, 0), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 8, guiTop + 20, te.getTankWater()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 100, guiTop + 20, te.getTankSteam()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 30, guiTop + 20, te.getTankFuel()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
 	}
 }

@@ -12,9 +12,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.inventory.SlotOutput;
 import com.tom.api.inventory.SlotSpeedUpgrade;
-import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.factory.tileentity.TileEntityUVLightbox;
 import com.tom.network.messages.MessageProgress;
+
+import com.tom.core.item.ItemBlueprint;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
@@ -76,7 +77,7 @@ public class ContainerUVLightbox extends ContainerTomsMod {
 
 		@Override
 		public boolean isItemValid(ItemStack stack) {
-			return CraftingMaterial.BLUEPRINT_BASIC_CIRCUIT.equals(stack) || CraftingMaterial.BLUEPRINT_NORMAL_CIRCUIT.equals(stack) || CraftingMaterial.BLUEPRINT_ADVANCED_CIRCUIT.equals(stack) || CraftingMaterial.BLUEPRINT_ELITE_CIRCUIT.equals(stack);
+			return stack.getItem() instanceof ItemBlueprint && ((ItemBlueprint)stack.getItem()).isCircuit(stack);
 		}
 	}
 }

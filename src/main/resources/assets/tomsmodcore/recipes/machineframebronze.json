@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:machineframebronze",
+    "data": 0,
+    "count": 4
+  },
+  "pattern": [
+    "CBC",
+    "BHB",
+    "CBC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "B": {
+      "ore": "plateBrass",
+      "type": "forge:ore_dict"
+    },
+    "C": {
+      "ore": "plateBronze",
+      "type": "forge:ore_dict"
+    },
+    "H": {
+      "ore": "itemHammer_lvl2",
+      "type": "forge:ore_dict"
+    }
+  }
+}

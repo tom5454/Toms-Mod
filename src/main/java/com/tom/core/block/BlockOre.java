@@ -35,11 +35,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.tom.api.block.ICustomItemBlock;
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.block.IRegisterRequired;
-import com.tom.apis.TMLogger;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.Type;
+import com.tom.util.TMLogger;
 import com.tom.worldgen.WorldGen;
 import com.tom.worldgen.WorldGen.OreGenEntry;
 
@@ -427,9 +427,9 @@ public class BlockOre extends Block implements ICustomItemBlock, IRegisterRequir
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
 		for (int i = 0;i < postFixes.size();i++) {
-			list.add(new ItemStack(itemIn, 1, i));
+			list.add(new ItemStack(this, 1, i));
 		}
 	}
 

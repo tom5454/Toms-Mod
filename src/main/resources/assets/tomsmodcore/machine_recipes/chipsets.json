@@ -1,0 +1,14 @@
+{
+	"chipsets": [
+		{
+			"unlocalized_name": "basic",
+			"model": "tomsmodcore:chipsetbasic",
+			"meta": 0
+		},
+		{
+			"unlocalized_name": "adv",
+			"model": "tomsmodcore:chipsetadvanced",
+			"meta": 2
+		}
+	]
+}

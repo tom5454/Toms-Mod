@@ -12,17 +12,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
-import com.tom.apis.RecipeData;
 import com.tom.lib.Configs;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.thirdparty.jei.AlloySmelterRecipeCategory.AlloySmelterRecipeJEI;
+import com.tom.util.RecipeData;
 
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public class AlloySmelterRecipeCategory implements IRecipeCategory<AlloySmelterRecipeJEI> {
 	public static List<AlloySmelterRecipeJEI> get() {
@@ -34,7 +36,7 @@ public class AlloySmelterRecipeCategory implements IRecipeCategory<AlloySmelterR
 			// data.itemstack3, data.itemstack4, data.itemstack5,
 			// data.itemstack6, data.itemstack7, data.itemstack8,
 			// data.itemstack9};
-			AlloySmelterRecipeJEI cr = new AlloySmelterRecipeJEI(data.itemstack0, data.itemstack1, data.itemstack2);
+			AlloySmelterRecipeJEI cr = new AlloySmelterRecipeJEI(data.itemstack0, data.itemstack1, data.itemstack2, data.id);
 			recipes.add(cr);
 		}
 		return recipes;
@@ -63,47 +65,26 @@ public class AlloySmelterRecipeCategory implements IRecipeCategory<AlloySmelterR
 
 	}
 
-	/*public static class AlloySmelterHandler implements IRecipeHandler<AlloySmelterRecipeJEI>{
-	
-		@Override
-		public Class<AlloySmelterRecipeJEI> getRecipeClass() {
-			return AlloySmelterRecipeJEI.class;
-		}
-	
-		@Override
-		public IRecipeWrapper getRecipeWrapper(AlloySmelterRecipeJEI recipe) {
-			return recipe;
-		}
-	
-		@Override
-		public boolean isRecipeValid(AlloySmelterRecipeJEI recipe) {
-			return recipe.input1 != null && recipe.input2 != null && recipe.output != null;
-		}
-	
-		@Override
-		public String getRecipeCategoryUid(AlloySmelterRecipeJEI recipe) {
-			return JEIConstants.ALLOY_SMELTER_ID;
-		}
-	
-	}*/
-	public static class AlloySmelterRecipeJEI extends BlankRecipeWrapper {
+	public static class AlloySmelterRecipeJEI implements IRecipeWrapper {
 		@Nullable
 		private final ItemStack input1;
 		@Nonnull
 		private final ItemStack output;
 		@Nullable
 		private final ItemStack input2;
+		private final String id;
 
-		public AlloySmelterRecipeJEI(ItemStack input1, ItemStack input2, ItemStack output) {
+		public AlloySmelterRecipeJEI(ItemStack input1, ItemStack input2, ItemStack output, String id) {
 			this.input1 = input1;
 			this.output = output;
 			this.input2 = input2;
+			this.id = id;
 		}
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setOutput(ItemStack.class, output);
-			ingredients.setInputs(ItemStack.class, Arrays.asList(new ItemStack[]{input1, input2}));
+			ingredients.setOutput(VanillaTypes.ITEM, output);
+			ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(new ItemStack[]{input1, input2}));
 		}
 	}
 
@@ -122,6 +103,12 @@ public class AlloySmelterRecipeCategory implements IRecipeCategory<AlloySmelterR
 		recipeLayout.getItemStacks().set(0, recipe.input1);
 		recipeLayout.getItemStacks().set(1, recipe.input2);
 		recipeLayout.getItemStacks().set(2, recipe.output);
+		recipeLayout.getItemStacks().addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+			if (slotIndex == 2) {
+				if(Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
+					tooltip.add(TextFormatting.GRAY + recipe.id);
+			}
+		});
 	}
 
 	@Override

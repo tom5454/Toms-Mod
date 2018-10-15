@@ -21,12 +21,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.tileentity.IConfigurable.IConfigurationOption;
 import com.tom.config.ConfigurationTerminal.SliderHandler.Handler;
 import com.tom.storage.multipart.block.StorageNetworkCable.CableColor;
 
 import com.tom.core.tileentity.gui.GuiConfigurator.GuiButtonConfig;
-import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public final class ConfigurationTerminal implements IConfigurationOption {
 	// private int lastButtonID = -1;
@@ -166,7 +166,7 @@ public final class ConfigurationTerminal implements IConfigurationOption {
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float partTicks) {
 			if (this.visible) {
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
@@ -200,7 +200,7 @@ public final class ConfigurationTerminal implements IConfigurationOption {
 		}
 
 		@Override
-		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
+		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsLib gui) {
 			if (this.visible) {
 				if (hovered) {
 					gui.drawHoveringTextI(tooltip, mouseX, mouseY);

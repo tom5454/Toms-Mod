@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:dust",
+    "data": 17,
+    "count": 1
+  },
+  "pattern": [
+    "TTT",
+    "TTT",
+    "TTT"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "T": {
+      "ore": "dustTinyObsidian",
+      "type": "forge:ore_dict"
+    }
+  }
+}

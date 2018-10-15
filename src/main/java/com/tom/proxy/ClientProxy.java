@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiErrorScreen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 import com.tom.api.block.IMethod;
@@ -26,16 +34,15 @@ import com.tom.client.EventHandlerClient;
 import com.tom.client.TileEntityCamoableSpecialRenderer;
 import com.tom.client.TileEntityCustomRenderer;
 import com.tom.client.TileEntityHiddenSpecialRenderer;
-import com.tom.client.TileEntityLaserRenderer;
 import com.tom.client.TileEntityMultiblockCustomRenderer;
-import com.tom.client.TileEntityTemplateSpecialRenderer;
 import com.tom.config.Config;
-import com.tom.core.CommandJEI;
-import com.tom.core.CommandProfiler;
 import com.tom.core.CoreInit;
+import com.tom.core.commands.CommandJEI;
+import com.tom.core.commands.CommandProfiler;
 import com.tom.core.model.ModelControllerBox;
 import com.tom.core.model.ModelMagReader;
 import com.tom.core.model.ModelMonitor;
+import com.tom.core.model.TileEntityTemplateSpecialRenderer;
 import com.tom.defense.client.TileEntityForceCapacitorRenderer;
 import com.tom.defense.tileentity.TileEntityForceCapacitor;
 import com.tom.factory.FactoryInit;
@@ -76,10 +83,6 @@ import com.tom.core.tileentity.TileEntityMonitor;
 import com.tom.core.tileentity.TileEntityRSDoor;
 import com.tom.core.tileentity.TileEntityTemplate;
 
-import com.tom.energy.tileentity.TileEntityLaserMK1;
-import com.tom.energy.tileentity.TileEntityLaserMK2;
-import com.tom.energy.tileentity.TileEntityLaserMK3;
-
 public class ClientProxy extends CommonProxy {
 	// private final List<CustomModelRenderer> blockRenderers = new
 	// ArrayList<CustomModelRenderer>();
@@ -106,12 +109,12 @@ public class ClientProxy extends CommonProxy {
 		}*/
 		CustomModelLoader.init();
 		GlobalFields.tabletSounds = new ArrayList<>();
+		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 	}
 
 	@Override
 	public void init() {
 		MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
-		MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
 		ClientCommandHandler.instance.registerCommand(new CommandProfiler());
 		if (CoreInit.isDebugging)
 			ClientCommandHandler.instance.registerCommand(new CommandJEI());
@@ -156,15 +159,14 @@ public class ClientProxy extends CommonProxy {
 			}
 			registerBaseModelRenderer(TileEntityMonitor.class, new ModelMonitor());
 		}
-		CoreInit.registerItemRenders();
 		// MultipartRegistryClient.bindMultipartSpecialRenderer(PartItemDuct.class,
 		// new ItemDuctCustomRenderer());
 		/*ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnergyCellMK1.class, new TileEntityEnergyCellRenderBase());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnergyCellMK2.class, new TileEntityEnergyCellRenderBase());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnergyCellMK3.class, new TileEntityEnergyCellRenderBase());*/
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserMK1.class, new TileEntityLaserRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserMK2.class, new TileEntityLaserRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserMK3.class, new TileEntityLaserRenderer());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserMK1.class, new TileEntityLaserRenderer());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserMK2.class, new TileEntityLaserRenderer());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLaserMK3.class, new TileEntityLaserRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLimitableChest.class, new TileEntityLimitableChestRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceCapacitor.class, new TileEntityForceCapacitorRenderer());
 		registerBaseModelRenderer(TileEntityDrive.class, new DriveCellsModel());
@@ -225,7 +227,7 @@ public class ClientProxy extends CommonProxy {
 	}*/
 	@Override
 	public void registerKeyBindings() {
-		if (CoreInit.isCCLoaded && Config.enableAdventureItems) {
+		if (Config.enableAdventureItems) {
 			ClientRegistry.registerKeyBinding(Keys.UP = new KeyBinding(Configs.keyPrefix + "up", Keyboard.KEY_UP, Configs.keyCatergory));
 			ClientRegistry.registerKeyBinding(Keys.DOWN = new KeyBinding(Configs.keyPrefix + "down", Keyboard.KEY_DOWN, Configs.keyCatergory));
 			ClientRegistry.registerKeyBinding(Keys.LEFT = new KeyBinding(Configs.keyPrefix + "left", Keyboard.KEY_LEFT, Configs.keyCatergory));
@@ -234,6 +236,10 @@ public class ClientProxy extends CommonProxy {
 			ClientRegistry.registerKeyBinding(Keys.BACK = new KeyBinding(Configs.keyPrefix + "back", 14, Configs.keyCatergory));
 			ClientRegistry.registerKeyBinding(Keys.INTERACT = new KeyBinding(Configs.keyPrefix + "interact", Keyboard.KEY_X, Configs.keyCatergory));
 			ClientRegistry.registerKeyBinding(Keys.MENU = new KeyBinding(Configs.keyPrefix + "menu", Keyboard.KEY_Y, Configs.keyCatergory));
+			ClientRegistry.registerKeyBinding(Keys.FUNCTION1 = new KeyBinding(Configs.keyPrefix + "func1", Keyboard.KEY_V, Configs.keyCatergory));
+			ClientRegistry.registerKeyBinding(Keys.FUNCTION2 = new KeyBinding(Configs.keyPrefix + "func2", Keyboard.KEY_B, Configs.keyCatergory));
+			ClientRegistry.registerKeyBinding(Keys.FUNCTION3 = new KeyBinding(Configs.keyPrefix + "func3", Keyboard.KEY_G, Configs.keyCatergory));
+			ClientRegistry.registerKeyBinding(Keys.FUNCTION4 = new KeyBinding(Configs.keyPrefix + "func4", Keyboard.KEY_H, Configs.keyCatergory));
 		}
 		ClientRegistry.registerKeyBinding(Keys.CONFIG = new KeyBinding(Configs.keyPrefix + "config", Keyboard.KEY_C, Configs.keyCatergory));
 		ClientRegistry.registerKeyBinding(Keys.PROFILE = new KeyBinding(Configs.keyPrefix + "profile", Keyboard.KEY_NUMPAD9, Configs.keyCatergory));
@@ -265,5 +271,63 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public <I, R> R runClientFunction(I i, Function<I, R> m) {
 		return m.apply(i);
+	}
+	@Override
+	public void delTexture(Integer id) {
+		if(id != null)GL11.glDeleteTextures(id);
+	}
+	@Override
+	public void delList(Integer id) {
+		if(id != null)GL11.glDeleteLists(id, 1);
+	}
+	@Override
+	public void error(String string) {
+		throw new CustomModLoadingErrorDisplayException() {
+			private static final long serialVersionUID = 5435172220591885091L;
+			private double zLevel;
+			@Override
+			public void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer) {
+
+			}
+
+			@Override
+			public void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime) {
+				drawGradientRect(0, 0, errorScreen.width, errorScreen.height, -12574688, -11530224);
+				errorScreen.drawCenteredString(fontRenderer, "", errorScreen.width / 2, 90, 16777215);
+				errorScreen.drawCenteredString(fontRenderer, string, errorScreen.width / 2, 110, 16777215);
+			}
+			/**
+			 * Draws a rectangle with a vertical gradient between the specified colors (ARGB format). Args : x1, y1, x2, y2,
+			 * topColor, bottomColor
+			 */
+			protected void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor)
+			{
+				float f = (startColor >> 24 & 255) / 255.0F;
+				float f1 = (startColor >> 16 & 255) / 255.0F;
+				float f2 = (startColor >> 8 & 255) / 255.0F;
+				float f3 = (startColor & 255) / 255.0F;
+				float f4 = (endColor >> 24 & 255) / 255.0F;
+				float f5 = (endColor >> 16 & 255) / 255.0F;
+				float f6 = (endColor >> 8 & 255) / 255.0F;
+				float f7 = (endColor & 255) / 255.0F;
+				GlStateManager.disableTexture2D();
+				GlStateManager.enableBlend();
+				GlStateManager.disableAlpha();
+				GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+				GlStateManager.shadeModel(7425);
+				Tessellator tessellator = Tessellator.getInstance();
+				BufferBuilder bufferbuilder = tessellator.getBuffer();
+				bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
+				bufferbuilder.pos(right, top, this.zLevel).color(f1, f2, f3, f).endVertex();
+				bufferbuilder.pos(left, top, this.zLevel).color(f1, f2, f3, f).endVertex();
+				bufferbuilder.pos(left, bottom, this.zLevel).color(f5, f6, f7, f4).endVertex();
+				bufferbuilder.pos(right, bottom, this.zLevel).color(f5, f6, f7, f4).endVertex();
+				tessellator.draw();
+				GlStateManager.shadeModel(7424);
+				GlStateManager.disableBlend();
+				GlStateManager.enableAlpha();
+				GlStateManager.enableTexture2D();
+			}
+		};
 	}
 }

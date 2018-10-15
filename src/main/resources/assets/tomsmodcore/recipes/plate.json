@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:plate",
+    "data": 35,
+    "count": 1
+  },
+  "pattern": [
+    "H",
+    "I",
+    "I"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "H": {
+      "ore": "itemHammer_lvl4",
+      "type": "forge:ore_dict"
+    },
+    "I": {
+      "ore": "ingotTungstensteel",
+      "type": "forge:ore_dict"
+    }
+  }
+}

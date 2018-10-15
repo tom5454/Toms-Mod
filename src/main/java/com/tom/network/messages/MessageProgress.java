@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
 
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 import com.tom.network.NetworkHandler;
 
 import io.netty.buffer.ByteBuf;

@@ -1,0 +1,16 @@
+{
+    "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+    "textures": {
+        "0": "tomsmodcore:items/tablet/tablet_icons"
+    },
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [ 3.0, 12.95, 8.000000014901161 ], 
+            "to": [ 13.0, 15.95, 8.1925 ], 
+            "faces": {
+                "south": { "texture": "#0", "uv": [ 3.0, 3.0, 13.0, 6.0 ] }
+            }
+        }
+    ]
+}

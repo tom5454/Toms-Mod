@@ -3,12 +3,11 @@ package com.tom.factory.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityLaserEngraver;
 import com.tom.factory.tileentity.inventory.ContainerLaserEngraver;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiLaserEngraver extends GuiTomsMod {
+public class GuiLaserEngraver extends GuiTomsLib {
 	private TileEntityLaserEngraver te;
 
 	public GuiLaserEngraver(InventoryPlayer playerInv, TileEntityLaserEngraver te) {

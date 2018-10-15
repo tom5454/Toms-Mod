@@ -22,18 +22,20 @@ import com.tom.thirdparty.jei.RubberBoilerRecipeCategory.RubberBoilerRecipeJEI;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public class RubberBoilerRecipeCategory implements IRecipeCategory<RubberBoilerRecipeJEI> {
 	public static List<RubberBoilerRecipeJEI> get() {
 		List<RubberBoilerRecipeJEI> recipes = new ArrayList<>();
 		recipes.add(new RubberBoilerRecipeJEI(0));
 		recipes.add(new RubberBoilerRecipeJEI(1));
+		recipes.add(new RubberBoilerRecipeJEI(2));
 		return recipes;
 	}
 
-	public static class RubberBoilerRecipeJEI extends BlankRecipeWrapper {
+	public static class RubberBoilerRecipeJEI implements IRecipeWrapper {
 		private int i;
 
 		public RubberBoilerRecipeJEI(int i) {
@@ -43,23 +45,22 @@ public class RubberBoilerRecipeCategory implements IRecipeCategory<RubberBoilerR
 		@Override
 		public void getIngredients(IIngredients ingredients) {
 			if (i == 0) {
-				ingredients.setInput(FluidStack.class, new FluidStack(CoreInit.resin.get(), 5));
-				ingredients.setOutput(FluidStack.class, new FluidStack(CoreInit.concentratedResin.get(), 1));
-			} else {
-				ingredients.setInputs(ItemStack.class, OreDictionary.getOres("logRubber"));
-				ingredients.setOutput(ItemStack.class, new ItemStack(Items.COAL, 1, 1));
-				ingredients.setOutput(FluidStack.class, new FluidStack(CoreInit.resin.get(), 100));
+				ingredients.setInput(VanillaTypes.FLUID, new FluidStack(CoreInit.resin.get(), 5));
+				ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CoreInit.concentratedResin.get(), 1));
+			} else if (i == 1) {
+				ingredients.setInputs(VanillaTypes.ITEM, OreDictionary.getOres("logRubber"));
+				ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(Items.COAL, 1, 1));
+				ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CoreInit.resin.get(), 100));
+			} else if (i == 2) {
+				ingredients.setInputs(VanillaTypes.ITEM, OreDictionary.getOres("leavesRubber"));
+				ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(CoreInit.resin.get(), 20));
 			}
 		}
 
 	}
 
 	@Nonnull
-	private IDrawable background = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/jei/jeiCrusher.png"), 1, 5, 85, 50);
-	@Nonnull
-	private final IDrawable tankOverlay = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/resSelect.png"), 102, 124, 12, 47);
-	@Nonnull
-	private final IDrawable tankBackground = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/resSelect.png"), 78, 120, 20, 55);
+	private IDrawable background = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/jei/jeiCrusher.png"), 130, 25, 125, 80);
 
 	@Override
 	public String getUid() {
@@ -73,7 +74,6 @@ public class RubberBoilerRecipeCategory implements IRecipeCategory<RubberBoilerR
 
 	@Override
 	public IDrawable getBackground() {
-		background = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/jei/jeiCrusher.png"), 1, 0, 85, 80);
 		return background;
 	}
 
@@ -84,19 +84,19 @@ public class RubberBoilerRecipeCategory implements IRecipeCategory<RubberBoilerR
 
 	@Override
 	public void drawExtras(Minecraft minecraft) {
-		tankBackground.draw(minecraft, -20, -4);
-		tankBackground.draw(minecraft, 85, -4);
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, RubberBoilerRecipeJEI recipeWrapper, IIngredients ingredients) {
-		int x = 6;
-		int y = 26;
+		int x = 21;
+		int y = 28;
 		recipeLayout.getItemStacks().init(0, true, x, y);
 		recipeLayout.getItemStacks().init(1, false, x + 55, y);
-		recipeLayout.getIngredientsGroup(ItemStack.class).set(ingredients);
-		recipeLayout.getFluidStacks().init(0, true, -16, 0, 12, 47, recipeWrapper.i == 0 ? 10 : 1000, true, tankOverlay);
-		recipeLayout.getFluidStacks().init(1, false, 89, 0, 12, 47, recipeWrapper.i == 0 ? 10 : 1000, true, tankOverlay);
+		recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(ingredients);
+		recipeLayout.getFluidStacks().init(0, true, 0, 0, 16, 58, recipeWrapper.i == 0 ? 10 : 1000, true, JEIHandler.tankOverlay);
+		recipeLayout.getFluidStacks().init(1, false, 98, 0, 16, 58, recipeWrapper.i == 0 ? 10 : 1000, true, JEIHandler.tankOverlay);
+		recipeLayout.getFluidStacks().setBackground(0, JEIHandler.tankBackground);
+		recipeLayout.getFluidStacks().setBackground(1, JEIHandler.tankBackground);
 		recipeLayout.getFluidStacks().set(ingredients);
 	}
 

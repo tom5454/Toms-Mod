@@ -3,13 +3,10 @@ package com.tom.factory.item;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import com.tom.handler.FuelHandler.IBurnable;
-
-public class ItemCoalCoke extends Item implements IBurnable {
+public class ItemCoalCoke extends Item  {
 
 	@Override
-	public int getBurnTime(ItemStack stack) {
+	public int getItemBurnTime(ItemStack itemStack) {
 		return 3200;
 	}
-
 }

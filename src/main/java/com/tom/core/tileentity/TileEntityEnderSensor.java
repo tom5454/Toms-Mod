@@ -16,26 +16,18 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.api.tileentity.ILookDetector;
 import com.tom.api.tileentity.TileEntityCamoable;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.core.entity.EntityCamera;
-import com.tom.lib.Configs;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageCamera;
+import com.tom.util.TomsModUtils;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityEnderSensor extends TileEntityCamoable implements IPeripheral, ILookDetector {
+public class TileEntityEnderSensor extends TileEntityCamoable implements ITMCompatPeripheral, ILookDetector {
 	public String[] methods = {"listMethods", "getPlayerDist", "setActive", "getActive"};
-	private List<IComputerAccess> computers = new ArrayList<>();
+	private List<IComputer> computers = new ArrayList<>();
 	public List<EntityPlayer> players = new ArrayList<>();
 	public ItemStack camoStack = null;
 	public boolean active = true;
@@ -54,7 +46,7 @@ public class TileEntityEnderSensor extends TileEntityCamoable implements IPeriph
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+	public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 		int xCoord = pos.getX();
 		int yCoord = pos.getY();
 		int zCoord = pos.getZ();
@@ -85,18 +77,13 @@ public class TileEntityEnderSensor extends TileEntityCamoable implements IPeriph
 	}
 
 	@Override
-	public void attach(IComputerAccess computer) {
+	public void attach(IComputer computer) {
 		computers.add(computer);
 	}
 
 	@Override
-	public void detach(IComputerAccess computer) {
+	public void detach(IComputer computer) {
 		computers.remove(computer);
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		return other == this;
 	}
 
 	@Override
@@ -169,7 +156,7 @@ public class TileEntityEnderSensor extends TileEntityCamoable implements IPeriph
 							if (playersOld.contains(player)) {
 								playersOld.remove(player);
 							} else {
-								for (IComputerAccess c : this.computers) {
+								for (IComputer c : this.computers) {
 									c.queueEvent("ender_sensor_look_" + player.getName(), new Object[]{player.getName(), player.getDistance(xCoord, yCoord, zCoord), player.posX, player.posY, player.posZ});
 								}
 							}
@@ -178,7 +165,7 @@ public class TileEntityEnderSensor extends TileEntityCamoable implements IPeriph
 				}
 				if (!playersOld.isEmpty()) {
 					for (EntityPlayer p : playersOld) {
-						for (IComputerAccess c : this.computers) {
+						for (IComputer c : this.computers) {
 							c.queueEvent("ender_sensor_look_stop_" + p.getName(), new Object[]{p.getName()});
 						}
 					}
@@ -235,12 +222,12 @@ public class TileEntityEnderSensor extends TileEntityCamoable implements IPeriph
 			int xCoord = pos.getX();
 			int yCoord = pos.getY();
 			int zCoord = pos.getZ();
-			for (IComputerAccess c : this.computers) {
+			for (IComputer c : this.computers) {
 				c.queueEvent("ender_sensor_look_out_" + player.getName(), new Object[]{player.getName(), player.getDistance(xCoord, yCoord, zCoord), player.posX, player.posY, player.posZ});
 			}
 		} else if (!mode && this.players.contains(player)) {
 			this.players.remove(player);
-			for (IComputerAccess c : this.computers) {
+			for (IComputer c : this.computers) {
 				c.queueEvent("ender_sensor_look_out_stop_" + player.getName(), new Object[]{player.getName()});
 			}
 		}

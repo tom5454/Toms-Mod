@@ -61,7 +61,7 @@ public class TileEntityCoilerPlant extends TileEntityMachineBase {
 		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
 

@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "minecraft:reeds",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "minecraft:sugar",
+    "data": 0,
+    "count": 2
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodenergy:fusioninjector",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "CRC",
+    "CRC",
+    "CRC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "C": {
+      "ore": "plateChrome",
+      "type": "forge:ore_dict"
+    }
+  }
+}

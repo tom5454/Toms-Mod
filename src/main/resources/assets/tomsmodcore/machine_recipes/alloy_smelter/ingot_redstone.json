@@ -1,0 +1,17 @@
+{
+  "in2": {
+    "item": "tomsmodcore:ingot",
+    "data": 27,
+    "count": 4
+  },
+  "in1": {
+    "item": "minecraft:redstone_block",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:ingot",
+    "data": 20,
+    "count": 4
+  }
+}

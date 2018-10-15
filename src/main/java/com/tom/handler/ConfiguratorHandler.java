@@ -25,9 +25,9 @@ import com.tom.api.tileentity.AccessType;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.IConfigurable.ICustomConfigurationErrorMessage;
 import com.tom.api.tileentity.ISecurityStation;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 
 public class ConfiguratorHandler {
 	public static boolean openConfigurator(ItemStack stack, EntityPlayer player, World world, BlockPos pos) {

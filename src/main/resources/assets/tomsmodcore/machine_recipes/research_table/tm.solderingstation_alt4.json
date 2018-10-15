@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:esolderingstation"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.solderingstation",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "IHI",
+      "RCR",
+      "IEI"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "item": "minecraft:redstone",
+        "data": 0
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "H": {
+        "id": "heatingCoilCupronickel",
+        "type": "tomsmodcore:material"
+      },
+      "I": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1100
+}

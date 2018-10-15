@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:soldering"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:material",
+      "data": 36,
+      "count": 2
+    },
+    "pattern": [
+      "CCC",
+      "GGG",
+      "RRR"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "ore": "itemRubber",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "plateCopper",
+        "type": "forge:ore_dict"
+      },
+      "G": {
+        "ore": "meshGlass",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 100
+}

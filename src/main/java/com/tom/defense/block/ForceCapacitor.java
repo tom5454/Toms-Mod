@@ -10,13 +10,13 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Plane;
@@ -24,20 +24,14 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.defense.tileentity.TileEntityForceCapacitor;
-import com.tom.lib.Configs;
+import com.tom.util.TomsModUtils;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class ForceCapacitor extends BlockContainerTomsMod implements IPeripheralProvider {
+public class ForceCapacitor extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", Plane.HORIZONTAL);
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
 
@@ -48,13 +42,6 @@ public class ForceCapacitor extends BlockContainerTomsMod implements IPeripheral
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityForceCapacitor();
-	}
-
-	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
-		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityForceCapacitor ? (IPeripheral) te : null;
 	}
 
 	@Override
@@ -111,24 +98,8 @@ public class ForceCapacitor extends BlockContainerTomsMod implements IPeripheral
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		TileEntity tile = worldIn.getTileEntity(pos);
-		ItemStack stack = new ItemStack(this);
-		if (tile instanceof TileEntityForceCapacitor) {
-			NBTTagCompound tag = new NBTTagCompound();
-			((TileEntityForceCapacitor) tile).writeToStackNBT(tag);
-			stack.setTagCompound(new NBTTagCompound());
-			stack.getTagCompound().setTag("BlockEntityTag", tag);
-			stack.getTagCompound().setBoolean("stored", true);
-		}
-		spawnAsEntity(worldIn, pos, stack);
-		super.breakBlock(worldIn, pos, state);
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("stored")) {
 			tooltip.add(I18n.format("tomsMod.tooltip.itemsStored"));
 		}

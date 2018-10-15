@@ -20,13 +20,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.inventory.InventorySection;
-import com.tom.apis.TomsModUtils;
-import com.tom.apis.TomsModUtils.FillRunnable;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.core.TMResource.Type;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.TomsModUtils;
+import com.tom.util.TomsModUtils.FillRunnable;
 
 public class TileEntityMixer extends TileEntityMachineBase implements ITileFluidHandler {
 	private FluidTank tankIn = new FluidTank(10000);
@@ -98,7 +98,7 @@ public class TileEntityMixer extends TileEntityMachineBase implements ITileFluid
 		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
 

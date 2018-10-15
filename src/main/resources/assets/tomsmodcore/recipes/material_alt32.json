@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 7,
+    "count": 1
+  },
+  "pattern": [
+    "I",
+    "I",
+    "I"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "I": {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    }
+  }
+}

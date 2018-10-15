@@ -2,8 +2,6 @@ package com.tom.config;
 
 import java.util.List;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -20,6 +18,7 @@ import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.tileentity.TileEntityForceConverter;
 import com.tom.defense.tileentity.inventory.ContainerSecurityStation.SlotPowerLinkCard;
+import com.tom.lib.utils.RenderUtil;
 
 public final class ConfigurationForceConverterControl implements IConfigurationOption {
 	private IInventory inventory;
@@ -36,9 +35,9 @@ public final class ConfigurationForceConverterControl implements IConfigurationO
 	@SideOnly(Side.CLIENT)
 	public void renderBackground(Minecraft mc, int x, int y) {
 		mc.renderEngine.bindTexture(securitySlotLocation);
-		Render.drawTexturedRect(x + 1, y + 1, 18, 18);
+		RenderUtil.drawTexturedRect(x + 1, y + 1, 18, 18);
 		mc.renderEngine.bindTexture(powerlinkSlotLocation);
-		Render.drawTexturedRect(x + 19, y + 1, 18, 18);
+		RenderUtil.drawTexturedRect(x + 19, y + 1, 18, 18);
 	}
 
 	@Override

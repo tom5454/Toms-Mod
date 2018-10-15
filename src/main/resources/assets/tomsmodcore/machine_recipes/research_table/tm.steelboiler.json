@@ -1,0 +1,25 @@
+{
+  "researches": [
+    "tomsmodcore:advboiler"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.steelboiler",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PP",
+      "PP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "item": "tomsmodfactory:tm.componentsblock",
+        "data": 6
+      }
+    }
+  },
+  "crafting_time": 600
+}

@@ -11,17 +11,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
-import com.tom.apis.RecipeData;
 import com.tom.lib.Configs;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.thirdparty.jei.PlateBlenderRecipeCategory.PlateBlenderRecipeJEI;
+import com.tom.util.RecipeData;
 
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderRecipeJEI> {
 	public static List<PlateBlenderRecipeJEI> get() {
@@ -33,7 +35,7 @@ public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderR
 			// data.itemstack3, data.itemstack4, data.itemstack5,
 			// data.itemstack6, data.itemstack7, data.itemstack8,
 			// data.itemstack9};
-			PlateBlenderRecipeJEI cr = new PlateBlenderRecipeJEI(data.itemstack0, data.itemstack1, data.energy);
+			PlateBlenderRecipeJEI cr = new PlateBlenderRecipeJEI(data.itemstack0, data.itemstack1, data.energy, data.id);
 			recipes.add(cr);
 		}
 		return recipes;
@@ -67,17 +69,19 @@ public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderR
 		return Configs.ModName;
 	}
 
-	public static class PlateBlenderRecipeJEI extends BlankRecipeWrapper {
+	public static class PlateBlenderRecipeJEI implements IRecipeWrapper {
 		@Nullable
 		private final ItemStack input;
 		@Nonnull
 		private final ItemStack output;
 		private final int level;
+		private final String id;
 
-		public PlateBlenderRecipeJEI(ItemStack input, ItemStack output, int level) {
+		public PlateBlenderRecipeJEI(ItemStack input, ItemStack output, int level, String id) {
 			this.input = input;
 			this.output = output;
 			this.level = level;
+			this.id = id;
 		}
 
 		@Override
@@ -87,8 +91,8 @@ public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderR
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInput(ItemStack.class, input);
-			ingredients.setOutput(ItemStack.class, output);
+			ingredients.setInput(VanillaTypes.ITEM, input);
+			ingredients.setOutput(VanillaTypes.ITEM, output);
 		}
 	}
 
@@ -105,6 +109,12 @@ public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderR
 		recipeLayout.getItemStacks().init(1, false, x + 55, y);
 		recipeLayout.getItemStacks().set(0, recipeWrapper.input);
 		recipeLayout.getItemStacks().set(1, recipeWrapper.output);
+		recipeLayout.getItemStacks().addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+			if (slotIndex == 1) {
+				if(Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
+					tooltip.add(TextFormatting.GRAY + recipeWrapper.id);
+			}
+		});
 	}
 
 	@Override

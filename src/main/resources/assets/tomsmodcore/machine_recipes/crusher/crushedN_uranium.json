@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmodcore:oreuranium",
+    "data": 1,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:crushedn",
+    "data": 8,
+    "count": 4
+  }
+}

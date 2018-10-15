@@ -4,14 +4,18 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public abstract class BlockContainerTomsMod extends BlockContainer implements ICustomItemBlock {
@@ -36,7 +40,7 @@ public abstract class BlockContainerTomsMod extends BlockContainer implements IC
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntity te = worldIn.getTileEntity(pos);
-		if (te != null) {
+		if (te != null && !(te instanceof IItemTile)) {
 			if (te instanceof IInventory) {
 				// InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)
 				// te);
@@ -88,5 +92,23 @@ public abstract class BlockContainerTomsMod extends BlockContainer implements IC
 	@Override
 	public ItemBlock createItemBlock() {
 		return new ItemBlock(this);
+	}
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if(tileEntity instanceof IItemTile){
+			((IItemTile)tileEntity).getDrops(drops, world, pos, state, fortune);
+		}else
+			super.getDrops(drops, world, pos, state, fortune);
+	}
+	@Override
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+		if(willHarvest)return true;
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
+	}
+	@Override
+	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack) {
+		super.harvestBlock(worldIn, player, pos, state, te, stack);
+		worldIn.setBlockToAir(pos);
 	}
 }

@@ -3,7 +3,9 @@ package com.tom.defense.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,10 +22,10 @@ import com.tom.api.item.IIdentityCard;
 import com.tom.api.item.IPowerLinkCard;
 import com.tom.api.item.ISecurityStationLinkCard;
 import com.tom.api.tileentity.AccessType;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.tileentity.inventory.ContainerSecurityStation;
+import com.tom.util.TomsModUtils;
 
 public class IdentityCard extends Item implements IIdentityCard, IPowerLinkCard, ISecurityStationLinkCard, IModelRegisterRequired {
 	public IdentityCard() {
@@ -71,11 +73,11 @@ public class IdentityCard extends Item implements IIdentityCard, IPowerLinkCard,
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 		String name = this.getUsername(stack);
 		BlockPos master = this.getMaster(stack);
 		BlockPos station = this.getStation(stack);
+		EntityPlayer playerIn = Minecraft.getMinecraft().player;
 		if (name != null) {
 			tooltip.add(I18n.format("tomsMod.tooltip.username") + ": " + name);
 			if (playerIn.openContainer instanceof ContainerSecurityStation) {

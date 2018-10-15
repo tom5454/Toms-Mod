@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:hvcable"
+  ],
+  "level": "tomsMod.craftingLevel.esoldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:hvcable",
+      "data": 0,
+      "count": 2
+    },
+    "pattern": [
+      "R-R",
+      "rCr",
+      "R-R"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "ore": "itemRubber",
+        "type": "forge:ore_dict"
+      },
+      "r": {
+        "item": "minecraft:redstone",
+        "data": 0
+      },
+      "C": {
+        "item": "tomsmodenergy:mvcable",
+        "data": 0
+      },
+      "-": {
+        "ore": "cableEnderium",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1800
+}

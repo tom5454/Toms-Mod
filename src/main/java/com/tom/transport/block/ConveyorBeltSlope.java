@@ -31,9 +31,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.api.block.IModelRegisterRequired;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.transport.tileentity.TileEntityConveyorBeltSlope;
+import com.tom.util.TomsModUtils;
 
 public class ConveyorBeltSlope extends BlockContainerTomsMod implements IModelRegisterRequired {
 	public static final AxisAlignedBB AABB_BOTTOM = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
@@ -83,9 +83,9 @@ public class ConveyorBeltSlope extends BlockContainerTomsMod implements IModelRe
 	}
 
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack(itemIn, 1, 0));
-		list.add(new ItemStack(itemIn, 1, 1));
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		list.add(new ItemStack(this, 1, 0));
+		list.add(new ItemStack(this, 1, 1));
 	}
 
 	@Override

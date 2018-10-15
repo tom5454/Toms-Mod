@@ -10,8 +10,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.TileEntityRSDoor;
 

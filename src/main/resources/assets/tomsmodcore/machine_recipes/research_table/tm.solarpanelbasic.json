@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:solarpanel"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:tm.solarpanelbasic",
+      "data": 0,
+      "count": 2
+    },
+    "pattern": [
+      "SSS",
+      "RER",
+      "P-P"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "item": "minecraft:redstone",
+        "data": 0
+      },
+      "S": {
+        "id": "solar1",
+        "type": "tomsmodcore:material"
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "-": {
+        "ore": "cableCopper",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1200
+}

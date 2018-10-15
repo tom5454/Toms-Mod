@@ -6,12 +6,12 @@ import net.minecraft.util.EnumFacing;
 
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.core.research.ResearchHandler;
 import com.tom.factory.block.SteamSolderingStation;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler.CraftingLevel;
 import com.tom.recipes.handler.AdvancedCraftingHandler.ReturnData;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.TileEntityResearchTable;
 

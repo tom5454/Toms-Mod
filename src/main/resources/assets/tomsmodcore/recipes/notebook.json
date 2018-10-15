@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:notebook",
+    "data": 0,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:writable_book",
+      "data": 0
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodstorage:tm.tank.basic",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "OGO",
+    "GGG",
+    "OGO"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "ore": "paneGlassColorless",
+      "type": "forge:ore_dict"
+    },
+    "O": {
+      "ore": "plateCopper",
+      "type": "forge:ore_dict"
+    }
+  }
+}

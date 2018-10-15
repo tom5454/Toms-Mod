@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmodcore:oresilver",
+    "data": 2,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:crushede",
+    "data": 14,
+    "count": 2
+  }
+}

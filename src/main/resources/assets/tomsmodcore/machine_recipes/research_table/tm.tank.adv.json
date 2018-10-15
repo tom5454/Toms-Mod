@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:advtank"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodstorage:tm.tank.adv",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "SGS",
+      "GTG",
+      "SGS"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "item": "tomsmodstorage:tm.tank.basic",
+        "data": 0
+      },
+      "G": {
+        "ore": "blockGlassColorless",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 300
+}

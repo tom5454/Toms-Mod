@@ -1,0 +1,25 @@
+{
+  "researches": [
+    "tomsmodcore:mortar"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:tm.mortarandpestle",
+      "data": 0,
+      "count": 1
+    },
+    "ingredients": [
+      {
+        "id": "stoneBowl",
+        "type": "tomsmodcore:material"
+      },
+      {
+        "ore": "itemFlint",
+        "type": "forge:ore_dict"
+      }
+    ],
+    "type": "forge:ore_shapeless"
+  },
+  "crafting_time": 200
+}

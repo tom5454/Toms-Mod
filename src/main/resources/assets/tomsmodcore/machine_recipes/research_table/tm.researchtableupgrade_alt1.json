@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:basicbronzemachines"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:tm.researchtableupgrade",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "BBB",
+      "-P-",
+      "S S"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plankWood",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "stickWood",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "pipeBronze",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 500
+}

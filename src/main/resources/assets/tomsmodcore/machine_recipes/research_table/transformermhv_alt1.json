@@ -1,0 +1,50 @@
+{
+  "researches": [
+    "tomsmodcore:hvtransformer"
+  ],
+  "level": "tomsMod.craftingLevel.esoldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:transformermhv",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "EIE",
+      "-F_",
+      "CIP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "sheetPlastic",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "coilIron",
+        "type": "forge:ore_dict"
+      },
+      "E": {
+        "ore": "coilElectrum",
+        "type": "forge:ore_dict"
+      },
+      "F": {
+        "item": "tomsmodcore:machineframetitanium",
+        "data": 0
+      },
+      "I": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "cableElectrum",
+        "type": "forge:ore_dict"
+      },
+      "_": {
+        "ore": "cableIron",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 2500
+}

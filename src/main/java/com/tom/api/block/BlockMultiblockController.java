@@ -12,8 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.factory.tileentity.TileEntityMultiblock;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.BlockHidden.IBreakingDetector;
 

@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodstorage:tm.cable",
+    "data": 34,
+    "count": 8
+  },
+  "pattern": [
+    "CCC",
+    "CWC",
+    "CCC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "C": {
+      "ore": "storageNetworkCableColored_smart",
+      "type": "forge:ore_dict"
+    },
+    "W": {
+      "item": "minecraft:water_bucket",
+      "data": 0
+    }
+  }
+}

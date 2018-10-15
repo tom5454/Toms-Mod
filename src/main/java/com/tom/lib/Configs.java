@@ -1,5 +1,7 @@
 package com.tom.lib;
 
+import java.util.UUID;
+
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
@@ -10,14 +12,11 @@ public final class Configs {
 	public static final String ModidL = "tomsmod";
 	public static final String Modid = "TomsMod";
 	public static final String ModName = "Tom's Tech Mod";
-	public static final String version = "2.1.0";
+	public static final String version = "2.1.1";
 	public static final String CLIENT_PROXY_CLASS = "com.tom.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.tom.proxy.ServerProxy";
-	public static final String Chanel1 = Modid + ":Chanel1";
 	public static final int InjectorMaxEnergy = 4000000;
 	public static final int InjectorMaxEnergyInput = 1000000;
-	public static final String FMP = "ForgeMultipart";
-	public static final String COMPUTERCRAFT = "computercraft";
 	public static final int InjectorUsage = 100;
 	public static final EnumFacing InjectorPort = EnumFacing.DOWN;
 	public static final int ChargerMaxEnergy = 1000000;
@@ -33,22 +32,16 @@ public final class Configs {
 	public static final int updateRate = 100;
 	public static final double EnergyCellCoreMax = 500000000;
 	public static final int monitorSize = 64;
-	public static final String BLOOD_MAGIC = "awwayoftime";
-	public static final String BOTANIA = "botania";
 	public static final String MODEL_LOCATION = "tomsmod:textures/models/";
 	public static final ResourceLocation antennaA = new ResourceLocation(MODEL_LOCATION + "TabletAccessPoint.png");
 	public static final ResourceLocation antennaLight = new ResourceLocation(MODEL_LOCATION + "TabletAccessPointOn.png");
 	public static final ResourceLocation antennaLightOn = new ResourceLocation(MODEL_LOCATION + "Antenna.png");
-	public static final String JEI = "jei";
 	public static final double wirelessChargerLoss = 4D;
 	public static final int maxProcessorTier = 10;
 	public static final ResourceLocation contBoxOff = new ResourceLocation(MODEL_LOCATION + "ControllerBox.png");
-	public static final String AE2 = "appliedenergistics2";
-	public static final String PNEUMATICCRAFT = "pneumaticcraft";
 	public static final ResourceLocation cam = new ResourceLocation(MODEL_LOCATION + "Camera.png");
 	public static final String keyCatergory = "keys.tomsmod.category";
 	public static final String keyPrefix = "keys.tomsmod.key.";
-	public static final String CHISEL = "chisel";
 	public static final ResourceLocation monitor = new ResourceLocation(MODEL_LOCATION + "monitor.png");
 	public static final ResourceLocation pixel = new ResourceLocation("tm:pixel.png");
 	public static final String modid_Short = "tm";
@@ -57,15 +50,10 @@ public final class Configs {
 	public static final String fakePlayerName = "[TomsMod]";
 	public static final int fluidDuctMaxInsert = 1000;
 	public static final int fluidDuctMaxExtract = 500;
-	public static final String mainDependencies = "after:unborked";
-	public static final String OPEN_COMPUTERS = "opencomputers|core";
+	public static final String mainDependencies = "required-after:tomslib";
 	public static final String updateJson = "https://raw.githubusercontent.com/tom5454/Toms-Mod/master/version-check.json";
-	public static final String EIO = "enderio";
-	public static final String Railcraft = "railcraft";
-	public static final String TheOneProbe = "theoneprobe";
 	public static final ResourceLocation controllerScreenModel = new ResourceLocation(MODEL_LOCATION + "controllerScreen.png");
 	public static final ResourceLocation lcdFont = new ResourceLocation("tomsmod:textures/font/ascii_lcd.png");
-	public static final String MCMULTIPART = "mcmultipart";
-	public static final String TESLA = "tesla";
 	public static final ResourceLocation plasticProcessor = new ResourceLocation(MODEL_LOCATION + "plasticprocessor.png");
+	public static final UUID tomsmodFakePlayerUUID = UUID.nameUUIDFromBytes(fakePlayerName.getBytes());
 }

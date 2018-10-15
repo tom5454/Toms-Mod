@@ -16,7 +16,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class WorldGenBrokenTree extends WorldGenerator {
-
+	public WorldGenBrokenTree(boolean notify) {
+		super(notify);
+	}
 	@Override
 	public boolean generate(World worldIn, Random rand, BlockPos position) {
 		boolean flag = true;
@@ -96,6 +98,9 @@ public class WorldGenBrokenTree extends WorldGenerator {
 	}
 
 	public boolean isReplaceable(World world, BlockPos pos) {
+		if(!world.isBlockLoaded(pos)){
+			return false;
+		}
 		net.minecraft.block.state.IBlockState state = world.getBlockState(pos);
 		return state.getBlock().isAir(state, world, pos) || state.getBlock().isLeaves(state, world, pos) || state.getBlock().isWood(world, pos) || canGrowInto(state.getBlock());
 	}

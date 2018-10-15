@@ -3,8 +3,8 @@ package com.tom.factory.item;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -37,8 +37,7 @@ public class ExtruderModule extends Item implements IExtruderModule, IModelRegis
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		tooltip.add(I18n.format("tomsMod.tooltip.tier") + ": " + ExtruderLevel.get(stack.getMetadata()).level);
 		tooltip.add(I18n.format("tomsMod.tooltip.speed") + ": " + ExtruderLevel.get(stack.getMetadata()).speed);
 	}
@@ -50,10 +49,11 @@ public class ExtruderModule extends Item implements IExtruderModule, IModelRegis
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		for (ExtruderLevel e : ExtruderLevel.VALUES) {
-			subItems.add(e.getStack(1));
-		}
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))
+			for (ExtruderLevel e : ExtruderLevel.VALUES) {
+				subItems.add(e.getStack(1));
+			}
 	}
 
 	public static enum ExtruderLevel {

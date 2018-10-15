@@ -40,7 +40,7 @@ import com.tom.api.research.Research;
 import com.tom.api.research.ResearchComplexity;
 import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
+import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.core.research.ResearchHandler;
 import com.tom.core.research.ResearchHandler.ResearchInformation;
@@ -50,6 +50,7 @@ import com.tom.recipes.OreDict;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler.CraftingLevel;
 import com.tom.recipes.handler.AdvancedCraftingHandler.ReturnData;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.ResearchTable;
 
@@ -66,6 +67,7 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 	private int totalCrafingTime = 0;
 	private int researchProgress = 0;
 	private int totalResearchProgress = 0;
+	private int containerCounter = 10;
 	public Research currentResearch = null;
 	private ItemStack craftingStackOut = ItemStack.EMPTY;
 	private ItemStack craftingStackExtra = ItemStack.EMPTY;
@@ -200,6 +202,7 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 	public void updateEntity(IBlockState state) {
 		if (world.isRemote || state.getValue(ResearchTable.STATE) != 2)
 			return;
+		if(containerCounter < 10)containerCounter++;
 		if (this.craftingErrorShowTimer > 0)
 			if (this.craftingErrorShowTimer-- == 1 && (craftingError == 2 || craftingError == 3 || craftingError == 4))
 				craftingError = 0;
@@ -256,7 +259,7 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 	}
 
 	private boolean checkPower() {
-		return type == ResearchTableType.BRONZE ? steam.getFluidAmount() > 1000 : (type == ResearchTableType.ELECTRICAL ? energy.getEnergyStored() > 10 : true);
+		return (type == ResearchTableType.BRONZE ? steam.getFluidAmount() > 1000 : (type == ResearchTableType.ELECTRICAL ? energy.getEnergyStored() > 10 : true)) && (Config.researchTableRequiresOpenUI ? containerCounter < 10 : true);
 	}
 
 	private void handlePower(double m) {
@@ -551,7 +554,7 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return energy.getMaxEnergyStored();
 	}
 
@@ -683,7 +686,7 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 	public boolean canHaveFluidHandler(EnumFacing f) {
 		if (world == null)
 			throw new RuntimeException();// Skip construction & NBT Reading
-											// Capability Initialization
+		// Capability Initialization
 		return f == null ? type == ResearchTableType.BRONZE : checkSide(f) && type == ResearchTableType.BRONZE;
 	}
 
@@ -699,5 +702,9 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 			return inv.isEmpty();
 		else
 			return true;
+	}
+
+	public void containerOpen() {
+		containerCounter = 0;
 	}
 }

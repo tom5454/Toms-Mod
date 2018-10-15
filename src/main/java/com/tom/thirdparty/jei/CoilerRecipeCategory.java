@@ -13,16 +13,17 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import com.tom.apis.RecipeData;
 import com.tom.lib.Configs;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.thirdparty.jei.CoilerRecipeCategory.CoilerRecipeJEI;
+import com.tom.util.RecipeData;
 
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public class CoilerRecipeCategory implements IRecipeCategory<CoilerRecipeJEI> {
 	public static List<CoilerRecipeJEI> get() {
@@ -63,7 +64,7 @@ public class CoilerRecipeCategory implements IRecipeCategory<CoilerRecipeJEI> {
 
 	}
 
-	public static class CoilerRecipeJEI extends BlankRecipeWrapper {
+	public static class CoilerRecipeJEI implements IRecipeWrapper {
 		@Nullable
 		private final ItemStack input1;
 		@Nonnull
@@ -79,8 +80,8 @@ public class CoilerRecipeCategory implements IRecipeCategory<CoilerRecipeJEI> {
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setOutput(ItemStack.class, output);
-			ingredients.setInputs(ItemStack.class, Arrays.asList(new ItemStack[]{input1, input2}));
+			ingredients.setOutput(VanillaTypes.ITEM, output);
+			ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(new ItemStack[]{input1, input2}));
 		}
 	}
 

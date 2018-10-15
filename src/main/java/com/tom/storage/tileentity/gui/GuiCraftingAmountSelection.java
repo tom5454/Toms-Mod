@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -20,9 +18,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
+import com.tom.api.gui.GuiTomsLib;
+import com.tom.client.GuiButtonTransparent;
+import com.tom.lib.utils.RenderUtil;
 import com.tom.storage.handler.StorageNetworkGrid.IStorageTerminalGui;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
 
 public class GuiCraftingAmountSelection extends GuiScreen {
 	private static final ResourceLocation gui = new ResourceLocation("tomsmod:textures/gui/crafting1.png");
@@ -35,7 +36,7 @@ public class GuiCraftingAmountSelection extends GuiScreen {
 	private int xSize = 176;
 	private int ySize = 107;
 	private GuiTextField numberField;
-	private GuiButtonHidden buttonBack;
+	private GuiButtonTransparent buttonBack;
 
 	public GuiCraftingAmountSelection(IStorageTerminalGui parent, ItemStack stack, ItemStack backButton) {
 		this.parent = parent;
@@ -125,7 +126,7 @@ public class GuiCraftingAmountSelection extends GuiScreen {
 		numberField.setFocused(true);
 		numberField.setMaxStringLength(6);
 		TomsModUtils.addTextFieldToLabelList(numberField, labelList);
-		buttonBack = new GuiButtonHidden(2, guiLeft + 155, guiTop + 2, 18, 18);
+		buttonBack = new GuiButtonTransparent(2, guiLeft + 155, guiTop + 2, 18, 18);
 		buttonList.add(buttonBack);
 	}
 
@@ -146,8 +147,8 @@ public class GuiCraftingAmountSelection extends GuiScreen {
 		if (stack != null) {
 			boolean hasBg = mouseX >= x - 1 && mouseY >= y - 1 && mouseX < x + 17 && mouseY < y + 17;
 			if (hasBg) {
-				Render.setColourWithAlphaPercent(color, 50);
-				Render.drawRect(x, y, 16, 16);
+				RenderUtil.setColourWithAlphaPercent(color, 50);
+				RenderUtil.drawRect(x, y, 16, 16);
 			}
 			GlStateManager.translate(0.0F, 0.0F, 32.0F);
 			this.zLevel = 100.0F;
@@ -163,7 +164,7 @@ public class GuiCraftingAmountSelection extends GuiScreen {
 			this.zLevel = 0.0F;
 			this.itemRender.zLevel = 0.0F;
 			if (hasBg) {
-				List<String> list = stack.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips);
+				List<String> list = stack.getTooltip(mc.player, GuiTomsLib.getTooltipFlag());
 				if (extraInfo != null && extraInfo.length > 0) {
 					list.addAll(TomsModUtils.getStringList(extraInfo));
 				}
@@ -189,7 +190,7 @@ public class GuiCraftingAmountSelection extends GuiScreen {
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				FontRenderer fontrenderer = mc.fontRenderer;
 				mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
@@ -236,23 +237,6 @@ public class GuiCraftingAmountSelection extends GuiScreen {
 		buttonNext.enabled = !numberField.getText().isEmpty();
 	}
 
-	public static class GuiButtonHidden extends GuiButton {
-
-		public GuiButtonHidden(int buttonId, int x, int y, int widthIn, int heightIn) {
-			super(buttonId, x, y, widthIn, heightIn, "");
-		}
-
-		/**
-		 * Draws this button to the screen.
-		 */
-		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-			if (this.visible) {
-				this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-			}
-		}
-	}
-
 	public static class GuiButtonNext extends GuiButton {
 		private String shift;
 
@@ -265,7 +249,7 @@ public class GuiCraftingAmountSelection extends GuiScreen {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				FontRenderer fontrenderer = mc.fontRenderer;
 				mc.getTextureManager().bindTexture(BUTTON_TEXTURES);

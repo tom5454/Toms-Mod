@@ -14,10 +14,10 @@ import net.minecraft.util.NonNullList;
 
 import com.tom.api.inventory.IJEIAutoFillTerminal;
 import com.tom.api.multipart.IGuiMultipart;
-import com.tom.apis.TomsModUtils;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.storage.handler.ICraftingTerminal;
+import com.tom.util.TomsModUtils;
 
 public class ContainerCraftingTerminal extends ContainerTerminalBase implements IJEIAutoFillTerminal {
 	// private int crafted;
@@ -25,7 +25,7 @@ public class ContainerCraftingTerminal extends ContainerTerminalBase implements 
 		super(te, playerInv.player);
 		int x = -4;
 		int y = 94;
-		this.addSlotToContainer(new SlotTerminalCrafting(playerInv.player, te.getCraftingInv(), te.getCraftResult(), this, 0, x + 124, y + 35));
+		this.addSlotToContainer(new SlotTerminalCrafting(playerInv.player, TomsModUtils.wrapCraftingInv(te.getCraftingInv(), player, te.getCraftResult()), te.getCraftResult(), this, 0, x + 124, y + 35));
 		for (int i = 0;i < 3;++i) {
 			for (int j = 0;j < 3;++j) {
 				this.addSlotToContainer(new Slot(te.getCraftingInv(), j + i * 3, x + 30 + j * 18, y + 17 + i * 18));
@@ -68,7 +68,7 @@ public class ContainerCraftingTerminal extends ContainerTerminalBase implements 
 				{
 					return null;
 				}
-				
+
 				slot.onSlotChange(itemstack1, itemstack);
 				if(slot instanceof SlotTerminalCrafting){
 					((SlotTerminalCrafting)slot).doCraft(playerIn, itemstack1, true);
@@ -92,7 +92,7 @@ public class ContainerCraftingTerminal extends ContainerTerminalBase implements 
 	}
 
 	public static class SlotTerminalCrafting extends SlotCrafting// implements
-																	// ISlotClickListener
+	// ISlotClickListener
 	{
 		private final ContainerTerminalBase terminalContainer;
 		// private ItemStack[] stacks = new ItemStack[9];
@@ -114,7 +114,7 @@ public class ContainerCraftingTerminal extends ContainerTerminalBase implements 
 				stacks[i] = TomsModUtils.copyItemStack(inventoryCrafting.getStackInSlot(i));
 			}
 			net.minecraftforge.common.ForgeHooks.setCraftingPlayer(thePlayer);
-			NonNullList<ItemStack> nonnulllist = CraftingManager.getInstance().getRemainingItems(this.inventoryCrafting, thePlayer.world);
+			NonNullList<ItemStack> nonnulllist = CraftingManager.getRemainingItems(this.inventoryCrafting, thePlayer.world);
 			net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
 
 			for (int i = 0;i < nonnulllist.size();++i) {
@@ -177,20 +177,20 @@ public class ContainerCraftingTerminal extends ContainerTerminalBase implements 
 			net.minecraftforge.common.ForgeHooks.setCraftingPlayer(playerIn);
 			NonNullList<ItemStack> aitemstack = CraftingManager.getInstance().getRemainingItems(this.inventoryCrafting, playerIn.world);
 			net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
-		
+
 			for (int i = 0; i < aitemstack.size(); ++i)
 			{
 				Item original = null;
 				ItemStack itemstack = this.inventoryCrafting.getStackInSlot(i);
 				ItemStack itemstack1 = aitemstack.get(i);
-		
+
 				if (itemstack != null)
 				{
 					original = itemstack.getItem();
 					this.inventoryCrafting.decrStackSize(i, 1);
 					itemstack = this.inventoryCrafting.getStackInSlot(i);
 				}
-		
+
 				if (itemstack1 != null)
 				{
 					if (itemstack == null && original != null && original == itemstack1.getItem())

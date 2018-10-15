@@ -14,7 +14,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.storage.block.CraftingController;
 import com.tom.storage.handler.AutoCraftingHandler;
 import com.tom.storage.handler.CacheRegistry;
@@ -22,6 +21,7 @@ import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.StorageNetworkGrid.ICraftingController;
 import com.tom.storage.handler.StorageNetworkGrid.IDevice;
 import com.tom.storage.handler.StorageNetworkGrid.IPowerDrain;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityCraftingController extends TileEntityChannel implements ICraftingController, IPowerDrain, IDevice {
 	private AutoCraftingHandler.CalculatedCrafting crafting = null;

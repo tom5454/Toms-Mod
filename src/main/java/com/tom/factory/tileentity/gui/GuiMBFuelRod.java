@@ -3,12 +3,11 @@ package com.tom.factory.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityMultiblockController;
 import com.tom.factory.tileentity.inventory.ContainerMBFuelRod;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiMBFuelRod extends GuiTomsMod {
+public class GuiMBFuelRod extends GuiTomsLib {
 
 	public GuiMBFuelRod(InventoryPlayer inventory, TileEntityMultiblockController tileEntity) {
 		super(new ContainerMBFuelRod(inventory, tileEntity), "fuelrodgui");

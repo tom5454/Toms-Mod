@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmodcore:oretungstate",
+    "data": 1,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:crushede",
+    "data": 34,
+    "count": 3
+  }
+}

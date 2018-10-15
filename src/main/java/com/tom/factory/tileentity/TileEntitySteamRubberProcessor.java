@@ -8,9 +8,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.core.CoreInit;
-import com.tom.core.CoreInit.FluidSupplier;
 import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.FluidSupplier;
 
 public class TileEntitySteamRubberProcessor extends TileEntitySteamMachine {
 	public static final int MAX_PROCESS_TIME = 200;

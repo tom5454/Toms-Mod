@@ -1,7 +1,5 @@
 package com.tom.client;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -10,7 +8,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.core.tileentity.gui.GuiConfigurator.GuiButtonConfig;
-import com.tom.core.tileentity.gui.GuiTomsMod;
+
+import com.tom.api.gui.GuiTomsLib;
+import com.tom.lib.utils.RenderUtil;
 
 @SideOnly(Side.CLIENT)
 public class GuiButtonPowerSharing extends GuiButtonConfig {
@@ -22,7 +22,7 @@ public class GuiButtonPowerSharing extends GuiButtonConfig {
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partTicks) {
 		if (this.visible) {
 			mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -34,13 +34,13 @@ public class GuiButtonPowerSharing extends GuiButtonConfig {
 			this.drawTexturedModalRect(this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
 			this.drawTexturedModalRect(this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
 			this.mouseDragged(mc, mouseX, mouseY);
-			mc.getTextureManager().bindTexture(GuiTomsMod.LIST_TEXTURE);
-			Render.drawTexturedRect(x + 2, y + 2, 16, 16, (controlType ? 114 : 98) / 256D, 191 / 256D);
+			mc.getTextureManager().bindTexture(GuiTomsLib.LIST_TEXTURE);
+			RenderUtil.drawTexturedRect(x + 2, y + 2, 16, 16, (controlType ? 114 : 98) / 256D, 191 / 256D);
 		}
 	}
 
 	@Override
-	public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
+	public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsLib gui) {
 		if (this.visible) {
 			if (hovered) {
 				gui.drawHoveringTextI(I18n.format(controlType ? "tomsmod.gui.powersharingOn" : "tomsmod.gui.powersharingOff"), mouseX, mouseY);

@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import com.tom.api.network.INBTPacketReceiver;
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;
 

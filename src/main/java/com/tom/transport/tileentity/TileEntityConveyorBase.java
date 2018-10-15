@@ -14,8 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.transport.block.ConveyorBeltBase;
+import com.tom.util.TomsModUtils;
 
 public abstract class TileEntityConveyorBase extends TileEntityTomsMod implements ISidedInventory {
 	private InventoryBasic inv = new InventoryBasic("", false, 2);

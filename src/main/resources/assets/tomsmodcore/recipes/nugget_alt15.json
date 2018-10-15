@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:nugget",
+    "data": 4,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "ingotNickel",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

@@ -3,10 +3,10 @@
     "textures": {
         "up": "tomsmodcore:blocks/Gray",
         "down": "tomsmodcore:blocks/Gray",
-        "north": "blocks/tm/AntennaSideOff",
-         "east": "blocks/tm/AntennaSideOff",
-        "south": "blocks/tm/AntennaSideOff",
-         "west": "blocks/tm/AntennaSideOff",
+        "north": "tomsmodcore:blocks/AntennaSideOff",
+         "east": "tomsmodcore:blocks/AntennaSideOff",
+        "south": "tomsmodcore:blocks/AntennaSideOff",
+         "west": "tomsmodcore:blocks/AntennaSideOff",
         "particle": "tomsmodcore:blocks/Gray"
     }
 }

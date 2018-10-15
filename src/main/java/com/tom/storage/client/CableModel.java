@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
@@ -26,12 +27,10 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.client.model.ModelProcessingHelper;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
 import com.tom.client.CustomModelLoader;
@@ -172,7 +171,7 @@ public class CableModel implements IModel {
 	}
 
 	private static IModel getModel(ResourceLocation loc) {
-		return ModelProcessingHelper.uvlock(ModelLoaderRegistry.getModelOrLogError(loc, "Couldn't load " + loc.toString() + " for tomsmodstorage:tm.cable"), true);
+		return ModelLoaderRegistry.getModelOrLogError(loc, "Couldn't load " + loc.toString() + " for tomsmodstorage:tm.cable").uvlock(true);
 	}
 
 	private static Matrix4f getMatrix(EnumFacing facing) {
@@ -251,7 +250,7 @@ public class CableModel implements IModel {
 		private final EnumFacing facing;
 		private final int state;
 		private final int channel;
-	
+
 		public BlockStateChecker(CableType type, CableColor color, EnumFacing facing, int state, int channel) {
 			this.type = type;
 			this.color = color;
@@ -259,7 +258,7 @@ public class CableModel implements IModel {
 			this.state = state;
 			this.channel = channel;
 		}
-	
+
 		@Override
 		public boolean apply(IBlockState input) {
 			IExtendedBlockState s = (IExtendedBlockState) input;
@@ -268,11 +267,11 @@ public class CableModel implements IModel {
 	}
 	public static class BlockStateCheckerAxis implements Predicate<IBlockState>{
 		private final Axis axis;
-	
+
 		public BlockStateCheckerAxis(Axis axis) {
 			this.axis = axis;
 		}
-	
+
 		@Override
 		public boolean apply(IBlockState input) {
 			IExtendedBlockState s = (IExtendedBlockState) input;

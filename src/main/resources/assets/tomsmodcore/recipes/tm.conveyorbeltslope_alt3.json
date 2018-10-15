@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodtransport:tm.conveyorbeltslope",
+    "data": 1,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "tomsmodtransport:tm.conveyorbeltslope",
+      "data": 0
+    },
+    {
+      "ore": "tomsmodwrench",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

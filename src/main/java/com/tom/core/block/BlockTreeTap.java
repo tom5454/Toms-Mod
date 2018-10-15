@@ -26,7 +26,6 @@ import net.minecraft.world.World;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.core.CoreInit;
-import com.tom.handler.AchievementHandler;
 
 import com.tom.core.tileentity.TileEntityTreeTap;
 
@@ -76,7 +75,7 @@ public class BlockTreeTap extends BlockContainerTomsMod {
 				if (added) {
 					te.setBottleStack(ItemStack.EMPTY);
 				}
-				AchievementHandler.giveAchievement(playerIn, "rubber");
+				//TODO: AchievementHandler.giveAchievement(playerIn, "rubber");
 			}
 			playerIn.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.4F, 0.5F);
 		} else {

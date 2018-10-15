@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.tileentity.TileEntityGenerator;
 

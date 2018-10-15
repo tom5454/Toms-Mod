@@ -34,7 +34,7 @@ import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Village;
 import net.minecraft.world.gen.structure.template.TemplateManager;
 
-import net.minecraftforge.fml.common.registry.VillagerRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
 import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession;
 
@@ -80,6 +80,7 @@ public class VillageHouseScientist extends Village {
 
 	@Override
 	public boolean addComponentParts(World world, Random random, StructureBoundingBox boxIn) {
+		CoreInit.log.info("Generating Scientist house");
 		try {
 			if (placedChests)
 				return true;
@@ -332,7 +333,7 @@ public class VillageHouseScientist extends Village {
 
 	@Override
 	protected VillagerProfession chooseForgeProfession(int count, net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession prof) {
-		return count == 0 ? VillagerRegistry.instance().getRegistry().getValue(new ResourceLocation("minecraft:librarian")) : CoreInit.professionScientist;
+		return count == 0 ? ForgeRegistries.VILLAGER_PROFESSIONS.getValue(new ResourceLocation("minecraft:librarian")) : CoreInit.professionScientist;
 	}
 
 	protected boolean placeChest(World world, StructureBoundingBox box, Random rand, int x, int y, int z, EnumFacing f, boolean a) {

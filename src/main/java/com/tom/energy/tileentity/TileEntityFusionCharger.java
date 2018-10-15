@@ -23,17 +23,6 @@ public class TileEntityFusionCharger extends TileEntityTomsMod implements IEnerg
 
 	@Override
 	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive, boolean simulate) {
-		/*int energyReceive = 0;
-		//boolean canReceive = this.maxEnergy > this.energy;
-		if(this.maxEnergy > this.energy && this.canConnectEnergy(from)){
-			int canReceive = (this.energy + this.maxEnergyInput) < this.maxEnergy ? this.maxEnergyInput : this.maxEnergy - this.energy;
-			energyReceive = maxReceive >= canReceive ? canReceive : maxReceive;
-		}
-		//if(canReceive){
-		
-		//}
-		
-		if(!simulate) this.energy = this.energy + energyReceive;*/
 		return energy.receiveEnergy(maxReceive, simulate);
 	}
 
@@ -44,8 +33,7 @@ public class TileEntityFusionCharger extends TileEntityTomsMod implements IEnerg
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
-
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return this.energy.getMaxEnergyStored();
 	}
 

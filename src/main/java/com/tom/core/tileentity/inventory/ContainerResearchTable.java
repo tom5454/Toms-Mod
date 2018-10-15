@@ -111,6 +111,7 @@ public class ContainerResearchTable extends ContainerTomsMod {
 		this.lastTotalResearchProgress = this.te.getField(4);
 		this.lastResearch = researchID;
 		this.lastCraftingError = craftingError;
+		te.containerOpen();
 	}
 
 	@Override

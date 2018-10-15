@@ -1,8 +1,6 @@
 package com.tom.core;
 
-import static com.tom.api.recipes.RecipeHelper.addRecipe;
-import static com.tom.api.recipes.RecipeHelper.addShapelessRecipe;
-import static com.tom.api.recipes.RecipeHelper.addSmelting;
+import static com.tom.api.recipes.RecipeHelper.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,8 +18,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockSlab.EnumBlockHalf;
+import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -30,6 +30,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -41,6 +42,8 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.crafting.IIngredientFactory;
+import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -52,16 +55,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import com.tom.apis.EmptyEntry;
-import com.tom.apis.ItemStackHelper;
-import com.tom.apis.TomsModUtils;
 import com.tom.config.Config;
+import com.tom.lib.utils.EmptyEntry;
 import com.tom.recipes.OreDict;
 import com.tom.recipes.handler.MachineCraftingHandler;
+import com.tom.recipes.handler.MachineCraftingHandler.ItemStackWRng;
+import com.tom.util.ItemStackHelper;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
+import com.tom.worldgen.WorldGen.OreGenEntry;
 
 import com.tom.core.block.MaterialSlab;
 
+import com.tom.core.item.ItemCircuit;
+import com.tom.core.item.ItemCircuit.CircuitType;
+import com.tom.core.item.ItemCircuitComponent;
+import com.tom.core.item.ItemCircuitComponent.CircuitComponentType;
 import com.tom.core.item.ResourceItem;
 
 
@@ -86,7 +98,7 @@ public enum TMResource implements IStringSerializable {
 	LAPIS(                  "lapis",  true,   false,        false,        "oreLapis",             5,             false,             0,               0,             0,               0,          0,        0,          0),
 	LEAD(                    "lead", false,   false,         true,         "oreLead",             2,              true,             0,               0,             3,               0,          2,        4,          8),
 	OBSIDIAN(            "obsidian",  true,   false,        false,        "obsidian",             2,             false,             3,             128,             0,               0,          0,        0,          0),
-	NETHER_QUARTZ(   "netherQuartz",  true,   false,        false,       "oreQuartz",             2,             false,             0,               0,             0,               0,          0,        0,          0),
+	NETHER_QUARTZ(         "quartz",  true,   false,        false,       "oreQuartz",             2,             false,             0,               0,             0,               0,          0,        0,          0),
 	BRASS(                  "brass", false,    true,         true,              null,             2,             false,             0,               0,             1,               0,          0,        0,          0),
 	REDSTONE(            "redstone", false,   false,        false,     "oreRedstone",             5,             false,             0,               0,             1,               3,          0,        0,          0),
 	DIAMOND(              "diamond",  true,   false,        false,      "oreDiamond",             2,             false,             3,            2048,             0,               0,          0,        0,          0),
@@ -162,7 +174,7 @@ public enum TMResource implements IStringSerializable {
 		} else if (type == Type.NUGGET) {
 			if (this == GOLD) {
 				return new ItemStack(Items.GOLD_NUGGET, a);
-			} else if (this == IRON) { return new ItemStack(Items.field_191525_da, a); }
+			} else if (this == IRON) { return new ItemStack(Items.IRON_NUGGET, a); }
 		} else if (type == Type.GEM) {
 			if (this == DIAMOND) {
 				return new ItemStack(Items.DIAMOND, a);
@@ -214,7 +226,8 @@ public enum TMResource implements IStringSerializable {
 	}
 
 	public boolean isVanila() {
-		return this == IRON || this == GOLD || this == LAPIS || this == OBSIDIAN || this == NETHER_QUARTZ || this == DIAMOND || this == GLOWSTONE || this == COAL || this == REDSTONE;
+		return this == IRON || this == GOLD || this == LAPIS || this == OBSIDIAN || this == NETHER_QUARTZ || this == DIAMOND ||
+				this == GLOWSTONE || this == COAL || this == REDSTONE;
 	}
 
 	public boolean isGem() {
@@ -226,8 +239,64 @@ public enum TMResource implements IStringSerializable {
 	}
 
 	public boolean isValid(Type type) {
-		return type == Type.INGOT ? (!isVanila() && (!isGem())) || this == REDSTONE : (type == Type.PLATE ? this != URANIUM && this != GLOWSTONE && this != COAL && this != SKY_QUARTZ && this != FLUIX && this != SULFUR && this != MERCURY : (type == Type.CABLE || type == Type.COIL ? (this != TUNGSTENSTEEL && this != URANIUM && this != BRONZE && this != advAlloyMK1 && this != advAlloyMK2 && this != CHROME && this != STEEL && this != BLUE_METAL && this != GREENIUM && (!isGem()) && this != OBSIDIAN && this != LEAD && this != TITANIUM && this != BRASS) || this == FLUIX : (type == Type.NUGGET ? this != advAlloyMK1 && this != advAlloyMK2 && this != GOLD && this != IRON && (!isGem()) && this != OBSIDIAN && this != REDSTONE : (type == Type.DUST ? this != advAlloyMK1 && this != REDSTONE && this != advAlloyMK2 && this != GLOWSTONE && this != MERCURY && this != STEEL : (type == Type.GEM ? (isGem /*|| !isAlloy || this == ENDERIUM*/) && (!isVanila() || this == IRON || this == GOLD) && this != SULFUR : (type == Type.DUST_TINY ? this != advAlloyMK1 && this != advAlloyMK2 && this != MERCURY && this != STEEL && this != BRONZE && this != BRASS : (type == Type.CRUSHED_ORE ? !isAlloy && this != OBSIDIAN && this != GLOWSTONE : (type == Type.CRUSHED_ORE_NETHER ? !isAlloy && this != OBSIDIAN && this != GLOWSTONE/* && this != QUARTZ*/ && this != LEAD && this != NETHER_QUARTZ && this != MERCURY && this != SKY_QUARTZ && this != WOLFRAM : (type == Type.CRUSHED_ORE_END ? this == WOLFRAM || this == PLATINUM || this == GOLD || this == TITANIUM || this == DIAMOND || this == NICKEL || this == ENDERIUM || this == SILVER : (type == Type.RESEARCH_ITEM ? this.isResearchItem() : /*(type == Type.CLUMP || type == Type.SHARD ?
-																																																																																																																																																																																																																																																																																																																																																																																																																																		(!isAlloy && !isGem && this != REDSTONE && this != OBSIDIAN) || this == MERCURY || this == ENDERIUM :*/ (true)))))))))));
+		switch (type) {
+		case INGOT:
+			return (!isVanila() && (!isGem())) || this == REDSTONE;
+		case PLATE:
+			return this != URANIUM && this != GLOWSTONE && this != COAL && this != SKY_QUARTZ && this != FLUIX && this != SULFUR &&
+			this != MERCURY;
+		case CABLE:
+		case COIL:
+			return (this != TUNGSTENSTEEL && this != URANIUM && this != BRONZE && this != advAlloyMK1 && this != advAlloyMK2 &&
+			this != CHROME && this != STEEL && this != BLUE_METAL && this != GREENIUM && (!isGem()) && this != OBSIDIAN &&
+			this != LEAD && this != TITANIUM && this != BRASS) || this == FLUIX;
+		case NUGGET:
+			return this != advAlloyMK1 && this != advAlloyMK2 && this != GOLD && this != IRON && (!isGem()) && this != OBSIDIAN &&
+			this != REDSTONE;
+		case DUST:
+			return this != advAlloyMK1 && this != REDSTONE && this != advAlloyMK2 && this != GLOWSTONE && this != MERCURY &&
+			this != STEEL;
+		case GEM:
+			return isGem && (!isVanila() || this == IRON || this == GOLD) && this != SULFUR;
+		case DUST_TINY:
+			return this != advAlloyMK1 && this != advAlloyMK2 && this != MERCURY && this != STEEL && this != BRONZE &&
+			this != BRASS;
+		case CRUSHED_ORE:
+			return !isAlloy && this != OBSIDIAN && this != GLOWSTONE;
+		case CRUSHED_ORE_NETHER:
+			return !isAlloy && this != OBSIDIAN && this != GLOWSTONE && this != LEAD && this != NETHER_QUARTZ && this != MERCURY &&
+			this != SKY_QUARTZ && this != WOLFRAM;
+		case CRUSHED_ORE_END:
+			return this == WOLFRAM || this == PLATINUM || this == GOLD || this == TITANIUM || this == DIAMOND || this == NICKEL ||
+			this == ENDERIUM || this == SILVER;
+		case RESEARCH_ITEM:
+			return isResearchItem();
+		default:
+			return true;
+		}
+		//return type == Type.INGOT ? (!isVanila() && (!isGem())) || this == REDSTONE : (type == Type.PLATE ? this != URANIUM &&
+		//		this != GLOWSTONE && this != COAL && this != SKY_QUARTZ && this != FLUIX && this != SULFUR && this != MERCURY :
+		//			(type == Type.CABLE || type == Type.COIL ? (this != TUNGSTENSTEEL && this != URANIUM && this != BRONZE &&
+		//			this != advAlloyMK1 && this != advAlloyMK2 && this != CHROME && this != STEEL && this != BLUE_METAL &&
+		//			this != GREENIUM && (!isGem()) && this != OBSIDIAN && this != LEAD && this != TITANIUM && this != BRASS) ||
+		//					this == FLUIX : (type == Type.NUGGET ? this != advAlloyMK1 && this != advAlloyMK2 && this != GOLD &&
+		//					this != IRON && (!isGem()) && this != OBSIDIAN && this != REDSTONE : (type == Type.DUST ?
+		//							this != advAlloyMK1 && this != REDSTONE && this != advAlloyMK2 && this != GLOWSTONE &&
+		//							this != MERCURY && this != STEEL : (type == Type.GEM ? (isGem /*|| !isAlloy ||
+		//							this == ENDERIUM*/) && (!isVanila() || this == IRON || this == GOLD) && this != SULFUR :
+		//								(type == Type.DUST_TINY ? this != advAlloyMK1 && this != advAlloyMK2 && this != MERCURY &&
+		//								this != STEEL && this != BRONZE && this != BRASS : (type == Type.CRUSHED_ORE ? !isAlloy &&
+		//										this != OBSIDIAN && this != GLOWSTONE : (type == Type.CRUSHED_ORE_NETHER ? !isAlloy
+		//												&& this != OBSIDIAN && this != GLOWSTONE/* && this != QUARTZ*/ &&
+		//												this != LEAD && this != NETHER_QUARTZ && this != MERCURY &&
+		//												this != SKY_QUARTZ && this != WOLFRAM : (type == Type.CRUSHED_ORE_END ?
+		//														this == WOLFRAM || this == PLATINUM || this == GOLD ||
+		//														this == TITANIUM || this == DIAMOND || this == NICKEL ||
+		//														this == ENDERIUM || this == SILVER : (type == Type.RESEARCH_ITEM ?
+		//																this.isResearchItem() : /*(type == Type.CLUMP ||
+		//																type == Type.SHARD ? (!isAlloy && !isGem && this != REDSTONE &&
+		//																this != OBSIDIAN) || this == MERCURY || this == ENDERIUM :*/
+		//																	(true)))))))))));
 	}
 
 	public boolean isResearchItem() {
@@ -341,12 +410,36 @@ public enum TMResource implements IStringSerializable {
 					}
 					if (r.isValid(Type.DUST)) {
 						for (ItemStack stack : r.getStackOreDict(Type.INGOT))
-							MachineCraftingHandler.addCrusherRecipe(stack, r.getStackNormal(Type.DUST, 1));
+							MachineCraftingHandler.genCrusherRecipeCh(stack, r.getStackNormal(Type.DUST, 1));
 					}
 					if (r.addSmeltingFromOre && r.ore != null) {
 						List<ItemStack> ores = OreDictionary.getOres(r.ore);
 						ItemStack ingot = r.getStackNormal(Type.INGOT);
 						addSmelting(ores, ingot, 0.4F);
+					}
+					if(Config.enableHammerOreMining){
+						for(List<OreGenEntry> es : CoreInit.oreList.values()){
+							for (OreGenEntry e : es) {
+								if(e.name.equalsIgnoreCase(r.ore) && e.block.test(Blocks.STONE.getDefaultState())){
+									float c = (e.veinSize * e.maxAmount * (e.ySize / 5f)) / 200f;
+									ItemStack is = r.getStackNormal(Type.CRUSHED_ORE);
+									MachineCraftingHandler.addHammerRecipe(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE), 2, new ItemStackWRng(is, c));
+									MachineCraftingHandler.addHammerRecipe(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.ANDESITE), 2, new ItemStackWRng(is, c));
+									MachineCraftingHandler.addHammerRecipe(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.GRANITE), 2, new ItemStackWRng(is, c));
+									MachineCraftingHandler.addHammerRecipe(Blocks.STONE.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.DIORITE), 2, new ItemStackWRng(is, c));
+								}
+								if(e.name == r.ore && e.block.test(Blocks.NETHERRACK.getDefaultState())){
+									float c = (e.veinSize * e.maxAmount * (e.ySize / 5f)) / 20f;
+									ItemStack is = r.getStackNormal(Type.CRUSHED_ORE_NETHER);
+									MachineCraftingHandler.addHammerRecipe(Blocks.NETHERRACK.getDefaultState(), 2, new ItemStackWRng(is, c));
+								}
+								if(e.name == r.ore && e.block.test(Blocks.END_STONE.getDefaultState())){
+									float c = (e.veinSize * e.maxAmount * (e.ySize / 5f)) / 20f;
+									ItemStack is = r.getStackNormal(Type.CRUSHED_ORE_END);
+									MachineCraftingHandler.addHammerRecipe(Blocks.END_STONE.getDefaultState(), 2, new ItemStackWRng(is, c));
+								}
+							}
+						}
 					}
 					if (r.isValid(Type.NUGGET) || r == GOLD || r == IRON) {
 						ItemStack ingot = r.getStackNormal(Type.INGOT);
@@ -372,15 +465,15 @@ public enum TMResource implements IStringSerializable {
 						boolean hasPlate = r.isValid(Type.PLATE);
 						if (hasPlate) {
 							addPlateRecipe(r.getStackNormal(Type.PLATE), r.materialLevel, r.getOreDictName(Type.INGOT));
-							MachineCraftingHandler.addPlateBlenderRecipe(r.getStackNormal(Type.INGOT), r.getStackNormal(Type.PLATE), r.materialLevel);
+							MachineCraftingHandler.genPlateBlenderRecipeCh(r.getStackNormal(Type.INGOT), r.getStackNormal(Type.PLATE), r.materialLevel);
 							if (r.toolStrength > 0 && r.durability > 0) {
 								addRecipe(new ItemStack(CoreInit.hammer, 1, r.ordinal()), new Object[]{"PPP", "PSP", "HS ", 'P', r.getOreDictName(Type.PLATE), 'H', "itemHammer_lvl" + r.materialLevel, 'S', Items.STICK});
 							}
 						}
 						if (r.isValid(Type.CABLE) && r.wireMillOutput > 0) {
-							MachineCraftingHandler.addWireMillRecipe(r.getStackNormal(Type.INGOT), r.getStackNormal(Type.CABLE, r.wireMillOutput), r.materialLevel);
+							MachineCraftingHandler.genWireMillRecipeCh(r.getStackNormal(Type.INGOT), r.getStackNormal(Type.CABLE, r.wireMillOutput), r.materialLevel);
 							if (hasPlate) {
-								MachineCraftingHandler.addWireMillRecipe(r.getStackNormal(Type.PLATE), r.getStackNormal(Type.CABLE, r.wireMillOutput + 1), r.materialLevel + 1);
+								MachineCraftingHandler.genWireMillRecipeCh(r.getStackNormal(Type.PLATE), r.getStackNormal(Type.CABLE, r.wireMillOutput + 1), r.materialLevel + 1);
 								addRecipe(r.getStackNormal(Type.CABLE, 2), new Object[]{"CP", 'C', "itemCutter_lvl" + r.materialLevel, 'P', r.getStackName(Type.PLATE)});
 							}
 							if (r.isValid(Type.COIL)) {
@@ -399,7 +492,7 @@ public enum TMResource implements IStringSerializable {
 					}
 					if (r.isValid(Type.DUST) && r != OBSIDIAN)
 						for (ItemStack stack : r.getStackOreDict(Type.GEM))
-							MachineCraftingHandler.addCrusherRecipe(stack, r.getStackNormal(Type.DUST, 1));
+							MachineCraftingHandler.genCrusherRecipeCh(stack, r.getStackNormal(Type.DUST, 1));
 				}
 				if (r.isValid(Type.DUST_TINY)) {
 					if (r.isValid(Type.DUST) || r == REDSTONE || r == GLOWSTONE) {
@@ -426,7 +519,7 @@ public enum TMResource implements IStringSerializable {
 						List<ItemStack> stackL = r.getStackOreDict(Type.GEM);
 						if (!stackL.isEmpty()) {
 							for (ItemStack stack : stackL)
-								MachineCraftingHandler.addCrusherRecipe(stack, r.getStackNormal(Type.DUST_TINY, 5));
+								MachineCraftingHandler.genCrusherRecipeCh(stack, r.getStackNormal(Type.DUST_TINY, 5));
 						}
 					}
 				}
@@ -440,14 +533,14 @@ public enum TMResource implements IStringSerializable {
 				List<ItemStack> stackL = OreDictionary.getOres("oreAluminum");
 				if (!stackL.isEmpty()) {
 					for (ItemStack stack : stackL)
-						MachineCraftingHandler.addCrusherRecipe(stack, ALUMINUM.getStackNormal(Type.CRUSHED_ORE, ALUMINUM.crusherAmount));
+						MachineCraftingHandler.genCrusherRecipeCh(stack, ALUMINUM.getStackNormal(Type.CRUSHED_ORE, ALUMINUM.crusherAmount));
 				}
 			}
 			{
 				List<ItemStack> stackL = OreDictionary.getOres("oreAluminium");
 				if (!stackL.isEmpty()) {
 					for (ItemStack stack : stackL)
-						MachineCraftingHandler.addCrusherRecipe(stack, ALUMINUM.getStackNormal(Type.CRUSHED_ORE, ALUMINUM.crusherAmount));
+						MachineCraftingHandler.genCrusherRecipeCh(stack, ALUMINUM.getStackNormal(Type.CRUSHED_ORE, ALUMINUM.crusherAmount));
 				}
 			}
 			MachineCraftingHandler.addCoilerPlantRecipe(REDSTONE.getStackNormal(Type.CABLE, 8), REDSTONE.getStackNormal(Type.COIL));
@@ -460,20 +553,20 @@ public enum TMResource implements IStringSerializable {
 				addRecipe(s, new Object[]{"PHP", " P ", "S S", 'P', r.getOreDictName(Type.PLATE), 'H', "itemHammer_lvl" + r.materialLevel, 'S', "rodIron"});
 			}
 			addRecipe(COAL.getStackNormal(Type.DUST), new Object[]{"MI", 'M', "itemMortar", 'I', COAL.getStackName(Type.GEM)});
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(Items.COAL), TMResource.COAL.getStackNormal(Type.DUST));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(Items.COAL), TMResource.COAL.getStackNormal(Type.DUST));
 			addRecipe(MERCURY.getBlockStackNormal(1), new Object[]{"GGG", "GGG", "GGG", 'G', REDSTONE.getOreDictName(Type.INGOT)});
 			addShapelessRecipe(REDSTONE.getStackNormal(Type.INGOT, 9), new Object[]{MERCURY.getBlockOreDictName()});
 			addRecipe(SULFUR.getBlockStackNormal(1), new Object[]{"GGG", "GGG", "GGG", 'G', SULFUR.getOreDictName(Type.DUST)});
 			addShapelessRecipe(SULFUR.getStackNormal(Type.DUST, 9), new Object[]{SULFUR.getBlockOreDictName()});
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(Blocks.IRON_ORE), IRON.getStackNormal(Type.CRUSHED_ORE, IRON.crusherAmount));
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(Blocks.GOLD_ORE), GOLD.getStackNormal(Type.CRUSHED_ORE, GOLD.crusherAmount));
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(Blocks.LAPIS_ORE), LAPIS.getStackNormal(Type.CRUSHED_ORE, LAPIS.crusherAmount));
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(Blocks.REDSTONE_ORE), REDSTONE.getStackNormal(Type.CRUSHED_ORE, REDSTONE.crusherAmount));
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(Blocks.COAL_ORE), COAL.getStackNormal(Type.CRUSHED_ORE, COAL.crusherAmount));
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(Blocks.DIAMOND_ORE), DIAMOND.getStackNormal(Type.CRUSHED_ORE, DIAMOND.crusherAmount));
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(Blocks.QUARTZ_ORE), NETHER_QUARTZ.getStackNormal(Type.CRUSHED_ORE, NETHER_QUARTZ.crusherAmount));
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(CoreInit.oreEnderium), ENDERIUM.getStackNormal(Type.CRUSHED_ORE_END, 2));
-			MachineCraftingHandler.addCrusherRecipe(new ItemStack(CoreInit.oreSkyQuartz), SKY_QUARTZ.getStackNormal(Type.CRUSHED_ORE, 2));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(Blocks.IRON_ORE), IRON.getStackNormal(Type.CRUSHED_ORE, IRON.crusherAmount));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(Blocks.GOLD_ORE), GOLD.getStackNormal(Type.CRUSHED_ORE, GOLD.crusherAmount));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(Blocks.LAPIS_ORE), LAPIS.getStackNormal(Type.CRUSHED_ORE, LAPIS.crusherAmount));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(Blocks.REDSTONE_ORE), REDSTONE.getStackNormal(Type.CRUSHED_ORE, REDSTONE.crusherAmount));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(Blocks.COAL_ORE), COAL.getStackNormal(Type.CRUSHED_ORE, COAL.crusherAmount));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(Blocks.DIAMOND_ORE), DIAMOND.getStackNormal(Type.CRUSHED_ORE, DIAMOND.crusherAmount));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(Blocks.QUARTZ_ORE), NETHER_QUARTZ.getStackNormal(Type.CRUSHED_ORE, NETHER_QUARTZ.crusherAmount));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(CoreInit.oreEnderium), ENDERIUM.getStackNormal(Type.CRUSHED_ORE_END, 2));
+			MachineCraftingHandler.genCrusherRecipeCh(new ItemStack(CoreInit.oreSkyQuartz), SKY_QUARTZ.getStackNormal(Type.CRUSHED_ORE, 2));
 		} else {
 			CoreInit.log.fatal("Somebody tries to corrupt the material registry!");
 			throw new RuntimeException("Somebody tries to corrupt the material registry!");
@@ -571,10 +664,10 @@ public enum TMResource implements IStringSerializable {
 	}
 
 	public static int getDurability(int damage) {
-		if (Config.enableHardRecipes) {
+		/*if (Config.enableHardRecipes) {
 			return MathHelper.ceil(get(damage).durability * 0.8D);
-		} else
-			return get(damage).durability;
+		} else*/
+		return get(damage).durability;
 	}
 
 	public static TMResource get(int index) {
@@ -586,7 +679,9 @@ public enum TMResource implements IStringSerializable {
 	}
 
 	public static enum Type {
-		PLATE("plate"), INGOT("ingot"), DUST("dust"), DUST_TINY("dustTiny"), CABLE("cable"), NUGGET("nugget"), GEM("gem"), COIL("coil"), CRUSHED_ORE("crushed"), CRUSHED_ORE_NETHER("crushedN"), CRUSHED_ORE_END("crushedE"), RESEARCH_ITEM("research"),
+		PLATE("plate"), INGOT("ingot"), DUST("dust"), DUST_TINY("dustTiny"), CABLE("cable"), NUGGET("nugget"),
+		GEM("gem"), COIL("coil"), CRUSHED_ORE("crushed"), CRUSHED_ORE_NETHER("crushedN"), CRUSHED_ORE_END("crushedE"),
+		RESEARCH_ITEM("research"),
 		// SHARD("shard"), CLUMP("clump"),
 		;
 		private ResourceItem item = null;
@@ -615,11 +710,80 @@ public enum TMResource implements IStringSerializable {
 			}
 		}
 	}
-
+	public static Map<String, Integer> metaMap = new HashMap<>();
 	public static enum CraftingMaterial {
-		ACID_PAPER("acidP", false, null), CHARGED_REDSTONE("chargedRedstone", false, null), CHARGED_GLOWSTONE("chargedGlowstone", false, null), CHARGED_ENDER("chargedEnder", false, null), BIG_REDSTONE("bigRedstone", false, null), BIG_GLOWSTONE("bigGlowstone", false, null), BIG_ENDER_PEARL("bigEnderPearl", false, null), IRON_ROD("rodIron", true, null), BAUXITE_DUST("dustBauxite", true, null), CRUSHED_OBSIDIAN("crushedObsidian", false, null), HOT_COPPER("hotCopper", false, new CoolingHandler(COPPER.getStackNormal(Type.INGOT))), OBSIDIAN_ROD("rodObsidian", true, null), COPPER_HAMMER_HEAD("copperHammerHead", false, null), ELECTRICAL_STEEL_INGOT("ingotESteel", true, null), ROSIN("rosin", false, null), HOT_COPPER_HAMMER_HEAD("hotCopperHammerHead", false, new CoolingHandler(COPPER_HAMMER_HEAD.getStackNormal())), ELECTRICAL_STEEL_PLATE("plateESteel", true, null), DISPLAY("display", false, null), RAW_MERCURY("rawMercury", true, null), BASIC_CARD("basicCard", false, null), UPGRADE_FRAME("upgradeFrame", false, null), STONE_BOWL("stoneBowl", false, null), NETHERRACK_DUST("dustNetherrack", true, null), BOTTLE_OF_RESIN("bottleRubber", false, new LaterSpecifiedHandler()), REFINED_CLAY("refinedClay", false, null), REFINED_BRICK("brickRefined", true, null), FLINT_HAMMER_HEAD("flintHammerHead", false, null), BASIC_CIRCUIT("circuitBasic", true, null), NORMAL_CIRCUIT("circuitNormal", true, null), ADVANCED_CIRCUIT("circuitAdvanced", true, null), ELITE_CIRCUIT("circuitElite", true, null), BASIC_CIRCUIT_PLATE("basicCircuitPlate", false, null), ADVANCED_CIRCUIT_PLATE("advCircuitPlate", false, null), BASIC_CIRCUIT_COMPONENT("circuitComponentBasic", true, null), NORMAL_CIRCUIT_COMPONENT("circuitComponentNormal", true, null), ADVANCED_CIRCUIT_COMPONENT("circuitComponentAdvanced", true, null), ELITE_CIRCUIT_COMPONENT("circuitComponentElite", true, null), BRONZE_PIPE("pipeBronze", true, null), SOLDERING_ALLOY("ingotSolderingAlloy", true, null), RUBBER("itemRubber", true, null), RAW_SILICON("rawSilicon", false, null), SILICON("itemSilicon", true, null), SILICON_PLATE("plateSilicon", true, null), GLASS_DUST("dustGlass", true, null), GLASS_FIBER("fiberGlass", true, null), GLASS_MESH("meshGlass", true, null), RAW_CICRUIT_BOARD("rawCircBoard", false, null), WOLFRAMIUM_GRINDER("grinderWolfram", "componentCrusher", null), TUNGSTATE_DUST("dustTungstate", false, null), HOT_WOLFRAM_INGOT("ingotHotTungsten", true, new CoolingHandler(WOLFRAM.getStackNormal(Type.INGOT))), HOT_TUNGSTENSTEEL_INGOT("ingotHotTungstensteel", true, new CoolingHandler(TUNGSTENSTEEL.getStackNormal(Type.INGOT))), ENDERIUM_BASE("enderiumBase", false, null), CUPRONICKEL_INGOT("ingotCupronickel", true, null), CUPRONICKEL_HEATING_COIL("heatingCoilCupronickel", false, null), TIN_TURBINE("tinTurbine", false, null), GENERATOR_COMPONENT("generator", false, null), SOLAR_PANEL_MK1("solar1", false, null), STEEL_PIPE("pipeSteel", true, null), ELECTRIC_MOTOR("electricMotor", false, null), PLASTIC_SHEET("sheetPlastic", true, null), RAW_BASIC_CIRCUIT_PANEL("circuitPanelRawBasic", false, new LaterSpecifiedHandler()), RAW_NORMAL_CIRCUIT_PANEL("circuitPanelRawNormal", false, new LaterSpecifiedHandler()), RAW_ADVANCED_CIRCUIT_PANEL("circuitPanelRawAdvanced", false, new LaterSpecifiedHandler()), RAW_ELITE_CIRCUIT_PANEL("circuitPanelRawElite", false, new LaterSpecifiedHandler()), UNASSEMBLED_BASIC_CIRCUIT_PANEL("circuitPanelBasic", false, new NoDespawnHandler()), UNASSEMBLED_NORMAL_CIRCUIT_PANEL("circuitPanelNormal", false, new NoDespawnHandler()), UNASSEMBLED_ADVANCED_CIRCUIT_PANEL("circuitPanelAdvanced", false, new NoDespawnHandler()), UNASSEMBLED_ELITE_CIRCUIT_PANEL("circuitPanelElite", false, new NoDespawnHandler()), BLUEPRINT_PAPER("blueprintPaper", false, null), BIG_BLUEPRINT_PAPER("blueprintPaperBig", false, null), BLUEPRINT_BASIC_CIRCUIT("blueprintCircuitBasic", false, null), BLUEPRINT_NORMAL_CIRCUIT("blueprintCircuitNormal", false, null), BLUEPRINT_ADVANCED_CIRCUIT("blueprintCircuitAdv", false, null), BLUEPRINT_ELITE_CIRCUIT("blueprintCircuitElite", false, null), IMPURE_FLUIX("gemFluixImpure", true, null), IMPURE_FLUIX_DUST("dustFluixImpure", true, null), BASIC_FLUIX_REACTOR_BLUEPRINT("basicFluixRBlueprint", false, null), ADVANCED_FLUIX_REACTOR_BLUEPRINT("advFluixRBlueprint", false, null), QUANTUM_CIRCUIT("circuitQuantum", true, null), FLUIX_CIRCUIT("circuitFluix", true, null), BLUEPRINT_FLUIX_CIRCUIT("blueprintCircuitFluix", false, null), BLUEPRINT_QUANTUM_CIRCUIT("blueprintCircuitQuantum", false, null), RAW_CHALK("rawChalk", false, null), PHOTOACTIVE_BASIC_CIRCUIT_PLATE("basicCircuitPlateP", false, null), PHOTOACTIVE_ADVANCED_CIRCUIT_PLATE("advCircuitPlateP", false, null), TIN_CAN("canTin", true, new LaterSpecifiedHandler()), UV_LAMP("uvLamp", false, null), PHOTOACTIVE_CAN("photoactiveCan", false, null), BASIC_CHIPSET("chipsetBasic", true, null), ADVANCED_CHIPSET("chipsetAdvanced", true, null), FLUIX_CHIPSET("chipsetFluix", true, null), QUANTUM_CHIPSET("chipsetQuantum", true, null), BLUEPRINT_BASIC_CHIPSET("chipsetBlueprintBasic", false, null), BLUEPRINT_ADVANCED_CHIPSET("chipsetBlueprintAdvanced", false, null), BLUEPRINT_FLUIX_CHIPSET("chipsetBlueprintFluix", false, null), BLUEPRINT_QUANTUM_CHIPSET("chipsetBlueprintQuantum", false, null), LASER_MODULE("moduleLaser", true, null), BLUEPRINT_FLUIX_PAPER("blueprintPaperFluix", false, null), RAW_ELECTRICAL_STEEL_DUST("rawESteelDust", false, null), HEATCONDUCTINGPASTE_CAN("heatPasteCan", false, null), LOGIC_PROCESSOR("processorLogic", true, null), ARITHMETIC_LOGIC_UNIT("alu", false, null), MEMORY_UNIT("memory", false, null), CENTRAL_UNIT("cu", false, null), QUARTZ_COMPONENT("quartz", false, null), BLUEPRINT_LOGIC_PROCESSOR("logicProcessorBlueprint", false, null), VULCANIZING_AGENTS("vulcanizingAgents", false, null), STONE_DUST("dustStone", true, null), STEEL_ROD("rodSteel", true, null), PUMP("pump", false, null), BOTTLE_OF_CONCENTRATED_RESIN("bottleConcentratedResin", false, new LaterSpecifiedHandler()),;
+		ACID_PAPER("acidP", false, null),
+		CHARGED_REDSTONE("chargedRedstone", false, null),
+		CHARGED_GLOWSTONE("chargedGlowstone", false, null),
+		CHARGED_ENDER("chargedEnder", false, null),
+		BIG_REDSTONE("bigRedstone", false, null),
+		BIG_GLOWSTONE("bigGlowstone", false, null),
+		BIG_ENDER_PEARL("bigEnderPearl", false, null),
+		IRON_ROD("rodIron", true, null),
+		BAUXITE_DUST("dustBauxite", true, null),
+		CRUSHED_OBSIDIAN("crushedObsidian", false, null),
+		HOT_COPPER("hotCopper", false, new CoolingHandler(COPPER.getStackNormal(Type.INGOT))),
+		OBSIDIAN_ROD("rodObsidian", true, null),
+		COPPER_HAMMER_HEAD("copperHammerHead", false, null),
+		ELECTRICAL_STEEL_INGOT("ingotESteel", true, null),
+		ROSIN("rosin", false, null),
+		HOT_COPPER_HAMMER_HEAD("hotCopperHammerHead", false, new CoolingHandler(COPPER_HAMMER_HEAD.getStackNormal())),
+		ELECTRICAL_STEEL_PLATE("plateESteel", true, null),
+		DISPLAY("display", false, null),
+		RAW_MERCURY("rawMercury", true, null),
+		BASIC_CARD("basicCard", false, null),
+		UPGRADE_FRAME("upgradeFrame", false, null),
+		STONE_BOWL("stoneBowl", false, null),
+		NETHERRACK_DUST("dustNetherrack", true, null),
+		BOTTLE_OF_RESIN("bottleRubber", false, new LaterSpecifiedHandler()),
+		REFINED_CLAY("refinedClay", false, null),
+		REFINED_BRICK("brickRefined", true, null),
+		FLINT_HAMMER_HEAD("flintHammerHead", false, null),
+		BRONZE_PIPE("pipeBronze", true, null),
+		SOLDERING_ALLOY("ingotSolderingAlloy", true, null),
+		RUBBER("itemRubber", true, null),
+		RAW_SILICON("rawSilicon", false, null),
+		SILICON("itemSilicon", true, null),
+		SILICON_PLATE("plateSilicon", true, null),
+		GLASS_DUST("dustGlass", true, null),
+		GLASS_FIBER("fiberGlass", true, null),
+		GLASS_MESH("meshGlass", true, null),
+		RAW_CICRUIT_BOARD("rawCircBoard", false, null),
+		WOLFRAMIUM_GRINDER("grinderWolfram", "componentCrusher", null),
+		TUNGSTATE_DUST("dustTungstate", false, null),
+		HOT_WOLFRAM_INGOT("ingotHotTungsten", true, new CoolingHandler(WOLFRAM.getStackNormal(Type.INGOT))),
+		HOT_TUNGSTENSTEEL_INGOT("ingotHotTungstensteel", true, new CoolingHandler(TUNGSTENSTEEL.getStackNormal(Type.INGOT))),
+		ENDERIUM_BASE("enderiumBase", false, null),
+		CUPRONICKEL_INGOT("ingotCupronickel", true, null),
+		CUPRONICKEL_HEATING_COIL("heatingCoilCupronickel", false, null),
+		TIN_TURBINE("tinTurbine", false, null),
+		GENERATOR_COMPONENT("generator", false, null),
+		SOLAR_PANEL_MK1("solar1", false, null),
+		STEEL_PIPE("pipeSteel", true, null),
+		ELECTRIC_MOTOR("electricMotor", false, null),
+		PLASTIC_SHEET("sheetPlastic", true, null),
+		BOTTLE_OF_CONCENTRATED_RESIN("bottleConcentratedResin", false, new LaterSpecifiedHandler()),
+		URANIUM235("ingotUranium235", true, null),
+		URANIUM238("ingotUranium238", true, null),
+		URANIUM238_NUGGET("nuggetUranium235", true, null),
+		VULCANIZING_AGENTS("vulcanizingAgents", false, null),
+		STONE_DUST("dustStone", true, null),
+		STEEL_ROD("rodSteel", true, null),
+		PUMP("pump", false, null),
+		BLUEPRINT_PAPER("blueprintPaper", false, null),
+		BIG_BLUEPRINT_PAPER("blueprintPaperBig", false, null),
+		IMPURE_FLUIX("gemFluixImpure", true, null),
+		IMPURE_FLUIX_DUST("dustFluixImpure", true, null),
+		RAW_ELECTRICAL_STEEL_DUST("rawESteelDust", false, null),
+		HEATCONDUCTINGPASTE_CAN("heatPasteCan", false, null),
+		LASER_MODULE("moduleLaser", true, null),
+		RAW_CHALK("rawChalk", false, null),
+		TIN_CAN("canTin", true, new LaterSpecifiedHandler()),
+		UV_LAMP("uvLamp", false, null),
+		PHOTOACTIVE_CAN("photoactiveCan", false, null),
+		MIXED_METAL_INGOT("advAlloyBase", false, null),
+		;
 		public static final CraftingMaterial[] VALUES = values();
-		public static final CraftingMaterial[] BLUEPRINTS = new CraftingMaterial[]{BLUEPRINT_BASIC_CIRCUIT, BLUEPRINT_NORMAL_CIRCUIT, BLUEPRINT_ADVANCED_CIRCUIT, BLUEPRINT_ELITE_CIRCUIT, BASIC_FLUIX_REACTOR_BLUEPRINT, ADVANCED_FLUIX_REACTOR_BLUEPRINT, BLUEPRINT_FLUIX_CIRCUIT, BLUEPRINT_QUANTUM_CIRCUIT, BLUEPRINT_BASIC_CHIPSET, BLUEPRINT_ADVANCED_CHIPSET, BLUEPRINT_FLUIX_CHIPSET, BLUEPRINT_QUANTUM_CHIPSET};
 		private final String name, oreDictName;
 		private final ItemHandler itemHandler;
 		private int maxStackSize = 64, maxDamage = 0;
@@ -634,6 +798,7 @@ public enum TMResource implements IStringSerializable {
 			this.name = name;
 			this.itemHandler = itemHandler;
 			this.oreDictName = oreDictName;
+			metaMap.put(name, ordinal());
 		}
 
 		@Override
@@ -953,22 +1118,10 @@ public enum TMResource implements IStringSerializable {
 				HOT_WOLFRAM_INGOT.setMaxStackSize(16);
 				HOT_TUNGSTENSTEEL_INGOT.setMaxStackSize(16);
 				RAW_CHALK.setMaxStackSize(4);
-				for (int i = 0;i < BLUEPRINTS.length;i++) {
-					BLUEPRINTS[i].setMaxStackSize(2);
-				}
-				RAW_BASIC_CIRCUIT_PANEL.setUpdateHandler(new AcidingHandler(UNASSEMBLED_BASIC_CIRCUIT_PANEL.getStackNormal(), 100));
-				RAW_NORMAL_CIRCUIT_PANEL.setUpdateHandler(new AcidingHandler(UNASSEMBLED_NORMAL_CIRCUIT_PANEL.getStackNormal(), 200));
-				RAW_ADVANCED_CIRCUIT_PANEL.setUpdateHandler(new AcidingHandler(UNASSEMBLED_ADVANCED_CIRCUIT_PANEL.getStackNormal(), 500));
-				RAW_ELITE_CIRCUIT_PANEL.setUpdateHandler(new AcidingHandler(UNASSEMBLED_ELITE_CIRCUIT_PANEL.getStackNormal(), 800));
 				Map<FluidStack, ItemStack> fluidMap = new HashMap<>();
 				fluidMap.put(new FluidStack(CoreInit.photoactiveLiquid.get(), 1000), CraftingMaterial.PHOTOACTIVE_CAN.getStackNormal());
 				fluidMap.put(new FluidStack(CoreInit.heatConductingPaste.get(), 1000), CraftingMaterial.HEATCONDUCTINGPASTE_CAN.getStackNormal());
 				TIN_CAN.setUpdateHandler(new FillingHandler(fluidMap));
-				BLUEPRINT_BASIC_CHIPSET.setInfo("tomsMod.tooltip.basicChipsetB");
-				BLUEPRINT_ADVANCED_CHIPSET.setInfo("tomsMod.tooltip.advChipsetB");
-				BLUEPRINT_FLUIX_CHIPSET.setInfo("tomsMod.tooltip.fluixChipsetB");
-				BLUEPRINT_QUANTUM_CHIPSET.setInfo("tomsMod.tooltip.quantumChipsetB");
-				BLUEPRINT_LOGIC_PROCESSOR.setInfo("tomsMod.tooltip.logicProcessorB");
 				BOTTLE_OF_RESIN.setUpdateHandler(new CapabilityHandler(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, (stack, nbt) -> new FluidHandlerItemStack.SwapEmpty(stack, new ItemStack(Items.GLASS_BOTTLE), 1000) {
 					FluidStack fluid = new FluidStack(CoreInit.resin.get(), 1000);
 
@@ -1050,7 +1203,7 @@ public enum TMResource implements IStringSerializable {
 		}
 
 		@SideOnly(Side.CLIENT)
-		public void getTooltip(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+		public void getTooltip(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 			if (info != null) {
 				String[] infoS = info.split("\\n");
 				for (int i = 0;i < infoS.length;i++) {
@@ -1329,6 +1482,7 @@ public enum TMResource implements IStringSerializable {
 		}
 	}*/
 	public void registerOre(int i, ItemStack itemStack) {
+		TMLogger.info("Registering ore: " + itemStack.getUnlocalizedName());
 		switch (i) {
 		case 0:
 			OreDict.registerOre("ore" + getOreDictName(), itemStack);
@@ -1336,7 +1490,7 @@ public enum TMResource implements IStringSerializable {
 				List<ItemStack> stackL = OreDictionary.getOres("ore" + getOreDictName());
 				if (!stackL.isEmpty()) {
 					for (ItemStack stack : stackL) {
-						MachineCraftingHandler.addCrusherRecipe(stack, getStackNormal(Type.CRUSHED_ORE, crusherAmount));
+						MachineCraftingHandler.genCrusherRecipeCh(stack, getStackNormal(Type.CRUSHED_ORE, crusherAmount));
 					}
 				} else {
 					Config.logWarn("Material ore" + getOreDictName() + " disappeared from OreDictionary!");
@@ -1351,7 +1505,7 @@ public enum TMResource implements IStringSerializable {
 					if (addSmeltingFromOre)
 						addSmelting(stackL, getStackNormal(Type.INGOT), 0.5F);
 					for (ItemStack stack : stackL) {
-						MachineCraftingHandler.addCrusherRecipe(stack, getStackNormal(Type.CRUSHED_ORE_END, crusherAmount));
+						MachineCraftingHandler.genCrusherRecipeCh(stack, getStackNormal(Type.CRUSHED_ORE_END, crusherAmount));
 					}
 				} else {
 					Config.logWarn("Material oreEnd" + getOreDictName() + " disappeared from OreDictionary!");
@@ -1366,7 +1520,7 @@ public enum TMResource implements IStringSerializable {
 					if (addSmeltingFromOre)
 						addSmelting(stackL, getStackNormal(Type.INGOT), 0.5F);
 					for (ItemStack stack : stackL) {
-						MachineCraftingHandler.addCrusherRecipe(stack, getStackNormal(Type.CRUSHED_ORE_NETHER, crusherAmount));
+						MachineCraftingHandler.genCrusherRecipeCh(stack, getStackNormal(Type.CRUSHED_ORE_NETHER, crusherAmount));
 					}
 				} else {
 					Config.logWarn("Material oreNether" + getOreDictName() + " disappeared from OreDictionary!");
@@ -1383,5 +1537,96 @@ public enum TMResource implements IStringSerializable {
 			addShapelessRecipe(plate, new Object[]{"itemHammer_lvl" + hammer, material});
 		else
 			addRecipe(plate, new Object[]{"H", "I", "I", 'I', material, 'H', "itemHammer_lvl" + hammer});
+	}
+	private static abstract class ingredient_factory implements IIngredientFactory {
+		public ingredient_factory() {
+			System.out.println("Constructing Ingredient Factory: " + getClass());
+		}
+	}
+	public static class tomsmod_circuit extends ingredient_factory {
+
+		@Override
+		public Ingredient parse(JsonContext context, JsonObject json) {
+			String id = json.get("id").getAsString();
+			CircuitType ct = ItemCircuit.circuitTypes.get(id);
+			if(ct == null){
+				throw new IllegalArgumentException("Invalid circuit id: " + id);
+			}
+			String type = json.get("ctype").getAsString();
+			JsonElement countE = json.get("count");
+			int count = countE != null ? countE.getAsInt() : 1;
+			switch (type) {
+			case "ua":
+				return Ingredient.fromStacks(ct.createStack(CoreInit.circuitUnassembled, count));
+			case "raw":
+				return Ingredient.fromStacks(ct.createStack(CoreInit.circuitRaw, count));
+			case "a":
+				return Ingredient.fromStacks(ct.createCStack(CoreInit.circuit, count));
+			default:
+				throw new IllegalArgumentException("Invalid circuit type, (ua, raw, a) are vaild");
+			}
+		}
+	}
+	public static class tomsmod_circuitcomp extends ingredient_factory {
+
+		@Override
+		public Ingredient parse(JsonContext context, JsonObject json) {
+			String id = json.get("id").getAsString();
+			CircuitComponentType ct = ItemCircuitComponent.componentTypes.get(id);
+			if(ct == null){
+				throw new IllegalArgumentException("Invalid circuit component id " + id);
+			}
+			JsonElement countE = json.get("count");
+			int count = countE != null ? countE.getAsInt() : 1;
+			return Ingredient.fromStacks(ct.createStack(CoreInit.circuitComponent, count));
+		}
+	}
+	public static class tomsmod_circuitpanel extends ingredient_factory {
+
+		@Override
+		public Ingredient parse(JsonContext context, JsonObject json) {
+			String id = json.get("id").getAsString();
+			Integer ct = ItemCircuit.panelNames.get(id);
+			if(ct == null){
+				throw new IllegalArgumentException("Invalid circuit id: " + id);
+			}
+			JsonElement phe = json.get("photoactive");
+			boolean ph = phe == null ? false : phe.getAsBoolean();
+			JsonElement countE = json.get("count");
+			int count = countE != null ? countE.getAsInt() : 1;
+			return Ingredient.fromStacks(new ItemStack(ph ? CoreInit.circuitPanelP : CoreInit.circuitPanel, count, ct));
+		}
+	}
+	public static class tomsmod_material extends ingredient_factory {
+
+		@Override
+		public Ingredient parse(JsonContext context, JsonObject json) {
+			String id = json.get("id").getAsString();
+			Integer ct = metaMap.get(id);
+			if(ct == null){
+				throw new IllegalArgumentException("Invalid Material id: " + id);
+			}
+			JsonElement countE = json.get("count");
+			int count = countE != null ? countE.getAsInt() : 1;
+			return Ingredient.fromStacks(new ItemStack(CoreInit.craftingMaterial, count, ct));
+		}
+	}
+	public static class tomsmod_chipset extends ingredient_factory {
+
+		@Override
+		public Ingredient parse(JsonContext context, JsonObject json) {
+			int meta = json.get("meta").getAsInt();
+			String type = json.get("ctype").getAsString();
+			JsonElement countE = json.get("count");
+			int count = countE != null ? countE.getAsInt() : 1;
+			switch(type){
+			case "base":
+				return Ingredient.fromStacks(new ItemStack(CoreInit.chipsetBase, count, meta));
+			case "chipset":
+				return Ingredient.fromStacks(new ItemStack(CoreInit.chipset, count, meta));
+			default:
+				throw new IllegalArgumentException("Invalid Chipset Type: " + type);
+			}
+		}
 	}
 }

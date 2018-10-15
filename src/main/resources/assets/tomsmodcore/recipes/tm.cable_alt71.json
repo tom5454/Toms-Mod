@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodstorage:tm.cable",
+    "data": 0,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:water_bucket",
+      "data": 0
+    },
+    {
+      "ore": "storageNetworkCableColored_normal",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

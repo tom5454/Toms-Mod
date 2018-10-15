@@ -8,6 +8,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -25,11 +26,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockGridDevice;
 import com.tom.api.tileentity.TileEntityGridDeviceBase;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.storage.tileentity.TileEntityInterface;
+import com.tom.util.TomsModUtils;
 
 public class BlockInterface extends BlockGridDevice {
 	public static final PropertyEnum<InterfaceFacing> FACING = PropertyEnum.<BlockInterface.InterfaceFacing>create("facing", InterfaceFacing.class);
@@ -104,8 +105,7 @@ public class BlockInterface extends BlockGridDevice {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("stored")) {
 			tooltip.add(I18n.format("tomsMod.tooltip.itemsStored"));
 		}

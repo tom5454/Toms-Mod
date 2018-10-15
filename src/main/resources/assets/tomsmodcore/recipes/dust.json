@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:dust",
+    "data": 23,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "blockSulfur",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

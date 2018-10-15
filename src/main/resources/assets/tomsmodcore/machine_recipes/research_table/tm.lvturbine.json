@@ -1,0 +1,48 @@
+{
+  "researches": [
+    "tomsmodcore:basicturbine"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:tm.lvturbine",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "-E-",
+      "TCT",
+      "G_G"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "T": {
+        "id": "tinTurbine",
+        "type": "tomsmodcore:material"
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "G": {
+        "id": "generator",
+        "type": "tomsmodcore:material"
+      },
+      "-": {
+        "ore": "pipeBronze",
+        "type": "forge:ore_dict"
+      },
+      "_": {
+        "ore": "cableTin",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

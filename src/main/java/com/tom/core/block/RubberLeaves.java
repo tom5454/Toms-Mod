@@ -18,8 +18,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
+import com.tom.util.TomsModUtils;
 
 public class RubberLeaves extends BlockLeaves {
 

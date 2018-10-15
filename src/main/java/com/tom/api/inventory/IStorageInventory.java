@@ -9,13 +9,13 @@ import net.minecraft.util.EnumFacing;
 
 import net.minecraftforge.items.IItemHandler;
 
-import com.tom.api.grid.IGridAccess;
-import com.tom.apis.TomsModUtils;
+import com.tom.lib.api.grid.IGridAccess;
 import com.tom.storage.handler.ICache;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.InventoryCache;
 import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.storage.handler.StorageNetworkGrid.IPrioritized;
+import com.tom.util.TomsModUtils;
 
 public interface IStorageInventory extends IPrioritized, IGridAccess<StorageNetworkGrid> {
 	<T extends ICraftable, C extends ICache<T>> List<T> getStacks(Class<C> cache);

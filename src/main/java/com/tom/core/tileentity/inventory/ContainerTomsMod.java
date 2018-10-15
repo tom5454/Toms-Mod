@@ -12,7 +12,7 @@ import com.tom.api.inventory.ISlotClickListener;
 import com.tom.api.inventory.ItemIgnoreList;
 import com.tom.api.inventory.SlotLocked;
 import com.tom.api.inventory.SlotPhantom;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 public abstract class ContainerTomsMod extends Container {
 	public static final int phantomSlotChange = 4;

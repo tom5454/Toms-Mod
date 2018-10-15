@@ -47,7 +47,7 @@ public class TileEntityEnergyAcceptor extends TileEntityGridDeviceBase<StorageNe
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return inEnergy.getMaxEnergyStored();
 	}
 

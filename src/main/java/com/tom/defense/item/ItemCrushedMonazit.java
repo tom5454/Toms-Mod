@@ -15,9 +15,11 @@ public class ItemCrushedMonazit extends Item implements IModelRegisterRequired {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		subItems.add(new ItemStack(itemIn, 1, 0));
-		subItems.add(new ItemStack(itemIn, 1, 1));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab)){
+			subItems.add(new ItemStack(this, 1, 0));
+			subItems.add(new ItemStack(this, 1, 1));
+		}
 	}
 
 	@Override

@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityWaterCollector extends TileEntityTomsMod implements ITileFluidHandler {
 	private final FluidTank tank;

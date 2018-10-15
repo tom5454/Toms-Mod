@@ -46,14 +46,12 @@ public class TileEntityWireMill extends TileEntityMachineBase {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		this.progress = compound.getInteger("progress");
-		// this.maxProgress = compound.getInteger("maxProgress");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setInteger("progress", progress);
-		// compound.setInteger("mayProgress", maxProgress);
 		return compound;
 	}
 
@@ -61,7 +59,7 @@ public class TileEntityWireMill extends TileEntityMachineBase {
 		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
 

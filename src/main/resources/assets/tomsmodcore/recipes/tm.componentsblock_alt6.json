@@ -1,0 +1,34 @@
+{
+  "result": {
+    "item": "tomsmodfactory:tm.componentsblock",
+    "data": 1,
+    "count": 1
+  },
+  "pattern": [
+    "S-S",
+    "BPC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "ore": "blockPiston",
+      "type": "forge:ore_dict"
+    },
+    "B": {
+      "item": "minecraft:bucket",
+      "data": 0
+    },
+    "S": {
+      "ore": "plateSteel",
+      "type": "forge:ore_dict"
+    },
+    "C": {
+      "ore": "chest",
+      "type": "forge:ore_dict"
+    },
+    "-": {
+      "ore": "pipeSteel",
+      "type": "forge:ore_dict"
+    }
+  }
+}

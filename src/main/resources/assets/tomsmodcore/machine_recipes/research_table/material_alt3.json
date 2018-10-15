@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:uvlightbox"
+  ],
+  "level": "tomsMod.craftingLevel.esoldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:material",
+      "data": 67,
+      "count": 1
+    },
+    "pattern": [
+      "GGG",
+      "GBG",
+      " C "
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "ore": "nuggetBlueMetal",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "plateCopper",
+        "type": "forge:ore_dict"
+      },
+      "G": {
+        "ore": "glassPaneHardened",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

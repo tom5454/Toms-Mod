@@ -33,7 +33,7 @@ public class TileEntityCreativeCell extends TileEntityTomsMod implements IEnergy
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return 1;
 	}
 

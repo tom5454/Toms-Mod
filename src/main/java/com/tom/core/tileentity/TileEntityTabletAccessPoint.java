@@ -4,7 +4,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.tom.api.tileentity.TileEntityTabletAccessPointBase;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.TabletAccessPoint;
 

@@ -3,7 +3,7 @@ package com.tom.core.tileentity;
 import net.minecraft.block.state.IBlockState;
 
 import com.tom.api.tileentity.TileEntityJammerBase;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.Jammer;
 

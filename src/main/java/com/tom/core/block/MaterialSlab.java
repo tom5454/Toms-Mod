@@ -96,10 +96,10 @@ public class MaterialSlab implements IMultiBlockInstance, IModelRegisterRequired
 		 */
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
-			if (itemIn != Item.getItemFromBlock(full)) {
+		public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+			if (Item.getItemFromBlock(this) != Item.getItemFromBlock(full)) {
 				for (int i = 0;i < resources.length;i++) {
-					list.add(new ItemStack(itemIn, 1, i));
+					list.add(new ItemStack(this, 1, i));
 				}
 			}
 		}

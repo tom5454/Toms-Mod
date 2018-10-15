@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:tm.hammer",
+    "data": 5,
+    "count": 1
+  },
+  "pattern": [
+    "PPP",
+    "PSP",
+    "HS "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "ore": "platePlatinum",
+      "type": "forge:ore_dict"
+    },
+    "S": {
+      "item": "minecraft:stick",
+      "data": 0
+    },
+    "H": {
+      "ore": "itemHammer_lvl2",
+      "type": "forge:ore_dict"
+    }
+  }
+}

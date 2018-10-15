@@ -3,9 +3,9 @@ package com.tom.client;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import com.tom.api.tileentity.TileEntityCamoable;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityCamoableSpecialRenderer extends TileEntitySpecialRendererTomsMod<TileEntityCamoable> {
 
@@ -49,7 +49,7 @@ public class TileEntityCamoableSpecialRenderer extends TileEntitySpecialRenderer
 			/*drawTexturedModalRect(xStart, yStart, zStart, s, bbRaw.maxX, bbRaw.maxY);
 			drawTexturedModalRect(xStart, yStart, zStop, s, bbRaw.maxX, bbRaw.maxY);*/
 			Tessellator tessellator = Tessellator.getInstance();
-			VertexBuffer vertexbuffer = tessellator.getBuffer();
+			BufferBuilder vertexbuffer = tessellator.getBuffer();
 			/*{
 				vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 				vertexbuffer.pos(xStart + 0, yStart + bbRaw.maxY, zStart).tex(0, 1).endVertex();

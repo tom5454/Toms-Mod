@@ -1,0 +1,18 @@
+{
+  "blueprint": "normcirc",
+  "in": {
+    "item": "tomsmodcore:item.tm.circuitpanel",
+    "data": 0,
+    "count": 1
+  },
+  "level": 0,
+  "time": 400,
+  "out": {
+    "nbt": {
+      "id": "normalecirc"
+    },
+    "item": "tomsmodcore:tm.circuitunassembled",
+    "data": 0,
+    "count": 1
+  }
+}

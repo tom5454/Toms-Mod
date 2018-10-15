@@ -17,15 +17,14 @@ import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.lib.Configs;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.block.FusionInjector;
 
 public class TileEntityFusionInjector extends TileEntityTomsMod implements IEnergyReceiver, ICustomMultimeterInformation {
 
 	private EnergyStorage energy = new EnergyStorage(Configs.InjectorMaxEnergy, Configs.InjectorMaxEnergyInput);
-	// private int i = 0;
 
 	@Override
 	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
@@ -34,17 +33,6 @@ public class TileEntityFusionInjector extends TileEntityTomsMod implements IEner
 
 	@Override
 	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive, boolean simulate) {
-		/*int energyReceive = 0;
-		//boolean canReceive = this.maxEnergy > this.energy;
-		if(this.maxEnergy > this.energy && this.canConnectEnergy(from)){
-			int canReceive = (this.energy + this.maxEnergyInput) < this.maxEnergy ? this.maxEnergyInput : this.maxEnergy - this.energy;
-			energyReceive = maxReceive >= canReceive ? canReceive : maxReceive;
-		}
-		//if(canReceive){
-		
-		//}
-		
-		this.energy = !simulate ? energyReceive + this.energy : this.energy;*/
 		return this.canConnectEnergy(from, type) ? energy.receiveEnergy(maxReceive, simulate) : 0;
 	}
 
@@ -55,8 +43,7 @@ public class TileEntityFusionInjector extends TileEntityTomsMod implements IEner
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
-
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return this.energy.getMaxEnergyStored();
 	}
 

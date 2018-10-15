@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:liquidfueledadvboiler"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.advfluidboiler",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PRP",
+      "PSP",
+      "BbB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "ore": "brickRefined",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "b": {
+        "item": "tomsmodfactory:tm.fluidboiler",
+        "data": 0
+      },
+      "S": {
+        "item": "tomsmodfactory:tm.advboiler",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 1200
+}

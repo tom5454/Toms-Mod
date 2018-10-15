@@ -21,9 +21,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.tom.api.block.ICustomItemBlock;
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.block.IRegisterRequired;
-import com.tom.apis.TMLogger;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
+import com.tom.util.TMLogger;
 import com.tom.worldgen.WorldGen;
 import com.tom.worldgen.WorldGen.OreGenEntry;
 
@@ -98,7 +98,8 @@ public class BlockSkyStone extends Block implements ICustomItemBlock, IRegisterR
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		Item itemIn = Item.getItemFromBlock(this);
 		list.add(new ItemStack(itemIn, 1, 0));
 		list.add(new ItemStack(itemIn, 1, 1));
 	}

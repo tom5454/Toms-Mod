@@ -1,0 +1,26 @@
+{
+  "result": {
+    "item": "tomsmodcore:linker",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "IRI",
+    "IMI"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "item": "minecraft:redstone",
+      "data": 0
+    },
+    "I": {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    },
+    "M": {
+      "item": "tomsmodcore:memorycard",
+      "data": 0
+    }
+  }
+}

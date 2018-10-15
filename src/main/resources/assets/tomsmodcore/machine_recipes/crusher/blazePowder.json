@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "minecraft:blaze_rod",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "minecraft:blaze_powder",
+    "data": 0,
+    "count": 5
+  }
+}

@@ -16,60 +16,23 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
-import com.tom.lib.Configs;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.TileEntityHolotapeReader;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class HolotapeReader extends BlockContainerTomsMod implements IPeripheralProvider {
+public class HolotapeReader extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyInteger STATE = PropertyInteger.create("state", 0, 2);
-
-	/*@SideOnly(Side.CLIENT)
-	protected IIcon side;
-	@SideOnly(Side.CLIENT)
-	protected IIcon vIIcon;
-	@SideOnly(Side.CLIENT)
-	protected IIcon ivIIcon;*/
 	public HolotapeReader() {
 		super(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
-
-	/*public void registerBlockIcons(IIconRegister i){
-		this.blockIcon = i.registerIcon("minecraft:tm/holoReader");
-		this.side = i.registerIcon("minecraft:tm/holoDeviceSide");
-		this.vIIcon = i.registerIcon("minecraft:tm/holoReaderV");
-		this.ivIIcon = i.registerIcon("minecraft:tm/holoReaderIv");
-	}
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
-		TileEntityHolotapeReader te = (TileEntityHolotapeReader)world.getTileEntity(x, y, z);
-		if(side == te.direction){
-			if(te.hasH){
-				if(te.isValidH) return this.vIIcon;
-				else return this.ivIIcon;
-			}else return this.blockIcon;
-		}else return this.side;
-	}*/
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityHolotapeReader();
-	}
-
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	@Override
-	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
-		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityHolotapeReader ? (IPeripheral) te : null;
 	}
 
 	@Override
@@ -89,7 +52,10 @@ public class HolotapeReader extends BlockContainerTomsMod implements IPeripheral
 			if (te.hasH) {
 				if (!world.isRemote) {
 					ItemStack holotape = te.holotape.removeStackFromSlot(0);
-					EntityItem itemEntity = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), holotape);
+					EnumFacing facing = state.getValue(FACING).getOpposite();
+					EntityItem itemEntity = new EntityItem(world, pos.getX()+.5+facing.getFrontOffsetX()*.5, pos.getY()+.5, pos.getZ()+.5+facing.getFrontOffsetZ()*.5, holotape);
+					itemEntity.motionX = facing.getFrontOffsetX() * 0.3;
+					itemEntity.motionZ = facing.getFrontOffsetZ() * 0.3;
 					world.spawnEntity(itemEntity);
 					te.markBlockForUpdate(pos);
 				}

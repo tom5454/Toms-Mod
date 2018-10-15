@@ -3,9 +3,9 @@ package com.tom.client;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -27,7 +27,7 @@ public class TileEntityCreativeCellRenderer extends TileEntitySpecialRendererTom
 		GlStateManager.disableLighting();
 		GlStateManager.pushMatrix();// side
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer renderer = tessellator.getBuffer();
+		BufferBuilder renderer = tessellator.getBuffer();
 		double u1 = 0.0D, v1 = 1.0D, u2 = 1.0D, v2 = 0.0D;
 		int w = 1;
 		int h = 1;

@@ -3,12 +3,11 @@ package com.tom.storage.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.storage.tileentity.TileEntityDrive;
 import com.tom.storage.tileentity.inventory.ContainerDrive;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiDrive extends GuiTomsMod {
+public class GuiDrive extends GuiTomsLib {
 
 	public GuiDrive(InventoryPlayer playerInv, TileEntityDrive te) {
 		super(new ContainerDrive(playerInv, te), "guiDrive");

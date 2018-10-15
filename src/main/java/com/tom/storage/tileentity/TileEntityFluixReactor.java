@@ -23,14 +23,14 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import com.tom.api.ITileFluidHandler.Helper;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.Checker.RunnableStorage;
-import com.tom.apis.MultiblockBlockChecker;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.SlabState;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockComponents.ComponentVariants;
+import com.tom.util.MultiblockBlockChecker;
+import com.tom.util.TomsModUtils;
+import com.tom.util.Checker.RunnableStorage;
 import com.tom.factory.block.BlockRefinery;
 
 import com.tom.core.tileentity.TileEntityHidden.ILinkableCapabilities;

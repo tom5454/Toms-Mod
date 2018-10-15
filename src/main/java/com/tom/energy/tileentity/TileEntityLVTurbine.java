@@ -42,7 +42,7 @@ public class TileEntityLVTurbine extends TileEntityTomsMod implements ITileFluid
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return canConnectEnergy(from, type) ? energy.getMaxEnergyStored() : 0;
 	}
 

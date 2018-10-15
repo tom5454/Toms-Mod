@@ -1,5 +1,22 @@
 Changelog:
 
+2.1.1_ALPHA for Minecraft 1.12.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported. This version may not be compatible with 1.10.2 or 1.11.2 worlds.
+
+    Update to Minecraft 1.12.2
+    The mod requires Tom's Lib
+    New circuit crafting and chipset crafting recipes
+    WIP OpenComputers compatibility (Only Basic functions, no LuaObjects)
+    Moved the Mapwriter part of the mod to a separate mod.
+    Moved parts of the mod to my lib mod.
+    JSON machine recipes for all machines
+    Added JEI handler for UV Lightbox, Laser Engraver, In World Crafting and Research Tree
+    Added Open Crate
+    Few texture and model changes.
+    Added Crushed Ore Drops to Hammer Recipes
+    Few other bug fixes
+
 2.1.0_ALPHA for Minecraft 1.11.2
 
 WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported. This version may not be compatible with 1.10.2 worlds.

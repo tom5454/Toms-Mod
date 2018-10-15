@@ -15,10 +15,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntitySteamSolderingStation;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 
 public class SteamSolderingStation extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);

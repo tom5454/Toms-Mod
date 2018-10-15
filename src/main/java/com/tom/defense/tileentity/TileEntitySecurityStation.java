@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -21,9 +22,11 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockAccess;
 
 import net.minecraftforge.common.UsernameCache;
 
+import com.tom.api.block.IItemTile;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.item.IIdentityCard;
 import com.tom.api.item.IPowerLinkCard;
@@ -35,15 +38,15 @@ import com.tom.api.tileentity.IForcePowerStation;
 import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.ISecurityStation;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.block.ForceCapacitor;
 import com.tom.defense.item.IdentityCard;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 
-public class TileEntitySecurityStation extends TileEntityTomsMod implements IForceDevice, ISecurityStation, ISidedInventory, IGuiTile {
+public class TileEntitySecurityStation extends TileEntityTomsMod implements IForceDevice, ISecurityStation, ISidedInventory, IGuiTile, IItemTile {
 	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
 	public ForceDeviceControlType rsMode = ForceDeviceControlType.LOW_REDSTONE;
 	private EnergyStorage energy = new EnergyStorage(10000, 1000);
@@ -324,7 +327,7 @@ public class TileEntitySecurityStation extends TileEntityTomsMod implements IFor
 		}
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return this.energy.getMaxEnergyStored();
 	}
 
@@ -390,5 +393,16 @@ public class TileEntitySecurityStation extends TileEntityTomsMod implements IFor
 	@Override
 	public BlockPos getSecurityStationPos() {
 		return pos;
+	}
+
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		ItemStack stack = new ItemStack(state.getBlock());
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToStackNBT(tag);
+		stack.setTagCompound(new NBTTagCompound());
+		stack.getTagCompound().setTag("BlockEntityTag", tag);
+		stack.getTagCompound().setBoolean("stored", true);
+		drops.add(stack);
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,12 +29,12 @@ import com.google.common.base.Joiner;
 import com.tom.api.block.BlockMultiblockController;
 import com.tom.api.item.IScroller;
 import com.tom.api.tileentity.IMultiblockController;
-import com.tom.apis.BlockData;
-import com.tom.apis.Counter;
-import com.tom.apis.CountingList;
-import com.tom.apis.MultiblockBlockChecker;
-import com.tom.apis.TomsModUtils;
-import com.tom.apis.TomsModUtils.BlockChecker;
+import com.tom.util.BlockData;
+import com.tom.util.Counter;
+import com.tom.util.CountingList;
+import com.tom.util.MultiblockBlockChecker;
+import com.tom.util.TomsModUtils;
+import com.tom.util.TomsModUtils.BlockChecker;
 
 import com.tom.core.tileentity.TileEntityTemplate;
 
@@ -46,7 +47,7 @@ public class ItemBuildGuide extends Item implements IScroller {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.hasTagCompound() && !stack.getTagCompound().getTagList("ingList", 10).hasNoTags()) {
 			int layer = stack.getTagCompound().getInteger("layer");
 			tooltip.add(I18n.format("tomsmod.tooltip.templateLayer", layer < 0 ? I18n.format("tomsmod.tooltip.template.allLayers") : I18n.format("tomsmod.tooltip.template.layers", layer + 1, stack.getTagCompound().getInteger("maxlayer"))));

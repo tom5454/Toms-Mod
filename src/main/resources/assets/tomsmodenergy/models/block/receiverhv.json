@@ -1,6 +1,0 @@
-{
-	"parent": "tomsmodenergy:block/laserreceiver",
-	"textures": {
-		"cable": "tomsmodenergy:blocks/cablehv"
-	}
-}

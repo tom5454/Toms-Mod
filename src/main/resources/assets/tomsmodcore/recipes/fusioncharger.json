@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodenergy:fusioncharger",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "CRC",
+    "CBC",
+    "CRC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "B": {
+      "ore": "ingotBlueMetal",
+      "type": "forge:ore_dict"
+    },
+    "C": {
+      "ore": "plateChrome",
+      "type": "forge:ore_dict"
+    }
+  }
+}

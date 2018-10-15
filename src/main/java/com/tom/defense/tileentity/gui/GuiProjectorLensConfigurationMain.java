@@ -17,18 +17,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.tom.api.gui.GuiNumberValueBox;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.gui.GuiNumberValueBox.GuiButtonNextNum;
 import com.tom.api.network.INBTPacketReceiver;
-import com.tom.apis.TomsModUtils;
 import com.tom.defense.ProjectorLensConfigEntry;
 import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationMain;
 import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationMain.ContainerProjectorLensConfig;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INBTPacketReceiver {
+public class GuiProjectorLensConfigurationMain extends GuiTomsLib implements INBTPacketReceiver {
 	private int selected = -1, showing = 0;
 	private List<ProjectorLensConfigEntry> entryList = new ArrayList<>();
 	private List<GuiButtonEntry> list = new ArrayList<>();
@@ -152,7 +151,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INB
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -187,7 +186,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INB
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -218,7 +217,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INB
 		}
 	}
 
-	public static class GuiProjectorLensConfig extends GuiTomsMod implements INBTPacketReceiver {
+	public static class GuiProjectorLensConfig extends GuiTomsLib implements INBTPacketReceiver {
 		private GuiTextField fieldName;
 		private ProjectorLensConfigEntry entry;
 		private boolean textFieldFoucusedLast;

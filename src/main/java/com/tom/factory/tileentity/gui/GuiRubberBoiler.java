@@ -5,13 +5,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.apis.TomsModUtils;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityRubberBoiler;
 import com.tom.factory.tileentity.inventory.ContainerRubberBoiler;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiRubberBoiler extends GuiTomsMod {
+public class GuiRubberBoiler extends GuiTomsLib {
 	private TileEntityRubberBoiler te;
 
 	public GuiRubberBoiler(InventoryPlayer playerInv, TileEntityRubberBoiler te) {
@@ -24,8 +23,8 @@ public class GuiRubberBoiler extends GuiTomsMod {
 		ySize = 176;
 		labelList.clear();
 		super.initGui();
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 30, guiTop + 8, te.getTankIn()).setUV(176, 0), labelList);
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 140, guiTop + 20, te.getTankOut()).setUV(176, 0), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 30, guiTop + 8, te.getTankIn()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 140, guiTop + 20, te.getTankOut()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
 	}
 
 	@Override

@@ -16,66 +16,23 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
-import com.tom.lib.Configs;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.TileEntityHolotapeWriter;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class HolotapeWriter extends BlockContainerTomsMod implements IPeripheralProvider {
+public class HolotapeWriter extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	public static final PropertyInteger STATE = PropertyInteger.create("state", 0, 3);
-
-	/*@SideOnly(Side.CLIENT)
-	protected IIcon side;
-	@SideOnly(Side.CLIENT)
-	protected IIcon vIIcon;
-	@SideOnly(Side.CLIENT)
-	protected IIcon ivIIcon;
-	@SideOnly(Side.CLIENT)
-	protected IIcon wIIcon;*/
 	public HolotapeWriter() {
 		super(Material.IRON);
 		this.setHardness(2F);
 		this.setResistance(2F);
 	}
-
-	/*public void registerBlockIcons(IIconRegister i){
-		this.blockIcon = i.registerIcon("minecraft:tm/holoWriter");
-		this.side = i.registerIcon("minecraft:tm/holoDeviceSide");
-		this.vIIcon = i.registerIcon("minecraft:tm/holoWriterV");
-		this.ivIIcon = i.registerIcon("minecraft:tm/holoWriterIv");
-		this.wIIcon = i.registerIcon("minecraft:tm/holoWriterW");
-	}
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
-		TileEntityHolotapeWriter te = (TileEntityHolotapeWriter)world.getTileEntity(x, y, z);
-		if(side == te.direction){
-			if(te.hasH){
-				if(te.isWriting) return this.wIIcon;
-				else{
-					if(te.isValidH) return this.vIIcon;
-					else return this.ivIIcon;
-				}
-			}else return this.blockIcon;
-		}else return this.side;
-	}*/
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityHolotapeWriter();
-	}
-
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	@Override
-	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
-		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityHolotapeWriter ? (IPeripheral) te : null;
 	}
 
 	@Override
@@ -95,7 +52,10 @@ public class HolotapeWriter extends BlockContainerTomsMod implements IPeripheral
 			if (te.hasH && !te.isWriting) {
 				if (!world.isRemote) {
 					ItemStack holotape = te.inv.removeStackFromSlot(0);
-					EntityItem itemEntity = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), holotape);
+					EnumFacing facing = state.getValue(FACING).getOpposite();
+					EntityItem itemEntity = new EntityItem(world, pos.getX()+.5+facing.getFrontOffsetX()*.5, pos.getY()+.5, pos.getZ()+.5+facing.getFrontOffsetZ()*.5, holotape);
+					itemEntity.motionX = facing.getFrontOffsetX() * 0.3;
+					itemEntity.motionZ = facing.getFrontOffsetZ() * 0.3;
 					world.spawnEntity(itemEntity);
 					te.markBlockForUpdate(pos);
 				}
@@ -132,14 +92,6 @@ public class HolotapeWriter extends BlockContainerTomsMod implements IPeripheral
 	 */
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		/*EnumFacing enumfacing = EnumFacing.getFront(meta % 4+2);
-		
-		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-		{
-		    enumfacing = EnumFacing.NORTH;
-		}
-		//System.out.println("getState");
-		return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(STATE, meta / 4);*/
 		return TomsModUtils.getBlockStateFromMeta(meta, STATE, FACING, getDefaultState(), 3);
 	}
 
@@ -148,12 +100,6 @@ public class HolotapeWriter extends BlockContainerTomsMod implements IPeripheral
 	 */
 	@Override
 	public int getMetaFromState(IBlockState state) {// System.out.println("getMeta");
-		/*EnumFacing enumfacing = state.getValue(FACING);
-		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-		{
-		    enumfacing = EnumFacing.NORTH;
-		}
-		return enumfacing.getIndex() * (state.getValue(STATE)+1);*/
 		return TomsModUtils.getMetaFromState(state.getValue(FACING), state.getValue(STATE));
 	}
 }

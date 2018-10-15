@@ -1,7 +1,6 @@
 package com.tom.factory;
 
-import static com.tom.core.CoreInit.registerBlock;
-import static com.tom.core.CoreInit.registerItem;
+import static com.tom.core.CoreInit.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +15,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.tom.api.block.BlockMultiblockCasing;
 import com.tom.core.CoreInit;
@@ -27,6 +25,7 @@ import com.tom.factory.block.AlloySmelter;
 import com.tom.factory.block.BasicBoiler;
 import com.tom.factory.block.BlockAdvBlastFurnace;
 import com.tom.factory.block.BlockBlastFurnace;
+import com.tom.factory.block.BlockCoalCoke;
 import com.tom.factory.block.BlockCokeOven;
 import com.tom.factory.block.BlockComponents;
 import com.tom.factory.block.BlockCrusher;
@@ -106,12 +105,11 @@ import com.tom.factory.tileentity.TileEntitySteamSolderingStation;
 import com.tom.factory.tileentity.TileEntityUVLightbox;
 import com.tom.factory.tileentity.TileEntityWaterCollector;
 import com.tom.factory.tileentity.TileEntityWireMill;
-import com.tom.handler.FuelHandler;
 import com.tom.lib.Configs;
 
 @Mod(modid = FactoryInit.modid, name = FactoryInit.modName, version = Configs.version, dependencies = Configs.coreDependencies)
 public class FactoryInit {
-	public static final String modid = Configs.ModidL + "|factory";
+	public static final String modid = Configs.ModidL + "factory";
 	public static final String modName = Configs.ModName + " Factory";
 	public static final Logger log = LogManager.getLogger(modName);
 
@@ -119,13 +117,13 @@ public class FactoryInit {
 
 	public static Block MultiblockCase, MultiblockEnergyPort, MultiblockHatch, MultiblockFluidHatch, MultiblockFuelRod;
 	public static Block Electrolyzer, Centrifuge, FusionPreHeater, cokeOven, blastFurnace, advBlastFurnace,
-			industrialBlastFurnace, refinery, plasticProcessor;
+	industrialBlastFurnace, refinery, plasticProcessor;
 	public static Block AdvancedMultiblockCasing, plateBlendingMachine, wireMill, crusher, basicBoiler, advBoiler,
-			steamFurnace, advSteamFurnace, electricFurnace, uvLightbox, laserEngraver, steamCrusher, coilerPlant,
-			waterCollector, steamPlateBlender;
+	steamFurnace, advSteamFurnace, electricFurnace, uvLightbox, laserEngraver, steamCrusher, coilerPlant,
+	waterCollector, steamPlateBlender;
 	public static Block advElectricFurnace, steamSolderingStation, solderingStation, pump, fluidTransposer,
-			geothermalBoiler, fluidBolier, advFluidBoiler, alloySmelter, steamAlloySmelter, steamMixer, mixer,
-			rubberBoiler, rubberProcessor, electricalRubberProcessor;
+	geothermalBoiler, fluidBolier, advFluidBoiler, alloySmelter, steamAlloySmelter, steamMixer, mixer,
+	rubberBoiler, rubberProcessor, electricalRubberProcessor;
 	public static Block blockCoalCoke, cokeOvenWall, blastFurnaceWall, components, steelBoiler;
 
 	@EventHandler
@@ -140,7 +138,7 @@ public class FactoryInit {
 		/** Blocks */
 		cokeOvenWall = new Block(Material.ROCK).setHardness(5.0F).setResistance(20.0F).setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.cokeOvenWall");
 		blastFurnaceWall = new Block(Material.ROCK).setHardness(6.0F).setResistance(40.0F).setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.blastFurnaceWall");
-		blockCoalCoke = new Block(Material.ROCK).setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.cokeBlock").setHardness(5.0F).setResistance(10.0F);
+		blockCoalCoke = new BlockCoalCoke().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.cokeBlock").setHardness(5.0F).setResistance(10.0F);//32000
 		components = new BlockComponents().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.componentsBlock").setHardness(5.0F).setResistance(10.0F);
 		steelBoiler = new BlockSteelBoiler().setCreativeTab(tabTomsModFactory).setUnlocalizedName("tm.steelBoiler");
 		/** TileEntities */
@@ -245,45 +243,44 @@ public class FactoryInit {
 		registerBlock(electricalRubberProcessor);
 		registerBlock(advBlastFurnace);
 		/** TileEntities */
-		GameRegistry.registerTileEntity(TileEntityElectrolyzer.class, Configs.Modid + "mbContElectrolyzer");
-		GameRegistry.registerTileEntity(TileEntityCentrifuge.class, Configs.Modid + "mbContCentrifuge");
-		GameRegistry.registerTileEntity(TileEntityFusionPreHeater.class, Configs.Modid + "FusionPreHeater");
-		GameRegistry.registerTileEntity(TileEntityCrusher.class, Configs.Modid + "crusher");
-		GameRegistry.registerTileEntity(TileEntityPlateBlendingMachine.class, Configs.Modid + "plateBlendingMachine");
-		GameRegistry.registerTileEntity(TileEntityWireMill.class, Configs.Modid + "wireMill");
-		GameRegistry.registerTileEntity(TileEntityCoilerPlant.class, Configs.Modid + "coilerPlant");
-		GameRegistry.registerTileEntity(TileEntityBasicBoiler.class, Configs.Modid + "basicBoiler");
-		GameRegistry.registerTileEntity(TileEntityAdvBoiler.class, Configs.Modid + "advBoiler");
-		GameRegistry.registerTileEntity(TileEntityWaterCollector.class, Configs.Modid + "waterCollector");
-		GameRegistry.registerTileEntity(TileEntitySteamCrusher.class, Configs.Modid + "steamCrusher");
-		GameRegistry.registerTileEntity(TileEntitySteamFurnace.class, Configs.Modid + "steamFurnace");
-		GameRegistry.registerTileEntity(TileEntitySteamFurnaceAdv.class, Configs.Modid + "steamFurnaceAdv");
-		GameRegistry.registerTileEntity(TileEntitySteamPlateBlender.class, Configs.Modid + "steamPlateBlendingMachine");
-		GameRegistry.registerTileEntity(TileEntitySteamAlloySmelter.class, Configs.Modid + "steamAlloySmelter");
-		GameRegistry.registerTileEntity(TileEntityAlloySmelter.class, Configs.Modid + "alloySmelter");
-		GameRegistry.registerTileEntity(TileEntityElectricFurnace.class, Configs.Modid + "electricFurnace");
-		GameRegistry.registerTileEntity(TileEntityElectricFurnaceAdv.class, Configs.Modid + "advElectricFurnace");
-		GameRegistry.registerTileEntity(TileEntitySteamSolderingStation.class, Configs.Modid + "steamSolderingStation");
-		GameRegistry.registerTileEntity(TileEntityCokeOven.class, Configs.Modid + "cokeOven");
-		GameRegistry.registerTileEntity(TileEntityBlastFurnace.class, Configs.Modid + "blastFurnace");
-		GameRegistry.registerTileEntity(TileEntitySolderingStation.class, Configs.Modid + "solderingStation");
-		GameRegistry.registerTileEntity(TileEntityPump.class, Configs.Modid + "pump");
-		GameRegistry.registerTileEntity(TileEntityFluidTransposer.class, Configs.Modid + "fluidTransposer");
-		GameRegistry.registerTileEntity(TileEntityIndustrialBlastFurnace.class, Configs.Modid + "industrialBlastFurnace");
-		GameRegistry.registerTileEntity(TileEntityRefinery.class, Configs.Modid + "refinery");
-		GameRegistry.registerTileEntity(TileEntityGeoBoiler.class, Configs.Modid + "geoBoiler");
-		GameRegistry.registerTileEntity(TileEntityFluidBoiler.class, Configs.Modid + "fluidBoiler");
-		GameRegistry.registerTileEntity(TileEntityAdvFluidBoiler.class, Configs.Modid + "advFluidBoiler");
-		GameRegistry.registerTileEntity(TileEntityPlasticProcessor.class, Configs.Modid + "plasticProcessor");
-		GameRegistry.registerTileEntity(TileEntityUVLightbox.class, Configs.Modid + "uvBox");
-		GameRegistry.registerTileEntity(TileEntitySteamMixer.class, Configs.Modid + "steamMixer");
-		GameRegistry.registerTileEntity(TileEntityMixer.class, Configs.Modid + "mixer");
-		GameRegistry.registerTileEntity(TileEntityLaserEngraver.class, Configs.Modid + "laserEngraver");
-		GameRegistry.registerTileEntity(TileEntityRubberBoiler.class, Configs.Modid + "rubberboiler");
-		GameRegistry.registerTileEntity(TileEntitySteamRubberProcessor.class, Configs.Modid + "rubberprocessor");
-		GameRegistry.registerTileEntity(TileEntityElectricalRubberProcessor.class, Configs.Modid + "erubberprocessor");
-		GameRegistry.registerTileEntity(TileEntityAdvBlastFurnace.class, Configs.Modid + "advblastfurnace");
-		FuelHandler.registerExtraFuelHandler(new ItemStack(blockCoalCoke), 32000);
+		registerTileEntity(TileEntityElectrolyzer.class, "mbContElectrolyzer");
+		registerTileEntity(TileEntityCentrifuge.class, "mbContCentrifuge");
+		registerTileEntity(TileEntityFusionPreHeater.class, "FusionPreHeater");
+		registerTileEntity(TileEntityCrusher.class, "crusher");
+		registerTileEntity(TileEntityPlateBlendingMachine.class, "plateBlendingMachine");
+		registerTileEntity(TileEntityWireMill.class, "wireMill");
+		registerTileEntity(TileEntityCoilerPlant.class, "coilerPlant");
+		registerTileEntity(TileEntityBasicBoiler.class, "basicBoiler");
+		registerTileEntity(TileEntityAdvBoiler.class, "advBoiler");
+		registerTileEntity(TileEntityWaterCollector.class, "waterCollector");
+		registerTileEntity(TileEntitySteamCrusher.class, "steamCrusher");
+		registerTileEntity(TileEntitySteamFurnace.class, "steamFurnace");
+		registerTileEntity(TileEntitySteamFurnaceAdv.class, "steamFurnaceAdv");
+		registerTileEntity(TileEntitySteamPlateBlender.class, "steamPlateBlendingMachine");
+		registerTileEntity(TileEntitySteamAlloySmelter.class, "steamAlloySmelter");
+		registerTileEntity(TileEntityAlloySmelter.class, "alloySmelter");
+		registerTileEntity(TileEntityElectricFurnace.class, "electricFurnace");
+		registerTileEntity(TileEntityElectricFurnaceAdv.class, "advElectricFurnace");
+		registerTileEntity(TileEntitySteamSolderingStation.class, "steamSolderingStation");
+		registerTileEntity(TileEntityCokeOven.class, "cokeOven");
+		registerTileEntity(TileEntityBlastFurnace.class, "blastFurnace");
+		registerTileEntity(TileEntitySolderingStation.class, "solderingStation");
+		registerTileEntity(TileEntityPump.class, "pump");
+		registerTileEntity(TileEntityFluidTransposer.class, "fluidTransposer");
+		registerTileEntity(TileEntityIndustrialBlastFurnace.class, "industrialBlastFurnace");
+		registerTileEntity(TileEntityRefinery.class, "refinery");
+		registerTileEntity(TileEntityGeoBoiler.class, "geoBoiler");
+		registerTileEntity(TileEntityFluidBoiler.class, "fluidBoiler");
+		registerTileEntity(TileEntityAdvFluidBoiler.class, "advFluidBoiler");
+		registerTileEntity(TileEntityPlasticProcessor.class, "plasticProcessor");
+		registerTileEntity(TileEntityUVLightbox.class, "uvBox");
+		registerTileEntity(TileEntitySteamMixer.class, "steamMixer");
+		registerTileEntity(TileEntityMixer.class, "mixer");
+		registerTileEntity(TileEntityLaserEngraver.class, "laserEngraver");
+		registerTileEntity(TileEntityRubberBoiler.class, "rubberboiler");
+		registerTileEntity(TileEntitySteamRubberProcessor.class, "rubberprocessor");
+		registerTileEntity(TileEntityElectricalRubberProcessor.class, "erubberprocessor");
+		registerTileEntity(TileEntityAdvBlastFurnace.class, "advblastfurnace");
 		TileEntityMultiblockController.init();
 		hadPreInit = true;
 		CoreInit.tryLoadAfterPreInit(log);

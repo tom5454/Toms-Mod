@@ -1,0 +1,26 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 41,
+    "count": 4
+  },
+  "ingredients": [
+    {
+      "ore": "dustTin",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustTin",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustSilver",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustPlatinum",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

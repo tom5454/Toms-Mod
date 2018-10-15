@@ -6,6 +6,7 @@ import java.util.Random;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -25,9 +26,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.storage.tileentity.TMTank;
+import com.tom.util.TomsModUtils;
 
 public abstract class BlockTankBase extends BlockContainerTomsMod {
 
@@ -44,7 +45,10 @@ public abstract class BlockTankBase extends BlockContainerTomsMod {
 			worldIn.setBlockToAir(pos);
 			return true;
 		}
-		return TomsModUtils.interactWithFluidHandler(((ITileFluidHandler) worldIn.getTileEntity(pos)).getTankOnSide(side), playerIn, hand);
+		TileEntity te = worldIn.getTileEntity(pos);
+		boolean b = TomsModUtils.interactWithFluidHandler(((ITileFluidHandler) te).getTankOnSide(side), playerIn, hand);
+		if(b && te instanceof TMTank)((TMTank)te).markBlockForUpdate();
+		return b;
 	}
 
 	@Override
@@ -73,17 +77,6 @@ public abstract class BlockTankBase extends BlockContainerTomsMod {
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		TileEntity tile = worldIn.getTileEntity(pos);
-		ItemStack stack = new ItemStack(this);
-		if (tile instanceof TMTank) {
-			((TMTank) tile).writeToStackNBT(stack);
-		}
-		spawnAsEntity(worldIn, pos, stack);
-		super.breakBlock(worldIn, pos, state);
-	}
-
-	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		TileEntity tile = world.getTileEntity(pos);
 		if (tile instanceof TMTank) {
@@ -93,8 +86,7 @@ public abstract class BlockTankBase extends BlockContainerTomsMod {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.hasTagCompound()) {
 			NBTTagCompound tag = stack.getTagCompound().getCompoundTag("BlockEntityTag").getCompoundTag("tank");
 			if (!tag.hasKey("Empty")) {

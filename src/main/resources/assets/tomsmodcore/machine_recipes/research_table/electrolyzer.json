@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:electrolyzer"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:electrolyzer",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "MBM",
+      "CPC",
+      "MRM"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "id": "pump",
+        "type": "tomsmodcore:material"
+      },
+      "R": {
+        "id": "chargedRedstone",
+        "type": "tomsmodcore:material"
+      },
+      "B": {
+        "item": "tomsmodfactory:tm.steelboiler",
+        "data": 0
+      },
+      "C": {
+        "item": "minecraft:coal_block",
+        "data": 0
+      },
+      "M": {
+        "item": "tomsmodfactory:mbcase",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 2000
+}

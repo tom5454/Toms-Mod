@@ -1,0 +1,46 @@
+{
+  "researches": [
+    "tomsmodcore:steammixer"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.steammixer",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "BGB",
+      "SCS",
+      "bPb"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "pipeBronze",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "b": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebronze",
+        "data": 0
+      },
+      "G": {
+        "ore": "blockGlass",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 800
+}

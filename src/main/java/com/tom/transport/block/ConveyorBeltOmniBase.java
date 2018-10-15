@@ -7,6 +7,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -21,8 +22,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.transport.tileentity.TileEntityConveyorOmniBase;
+import com.tom.util.TomsModUtils;
 
 public abstract class ConveyorBeltOmniBase extends BlockContainerTomsMod {
 	public static final PropertyDirection POSITION = PropertyDirection.create("pos");
@@ -151,7 +152,7 @@ public abstract class ConveyorBeltOmniBase extends BlockContainerTomsMod {
 		float f6 = f1 * f3;
 		double d3 = 5.0D;
 		if (player instanceof EntityPlayerMP) {
-			d3 = ((EntityPlayerMP) player).interactionManager.getBlockReachDistance();
+			d3 = ((EntityPlayerMP) player).getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
 		}
 		Vec3d end = start.addVector(f5 * d3, f4 * d3, f6 * d3);
 		return Pair.of(start, end);

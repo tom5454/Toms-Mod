@@ -1,7 +1,6 @@
 package com.tom.defense.tileentity;
 
-import static com.tom.api.energy.EnergyType.FORCE;
-import static com.tom.api.energy.EnergyType.HV;
+import static com.tom.api.energy.EnergyType.*;
 
 import java.util.List;
 
@@ -30,10 +29,10 @@ import com.tom.api.tileentity.IForcePowerStation;
 import com.tom.api.tileentity.ISecuredTileEntity;
 import com.tom.api.tileentity.ISecurityStation;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.config.ConfigurationForceConverterControl;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.block.ForceConverter;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityForceConverter extends TileEntityTomsMod implements IEnergyHandler, IConfigurable, ISecuredTileEntity {
 	public EnergyStorage energy = new EnergyStorage(10000);
@@ -75,7 +74,7 @@ public class TileEntityForceConverter extends TileEntityTomsMod implements IEner
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return type == FORCE ? energy.getMaxEnergyStored() : 0;
 	}
 

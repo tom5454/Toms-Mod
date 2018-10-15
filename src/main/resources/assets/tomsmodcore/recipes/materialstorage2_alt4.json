@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodcore:materialstorage2",
+    "data": 2,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "ore": "slabSteel",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "slabSteel",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 
 import com.tom.core.tileentity.inventory.ContainerTablet;
 

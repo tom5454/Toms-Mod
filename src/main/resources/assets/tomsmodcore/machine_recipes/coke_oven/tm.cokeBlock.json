@@ -1,0 +1,14 @@
+{
+  "creosote": 5000,
+  "in": {
+    "item": "minecraft:coal_block",
+    "data": 0,
+    "count": 1
+  },
+  "time": 15500,
+  "out": {
+    "item": "tomsmodfactory:tm.cokeblock",
+    "data": 0,
+    "count": 1
+  }
+}

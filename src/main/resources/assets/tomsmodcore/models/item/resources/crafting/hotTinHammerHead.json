@@ -1,6 +1,0 @@
-{
-	"parent":"block/hammerHead",
-	"textures":{
-		"block":"tomsmodcore:blocks/blockHotTin"
-	}
-}

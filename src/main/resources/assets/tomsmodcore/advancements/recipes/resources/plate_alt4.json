@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_the_item"
+    ]
+  ],
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "tomsmodcore:plate_alt4"
+      }
+    },
+    "has_the_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "tomsmodcore:ingot",
+            "data": 27
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "tomsmodcore:plate_alt4"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "tier": 2,
+  "in": {
+    "item": "tomsmodcore:plate",
+    "data": 26,
+    "count": 3
+  },
+  "out": {
+    "item": "tomsmodcore:tm.steelfence",
+    "data": 0,
+    "count": 2
+  }
+}

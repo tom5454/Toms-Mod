@@ -1,0 +1,48 @@
+{
+  "researches": [
+    "tomsmodcore:mvmachines"
+  ],
+  "level": "tomsMod.craftingLevel.esoldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.electricfurnace",
+      "data": 1,
+      "count": 1
+    },
+    "pattern": [
+      "STS",
+      "-MF",
+      "SES"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "S": {
+        "ore": "plateTitanium",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "item": "tomsmodenergy:transformerlmv",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "normalecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "F": {
+        "item": "tomsmodcore:machineframetitanium",
+        "data": 0
+      },
+      "M": {
+        "item": "tomsmodfactory:tm.electricfurnace",
+        "data": 2
+      },
+      "-": {
+        "ore": "cableElectrum",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1500
+}

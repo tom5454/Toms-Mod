@@ -1,0 +1,37 @@
+{
+  "researches": [
+    "tomsmodcore:multiblockcomponents"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:mbhatch",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "MPM",
+      "ICI"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "blockPiston",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "chest",
+        "type": "forge:ore_dict"
+      },
+      "I": {
+        "ore": "ingotIron",
+        "type": "forge:ore_dict"
+      },
+      "M": {
+        "item": "tomsmodfactory:mbcase",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 1800
+}

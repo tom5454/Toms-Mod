@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:geoboiler"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.geoboiler",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "SBS",
+      "-A-",
+      "BOB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "A": {
+        "item": "tomsmodfactory:tm.advboiler",
+        "data": 0
+      },
+      "B": {
+        "ore": "brickRefined",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "pipeSteel",
+        "type": "forge:ore_dict"
+      },
+      "O": {
+        "item": "minecraft:obsidian",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 1500
+}

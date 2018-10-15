@@ -8,10 +8,10 @@ import net.minecraft.util.EnumFacing;
 
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyHandler;
-import com.tom.api.energy.IEnergyStorageHandler;
-import com.tom.api.grid.IGridUpdateListener;
+import com.tom.api.energy.IEnergyStorageHandlerCapability;
 import com.tom.api.multipart.PartDuct;
-import com.tom.apis.TomsModUtils;
+import com.tom.lib.api.grid.IGridUpdateListener;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.api.multipart.MultipartHelper;
 
@@ -23,14 +23,14 @@ public abstract class PartCable extends PartDuct<EnergyGrid> implements IGridUpd
 		this.etype = etype;
 	}
 
-	private List<IEnergyStorageHandler> rec = new ArrayList<>();
+	private List<IEnergyStorageHandlerCapability> rec = new ArrayList<>();
 
 	@Override
 	public void onGridReload() {
 		grid.rec.removeAll(rec);
 		rec.clear();
 		for (EnumFacing f : EnumFacing.VALUES) {
-			IEnergyStorageHandler in = EnergyType.getHandlerFrom(world, pos, f.getOpposite(), t -> isValidConnection(f, t));
+			IEnergyStorageHandlerCapability in = EnergyType.getHandlerFrom(world, pos, f.getOpposite(), t -> isValidConnection(f, t));
 			if (in != null) {
 				rec.add(in);
 				grid.rec.add(in);
@@ -45,7 +45,7 @@ public abstract class PartCable extends PartDuct<EnergyGrid> implements IGridUpd
 	@Override
 	public boolean isValidConnection(EnumFacing side, TileEntity tile) {
 		if (tile != null) {
-			IEnergyStorageHandler cap = tile.getCapability(EnergyType.ENERGY_HANDLER_CAPABILITY, side.getOpposite());
+			IEnergyStorageHandlerCapability cap = tile.getCapability(EnergyType.ENERGY_HANDLER_CAPABILITY, side.getOpposite());
 			return tile.hasCapability(EnergyType.ENERGY_HANDLER_CAPABILITY, side.getOpposite()) && cap != null && cap.canConnectEnergy(etype);
 		} else
 			return false;
@@ -82,7 +82,7 @@ public abstract class PartCable extends PartDuct<EnergyGrid> implements IGridUpd
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return this.canConnectEnergy(from, type) ? grid.getData().getMaxEnergyStored() : 0;
 	}
 

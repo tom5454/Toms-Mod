@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:cokeoven"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.cokeovenwall",
+      "data": 0,
+      "count": 4
+    },
+    "pattern": [
+      "BSB",
+      "SRS",
+      "BSB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "item": "minecraft:brick",
+        "data": 0
+      },
+      "R": {
+        "ore": "brickRefined",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "item": "minecraft:sand",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 600
+}

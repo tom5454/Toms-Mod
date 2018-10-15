@@ -1,0 +1,53 @@
+{
+  "researches": [
+    "tomsmodcore:refinedbricks"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:material",
+      "data": 24,
+      "count": 4
+    },
+    "ingredients": [
+      {
+        "item": "minecraft:clay_ball",
+        "data": 0
+      },
+      {
+        "item": "minecraft:clay_ball",
+        "data": 0
+      },
+      {
+        "ore": "dustNetherrack",
+        "type": "forge:ore_dict"
+      },
+      {
+        "item": "minecraft:sand",
+        "data": 0
+      },
+      {
+        "item": "minecraft:sand",
+        "data": 0
+      },
+      {
+        "ore": "dustCoal",
+        "type": "forge:ore_dict"
+      },
+      {
+        "ore": "dustIron",
+        "type": "forge:ore_dict"
+      },
+      {
+        "ore": "dustObsidian",
+        "type": "forge:ore_dict"
+      },
+      {
+        "item": "minecraft:gravel",
+        "data": 0
+      }
+    ],
+    "type": "forge:ore_shapeless"
+  },
+  "crafting_time": 50
+}

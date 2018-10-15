@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:blastfurnace"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.blastfurnacewall",
+      "data": 0,
+      "count": 4
+    },
+    "pattern": [
+      "BSB",
+      "SRS",
+      "BSB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "item": "minecraft:nether_brick",
+        "data": 0
+      },
+      "R": {
+        "ore": "brickRefined",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "item": "minecraft:soul_sand",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 600
+}

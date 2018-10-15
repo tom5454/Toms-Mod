@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 57,
+    "count": 1
+  },
+  "pattern": [
+    " II",
+    "IRI",
+    "II "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "I": {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    }
+  }
+}

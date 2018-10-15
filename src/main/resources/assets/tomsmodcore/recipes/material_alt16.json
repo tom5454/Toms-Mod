@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 56,
+    "count": 4
+  },
+  "pattern": [
+    " I",
+    "HI",
+    " I"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "H": {
+      "ore": "itemHammer_lvl1",
+      "type": "forge:ore_dict"
+    },
+    "I": {
+      "ore": "plateSteel",
+      "type": "forge:ore_dict"
+    }
+  }
+}

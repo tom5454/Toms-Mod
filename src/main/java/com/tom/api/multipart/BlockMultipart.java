@@ -26,8 +26,8 @@ import com.google.common.collect.Lists;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.api.item.MultipartItem;
-import com.tom.apis.TomsModUtils;
-import com.tom.handler.WorldHandler;
+import com.tom.lib.handler.WorldHandler;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.RayTraceHelper;
 import mcmultipart.api.container.IMultipartContainer;

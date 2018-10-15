@@ -1,0 +1,45 @@
+{
+  "secondary": {
+    "nbt": {
+      "damage": 2.0
+    },
+    "item": "tomsmodcore:tm.chalk",
+    "data": 0,
+    "count": 1
+  },
+  "researches": [
+    "tomsmodcore:mvcircuit"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "nbt": {
+        "id": "normalcirc"
+      },
+      "item": "tomsmodcore:tm.blueprint",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "BBP",
+      "BbB",
+      "BBB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "item": "tomsmodcore:tm.chalk",
+        "data": 0
+      },
+      "B": {
+        "id": "blueprintPaper",
+        "type": "tomsmodcore:material"
+      },
+      "b": {
+        "id": "blueprintPaperBig",
+        "type": "tomsmodcore:material"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

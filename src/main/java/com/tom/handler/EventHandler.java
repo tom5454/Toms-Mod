@@ -1,8 +1,14 @@
 package com.tom.handler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -12,8 +18,11 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.ChunkPos;
 
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegistryEvent.MissingMappings;
+import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -25,85 +34,71 @@ import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+
+import com.google.common.collect.ImmutableList;
 
 import com.tom.api.event.ItemAdvCraftedEvent;
 import com.tom.api.item.ICustomCraftingHandler;
 import com.tom.api.item.ICustomCraftingHandlerAdv;
 import com.tom.api.item.ICustomCraftingHandlerAdv.CraftingErrorException;
+import com.tom.api.research.Research;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource.CraftingMaterial;
-import com.tom.handler.WorldHandler.Action;
+import com.tom.core.research.ResearchHandler;
+import com.tom.handler.TMWorldHandler.Action;
+import com.tom.lib.Configs;
 import com.tom.network.NetworkHandler;
+import com.tom.network.messages.MessageMarker;
 import com.tom.network.messages.MessageMarkerSync;
-import com.tom.network.messages.MessageMinimap;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
 
 public class EventHandler {
 	public static final EventHandler instance = new EventHandler();
+	public static Map<ChunkPos, List<EntityPlayerMP>> watch = new HashMap<>();
 	// public static Set<Block> woods = new HashSet<>();
 	public static Set<Item> disabledItems = new HashSet<>();
-
-	/*@SubscribeEvent
-	public void onPlayerLoadFromFileEvent(LoadFromFile event)
-	{
-	
-	}
-	
-	@SubscribeEvent
-	public void onPlayerSaveToFileEvent(SaveToFile event)
-	{
-	
-	}*/
-	@SubscribeEvent
-	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
-		if (!event.player.world.isRemote) {
-			PlayerHandler.playerLogOut(event.player);
-		}
-	}
 
 	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 		if (!event.player.world.isRemote) {
-			PlayerHandler.playerLogIn(event.player);
 			MessageMarkerSync.sendSyncMessageTo(event.player);
 		}
 	}
-
 	@SubscribeEvent
 	public void onItemCraftedEvent(ItemCraftedEvent event) {
 		if (event.crafting != null) {
 			if (event.crafting.getItem() instanceof ICustomCraftingHandler)
 				((ICustomCraftingHandler) event.crafting.getItem()).onCrafing(event.player, event.crafting, event.craftMatrix);
-			else if (event.crafting.getItem() instanceof ItemBlock && ((ItemBlock) event.crafting.getItem()).block instanceof ICustomCraftingHandler)
-				((ICustomCraftingHandler) ((ItemBlock) event.crafting.getItem()).block).onCrafing(event.player, event.crafting, event.craftMatrix);
+			else if (event.crafting.getItem() instanceof ItemBlock && ((ItemBlock) event.crafting.getItem()).getBlock() instanceof ICustomCraftingHandler)
+				((ICustomCraftingHandler) ((ItemBlock) event.crafting.getItem()).getBlock()).onCrafing(event.player, event.crafting, event.craftMatrix);
 		}
 		for (int i = 0;i < event.craftMatrix.getSizeInventory();i++) {
 			ItemStack s = event.craftMatrix.getStackInSlot(i);
 			if (s != null) {
 				if (s.getItem() instanceof ICustomCraftingHandler)
 					((ICustomCraftingHandler) s.getItem()).onUsing(event.player, event.crafting, event.craftMatrix, s);
-				else if (s.getItem() instanceof ItemBlock && ((ItemBlock) s.getItem()).block instanceof ICustomCraftingHandler)
-					((ICustomCraftingHandler) ((ItemBlock) s.getItem()).block).onCrafing(event.player, event.crafting, event.craftMatrix);
+				else if (s.getItem() instanceof ItemBlock && ((ItemBlock) s.getItem()).getBlock() instanceof ICustomCraftingHandler)
+					((ICustomCraftingHandler) ((ItemBlock) s.getItem()).getBlock()).onCrafing(event.player, event.crafting, event.craftMatrix);
 			}
 		}
 		if (event.crafting != null) {
 			Item item = event.crafting.getItem();
 			if (item == Item.getItemFromBlock(CoreInit.researchTable)) {
-				AchievementHandler.giveAchievement(event.player, "researchTable");
+				//TODO: AchievementHandler.giveAchievement(event.player, "researchTable");
 			} else if (item == CoreInit.treeTap) {
-				AchievementHandler.giveAchievement(event.player, "treetap");
+				//TODO: AchievementHandler.giveAchievement(event.player, "treetap");
 			}
 		}
 	}
@@ -113,8 +108,8 @@ public class EventHandler {
 		if (event.crafting != null) {
 			if (event.crafting.getItem() instanceof ICustomCraftingHandlerAdv)
 				((ICustomCraftingHandlerAdv) event.crafting.getItem()).onCrafingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix);
-			else if (event.crafting.getItem() instanceof ItemBlock && ((ItemBlock) event.crafting.getItem()).block instanceof ICustomCraftingHandlerAdv)
-				((ICustomCraftingHandlerAdv) ((ItemBlock) event.crafting.getItem()).block).onCrafingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix);
+			else if (event.crafting.getItem() instanceof ItemBlock && ((ItemBlock) event.crafting.getItem()).getBlock() instanceof ICustomCraftingHandlerAdv)
+				((ICustomCraftingHandlerAdv) ((ItemBlock) event.crafting.getItem()).getBlock()).onCrafingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix);
 		}
 		try {
 			for (int i = 0;i < event.craftMatrix.getSizeInventory();i++) {
@@ -122,8 +117,8 @@ public class EventHandler {
 				if (s != null) {
 					if (s.getItem() instanceof ICustomCraftingHandlerAdv)
 						((ICustomCraftingHandlerAdv) s.getItem()).onUsingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix, s);
-					else if (s.getItem() instanceof ItemBlock && ((ItemBlock) s.getItem()).block instanceof ICustomCraftingHandlerAdv)
-						((ICustomCraftingHandlerAdv) ((ItemBlock) s.getItem()).block).onUsingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix, s);
+					else if (s.getItem() instanceof ItemBlock && ((ItemBlock) s.getItem()).getBlock() instanceof ICustomCraftingHandlerAdv)
+						((ICustomCraftingHandlerAdv) ((ItemBlock) s.getItem()).getBlock()).onUsingAdv(event.player, event.crafting, event.secondStack, event.craftMatrix, s);
 				}
 			}
 		} catch (CraftingErrorException e) {
@@ -137,100 +132,47 @@ public class EventHandler {
 	}
 
 	@SubscribeEvent
-	public void onWorldSave(WorldEvent.Save event) {
-		if (event.getWorld().provider.getDimension() == 0)
-			PlayerHandler.save();
-		WorldHandler.saveWorld(event.getWorld().provider.getDimension());
-	}
-
-	@SubscribeEvent
 	public void breakBlockEvent(BreakEvent event) {
-		boolean cancel = WorldHandler.breakBlockS(event);
+		boolean cancel = TMWorldHandler.breakBlockS(event);
 		if (cancel)
 			event.setCanceled(true);
 	}
 
 	@SubscribeEvent
-	public void chunkLoad(ChunkEvent.Load event) {
-		WorldHandler.loadChunkS(event.getChunk());
-	}
-
-	@SubscribeEvent
-	public void chunkUnload(ChunkEvent.Unload event) {
-		WorldHandler.unloadChunkS(event.getChunk());
-	}
-
-	@SubscribeEvent
-	public void dimLoad(WorldEvent.Load event) {
-		WorldHandler.loadWorld(event.getWorld());
-	}
-
-	@SubscribeEvent
-	public void dimUnload(WorldEvent.Unload event) {
-		if (event.getWorld().isRemote)
-			return;
-		WorldHandler.unloadWorld(event.getWorld().provider.getDimension());
-	}
-
-	@SubscribeEvent
-	public void onSpawn(WorldEvent.PotentialSpawns event) {
-		try {
-			boolean cancel = WorldHandler.onEntitySpawning(event);
-			if (cancel)
-				event.setCanceled(true);
-		} catch (Exception e) {
-		}
-	}
-
-	@SubscribeEvent
 	public void placeBlock(PlaceEvent event) {
-		boolean cancel = WorldHandler.placeBlockS(event.getPlacedBlock(), event.getPlayer(), event.getPos());
+		boolean cancel = TMWorldHandler.placeBlockS(event.getPlacedBlock(), event.getPlayer(), event.getPos());
 		if (cancel)
 			event.setCanceled(true);
 	}
 
 	@SubscribeEvent
 	public void placeBlockM(MultiPlaceEvent event) {
-		boolean cancel = WorldHandler.placeBlockS(event.getPlacedBlock(), event.getPlayer(), event.getPos());
+		boolean cancel = TMWorldHandler.placeBlockS(event.getPlacedBlock(), event.getPlayer(), event.getPos());
 		if (cancel)
 			event.setCanceled(true);
 
-	}
-
-	@SubscribeEvent
-	public void tick(WorldTickEvent event) {
-		WorldHandler.onTick(event.world, event.phase);
 	}
 
 	public static boolean profile = false;
 	public static int key = -1;
 
 	@SubscribeEvent
-	public void tickServer(ServerTickEvent event) {
-		if (event.phase == Phase.START && event.type == net.minecraftforge.fml.common.gameevent.TickEvent.Type.SERVER) {
-			PlayerHandler.update(Phase.START);
-		} else if (event.phase == Phase.END && event.type == net.minecraftforge.fml.common.gameevent.TickEvent.Type.SERVER) {
-			PlayerHandler.update(Phase.END);
-		}
-	}
-
-	@SubscribeEvent
 	public void breakSpeed(BreakSpeed event) {
-		boolean cancel = WorldHandler.breakSpeed(event);
+		boolean cancel = TMWorldHandler.breakSpeed(event);
 		if (cancel)
 			event.setCanceled(true);
 	}
 
 	@SubscribeEvent
 	public void interactLeftClick(PlayerInteractEvent.LeftClickBlock event) {
-		boolean cancel = WorldHandler.interact(event, Action.LEFT_CLICK_BLOCK);
+		boolean cancel = TMWorldHandler.interact(event, Action.LEFT_CLICK_BLOCK);
 		if (cancel)
 			event.setCanceled(true);
 	}
 
 	@SubscribeEvent
 	public void interact(PlayerInteractEvent.RightClickBlock event) {
-		boolean cancel = WorldHandler.interact(event, Action.RIGHT_CLICK_BLOCK);
+		boolean cancel = TMWorldHandler.interact(event, Action.RIGHT_CLICK_BLOCK);
 		if (cancel)
 			event.setCanceled(true);
 	}
@@ -238,8 +180,8 @@ public class EventHandler {
 	@SubscribeEvent
 	public void onDeath(LivingDeathEvent event) {
 		if (event.getEntityLiving().isServerWorld() && event.getEntityLiving() instanceof EntityPlayer) {
-			if (CoreInit.isMapEnabled)
-				NetworkHandler.sendTo(new MessageMinimap((EntityPlayer) event.getEntityLiving()), (EntityPlayerMP) event.getEntityLiving());
+			//if (CoreInit.isMapEnabled)
+			NetworkHandler.sendTo(new MessageMarker((EntityPlayer) event.getEntityLiving()), (EntityPlayerMP) event.getEntityLiving());
 		}
 		/*try{
 			ResearchHandler h = ResearchHandler.getHandlerFromName("Player31");
@@ -263,7 +205,7 @@ public class EventHandler {
 
 	@SubscribeEvent
 	public void onEnderTP(EnderTeleportEvent event) {
-		WorldHandler.enderTeleportS(event);
+		TMWorldHandler.enderTeleportS(event);
 	}
 
 	@SubscribeEvent
@@ -299,11 +241,10 @@ public class EventHandler {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@SubscribeEvent
-	public void attachCapabilitiesItem(AttachCapabilitiesEvent.Item event) {
-		if (event.getItem() == Items.GLASS_BOTTLE) {
-			event.addCapability(new ResourceLocation("tomsmod:resin"), new FluidHandlerItemStack(event.getItemStack(), 1000) {
+	public void attachCapabilitiesItem(AttachCapabilitiesEvent<ItemStack> event) {
+		if (event.getObject() instanceof ItemStack && event.getObject().getItem() == Items.GLASS_BOTTLE) {
+			event.addCapability(new ResourceLocation("tomsmod:resin"), new FluidHandlerItemStack(event.getObject(), 1000) {
 				@Override
 				protected void setFluid(FluidStack fluid) {
 					if (fluid.getFluid() == CoreInit.resin.get()) {
@@ -337,4 +278,49 @@ public class EventHandler {
 			}
 		}
 	}*/
+	@SubscribeEvent
+	public void remapItem(MissingMappings<Item> event){
+		TMLogger.info("Remapping items...");
+		filterMappings(event.getAllMappings(), e -> {
+			remap(ForgeRegistries.ITEMS, e);
+		});
+	}
+	@SubscribeEvent
+	public void remapBlock(MissingMappings<Block> event){
+		TMLogger.info("Remapping blocks...");
+		filterMappings(event.getAllMappings(), e -> {
+			remap(ForgeRegistries.BLOCKS, e);
+		});
+	}
+	@SubscribeEvent
+	public void remapResearch(MissingMappings<Research> event){
+		TMLogger.info("Remapping researches...");
+		filterMappings(event.getAllMappings(), e -> {
+			remap(ResearchHandler.REGISTRY, e);
+		});
+	}
+	private <T extends IForgeRegistryEntry<T>> void filterMappings(ImmutableList<Mapping<T>> in, Consumer<Mapping<T>> action){
+		in.stream().filter(e -> e.key.getResourceDomain().startsWith(Configs.ModidL) && e.key.getResourceDomain().contains("|")).forEach(action);
+	}
+	private <T extends IForgeRegistryEntry<T>> void remap(IForgeRegistry<T> reg, Mapping<T> e){
+		ResourceLocation loc = new ResourceLocation(e.key.getResourceDomain().replace("|", ""), e.key.getResourcePath());
+		T val = reg.getValue(loc);
+		if(val != null)e.remap(val);
+		else TMLogger.error("No registry entry found for " + loc.toString());
+	}
+	@SubscribeEvent
+	public void watch(ChunkWatchEvent.Watch evt){
+		TomsModUtils.getOrPut(watch, evt.getChunkInstance().getPos(), ArrayList::new).add(evt.getPlayer());
+		TMWorldHandler.markDirty(evt.getPlayer().world, evt.getChunkInstance().getPos());
+	}
+	@SubscribeEvent
+	public void unwatch(ChunkWatchEvent.UnWatch evt){
+		List<EntityPlayerMP> l = watch.get(evt.getChunkInstance().getPos());
+		if(l != null){
+			l.remove(evt.getPlayer());
+			if(l.isEmpty()){
+				watch.remove(evt.getChunkInstance().getPos());
+			}
+		}
+	}
 }

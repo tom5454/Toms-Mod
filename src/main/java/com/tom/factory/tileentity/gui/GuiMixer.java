@@ -5,13 +5,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.apis.TomsModUtils;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityMixer;
 import com.tom.factory.tileentity.inventory.ContainerMixer;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiMixer extends GuiTomsMod {
+public class GuiMixer extends GuiTomsLib {
 	private TileEntityMixer te;
 
 	public GuiMixer(InventoryPlayer playerInv, TileEntityMixer te) {
@@ -36,9 +35,9 @@ public class GuiMixer extends GuiTomsMod {
 		ySize = 176;
 		labelList.clear();
 		super.initGui();
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 25, guiTop + 15, te.getTankIn()).setUV(176, 0), labelList);
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 45, guiTop + 15, te.getTankIn2()).setUV(176, 0), labelList);
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 130, guiTop + 15, te.getTankOut()).setUV(176, 0), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 25, guiTop + 15, te.getTankIn()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 45, guiTop + 15, te.getTankIn2()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 130, guiTop + 15, te.getTankOut()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
 	}
 
 	@Override

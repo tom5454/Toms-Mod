@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmodcore:material",
+    "data": 9,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:dust",
+    "data": 17,
+    "count": 1
+  }
+}

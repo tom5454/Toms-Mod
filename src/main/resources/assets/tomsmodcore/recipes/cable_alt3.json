@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "tomsmodcore:cable",
+    "data": 25,
+    "count": 2
+  },
+  "pattern": [
+    "CP"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "ore": "plateEnderium",
+      "type": "forge:ore_dict"
+    },
+    "C": {
+      "ore": "itemCutter_lvl2",
+      "type": "forge:ore_dict"
+    }
+  }
+}

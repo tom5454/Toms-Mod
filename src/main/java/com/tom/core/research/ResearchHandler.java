@@ -14,60 +14,50 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 
-import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import net.minecraftforge.fml.common.registry.RegistryBuilder;
-
-import com.google.common.collect.BiMap;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.RegistryBuilder;
 
 import com.tom.api.research.IScanningInformation;
 import com.tom.api.research.Research;
 import com.tom.config.Config;
 
 public class ResearchHandler {
-	// private static List<Research> researchList = new ArrayList<Research>();
 	private static Map<String, ResearchHandler> researchHandlerList = new HashMap<>();
 	public static Logger log = LogManager.getLogger("Tom's Mod Research Handler");
-	// private static File researchData = null;
-	// private static final String CATRGORY = "research", NAME = "data", ERRORED
-	// = "errored";
 	private List<Research> researchDone = new ArrayList<>();
 	private List<IScanningInformation> scanInfo = new ArrayList<>();
 	public final String name;
-	private static FMLControlledNamespacedRegistry<Research> iResearchRegistry;
+	public static final ForgeRegistry<Research> REGISTRY;
 	private static final ResourceLocation loc = new ResourceLocation("tomsmod:research");
 	private static final int MIN_ID = 0;
 	private static final int MAX_ID = Integer.MAX_VALUE - 1;
-
-	public static void init() {
-		log.info("Loading Research Handler...");
+	static {
 		RegistryBuilder<Research> builder = new RegistryBuilder<>();
 		builder.setName(loc);
 		builder.setType(Research.class);
 		builder.setIDRange(MIN_ID, MAX_ID);
-		iResearchRegistry = (FMLControlledNamespacedRegistry<Research>) builder.create();
-		// iResearchRegistry = PersistentRegistryManager.createRegistry(loc,
-		// Research.class, new ResourceLocation("invalid"), MIN_ID, MAX_ID,
-		// true, ResearchCallbacks.INSTANCE, ResearchCallbacks.INSTANCE,
-		// ResearchCallbacks.INSTANCE);
+		REGISTRY = (ForgeRegistry<Research>) builder.create();
 	}
 
-	// private static boolean allowSave = false;
+	public static void init() {
+		log.info("Loading Research Handler...");
+	}
+
 	public static Research getResearchByID(int id) {
 		if (id == -1)
 			return null;
-		return iResearchRegistry.getObjectById(id);
+		return REGISTRY.getValue(id);
 	}
 
 	public static int getId(Research research) {
 		if (research == null)
 			return -1;
-		return iResearchRegistry.getId(research);
+		return REGISTRY.getID(research);
 	}
 
 	public List<ResearchInformation> getAvailableResearches() {
 		List<ResearchInformation> ret = new ArrayList<>();
-		for (Entry<ResourceLocation, Research> rE : iResearchRegistry.getEntries()) {
+		for (Entry<ResourceLocation, Research> rE : REGISTRY.getEntries()) {
 			Research r = rE.getValue();
 			if (r.isValid() && !this.researchDone.contains(r)) {
 				List<Research> parents = r.getParents();
@@ -198,7 +188,7 @@ public class ResearchHandler {
 		} else {
 			NBTTagList list = tag.getTagList("ids", 8);
 			for (int i = 0;i < list.tagCount();i++) {
-				Research res = iResearchRegistry.getObject(new ResourceLocation(list.getStringTagAt(i)));
+				Research res = REGISTRY.getValue(new ResourceLocation(list.getStringTagAt(i)));
 				if (res != null) {
 					this.researchDone.add(res);
 				}
@@ -293,25 +283,6 @@ public class ResearchHandler {
 		return ret;
 	}
 
-	public static class ResearchCallbacks implements IForgeRegistry.AddCallback<Research>, IForgeRegistry.ClearCallback<Research>, IForgeRegistry.CreateCallback<Research> {
-		public static final ResearchCallbacks INSTANCE = new ResearchCallbacks();
-
-		@Override
-		public void onCreate(Map<ResourceLocation, ?> slaveset, BiMap<ResourceLocation, ? extends IForgeRegistry<?>> registries) {
-
-		}
-
-		@Override
-		public void onClear(IForgeRegistry<Research> is, Map<ResourceLocation, ?> slaveset) {
-
-		}
-
-		@Override
-		public void onAdd(Research obj, int id, Map<ResourceLocation, ?> slaveset) {
-
-		}
-	}
-
 	public boolean isCompleted(Research research) {
 		if (research == null)
 			return false;
@@ -327,11 +298,11 @@ public class ResearchHandler {
 	}
 
 	public static Research getResearchByName(String string) {
-		return iResearchRegistry.getObject(new ResourceLocation(string));
+		return REGISTRY.getValue(new ResourceLocation(string));
 	}
 
 	public static List<Research> getAllResearches() {
-		return iResearchRegistry.getValues();
+		return new ArrayList<>(REGISTRY.getValuesCollection());
 	}
 
 	public void removeResearch(Research r) {

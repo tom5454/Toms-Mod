@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:centrifuge"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:centrifuge",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "MBM",
+      "IPI",
+      "MRM"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "id": "pump",
+        "type": "tomsmodcore:material"
+      },
+      "R": {
+        "id": "chargedRedstone",
+        "type": "tomsmodcore:material"
+      },
+      "B": {
+        "item": "tomsmodfactory:tm.steelboiler",
+        "data": 0
+      },
+      "I": {
+        "ore": "blockAluminum",
+        "type": "forge:ore_dict"
+      },
+      "M": {
+        "item": "tomsmodfactory:mbcase",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 2000
+}

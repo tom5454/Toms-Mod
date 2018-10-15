@@ -1,0 +1,48 @@
+{
+  "researches": [
+    "tomsmodcore:fluidtransposer"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.fluidtransposer",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "IEI",
+      "BCT",
+      "IPI"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "id": "pump",
+        "type": "tomsmodcore:material"
+      },
+      "B": {
+        "item": "minecraft:bucket",
+        "data": 0
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "T": {
+        "item": "tomsmodstorage:tm.tank.basic",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "I": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1100
+}

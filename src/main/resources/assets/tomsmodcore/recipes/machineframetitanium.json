@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:machineframetitanium",
+    "data": 0,
+    "count": 4
+  },
+  "pattern": [
+    "CCC",
+    "CHC",
+    "CCC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "C": {
+      "ore": "plateTitanium",
+      "type": "forge:ore_dict"
+    },
+    "H": {
+      "ore": "itemHammer_lvl4",
+      "type": "forge:ore_dict"
+    }
+  }
+}

@@ -8,8 +8,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 import com.tom.api.client.MultiblockRenderer;
-import com.tom.apis.TomsModUtils;
 import com.tom.model.IBaseModel;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityMultiblockCustomRenderer<T extends TileEntity> extends MultiblockRenderer<T> {
 	public TileEntityMultiblockCustomRenderer(IBaseModel model) {

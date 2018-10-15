@@ -1,0 +1,40 @@
+{
+  "researches": [
+    "tomsmodcore:industrialblastfurnace"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.industrialblastfurnace",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "EHE",
+      "HCH",
+      "FHF"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "C": {
+        "item": "tomsmodcore:machineframesteel",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "F": {
+        "item": "tomsmodfactory:tm.electricfurnace",
+        "data": 2
+      },
+      "H": {
+        "id": "heatingCoilCupronickel",
+        "type": "tomsmodcore:material"
+      }
+    }
+  },
+  "crafting_time": 1200
+}

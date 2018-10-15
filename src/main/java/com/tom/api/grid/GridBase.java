@@ -15,6 +15,10 @@ import net.minecraft.world.World;
 import com.tom.api.multipart.IDuctModule;
 import com.tom.api.multipart.PartDuct;
 import com.tom.api.multipart.PartModule;
+import com.tom.lib.api.grid.IGrid;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridUpdateListener;
+import com.tom.lib.api.grid.IMultigridDevice;
 
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.container.IPartInfo;

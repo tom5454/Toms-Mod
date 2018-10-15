@@ -1,0 +1,46 @@
+{
+  "researches": [
+    "tomsmodcore:mvtransformer"
+  ],
+  "level": "tomsMod.craftingLevel.esoldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:transformerlmv",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "CIC",
+      "-F_",
+      "EIE"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "C": {
+        "ore": "coilCopper",
+        "type": "forge:ore_dict"
+      },
+      "E": {
+        "ore": "coilElectrum",
+        "type": "forge:ore_dict"
+      },
+      "F": {
+        "item": "tomsmodcore:machineframesteel",
+        "data": 0
+      },
+      "I": {
+        "item": "minecraft:iron_ingot",
+        "data": 0
+      },
+      "-": {
+        "ore": "cableCopper",
+        "type": "forge:ore_dict"
+      },
+      "_": {
+        "ore": "cableElectrum",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1500
+}

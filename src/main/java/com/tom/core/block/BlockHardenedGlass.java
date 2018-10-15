@@ -101,11 +101,10 @@ public class BlockHardenedGlass extends Block implements ICustomItemBlock, IMode
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack(itemIn, 1, 0));
-		list.add(new ItemStack(itemIn, 1, 1));
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		list.add(new ItemStack(this, 1, 0));
+		list.add(new ItemStack(this, 1, 1));
 	}
-
 	@Override
 	public void registerModels() {
 		Item item = Item.getItemFromBlock(this);

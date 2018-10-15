@@ -15,7 +15,7 @@ import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 public class TileEntitySmallFluixReactor extends TileEntityTomsMod implements ITileFluidHandler, IEnergyReceiver, ISidedInventory {
 	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
@@ -142,7 +142,7 @@ public class TileEntitySmallFluixReactor extends TileEntityTomsMod implements IT
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return energy.getMaxEnergyStored();
 	}
 

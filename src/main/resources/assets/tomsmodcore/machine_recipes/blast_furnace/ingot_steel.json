@@ -1,0 +1,19 @@
+{
+  "heat": 1020,
+  "time": 2800,
+  "in2": {
+    "item": "tomsmodcore:dust",
+    "data": 31,
+    "count": 2
+  },
+  "in1": {
+    "item": "minecraft:iron_ingot",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:ingot",
+    "data": 26,
+    "count": 1
+  }
+}

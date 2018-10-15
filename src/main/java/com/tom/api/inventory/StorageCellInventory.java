@@ -12,12 +12,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 
 import com.tom.api.inventory.IStorageInventory.IUpdateable;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
+import com.tom.lib.handler.FileManager;
 import com.tom.storage.handler.CacheRegistry;
 import com.tom.storage.handler.ICache;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.StorageNetworkGrid;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
 
 public class StorageCellInventory implements IStorageInventory, IUpdateable {
 	public static class StoredCraftable {
@@ -88,6 +89,22 @@ public class StorageCellInventory implements IStorageInventory, IUpdateable {
 			}
 		}
 		compound.setTag("inventory", list);*/
+		/*NBTTagList list = new NBTTagList();
+		for (int i = 0;i < data.size();i++) {
+			if (data.get(i) != null) {
+				NBTTagCompound tag = new NBTTagCompound();
+				CacheRegistry.writeToNBT(data.get(i).c, tag);
+				list.appendTag(tag);
+			}
+		}
+		compound.setTag("data", list);*/
+		if(compound.hasKey("data"))compound.removeTag("data");
+		long id = compound.getLong("data_id");
+		if(id == 0){
+			id = FileManager.INSTANCE.newTag();
+			compound.setLong("data_id", id);
+		}
+		NBTTagCompound comp = new NBTTagCompound();
 		NBTTagList list = new NBTTagList();
 		for (int i = 0;i < data.size();i++) {
 			if (data.get(i) != null) {
@@ -96,18 +113,34 @@ public class StorageCellInventory implements IStorageInventory, IUpdateable {
 				list.appendTag(tag);
 			}
 		}
-		compound.setTag("data", list);
+		comp.setTag("data", list);
+		FileManager.INSTANCE.saveTagCompound(comp, id);
+
 		compound.setInteger("bytes", bytesUsed);
 	}
 
 	public void readFromNBT(NBTTagCompound compound) {
 		data.clear();
-		NBTTagList list = compound.getTagList("data", 10);
-		for (int i = 0;i < list.tagCount();++i) {
-			NBTTagCompound tag = list.getCompoundTagAt(i);
-			ICraftable e = CacheRegistry.readFromNBT(tag);
-			if (e != null)
-				data.add(new StoredCraftable(e));
+		long id = compound.getLong("data_id");
+		if(id > 0){
+			NBTTagCompound comp = FileManager.INSTANCE.getTagCompound(id);
+			NBTTagList list = comp.getTagList("data", 10);
+			for (int i = 0;i < list.tagCount();++i) {
+				NBTTagCompound tag = list.getCompoundTagAt(i);
+				ICraftable e = CacheRegistry.readFromNBT(tag);
+				if (e != null)
+					data.add(new StoredCraftable(e));
+			}
+		}
+		if (compound.hasKey("data")) {
+			TMLogger.info("Found a disk with old data, converting...");
+			NBTTagList list = compound.getTagList("data", 10);
+			for (int i = 0;i < list.tagCount();++i) {
+				NBTTagCompound tag = list.getCompoundTagAt(i);
+				ICraftable e = CacheRegistry.readFromNBT(tag);
+				if (e != null)
+					data.add(new StoredCraftable(e));
+			}
 		}
 		if (compound.hasKey("inventory")) {
 			TMLogger.info("Found a disk with old data, converting...");

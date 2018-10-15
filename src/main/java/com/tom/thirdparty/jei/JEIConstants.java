@@ -15,4 +15,8 @@ public final class JEIConstants {
 	public static final String PLASTIC = Configs.Modid + ":plastic";
 	public static final String RUBBER_BOILER = Configs.Modid + ":rubberboiler";
 	public static final String RUBBER_PROCESSOR = Configs.Modid + ":rubberprocessor";
+	public static final String LASER_ENGRAVER = Configs.Modid + ":lasereng";
+	public static final String UV_BOX = Configs.Modid + ":uvb";
+	public static final String IN_WORLD = Configs.Modid + ":world";
+	public static final String RESEARCH = Configs.Modid + ":research";
 }

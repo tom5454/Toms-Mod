@@ -1,0 +1,18 @@
+{
+  "blueprint": "advcirc",
+  "in": {
+    "item": "tomsmodcore:item.tm.circuitpanel",
+    "data": 1,
+    "count": 1
+  },
+  "level": 1,
+  "time": 800,
+  "out": {
+    "nbt": {
+      "id": "advecirc"
+    },
+    "item": "tomsmodcore:tm.circuitunassembled",
+    "data": 1,
+    "count": 1
+  }
+}

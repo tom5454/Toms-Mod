@@ -8,18 +8,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.lib.Configs;
 
 import com.tom.core.tileentity.TileEntityRedstonePort;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class RedstonePort extends BlockContainerTomsMod implements IPeripheralProvider {
+public class RedstonePort extends BlockContainerTomsMod {
 
 	public RedstonePort() {
 		super(Material.IRON);
@@ -30,13 +23,6 @@ public class RedstonePort extends BlockContainerTomsMod implements IPeripheralPr
 	@Override
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityRedstonePort();
-	}
-
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	@Override
-	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
-		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityRedstonePort ? (IPeripheral) te : null;
 	}
 
 	@Override

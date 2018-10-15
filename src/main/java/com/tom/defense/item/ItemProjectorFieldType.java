@@ -3,6 +3,7 @@ package com.tom.defense.item;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -11,20 +12,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.item.ICustomCraftingHandler;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
+import com.tom.util.TomsModUtils;
 
 public class ItemProjectorFieldType extends Item implements ICustomCraftingHandler, IModelRegisterRequired {
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		for (int i = 0;i < FieldType.VALUES.length;i++)
-			subItems.add(new ItemStack(itemIn, 1, i));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))
+			for (int i = 0;i < FieldType.VALUES.length;i++)
+				subItems.add(new ItemStack(this, 1, i));
 	}
 
 	@Override
@@ -91,8 +94,7 @@ public class ItemProjectorFieldType extends Item implements ICustomCraftingHandl
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
 		if (FieldType.get(stack.getItemDamage()) == FieldType.TUBE) {
 			int currentS = (stack.getTagCompound() != null ? stack.getTagCompound().getInteger("extra") : 0) % 3;
 			if (currentS == 0)

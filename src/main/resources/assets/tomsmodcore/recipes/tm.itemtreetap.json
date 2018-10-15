@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:tm.itemtreetap",
+    "data": 0,
+    "count": 2
+  },
+  "pattern": [
+    " _S",
+    "WWW",
+    "  W"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "S": {
+      "item": "minecraft:stick",
+      "data": 0
+    },
+    "W": {
+      "ore": "plankWood",
+      "type": "forge:ore_dict"
+    },
+    "_": {
+      "ore": "slabWood",
+      "type": "forge:ore_dict"
+    }
+  }
+}

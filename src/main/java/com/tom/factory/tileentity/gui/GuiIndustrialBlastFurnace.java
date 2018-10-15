@@ -3,12 +3,11 @@ package com.tom.factory.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityIndustrialBlastFurnace;
 import com.tom.factory.tileentity.inventory.ContainerIndustrialBlastFurnace;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiIndustrialBlastFurnace extends GuiTomsMod {
+public class GuiIndustrialBlastFurnace extends GuiTomsLib {
 
 	public GuiIndustrialBlastFurnace(InventoryPlayer playerInv, TileEntityIndustrialBlastFurnace te) {
 		super(new ContainerIndustrialBlastFurnace(playerInv, te), "industrialBlastFurnaceGui");

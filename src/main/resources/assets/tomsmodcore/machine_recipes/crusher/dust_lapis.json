@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "minecraft:dye",
+    "data": 4,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:dust",
+    "data": 15,
+    "count": 1
+  }
+}

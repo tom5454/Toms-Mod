@@ -40,12 +40,12 @@ public class TileEntityMagCardReader extends TileEntityTomsMod implements ICusto
 	public void attach(IComputerAccess computer) {
 		computers.add(computer);
 	}
-	
+
 	@Override
 	public void detach(IComputerAccess computer) {
 		computers.remove(computer);
 	}
-	
+
 	@Override
 	public boolean equals(IPeripheral other) {
 		return other == this;
@@ -111,12 +111,12 @@ public class TileEntityMagCardReader extends TileEntityTomsMod implements ICusto
 	public String getType() {
 		return "tm_mag_card_device";
 	}
-	
+
 	@Override
 	public String[] getMethodNames() {
 		return new String[]{"isCodeMode","setCodeMode","addCode","removeCode","containsCode"};
 	}
-	
+
 	@Override
 	public Object[] callMethod(IComputerAccess computer, ILuaContext context,
 			int method, Object[] a) throws LuaException,

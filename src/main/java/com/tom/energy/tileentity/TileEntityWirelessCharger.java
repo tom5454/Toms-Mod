@@ -1,8 +1,6 @@
 package com.tom.energy.tileentity;
 
-import static com.tom.api.energy.EnergyType.HV;
-import static com.tom.api.energy.EnergyType.LV;
-import static com.tom.api.energy.EnergyType.MV;
+import static com.tom.api.energy.EnergyType.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,24 +13,27 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IBlockAccess;
 
+import com.tom.api.block.IItemTile;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyContainerItem;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.ILinkable;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.Coords;
-import com.tom.apis.ExtraBlockHitInfo;
-import com.tom.apis.TomsModUtils;
 import com.tom.lib.Configs;
+import com.tom.util.Coords;
+import com.tom.util.ExtraBlockHitInfo;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.block.WirelessCharger;
 
-public class TileEntityWirelessCharger extends TileEntityTomsMod implements IEnergyReceiver, ILinkable {
+public class TileEntityWirelessCharger extends TileEntityTomsMod implements IEnergyReceiver, ILinkable, IItemTile {
 	private static final float RF = 0.9F;
 	private EnergyStorage energy = new EnergyStorage(10000000, 10000, 10000);
 	private List<Coords> linked = new ArrayList<>();
@@ -57,7 +58,7 @@ public class TileEntityWirelessCharger extends TileEntityTomsMod implements IEne
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return this.energy.getMaxEnergyStored();
 	}
 
@@ -124,9 +125,9 @@ public class TileEntityWirelessCharger extends TileEntityTomsMod implements IEne
 					}
 					if (!this.energy.hasEnergy())
 						return;
-				} else if (tile instanceof cofh.api.energy.IEnergyReceiver) {
+				} else if (tile instanceof cofh.redstoneflux.api.IEnergyReceiver) {
 					if (hasRF) {
-						cofh.api.energy.IEnergyReceiver te = (cofh.api.energy.IEnergyReceiver) tile;
+						cofh.redstoneflux.api.IEnergyReceiver te = (cofh.redstoneflux.api.IEnergyReceiver) tile;
 						double distance = tile.getPos().distanceSq(xCoord, yCoord, zCoord);
 						double loss = distance / Configs.wirelessChargerLoss;
 						int rec = te.receiveEnergy(c.facing, MathHelper.floor(100000 / distance), true);
@@ -154,8 +155,8 @@ public class TileEntityWirelessCharger extends TileEntityTomsMod implements IEne
 									c.receiveEnergy(item, LV.convertFrom(getType(state), energy.extractEnergy(getType(state).convertFrom(LV, received), false)), false);
 								}
 							}
-							if (hasRF && item.getItem() instanceof cofh.api.energy.IEnergyContainerItem) {
-								cofh.api.energy.IEnergyContainerItem c = (cofh.api.energy.IEnergyContainerItem) item.getItem();
+							if (hasRF && item.getItem() instanceof cofh.redstoneflux.api.IEnergyContainerItem) {
+								cofh.redstoneflux.api.IEnergyContainerItem c = (cofh.redstoneflux.api.IEnergyContainerItem) item.getItem();
 								int received = c.receiveEnergy(item, EnergyType.toRF(getType(state), energy.getEnergyStored(), RF), true);
 								if (received > 0) {
 									c.receiveEnergy(item, EnergyType.toRF(getType(state), energy.extractEnergy(EnergyType.fromRF(getType(state), received, RF), false), RF), false);
@@ -179,7 +180,7 @@ public class TileEntityWirelessCharger extends TileEntityTomsMod implements IEne
 	@Override
 	public boolean link(int x, int y, int z, EnumFacing side, ExtraBlockHitInfo bhp, int dim) {
 		TileEntity tile = this.world.getTileEntity(new BlockPos(x, y, z));
-		if (tile != null && (tile instanceof IEnergyReceiver || (hasRF && tile instanceof cofh.api.energy.IEnergyReceiver)) && !this.linked.contains(tile)) {
+		if (tile != null && (tile instanceof IEnergyReceiver || (hasRF && tile instanceof cofh.redstoneflux.api.IEnergyReceiver)) && !this.linked.contains(tile)) {
 			this.linked.add(new Coords(x, y, z).setFacing(side));
 			return true;
 		}
@@ -201,5 +202,15 @@ public class TileEntityWirelessCharger extends TileEntityTomsMod implements IEne
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		ItemStack s = new ItemStack(state.getBlock(), 1, state.getBlock().damageDropped(state));
+		s.setTagCompound(new NBTTagCompound());
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToStackNBT(tag);
+		s.getTagCompound().setTag("BlockEntityTag", tag);
+		drops.add(s);
 	}
 }

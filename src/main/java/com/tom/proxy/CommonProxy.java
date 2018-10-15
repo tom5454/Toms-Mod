@@ -42,4 +42,14 @@ public abstract class CommonProxy {// ClientProxy
 	public abstract void runMethod(IMethod m);
 
 	public abstract <I, R> R runClientFunction(I in, Function<I, R> m);
+
+	public void error(String string) {
+		throw new IllegalStateException(string);
+	}
+
+	public void delTexture(Integer id) {
+	}
+
+	public void delList(Integer renderer) {
+	}
 }

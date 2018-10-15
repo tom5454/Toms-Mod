@@ -1,0 +1,28 @@
+{
+  "researches": [
+    "tomsmodcore:fluidduct"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodtransport:tm.fluidductopaque",
+      "data": 0,
+      "count": 6
+    },
+    "pattern": [
+      "PLP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateIron",
+        "type": "forge:ore_dict"
+      },
+      "L": {
+        "ore": "plateLead",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 30
+}

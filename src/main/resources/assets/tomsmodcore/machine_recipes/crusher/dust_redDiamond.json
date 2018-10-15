@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmodcore:gem",
+    "data": 13,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:dust",
+    "data": 13,
+    "count": 1
+  }
+}

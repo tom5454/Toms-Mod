@@ -9,13 +9,13 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -28,10 +28,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.api.block.IModelRegisterRequired;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.energy.item.WirelessChargerItemBlock;
 import com.tom.factory.FactoryInit;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.tileentity.TileEntityWirelessCharger;
 
@@ -100,14 +100,13 @@ public class WirelessCharger extends BlockContainerTomsMod implements IModelRegi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack(itemIn, 1, 0));
-		list.add(new ItemStack(itemIn, 1, 1));
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		list.add(new ItemStack(this, 1, 0));
+		list.add(new ItemStack(this, 1, 1));
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		tooltip.add(I18n.format("tomsMod.tooltip.accepts", stack.getMetadata() == 0 ? "HV" : "MV"));
 		if (stack.hasTagCompound()) {
 			tooltip.add(I18n.format("tomsMod.tooltip.energyStored", stack.getTagCompound().getCompoundTag("BlockEntityTag").getDouble("energy")));
@@ -132,12 +131,6 @@ public class WirelessCharger extends BlockContainerTomsMod implements IModelRegi
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntityWirelessCharger te = (TileEntityWirelessCharger) worldIn.getTileEntity(pos);
-		ItemStack s = new ItemStack(this, 1, damageDropped(state));
-		s.setTagCompound(new NBTTagCompound());
-		NBTTagCompound tag = new NBTTagCompound();
-		te.writeToStackNBT(tag);
-		s.getTagCompound().setTag("BlockEntityTag", tag);
-		spawnAsEntity(worldIn, pos, s);
 		if (te.hasRF)
 			spawnAsEntity(worldIn, pos, new ItemStack(FactoryInit.rfModule));
 		super.breakBlock(worldIn, pos, state);

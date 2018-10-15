@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodenergy:fusioncontroller",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "CGC",
+    "CRC",
+    "CCC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "C": {
+      "ore": "plateChrome",
+      "type": "forge:ore_dict"
+    },
+    "G": {
+      "ore": "plateAdvA2",
+      "type": "forge:ore_dict"
+    }
+  }
+}

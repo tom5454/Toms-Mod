@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:rubberprocessing"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.rubberprocessor",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "BSB",
+      "_B_",
+      "bFb"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "b": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "S": {
+        "item": "tomsmodfactory:tm.steelboiler",
+        "data": 0
+      },
+      "F": {
+        "item": "tomsmodfactory:tm.steam.adv.furnace",
+        "data": 0
+      },
+      "_": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

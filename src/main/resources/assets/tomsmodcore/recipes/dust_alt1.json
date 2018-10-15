@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "tomsmodcore:dust",
+    "data": 31,
+    "count": 1
+  },
+  "pattern": [
+    "MI"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "I": {
+      "ore": "Coal",
+      "type": "forge:ore_dict"
+    },
+    "M": {
+      "ore": "itemMortar",
+      "type": "forge:ore_dict"
+    }
+  }
+}

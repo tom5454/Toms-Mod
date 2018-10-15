@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentDurability;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -115,11 +117,9 @@ public abstract class ItemDamagableCrafting extends Item implements ICustomCraft
 	@Override
 	public void onCrafing(EntityPlayer crafter, ItemStack returnStack, IInventory crafingTableInventory) {
 	}
-
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		int damage = getItemDamage(stack), maxDamage = getDurability(stack);
 		tooltip.add(I18n.format("tomsMod.tooltip.durability") + ": " + (maxDamage - damage) + "/" + maxDamage);
 	}
@@ -219,9 +219,9 @@ public abstract class ItemDamagableCrafting extends Item implements ICustomCraft
 		}
 
 		setItemDamage(stack, getItemDamage(stack) + amount); // Redirect through
-																// Item's
-																// callback if
-																// applicable.
+		// Item's
+		// callback if
+		// applicable.
 		return getItemDamage(stack) > getDurability(stack);
 	}
 

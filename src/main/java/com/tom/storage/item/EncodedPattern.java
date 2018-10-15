@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -56,8 +57,7 @@ public class EncodedPattern extends Item implements ICraftingRecipeContainer, IM
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.getMetadata() != 0) {
 			AutoCraftingHandler.SavedCraftingRecipe recipe = readRecipe(stack);
 			if (recipe != null && recipe.getOutputs() != null && recipe.getInputs() != null) {

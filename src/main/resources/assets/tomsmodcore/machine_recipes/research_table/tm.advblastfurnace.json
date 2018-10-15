@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:advblastfurnace"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.advblastfurnace",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "SBS",
+      "bMb",
+      "SBS"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "ore": "brickRefined",
+        "type": "forge:ore_dict"
+      },
+      "b": {
+        "item": "tomsmodfactory:tm.blastfurnacewall",
+        "data": 0
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "M": {
+        "item": "tomsmodfactory:tm.blastfurnace",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 800
+}

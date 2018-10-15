@@ -1,0 +1,40 @@
+{
+  "researches": [
+    "tomsmodcore:basiclvmachines"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:tm.researchtableupgrade",
+      "data": 1,
+      "count": 1
+    },
+    "pattern": [
+      "BBB",
+      "-P-",
+      "S S"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "B": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "stickWood",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "item": "tomsmodenergy:lvcable",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 1000
+}

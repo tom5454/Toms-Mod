@@ -24,22 +24,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.google.common.base.Function;
 
 import com.tom.api.energy.IEnergyStorage;
-import com.tom.api.grid.BlockAccess;
 import com.tom.api.grid.GridBase;
 import com.tom.api.grid.IDenseGridDevice;
-import com.tom.api.grid.IGridDevice;
-import com.tom.api.grid.IGridUpdateListener;
-import com.tom.api.grid.IMultigridDevice;
 import com.tom.api.inventory.IStorageInventory;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.multipart.IDuctModule;
 import com.tom.api.multipart.PartDuct;
 import com.tom.api.multipart.PartModule;
 import com.tom.api.tileentity.ISecuredTileEntity;
-import com.tom.apis.Storage;
-import com.tom.apis.TomsModUtils;
+import com.tom.lib.api.grid.BlockAccess;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridUpdateListener;
+import com.tom.lib.api.grid.IMultigridDevice;
 import com.tom.storage.multipart.PartStorageNetworkCable;
 import com.tom.storage.multipart.block.StorageNetworkCable;
+import com.tom.util.Storage;
+import com.tom.util.TomsModUtils;
 
 public class StorageNetworkGrid extends GridBase<StorageData, StorageNetworkGrid> {
 	private static final PowerDrainSorter POWER_SORTER = new PowerDrainSorter();
@@ -65,7 +65,7 @@ public class StorageNetworkGrid extends GridBase<StorageData, StorageNetworkGrid
 			if (d == null)
 				return data;
 			else
-				return d.getValue();
+				return d.get();
 		} else
 			return data;
 	}
@@ -410,8 +410,8 @@ public class StorageNetworkGrid extends GridBase<StorageData, StorageNetworkGrid
 			denseGrid = controllerPos != null;
 		// if(p != null)p.endStartSection("dataTransfer2");
 		if (((oldData == getData() || (controllerOld != null) || routerOld != null) && (controller == null || router == null)/* && router == null/* && advRouter == null*/) ||
-		/*((oldData == getData() || (routerOld != null)) && controller == null && router == null && advRouter == null) ||*/
-		/*((oldData == getData() || (advRouterOld != null)) && controller == null && advRouter == null) || */(!denseGrid && denseGridOld))
+				/*((oldData == getData() || (routerOld != null)) && controller == null && router == null && advRouter == null) ||*/
+				/*((oldData == getData() || (advRouterOld != null)) && controller == null && advRouter == null) || */(!denseGrid && denseGridOld))
 			setDataRaw(new StorageData());
 		if (!denseGrid && router != null && router != routerOld)
 			setDataRaw(router.getGrid().getData());
@@ -564,7 +564,7 @@ public class StorageNetworkGrid extends GridBase<StorageData, StorageNetworkGrid
 		public double getEnergyStored();
 
 		@Override
-		public int getMaxEnergyStored();
+		public long getMaxEnergyStored();
 
 		@Override
 		public int getPriority();

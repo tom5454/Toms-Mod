@@ -12,9 +12,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import com.tom.apis.TomsModUtils;
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 import com.tom.network.NetworkHandler;
+import com.tom.util.TomsModUtils;
 
 import io.netty.buffer.ByteBuf;
 

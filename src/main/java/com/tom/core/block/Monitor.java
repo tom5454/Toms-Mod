@@ -10,17 +10,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fml.common.Optional;
-
-import com.tom.lib.Configs;
-
 import com.tom.core.tileentity.TileEntityMonitor;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class Monitor extends BlockMonitorBase implements IPeripheralProvider {
+public class Monitor extends BlockMonitorBase {
 	/*@SideOnly(Side.CLIENT)
 	private IIcon side;
 	//@SideOnly(Side.CLIENT)
@@ -57,7 +49,7 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider {
 	//		this.blockIcon = iconregister.registerIcon("minecraft:tm/Gray");
 		this.side = iconregister.registerIcon("minecraft:tm/transparent");
 	}
-	
+
 	/*public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side){
 		return this.side;
 	}*/
@@ -69,7 +61,7 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider {
 		}else{
 			return this.blockIcon;
 		}
-	
+
 	}
 	public IIcon getIcon(int side, int meta){
 		if(side == 3){
@@ -163,7 +155,7 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider {
 		te.screen[s+10][3] = 0x00FA9A;
 		te.screen[s+10][4] = 0xFFFFFF;
 		te.screen[s+10][5] = 0xFFFFFF;
-	
+
 		te.screen[s+1][7] = 0xFFFFFF;
 		te.screen[s+1][8] = 0xFFFFFF;
 		te.screen[s+2][9] = 0xFFFFFF;
@@ -192,17 +184,6 @@ public class Monitor extends BlockMonitorBase implements IPeripheralProvider {
 		TileEntity tilee = world.getTileEntity(pos);
 		TileEntityMonitor te = ((TileEntityMonitor) tilee);
 		return te.onBlockActivated(!world.isRemote, side, hitX, hitY, hitZ, player);
-	}
-
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	@Override
-	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
-		TileEntity tilee = world.getTileEntity(pos);
-		if (tilee instanceof TileEntityMonitor) {
-			TileEntityMonitor te = ((TileEntityMonitor) tilee);
-			return te.direction == side.ordinal() ? null : te;
-		}
-		return null;
 	}
 
 	/*public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ){

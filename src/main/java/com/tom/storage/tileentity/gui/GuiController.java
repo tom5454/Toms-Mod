@@ -13,6 +13,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.client.EventHandlerClient;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
@@ -20,9 +21,7 @@ import com.tom.storage.tileentity.TileEntityStorageNetworkController;
 import com.tom.storage.tileentity.TileEntityStorageNetworkController.ControllerState;
 import com.tom.storage.tileentity.inventory.ContainerController;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiController extends GuiTomsMod {
+public class GuiController extends GuiTomsLib {
 	private GuiTextField text;
 	private GuiButtonOnOff onOff;
 	private TileEntityStorageNetworkController te;
@@ -130,7 +129,7 @@ public class GuiController extends GuiTomsMod {
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

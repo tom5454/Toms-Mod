@@ -1,0 +1,22 @@
+{
+	"components": [
+		{
+			"id": "basic",
+			"unlocalized_name": "basic_circuit_comp",
+			"meta": 0,
+			"model": "tomsmodcore:circuitcomponentbasic"
+		},
+		{
+			"id": "normal",
+			"unlocalized_name": "normal_circuit_comp",
+			"meta": 1,
+			"model": "tomsmodcore:circuitcomponentnormal"
+		},
+		{
+			"id": "adv",
+			"unlocalized_name": "adv_circuit_comp",
+			"meta": 2,
+			"model": "tomsmodcore:circuitcomponentadvanced"
+		}
+	]
+}

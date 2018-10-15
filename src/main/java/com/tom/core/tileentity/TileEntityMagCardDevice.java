@@ -9,23 +9,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.api.item.IMagCard;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.lib.Configs;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.MagCardDevice;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityMagCardDevice extends TileEntityTomsMod implements IPeripheral {
-	private List<IComputerAccess> computers = new ArrayList<>();
+public class TileEntityMagCardDevice extends TileEntityTomsMod implements ITMCompatPeripheral {
+	private List<IComputer> computers = new ArrayList<>();
 	public int direction = 0;
 	// public boolean ledG = false;
 	private int ledGTime = 0;
@@ -50,7 +42,7 @@ public class TileEntityMagCardDevice extends TileEntityTomsMod implements IPerip
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+	public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 		if (method == 0) {
 			if (a.length > 1) {
 				wData = a[1].toString();
@@ -58,7 +50,7 @@ public class TileEntityMagCardDevice extends TileEntityTomsMod implements IPerip
 				this.writeMode = true;
 				boolean mode = a.length > 2 ? (a[2] instanceof Boolean ? (Boolean) a[2] : false) : true;
 				if (mode)
-					return context.pullEvent("tm_magcard_write");
+					return computer.pullEvent("tm_magcard_write");
 			}
 		} else if (method == 1) {
 			return new Object[]{this.isCodeMode};
@@ -79,18 +71,13 @@ public class TileEntityMagCardDevice extends TileEntityTomsMod implements IPerip
 	}
 
 	@Override
-	public void attach(IComputerAccess computer) {
+	public void attach(IComputer computer) {
 		computers.add(computer);
 	}
 
 	@Override
-	public void detach(IComputerAccess computer) {
+	public void detach(IComputer computer) {
 		computers.remove(computer);
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		return other == this;
 	}
 
 	public void activate(EntityPlayer player, ItemStack is) {
@@ -98,7 +85,7 @@ public class TileEntityMagCardDevice extends TileEntityTomsMod implements IPerip
 		if (this.writeMode) {
 			card.write(wData, wName, is, world, player);
 			this.writeMode = false;
-			for (IComputerAccess c : computers) {
+			for (IComputer c : computers) {
 				c.queueEvent("tm_magcard_write", new Object[]{c.getAttachmentName(), player.getName(), wName});
 			}
 		} else {
@@ -114,7 +101,7 @@ public class TileEntityMagCardDevice extends TileEntityTomsMod implements IPerip
 				} else {
 					this.ledRTime = ledTimeMax;
 				}
-				for (IComputerAccess c : computers) {
+				for (IComputer c : computers) {
 					c.queueEvent("tm_magcard_swipe", new Object[]{c.getAttachmentName(), player.getName(), good});
 				}
 				markBlockForUpdate(pos);
@@ -125,7 +112,7 @@ public class TileEntityMagCardDevice extends TileEntityTomsMod implements IPerip
 					a[i + 2] = args[i];
 				}
 				a[1] = player.getName();
-				for (IComputerAccess c : computers) {
+				for (IComputer c : computers) {
 					a[0] = c.getAttachmentName();
 					c.queueEvent("tm_magcard_swipe", a);
 				}

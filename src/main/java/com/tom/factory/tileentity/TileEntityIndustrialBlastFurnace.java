@@ -10,12 +10,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.block.BlockBlastFurnace;
 import com.tom.factory.block.IndustrialBlastFurnace;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityIndustrialBlastFurnace extends TileEntityMachineBase {
 	/** {{max heat, lava heat, air heat}, {casing heat values...}} */

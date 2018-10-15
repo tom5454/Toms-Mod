@@ -3,6 +3,7 @@ package com.tom.storage.item;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,9 +20,9 @@ import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.inventory.IStorageInventory;
 import com.tom.api.inventory.StorageCellInventory;
 import com.tom.api.item.IStorageCell;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.storage.handler.StorageNetworkGrid;
+import com.tom.util.TomsModUtils;
 
 public class ItemStorageCell extends Item implements IStorageCell, IModelRegisterRequired {
 	public static enum CellLight {
@@ -48,8 +49,7 @@ public class ItemStorageCell extends Item implements IStorageCell, IModelRegiste
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		StorageCellInventory inv = new StorageCellInventory(stack, getSize(stack.getMetadata()));
 		tooltip.add(I18n.format("tomsMod.tooltip.bytesUsed", inv.getClientBytes(), inv.getMaxBytes()));
 		tooltip.add(I18n.format("tomsMod.tooltip.cellFormatting", I18n.format("tomsMod.storage.formatnormal")));
@@ -61,11 +61,13 @@ public class ItemStorageCell extends Item implements IStorageCell, IModelRegiste
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		subItems.add(new ItemStack(itemIn, 1, 0));
-		subItems.add(new ItemStack(itemIn, 1, 1));
-		subItems.add(new ItemStack(itemIn, 1, 2));
-		subItems.add(new ItemStack(itemIn, 1, 3));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab)){
+			subItems.add(new ItemStack(this, 1, 0));
+			subItems.add(new ItemStack(this, 1, 1));
+			subItems.add(new ItemStack(this, 1, 2));
+			subItems.add(new ItemStack(this, 1, 3));
+		}
 	}
 
 	@Override

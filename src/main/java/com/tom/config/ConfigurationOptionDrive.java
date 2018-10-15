@@ -3,8 +3,6 @@ package com.tom.config;
 import java.io.IOException;
 import java.util.List;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -22,11 +20,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.IConfigurable.IConfigurationOption;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
 import com.tom.client.GuiButtonSelection;
+import com.tom.lib.utils.RenderUtil;
 import com.tom.storage.tileentity.TileEntityDrive;
 import com.tom.storage.tileentity.gui.GuiCraftingAmountSelection.GuiButtonNum;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
 
 public final class ConfigurationOptionDrive implements IConfigurationOption {
 	private static final ResourceLocation SIDE = new ResourceLocation("tomsmodstorage:textures/blocks/device_side.png");
@@ -51,19 +50,19 @@ public final class ConfigurationOptionDrive implements IConfigurationOption {
 	@SideOnly(Side.CLIENT)
 	public void renderBackground(Minecraft mc, int xP, int yP) {
 		mc.renderEngine.bindTexture(securitySlotLocation);
-		Render.drawTexturedRect(xP - 1, yP - 1, 18, 18);
+		RenderUtil.drawTexturedRect(xP - 1, yP - 1, 18, 18);
 		mc.renderEngine.bindTexture(SIDES[2]);
-		Render.drawTexturedRect(xP + 17, yP + 17, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 17, yP + 17, 16, 16);
 		mc.renderEngine.bindTexture(SIDES[1]);
-		Render.drawTexturedRect(xP + 17, yP, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 17, yP, 16, 16);
 		mc.renderEngine.bindTexture(SIDES[0]);
-		Render.drawTexturedRect(xP + 17, yP + 34, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 17, yP + 34, 16, 16);
 		mc.renderEngine.bindTexture(SIDES[4]);
-		Render.drawTexturedRect(xP, yP + 17, 16, 16);
+		RenderUtil.drawTexturedRect(xP, yP + 17, 16, 16);
 		mc.renderEngine.bindTexture(SIDES[5]);
-		Render.drawTexturedRect(xP + 34, yP + 17, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 34, yP + 17, 16, 16);
 		mc.renderEngine.bindTexture(SIDES[3]);
-		Render.drawTexturedRect(xP + 34, yP + 34, 16, 16);
+		RenderUtil.drawTexturedRect(xP + 34, yP + 34, 16, 16);
 	}
 
 	@Override
@@ -100,27 +99,27 @@ public final class ConfigurationOptionDrive implements IConfigurationOption {
 	public void renderForeground(Minecraft mc, int xP, int yP, int mouseX, int mouseY) {
 		if (contains(EnumFacing.DOWN)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 17, yP + 34, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 17, yP + 34, 16, 16);
 		}
 		if (contains(EnumFacing.UP)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 17, yP, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 17, yP, 16, 16);
 		}
 		if (contains(EnumFacing.NORTH)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 17, yP + 17, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 17, yP + 17, 16, 16);
 		}
 		if (contains(EnumFacing.SOUTH)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 34, yP + 34, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 34, yP + 34, 16, 16);
 		}
 		if (contains(EnumFacing.WEST)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP, yP + 17, 16, 16);
+			RenderUtil.drawTexturedRect(xP, yP + 17, 16, 16);
 		}
 		if (contains(EnumFacing.EAST)) {
 			mc.renderEngine.bindTexture(selectionTexLoc);
-			Render.drawTexturedRect(xP + 34, yP + 17, 16, 16);
+			RenderUtil.drawTexturedRect(xP + 34, yP + 17, 16, 16);
 		}
 		mc.fontRenderer.drawString(I18n.format("tomsmod.gui.priority"), xP + 55, yP + 37, 0xFFFFFF);
 	}

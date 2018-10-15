@@ -14,10 +14,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.tileentity.IGuiTile;
-import com.tom.apis.TomsModUtils;
 import com.tom.factory.block.FluidTransposer;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityFluidTransposer extends TileEntityMachineBase implements ITileFluidHandler, IGuiTile {
 	private EnergyStorage energy = new EnergyStorage(20000, 1000);

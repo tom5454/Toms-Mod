@@ -22,10 +22,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntityRubberBoiler;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 
 public class RubberBoiler extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);

@@ -1,0 +1,9 @@
+{
+  "ingredients": {
+    "circuit": "com.tom.core.TMResource$tomsmod_circuit",
+    "material": "com.tom.core.TMResource$tomsmod_material",
+    "circuitpanel": "com.tom.core.TMResource$tomsmod_circuitpanel",
+    "chipset": "com.tom.core.TMResource$tomsmod_chipset",
+    "circuitcomp": "com.tom.core.TMResource$tomsmod_circuitcomp"
+  }
+}

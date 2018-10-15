@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -27,7 +28,9 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockAccess;
 
+import com.tom.api.block.IItemTile;
 import com.tom.api.energy.IEnergyStorage;
 import com.tom.api.item.IPowerLinkCard;
 import com.tom.api.item.ISecurityStationLinkCard;
@@ -39,7 +42,6 @@ import com.tom.api.tileentity.IForcePowerStation;
 import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.ISecurityStation;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.core.DamageSourceTomsMod;
@@ -47,14 +49,15 @@ import com.tom.defense.DefenseInit;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.block.ForceCapacitor;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 
-public class TileEntityDefenseStation extends TileEntityTomsMod implements IForceDevice, ISidedInventory, IGuiTile, INBTPacketReceiver {
+public class TileEntityDefenseStation extends TileEntityTomsMod implements IForceDevice, ISidedInventory, IGuiTile, INBTPacketReceiver, IItemTile {
 	public ForceDeviceControlType rsMode = ForceDeviceControlType.LOW_REDSTONE;
 	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
 	// private EnergyStorage energy = new EnergyStorage(10000000,100000,200000);
 	public boolean active = false;
 	private boolean firstStart = true, lastActive = false;
-	public int clientEnergy = 0, clientMax;
+	public long clientEnergy = 0, clientMax;
 	private static final int[] SLOTS = new int[]{9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24},
 			ITEMS = new int[]{25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45};
 	public DefenseStationConfig config = DefenseStationConfig.INFORM;
@@ -192,7 +195,7 @@ public class TileEntityDefenseStation extends TileEntityTomsMod implements IForc
 
 	@Override
 	public int getField(int id) {
-		return id == 0 ? this.clientEnergy : id == 1 ? clientMax : 0;
+		return (int) (id == 0 ? this.clientEnergy : id == 1 ? clientMax : 0);
 	}
 
 	@Override
@@ -515,18 +518,18 @@ public class TileEntityDefenseStation extends TileEntityTomsMod implements IForc
 		int uCX = !inv.getStackInSlot(3).isEmpty() ? inv.getStackInSlot(3).getCount() : 0;
 		int uCY = !inv.getStackInSlot(4).isEmpty() ? inv.getStackInSlot(4).getCount() : 0;
 		int uCZ = !inv.getStackInSlot(5).isEmpty() ? inv.getStackInSlot(5).getCount() : 0;
-		return box.expand(2, 2, 2).expand(uCX, uCY, uCZ);
+		return box.grow(2, 2, 2).grow(uCX, uCY, uCZ);
 	}
 
 	private AxisAlignedBB getInformBounds(AxisAlignedBB box) {
 		int uCX = !inv.getStackInSlot(6).isEmpty() ? inv.getStackInSlot(6).getCount() : 0;
 		int uCY = !inv.getStackInSlot(7).isEmpty() ? inv.getStackInSlot(7).getCount() : 0;
 		int uCZ = !inv.getStackInSlot(8).isEmpty() ? inv.getStackInSlot(8).getCount() : 0;
-		return this.getActionBounds(box).expand(2, 2, 2).expand(uCX, uCY, uCZ);
+		return this.getActionBounds(box).grow(2, 2, 2).grow(uCX, uCY, uCZ);
 	}
 
 	private void handleItems(IEnergyStorage energy, boolean pickup, AxisAlignedBB bounds) {
-		List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, bounds.expand(1, 1, 1));
+		List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, bounds.grow(1, 1, 1));
 		for (EntityItem item : items) {
 			if (energy.getEnergyStored() < 1)
 				break;
@@ -688,7 +691,18 @@ public class TileEntityDefenseStation extends TileEntityTomsMod implements IForc
 		inv.clear();
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return clientMax;
+	}
+
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		ItemStack stack = new ItemStack(state.getBlock());
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToStackNBT(tag);
+		stack.setTagCompound(new NBTTagCompound());
+		stack.getTagCompound().setTag("BlockEntityTag", tag);
+		stack.getTagCompound().setBoolean("stored", true);
+		drops.add(stack);
 	}
 }

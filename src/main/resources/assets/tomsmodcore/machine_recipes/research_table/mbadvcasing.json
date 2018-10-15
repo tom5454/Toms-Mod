@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:advmultiblockparts"
+  ],
+  "level": "tomsMod.craftingLevel.mv",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:mbadvcasing",
+      "data": 0,
+      "count": 2
+    },
+    "pattern": [
+      "TtT",
+      "CEC",
+      "TMT"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "C": {
+        "ore": "plateChrome",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "ore": "plateTungstensteel",
+        "type": "forge:ore_dict"
+      },
+      "t": {
+        "ore": "plateTitanium",
+        "type": "forge:ore_dict"
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "advecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "M": {
+        "item": "tomsmodfactory:mbcase",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 2200
+}

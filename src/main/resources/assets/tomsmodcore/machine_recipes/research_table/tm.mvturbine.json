@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:mvturbine"
+  ],
+  "level": "tomsMod.craftingLevel.esoldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:tm.mvturbine",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "STS",
+      "EFE",
+      "SRS"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "item": "minecraft:redstone",
+        "data": 0
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "item": "tomsmodenergy:tm.lvturbine",
+        "data": 0
+      },
+      "E": {
+        "ore": "coilElectrum",
+        "type": "forge:ore_dict"
+      },
+      "F": {
+        "item": "tomsmodcore:machineframesteel",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 1500
+}

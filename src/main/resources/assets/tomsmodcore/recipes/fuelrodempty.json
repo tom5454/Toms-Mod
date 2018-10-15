@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:fuelrodempty",
+    "data": 0,
+    "count": 2
+  },
+  "pattern": [
+    "III",
+    "I I",
+    " I "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "I": {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    }
+  }
+}

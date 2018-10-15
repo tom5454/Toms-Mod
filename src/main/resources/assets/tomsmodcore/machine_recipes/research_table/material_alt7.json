@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:basiclvmachines"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:material",
+      "data": 37,
+      "count": 1
+    },
+    "pattern": [
+      "WSW",
+      "SBS",
+      "WSW"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "ore": "blockSteel",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "W": {
+        "ore": "plateWolfram",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

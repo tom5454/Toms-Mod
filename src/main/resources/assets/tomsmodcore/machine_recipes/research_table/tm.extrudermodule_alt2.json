@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:basiclvmachines"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.extrudermodule",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "WDW",
+      "SBS",
+      "SWS"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "id": "upgradeFrame",
+        "type": "tomsmodcore:material"
+      },
+      "S": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "D": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      },
+      "W": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

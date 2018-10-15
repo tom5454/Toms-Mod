@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:erubberprocessing"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.erubberprocessor",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "PBP",
+      "CFC",
+      "PSP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "tomsmodfactory:tm.rubberboiler",
+        "data": 0
+      },
+      "S": {
+        "item": "tomsmodfactory:tm.electricfurnace",
+        "data": 0
+      },
+      "C": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "F": {
+        "item": "tomsmodfactory:tm.rubberprocessor",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 1600
+}

@@ -10,11 +10,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.tom.api.ITileFluidHandler;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntityElectricalRubberProcessor;
 import com.tom.factory.tileentity.TileEntityMachineBase;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 
 public class ElectricalRubberProcessor extends BlockMachineBase {
 

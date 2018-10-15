@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:ingot",
+    "data": 5,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "blockPlatinum",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

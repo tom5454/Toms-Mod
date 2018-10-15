@@ -1,0 +1,28 @@
+{
+  "researches": [
+    "tomsmodcore:fluidduct"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodtransport:tm.fluidduct",
+      "data": 0,
+      "count": 6
+    },
+    "pattern": [
+      "PGP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateIron",
+        "type": "forge:ore_dict"
+      },
+      "G": {
+        "ore": "blockGlass",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 30
+}

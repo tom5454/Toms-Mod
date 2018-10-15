@@ -2,6 +2,7 @@ package com.tom.core.item;
 
 import java.util.List;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -26,7 +27,7 @@ public class ItemBigNoteBook extends Item implements ICustomCraftingHandler {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("owner")) {
 			tooltip.add("Owner: " + stack.getTagCompound().getString("owner"));
 		}

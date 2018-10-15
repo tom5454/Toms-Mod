@@ -1,0 +1,46 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 62,
+    "count": 8
+  },
+  "ingredients": [
+    {
+      "ore": "dustCoal",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustCoal",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustCoal",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustCoal",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustIron",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustIron",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustNickel",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustBlueMetal",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "itemSilicon",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

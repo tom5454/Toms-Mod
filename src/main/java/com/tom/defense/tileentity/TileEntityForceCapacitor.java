@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -18,9 +19,9 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockAccess;
 
-import net.minecraftforge.fml.common.Optional;
-
+import com.tom.api.block.IItemTile;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.IEnergyStorage;
 import com.tom.api.item.IPowerLinkCard;
@@ -33,22 +34,16 @@ import com.tom.api.tileentity.IForcePowerStation;
 import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.ISecurityStation;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.config.ConfigurationForceCapacitorControl;
 import com.tom.core.CoreInit;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.block.ForceCapacitor;
 import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.lib.Configs;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
+import com.tom.util.TomsModUtils;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityForceCapacitor extends TileEntityTomsMod implements IPeripheral, ISidedInventory, IForcePowerStation, IGuiTile, IConfigurable {
+public class TileEntityForceCapacitor extends TileEntityTomsMod implements ITMCompatPeripheral, ISidedInventory, IForcePowerStation, IGuiTile, IConfigurable, IItemTile {
 	private static final int DEFAULT_RANGE = 2;
 	private static final int RANGE_UPGRADE_INCREASE = 2;
 	private EnergyStorage energy = new EnergyStorage(10000000, 100000);
@@ -62,76 +57,24 @@ public class TileEntityForceCapacitor extends TileEntityTomsMod implements IPeri
 	public int clientEnergy = 0;
 	private ConfigurationForceCapacitorControl cfgOption = new ConfigurationForceCapacitorControl(this);
 	private boolean powersharing = false;
-
-	/*@Override
-	public boolean canConnectEnergy(EnumFacing from, EnergyType type) {
-		return type == FORCE && from == this.getFacing(world.getBlockState(pos)).rotateY();
-	}
-	
 	@Override
-	public List<EnergyType> getValidEnergyTypes() {
-		return FORCE.getList();
-	}*/
-	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	public String getType() {
 		return "force_capacitor";
 	}
 
 	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	public String[] getMethodNames() {
 		return new String[]{"getEnergyStored", "getMaxEnergyStored"};
 	}
 
 	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+	public Object[] callMethod(IComputer computer, int method, Object[] arguments) throws LuaException {
 		if (method == 0) {
 			return new Object[]{energy.getEnergyStored()};
 		} else if (method == 1) { return new Object[]{energy.getMaxEnergyStored()}; }
 		return null;
 	}
 
-	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public void attach(IComputerAccess computer) {
-
-	}
-
-	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public void detach(IComputerAccess computer) {
-
-	}
-
-	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public boolean equals(IPeripheral other) {
-		return other == this;
-	}
-
-	/*@Override
-	public double receiveEnergy(EnumFacing from, EnergyType type,
-			double maxReceive, boolean simulate) {
-		return this.active && this.canConnectEnergy(from, type) ? energy.receiveEnergy(maxReceive, simulate) : 0;
-	}
-	
-	@Override
-	public double extractEnergy(EnumFacing from, EnergyType type,
-			double maxExtract, boolean simulate) {
-		return this.active && this.canConnectEnergy(from, type) ? energy.extractEnergy(maxExtract, simulate) : 0;
-	}
-	
-	@Override
-	public double getEnergyStored(EnumFacing from, EnergyType type) {
-		return energy.getEnergyStored();
-	}
-	
-	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
-		return energy.getMaxEnergyStored();
-	}*/
 	public EnumFacing getFacing(IBlockState state) {
 		return state.getBlock() == DefenseInit.forceCapacitor ? state.getValue(ForceCapacitor.FACING) : EnumFacing.NORTH;
 	}
@@ -453,7 +396,7 @@ public class TileEntityForceCapacitor extends TileEntityTomsMod implements IPeri
 		return EnergyStorage.DUMMY_STORAGE;
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
 
@@ -502,5 +445,16 @@ public class TileEntityForceCapacitor extends TileEntityTomsMod implements IPeri
 	@Override
 	public String getConfigName() {
 		return "tile.tm.forceCapacitor.name";
+	}
+
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		ItemStack stack = new ItemStack(state.getBlock());
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToStackNBT(tag);
+		stack.setTagCompound(new NBTTagCompound());
+		stack.getTagCompound().setTag("BlockEntityTag", tag);
+		stack.getTagCompound().setBoolean("stored", true);
+		drops.add(stack);
 	}
 }

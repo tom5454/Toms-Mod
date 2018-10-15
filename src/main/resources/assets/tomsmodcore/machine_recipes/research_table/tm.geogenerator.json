@@ -1,0 +1,48 @@
+{
+  "researches": [
+    "tomsmodcore:geogenerator"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:tm.geogenerator",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "SES",
+      "BGB",
+      "CAC"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "A": {
+        "item": "tomsmodfactory:tm.geoboiler",
+        "data": 0
+      },
+      "B": {
+        "ore": "brickRefined",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "id": "generator",
+        "type": "tomsmodcore:material"
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "G": {
+        "ore": "glassHardened",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1800
+}

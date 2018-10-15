@@ -1,25 +1,22 @@
 package com.tom.core.block;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.lib.Configs;
+import com.tom.core.CoreInit;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.TileEntityTabletController;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public class TabletController extends BlockContainerTomsMod implements IPeripheralProvider {
-	/*@SideOnly(Side.CLIENT)
-	private IIcon online;*/
+public class TabletController extends BlockContainerTomsMod {
 	protected TabletController(Material p_i45386_1_) {
 		super(p_i45386_1_);
 	}
@@ -34,21 +31,25 @@ public class TabletController extends BlockContainerTomsMod implements IPeripher
 	public TileEntity createNewTileEntity(World arg0, int arg1) {
 		return new TileEntityTabletController();
 	}
-
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
 	@Override
-	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
-		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityTabletController ? (IPeripheral) te : null;
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if(playerIn.getHeldItem(hand).getItem() == CoreInit.Tablet){
+			if(!worldIn.isRemote){
+				if(!playerIn.getHeldItem(hand).hasTagCompound())playerIn.getHeldItem(hand).setTagCompound(new NBTTagCompound());
+				NBTTagCompound tag = playerIn.getHeldItem(hand).getTagCompound();
+				if(tag.getBoolean("connected") && tag.getInteger("x") == pos.getX() && tag.getInteger("y") == pos.getY() && tag.getInteger("z") == pos.getZ()){
+					tag.setBoolean("connected", false);
+					TomsModUtils.sendNoSpamTranslate(playerIn, "tomsMod.tabletUnlinked");
+				}else{
+					tag.setInteger("x", pos.getX());
+					tag.setInteger("y", pos.getY());
+					tag.setInteger("z", pos.getZ());
+					tag.setBoolean("connected", true);
+					TomsModUtils.sendNoSpamTranslate(playerIn, "tomsMod.tabletLinked");
+				}
+			}
+			return true;
+		}
+		return false;
 	}
-	/*@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconregister){
-		this.blockIcon = iconregister.registerIcon("minecraft:tm/Antenna2");
-		this.online = iconregister.registerIcon("minecraft:tm/TabContSideAct");
-	}
-	public IIcon getIcon(int side, int meta){
-		if(side > 1) return this.online;
-		else return this.blockIcon;
-	}*/
-
 }

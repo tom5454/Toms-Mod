@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:wireprocessinglv"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.coilerplant",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "IWI",
+      "ECE",
+      "IPI"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "blockPiston",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "W": {
+        "item": "tomsmodcore:emptycoil",
+        "data": 0
+      },
+      "I": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1100
+}

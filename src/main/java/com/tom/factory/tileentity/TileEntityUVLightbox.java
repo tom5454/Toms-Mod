@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
-import com.tom.core.TMResource.CraftingMaterial;
+import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
 public class TileEntityUVLightbox extends TileEntityMachineBase {
@@ -74,7 +74,7 @@ public class TileEntityUVLightbox extends TileEntityMachineBase {
 		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
 
@@ -84,33 +84,6 @@ public class TileEntityUVLightbox extends TileEntityMachineBase {
 		int p = upgradeC + MathHelper.floor(10 * (getMaxProcessTimeNormal() / TYPE_MULTIPLIER_SPEED[getType()])) + (upgradeC / 2);
 		progress = Math.max(0, progress - p);
 		energy.extractEnergy(0.1D * p, false);
-	}
-
-	private ItemStack getRecipe() {
-		int lvl = 2 - getType();
-		if (!inv.getStackInSlot(2).isEmpty() && CraftingMaterial.equals(inv.getStackInSlot(2).getItem())) {
-			if (CraftingMaterial.BLUEPRINT_BASIC_CIRCUIT.equals(inv.getStackInSlot(2)) && CraftingMaterial.PHOTOACTIVE_BASIC_CIRCUIT_PLATE.equals(inv.getStackInSlot(0))) {
-				return CraftingMaterial.RAW_BASIC_CIRCUIT_PANEL.getStackNormal();
-			} else if (CraftingMaterial.BLUEPRINT_NORMAL_CIRCUIT.equals(inv.getStackInSlot(2)) && CraftingMaterial.PHOTOACTIVE_BASIC_CIRCUIT_PLATE.equals(inv.getStackInSlot(0))) {
-				return CraftingMaterial.RAW_NORMAL_CIRCUIT_PANEL.getStackNormal();
-			} else if (CraftingMaterial.BLUEPRINT_ADVANCED_CIRCUIT.equals(inv.getStackInSlot(2)) && CraftingMaterial.PHOTOACTIVE_ADVANCED_CIRCUIT_PLATE.equals(inv.getStackInSlot(0))) {
-				return lvl > 0 ? CraftingMaterial.RAW_ADVANCED_CIRCUIT_PANEL.getStackNormal() : ItemStack.EMPTY;
-			} else if (CraftingMaterial.BLUEPRINT_ELITE_CIRCUIT.equals(inv.getStackInSlot(2)) && CraftingMaterial.PHOTOACTIVE_ADVANCED_CIRCUIT_PLATE.equals(inv.getStackInSlot(0))) { return lvl > 1 ? CraftingMaterial.RAW_ELITE_CIRCUIT_PANEL.getStackNormal() : ItemStack.EMPTY; }
-		}
-		return ItemStack.EMPTY;
-	}
-
-	private int getTime() {
-		if (!inv.getStackInSlot(2).isEmpty() && CraftingMaterial.equals(inv.getStackInSlot(2).getItem())) {
-			if (CraftingMaterial.BLUEPRINT_BASIC_CIRCUIT.equals(inv.getStackInSlot(2)) && CraftingMaterial.PHOTOACTIVE_BASIC_CIRCUIT_PLATE.equals(inv.getStackInSlot(0))) {
-				return 500;
-			} else if (CraftingMaterial.BLUEPRINT_NORMAL_CIRCUIT.equals(inv.getStackInSlot(2)) && CraftingMaterial.PHOTOACTIVE_BASIC_CIRCUIT_PLATE.equals(inv.getStackInSlot(0))) {
-				return 1000;
-			} else if (CraftingMaterial.BLUEPRINT_ADVANCED_CIRCUIT.equals(inv.getStackInSlot(2)) && CraftingMaterial.PHOTOACTIVE_ADVANCED_CIRCUIT_PLATE.equals(inv.getStackInSlot(0))) {
-				return 1600;
-			} else if (CraftingMaterial.BLUEPRINT_ELITE_CIRCUIT.equals(inv.getStackInSlot(2)) && CraftingMaterial.PHOTOACTIVE_ADVANCED_CIRCUIT_PLATE.equals(inv.getStackInSlot(0))) { return 2500; }
-		}
-		return 0;
 	}
 
 	@Override
@@ -132,21 +105,17 @@ public class TileEntityUVLightbox extends TileEntityMachineBase {
 	public int[] getInputSlots() {
 		return new int[]{0};
 	}
-
 	@Override
 	public void checkItems() {
-		ItemStack s = getRecipe();
-		if (!s.isEmpty()) {
-			ItemStack s2 = s.copy();
-			s2.setCount(1);
-			ItemStackChecker c = new ItemStackChecker(s2).setExtra2(s.getCount());
-			checkItems(c, 1, maxProgress = getTime(), 4, 0);
-			setOut(0, c);
+		ItemStackChecker s = MachineCraftingHandler.getUVBoxOutput(inv.getStackInSlot(0), inv.getStackInSlot(2));
+		if (s != null) {
+			checkItems(s, 1, maxProgress = s.getExtra3(), 0, -1);
+			setOut(0, s);
 		}
 	}
 
 	@Override
 	public void finish() {
-		addItemsAndSetProgress(getOutput(0), 1, 4, 0);
+		addItemsAndSetProgress(getOutput(0), 1, 0, -1);
 	}
 }

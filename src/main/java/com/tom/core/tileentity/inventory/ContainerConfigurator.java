@@ -15,12 +15,12 @@ import net.minecraft.world.World;
 
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.IGuiTile;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.handler.ConfiguratorHandler;
 import com.tom.handler.ConfiguratorHandler.ConfigurableDevice;
 import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.network.messages.MessageNBT;
+import com.tom.util.TomsModUtils;
 
 public class ContainerConfigurator extends ContainerTomsMod {
 	public static class MissingConfigurableTileExteption extends RuntimeException {

@@ -2,8 +2,6 @@ package com.tom.storage.tileentity.gui;
 
 import java.io.IOException;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,12 +9,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
+import com.tom.api.gui.GuiTomsLib;
+import com.tom.lib.utils.RenderUtil;
 import com.tom.storage.tileentity.TileEntityLimitableChest;
 import com.tom.storage.tileentity.inventory.ContainerLimitableChest;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiLimitableChest extends GuiTomsMod {
+public class GuiLimitableChest extends GuiTomsLib {
 	private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 	// private static final ResourceLocation LIST_TEXTURE = new
 	// ResourceLocation("tomsmod:textures/gui/resSelect.png");
@@ -44,8 +42,8 @@ public class GuiLimitableChest extends GuiTomsMod {
 		for (int i = 0;i < a;i++) {
 			int x = guiLeft + (18 * 8) + 8 - (18 * ((i < 9 ? i + 1 : i) % 9));
 			int y = guiTop + (18 * 2) + 18 - (18 * (i / 9));
-			Render.setColourWithAlphaPercent(0xFF0000, 50);
-			Render.drawRect(x, y, 16, 16);
+			RenderUtil.setColourWithAlphaPercent(0xFF0000, 50);
+			RenderUtil.drawRect(x, y, 16, 16);
 		}
 	}
 
@@ -112,7 +110,7 @@ public class GuiLimitableChest extends GuiTomsMod {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				// FontRenderer fontrenderer = mc.fontRendererObj;
 				mc.getTextureManager().bindTexture(LIST_TEXTURE);
@@ -130,7 +128,7 @@ public class GuiLimitableChest extends GuiTomsMod {
 				// 20,/**u*/ this.width / 2, this.height);
 				this.mouseDragged(mc, mouseX, mouseY);
 				/*int j = 14737632;
-				
+
 				if (packedFGColour != 0)
 				{
 				    j = packedFGColour;

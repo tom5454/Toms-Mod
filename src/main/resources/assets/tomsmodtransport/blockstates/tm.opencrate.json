@@ -1,0 +1,10 @@
+{
+	"variants":{
+	    "facing=down": {"model": "tomsmodtransport:opencrate"},
+		"facing=up": {"model": "tomsmodtransport:opencrate", "x": 180},
+		"facing=north": {"model": "tomsmodtransport:opencrate", "x": 90, "y": 180},
+		"facing=south": {"model": "tomsmodtransport:opencrate", "x": 90},
+		"facing=east": {"model": "tomsmodtransport:opencrate", "y": 270, "x": 90},
+		"facing=west": {"model": "tomsmodtransport:opencrate", "y": 90, "x": 90}
+	}
+}

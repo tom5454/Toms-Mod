@@ -1,0 +1,19 @@
+{
+  "heat": 1700,
+  "time": 5000,
+  "in2": {
+    "item": "tomsmodcore:dust",
+    "data": 31,
+    "count": 1
+  },
+  "in1": {
+    "item": "tomsmodcore:dust",
+    "data": 29,
+    "count": 2
+  },
+  "out": {
+    "item": "tomsmodcore:ingot",
+    "data": 29,
+    "count": 2
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "minecraft:glass",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:material",
+    "data": 33,
+    "count": 1
+  }
+}

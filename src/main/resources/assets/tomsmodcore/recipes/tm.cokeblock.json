@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodfactory:tm.cokeblock",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "CCC",
+    "CCC",
+    "CCC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "C": {
+      "item": "tomsmodfactory:tm.coalcoke",
+      "data": 0
+    }
+  }
+}

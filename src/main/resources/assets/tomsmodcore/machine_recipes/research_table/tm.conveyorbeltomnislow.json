@@ -1,0 +1,30 @@
+{
+  "researches": [
+    "tomsmodcore:conveyorbelts"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodtransport:tm.conveyorbeltomnislow",
+      "data": 0,
+      "count": 8
+    },
+    "pattern": [
+      "CCC",
+      "CSC",
+      "CCC"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "C": {
+        "item": "tomsmodtransport:tm.conveyorbeltslow",
+        "data": 0
+      },
+      "S": {
+        "ore": "slimeball",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 100
+}

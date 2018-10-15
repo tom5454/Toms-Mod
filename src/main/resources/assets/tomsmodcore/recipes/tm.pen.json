@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodcore:tm.pen",
+    "data": 0,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "tomsmodcore:tm.acidrinkbottle",
+      "data": 0
+    },
+    {
+      "item": "tomsmodcore:tm.pen",
+      "data": 1
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

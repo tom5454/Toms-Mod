@@ -87,7 +87,7 @@ public class PowerCache implements IEnergyStorage {
 	}
 
 	@Override
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		int maxStored = 0;
 		for (int i = 0;i < energyStorages.size();i++) {
 			maxStored += energyStorages.get(i).getMaxEnergyStored();

@@ -6,11 +6,11 @@ import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -36,13 +36,13 @@ import com.tom.api.item.ISwitch;
 import com.tom.api.item.IWrench;
 import com.tom.api.tileentity.AccessType;
 import com.tom.api.tileentity.ISecurityStation;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.tileentity.TileEntityForceField;
 import com.tom.defense.tileentity.TileEntityForceFieldProjector;
 import com.tom.handler.ConfiguratorHandler;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 import com.tom.handler.WrenchHandler;
 
 public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwitch, IConfigurator, IModelRegisterRequired {
@@ -83,8 +83,7 @@ public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwit
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		double energy = this.getEnergyStored(stack);
 		double per = energy * 100 / capacity;
 		int p = MathHelper.floor(per);
@@ -116,13 +115,15 @@ public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwit
 	}
 
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		subItems.add(new ItemStack(itemIn, 1, 0));
-		ItemStack is = new ItemStack(itemIn, 1, 0);
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setDouble("Energy", capacity);
-		is.setTagCompound(tag);
-		subItems.add(is);
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if(isInCreativeTab(tab)){
+			subItems.add(new ItemStack(this, 1, 0));
+			ItemStack is = new ItemStack(this, 1, 0);
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setDouble("Energy", capacity);
+			is.setTagCompound(tag);
+			subItems.add(is);
+		}
 	}
 
 	@Override
@@ -326,5 +327,13 @@ public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwit
 		CoreInit.registerRender(this, 2, "tomsmoddefense:" + getUnlocalizedName(new ItemStack(this, 1, 2)).substring(5));
 		CoreInit.registerRender(this, 3, "tomsmoddefense:" + getUnlocalizedName(new ItemStack(this, 1, 3)).substring(5));
 		CoreInit.registerRender(this, 4, "tomsmoddefense:" + getUnlocalizedName(new ItemStack(this, 1, 4)).substring(5));
+	}
+	@Override
+	public ItemStack getContainerItem(ItemStack itemStack) {
+		return itemStack;
+	}
+	@Override
+	public boolean hasContainerItem(ItemStack stack) {
+		return true;
 	}
 }

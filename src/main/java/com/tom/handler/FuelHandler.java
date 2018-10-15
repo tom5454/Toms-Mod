@@ -1,30 +1,24 @@
 package com.tom.handler;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.IFuelHandler;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 import com.google.common.base.Predicate;
 
-import com.tom.apis.DefaultedHashMap;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
-import com.tom.lib.Configs;
+import com.tom.lib.utils.Modids;
+import com.tom.util.DefaultedHashMap;
+import com.tom.util.TMLogger;
 
-public class FuelHandler implements IFuelHandler {
+public class FuelHandler {
 	public static final FuelHandler INSTANCE = new FuelHandler();
-	private static final Map<ItemStack, Integer> extra = new HashMap<>();
 	private static final Map<Fluid, Integer> fluidBurnTimes = new DefaultedHashMap<>(-1);
 	public static final Predicate<Fluid> IS_FLUID_FUEL_PREDICATE = new Predicate<Fluid>() {
 
@@ -40,26 +34,6 @@ public class FuelHandler implements IFuelHandler {
 			return input != null ? IS_FLUID_FUEL_PREDICATE.apply(input.getFluid()) : false;
 		}
 	};
-
-	@Override
-	public int getBurnTime(ItemStack fuel) {
-		return fuel != null && fuel.getItem() instanceof IBurnable ? ((IBurnable) fuel.getItem()).getBurnTime(fuel) : getOtherValue(fuel);
-	}
-
-	private static int getOtherValue(ItemStack stack) {
-		for (Entry<ItemStack, Integer> e : extra.entrySet()) {
-			if (TomsModUtils.areItemStacksEqual(stack, e.getKey(), true, false, false)) { return e.getValue(); }
-		}
-		return 0;
-	}
-
-	public static interface IBurnable {
-		int getBurnTime(ItemStack stack);
-	}
-
-	public static void registerExtraFuelHandler(ItemStack stack, int burnTime) {
-		extra.put(stack, burnTime);
-	}
 
 	public static void registerFluidFuelHandler(Fluid fluid, int burnTime) {
 		fluidBurnTimes.put(fluid, burnTime);
@@ -91,11 +65,11 @@ public class FuelHandler implements IFuelHandler {
 		tag.setString(EIOConstants.KEY_FLUID_NAME, fluid.getName());
 		tag.setInteger(EIOConstants.KEY_TOTAL_BURN_TIME, Config.getEIOBurnTime(fluid.getName(), burnTime * 5));
 		tag.setInteger(EIOConstants.KEY_POWER_PER_CYCLE, Config.getEIOPowerPerCycle(fluid.getName(), burnTime * 2 / 10));
-		FMLInterModComms.sendMessage(Configs.EIO, EIOConstants.FLUID_FUEL_ADD, tag);
+		FMLInterModComms.sendMessage(Modids.EIO, EIOConstants.FLUID_FUEL_ADD, tag);
 	}
 
 	private static void callRailcraft(Fluid fluid, int burnTime) {
-		FMLInterModComms.sendMessage(Configs.Railcraft, RailcraftConstants.FLUID_FUEL_ADD, RailcraftConstants.format(fluid.getName(), burnTime));
+		FMLInterModComms.sendMessage(Modids.Railcraft, RailcraftConstants.FLUID_FUEL_ADD, RailcraftConstants.format(fluid.getName(), burnTime));
 	}
 
 	public static class EIOConstants {

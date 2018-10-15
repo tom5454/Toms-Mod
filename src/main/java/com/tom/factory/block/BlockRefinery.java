@@ -11,12 +11,12 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.block.BlockMultiblockController;
-import com.tom.apis.MultiBlockPos;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.tileentity.TileEntityMultiblock;
 import com.tom.factory.tileentity.TileEntityRefinery;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.MultiBlockPos;
+import com.tom.util.TomsModUtils;
 
 public class BlockRefinery extends BlockMultiblockController {
 

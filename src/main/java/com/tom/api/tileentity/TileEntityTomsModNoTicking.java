@@ -3,6 +3,7 @@ package com.tom.api.tileentity;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -19,9 +20,7 @@ import net.minecraft.world.WorldServer;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
@@ -34,14 +33,15 @@ import com.tom.api.energy.EnergyType.EnergyHandlerReceiver;
 import com.tom.api.energy.IEnergyHandler;
 import com.tom.api.energy.IEnergyProvider;
 import com.tom.api.energy.IEnergyReceiver;
-import com.tom.api.energy.IEnergyStorageHandler;
 import com.tom.api.energy.IEnergyStorageTile;
 import com.tom.api.energy.IRFMachine;
-import com.tom.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.tileentity.ITMPeripheral;
+import com.tom.lib.api.tileentity.ITMPeripheral.ISidedTMPeripheral;
 
 public class TileEntityTomsModNoTicking extends TileEntity {
 	@SuppressWarnings("rawtypes")
-	protected Map<Capability, Map<EnumFacing, ?>> capabilityMap = new HashMap<>();
+	protected Map<Capability, Map<EnumFacing, Supplier<Object>>> capabilityMap = new HashMap<>();
 	protected boolean /*added = false, */ initLater = false;
 
 	public TileEntityTomsModNoTicking() {
@@ -56,71 +56,81 @@ public class TileEntityTomsModNoTicking extends TileEntity {
 	protected final void initializeCapabilities() {
 		capabilityMap = new HashMap<>();
 		if (this instanceof IInventory && canHaveInventory(null)) {
-			EnumMap<EnumFacing, IItemHandler> itemHandlerSidedMap;
+			EnumMap<EnumFacing, Supplier<Object>> itemHandlerSidedMap;
 			capabilityMap.put(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, itemHandlerSidedMap = new EnumMap<>(EnumFacing.class));
 			if (this instanceof ISidedInventory) {
 				ISidedInventory thisInv = (ISidedInventory) this;
 				for (EnumFacing f : EnumFacing.VALUES) {
-					if (canHaveInventory(f))
-						itemHandlerSidedMap.put(f, new SidedInvWrapper(thisInv, f));
+					if (canHaveInventory(f)){
+						Object o = new SidedInvWrapper(thisInv, f);
+						itemHandlerSidedMap.put(f, () -> o);
+					}
 				}
 			} else {
 				InvWrapper thisInv = new InvWrapper((IInventory) this);
 				for (EnumFacing f : EnumFacing.VALUES) {
 					if (canHaveInventory(f))
-						itemHandlerSidedMap.put(f, thisInv);
+						itemHandlerSidedMap.put(f, () -> thisInv);
 				}
 			}
 		}
 		if (this instanceof IEnergyStorageTile && canHaveEnergyHandler(null)) {
-			EnumMap<EnumFacing, IEnergyStorageHandler> energyHandlerMap;
+			EnumMap<EnumFacing, Supplier<Object>> energyHandlerMap;
 			capabilityMap.put(EnergyType.ENERGY_HANDLER_CAPABILITY, energyHandlerMap = new EnumMap<>(EnumFacing.class));
 			if (this instanceof IEnergyHandler) {
 				IEnergyHandler thisHandler = (IEnergyHandler) this;
 				for (EnumFacing f : EnumFacing.VALUES) {
-					if (canHaveEnergyHandler(f))
-						energyHandlerMap.put(f, new EnergyHandlerNormal(thisHandler, f));
+					if (canHaveEnergyHandler(f)){
+						Object o = new EnergyHandlerNormal(thisHandler, f);
+						energyHandlerMap.put(f, () -> o);
+					}
 				}
 			} else if (this instanceof IEnergyReceiver) {
 				IEnergyReceiver thisHandler = (IEnergyReceiver) this;
 				for (EnumFacing f : EnumFacing.VALUES) {
-					if (canHaveEnergyHandler(f))
-						energyHandlerMap.put(f, new EnergyHandlerReceiver(thisHandler, f));
+					if (canHaveEnergyHandler(f)){
+						Object o = new EnergyHandlerReceiver(thisHandler, f);
+						energyHandlerMap.put(f, () -> o);
+					}
 				}
 			} else if (this instanceof IEnergyProvider) {
 				IEnergyProvider thisHandler = (IEnergyProvider) this;
 				for (EnumFacing f : EnumFacing.VALUES) {
-					if (canHaveEnergyHandler(f))
-						energyHandlerMap.put(f, new EnergyHandlerProvider(thisHandler, f));
+					if (canHaveEnergyHandler(f)){
+						Object o = new EnergyHandlerProvider(thisHandler, f);
+						energyHandlerMap.put(f, () -> o);
+					}
 				}
 			}
 		}
 		if (this instanceof ITileFluidHandler && canHaveFluidHandler(null)) {
-			EnumMap<EnumFacing, IFluidHandler> fluidHandlerMap;
+			EnumMap<EnumFacing, Supplier<Object>> fluidHandlerMap;
 			capabilityMap.put(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, fluidHandlerMap = new EnumMap<>(EnumFacing.class));
 			ITileFluidHandler thisFluid = (ITileFluidHandler) this;
 			for (EnumFacing f : EnumFacing.VALUES) {
-				if (canHaveFluidHandler(f))
-					fluidHandlerMap.put(f, new FluidHandlerWrapper(f, thisFluid));
+				if (canHaveFluidHandler(f)){
+					Object o = new FluidHandlerWrapper(f, thisFluid);
+					fluidHandlerMap.put(f, () -> o);
+				}
 			}
 		}
 		if (this instanceof ISecuredTileEntity) {
 			ISecuredTileEntity t = (ISecuredTileEntity) this;
-			Map<EnumFacing, ISecuredTileEntity> map = new HashMap<>();
-			map.put(null, t);
+			Map<EnumFacing, Supplier<Object>> map = new HashMap<>();
+			map.put(null, () -> t);
 			for (EnumFacing f : EnumFacing.VALUES) {
-				map.put(f, t);
+				map.put(f, () -> t);
 			}
 			capabilityMap.put(Capabilities.SECURED_TILE, map);
 		}
 		if (this instanceof IConfigurable) {
 			IConfigurable t = (IConfigurable) this;
-			Map<EnumFacing, IConfigurable> map = new HashMap<>();
+			Map<EnumFacing, Supplier<Object>> map = new HashMap<>();
 			if (isConfigurableSide(null))
-				map.put(null, t);
+				map.put(null, () -> t);
 			for (EnumFacing f : EnumFacing.VALUES) {
 				if (isConfigurableSide(f))
-					map.put(f, t);
+					map.put(f, () -> t);
 			}
 			capabilityMap.put(Capabilities.CONFIGURABLE, map);
 		}
@@ -128,14 +138,20 @@ public class TileEntityTomsModNoTicking extends TileEntity {
 			capabilityMap.putAll(((IRFMachine) this).initCapabilities());
 		}
 		if (this instanceof IGridDevice) {
-			Map<EnumFacing, IGridDevice<?>> map = new HashMap<>();
+			Map<EnumFacing, Supplier<Object>> map = new HashMap<>();
 			IGridDevice<?> d = (IGridDevice<?>) this;
 			for (EnumFacing f : EnumFacing.VALUES) {
 				if (d.isValidConnection(f))
-					map.put(f, d);
+					map.put(f, () -> d);
 			}
-			map.put(null, d);
+			map.put(null, () -> d);
 			capabilityMap.put(Capabilities.GRID_DEVICE, map);
+		}
+		if(this instanceof ITMPeripheral){
+			ITMPeripheral.Handler.initCapabilities(capabilityMap, (ITMPeripheral) this);
+		}
+		if(this instanceof ISidedTMPeripheral){
+			ITMPeripheral.Handler.initCapabilitiesSided(capabilityMap, (ISidedTMPeripheral) this);
 		}
 		initializeCapabilitiesI();
 	}
@@ -236,9 +252,9 @@ public class TileEntityTomsModNoTicking extends TileEntity {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected final <T> T getInstance(Map<EnumFacing, ?> in, EnumFacing f, Capability<T> capability) {
+	protected final <T> T getInstance(Map<EnumFacing, Supplier<Object>> in, EnumFacing f, Capability<T> capability) {
 		try {
-			return (T) (in.get(f));
+			return (T) (in.get(f).get());
 		} catch (ClassCastException e) {
 		}
 		return getCapabilityI(capability, f);

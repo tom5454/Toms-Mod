@@ -1,0 +1,17 @@
+{
+  "in2": {
+    "item": "tomsmodcore:material",
+    "data": 62,
+    "count": 1
+  },
+  "in1": {
+    "item": "tomsmodcore:ingot",
+    "data": 26,
+    "count": 4
+  },
+  "out": {
+    "item": "tomsmodcore:material",
+    "data": 13,
+    "count": 4
+  }
+}

@@ -20,12 +20,12 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.IHeatSource;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.RubberBoiler;
 import com.tom.lib.Configs;
 import com.tom.recipes.OreDict;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityRubberBoiler extends TileEntityTomsMod implements ISidedInventory, ITileFluidHandler {
 	public static final int MAX_PROGRESS = 300;
@@ -36,6 +36,7 @@ public class TileEntityRubberBoiler extends TileEntityTomsMod implements ISidedI
 	private double heat = 20;
 	public int maxHeat;
 	public int clientHeat;
+	private int type;
 
 	@Override
 	public int getSizeInventory() {
@@ -181,29 +182,29 @@ public class TileEntityRubberBoiler extends TileEntityTomsMod implements ISidedI
 							decrStackSize(0, 1);
 							progress = MAX_PROGRESS;
 							active = true;
+							type = 0;
+						}else if (OreDict.isOre(inv.getStackInSlot(0), "leavesRubber")) {
+							decrStackSize(0, 1);
+							progress = 60;
+							active = true;
+							type = 1;
 						}
 					} else if (progress == 0) {
-						ItemStack stack = inv.getStackInSlot(1);
-						if (stack.isEmpty()) {
-							inv.setInventorySlotContents(1, new ItemStack(Items.COAL, 1, 1));
-							progress = -1;
-						} else if (stack.getItem() == Items.COAL && stack.getMetadata() == 1 && stack.getCount() < stack.getMaxStackSize()) {
-							stack.grow(1);
-							progress = -1;
-						}
+						if(type == 0){
+							ItemStack stack = inv.getStackInSlot(1);
+							if (stack.isEmpty()) {
+								inv.setInventorySlotContents(1, new ItemStack(Items.COAL, 1, 1));
+								progress = -1;
+							} else if (stack.getItem() == Items.COAL && stack.getMetadata() == 1 && stack.getCount() < stack.getMaxStackSize()) {
+								stack.grow(1);
+								progress = -1;
+							}
+						}else progress = -1;
 						active = true;
 					} else {
-						if (progress % 3 == 0)
-							resin.fill(new FluidStack(CoreInit.resin.get(), 1), true);
-						progress--;
-						heat -= 0.01;
+						process();
 						active = true;
-						if (heat > 900) {
-							if (progress % 3 == 0)
-								resin.fill(new FluidStack(CoreInit.resin.get(), 1), true);
-							progress--;
-							heat -= 0.01;
-						}
+						if (heat > 900)process();
 					}
 				}
 			}
@@ -230,6 +231,13 @@ public class TileEntityRubberBoiler extends TileEntityTomsMod implements ISidedI
 		}
 	}
 
+	private void process(){
+		if (progress % 3 == 0)
+			resin.fill(new FluidStack(CoreInit.resin.get(), 1), true);
+		progress--;
+		heat -= 0.01;
+	}
+
 	public EnumFacing getFacing(IBlockState state) {
 		return state.getValue(RubberBoiler.FACING);
 	}
@@ -246,6 +254,7 @@ public class TileEntityRubberBoiler extends TileEntityTomsMod implements ISidedI
 		compound.setTag("cresin", cresin.writeToNBT(new NBTTagCompound()));
 		compound.setInteger("progress1", drained);
 		compound.setInteger("progress2", progress);
+		compound.setInteger("recipe", type);
 		return super.writeToNBT(compound);
 	}
 
@@ -258,6 +267,7 @@ public class TileEntityRubberBoiler extends TileEntityTomsMod implements ISidedI
 		cresin.readFromNBT(compound.getCompoundTag("cresin"));
 		drained = compound.getInteger("progress1");
 		progress = compound.getInteger("progress2");
+		type = compound.getInteger("recipe");
 	}
 
 	public IHeatSource getHeatSource() {

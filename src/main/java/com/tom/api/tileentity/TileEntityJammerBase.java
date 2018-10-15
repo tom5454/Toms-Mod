@@ -1,19 +1,12 @@
 package com.tom.api.tileentity;
 
-import java.util.List;
-
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.AxisAlignedBB;
 
-import com.tom.core.CoreInit;
+import com.tom.handler.TMWorldHandler;
 
-import com.tom.core.item.Tablet;
-
-public class TileEntityJammerBase extends TileEntityTomsMod {
+public class TileEntityJammerBase extends TileEntityTomsMod implements IJammer {
 	// public boolean connected = false;
 	// public int posX = 0;
 	// public int posY = 0;
@@ -34,12 +27,9 @@ public class TileEntityJammerBase extends TileEntityTomsMod {
 			TileEntity tilee = worldObj.getTileEntity(posX, posY, posZ);
 			this.linked = tilee instanceof IWirelessPeripheralController;
 		}*/
-		int xCoord = pos.getX();
-		int yCoord = pos.getY();
-		int zCoord = pos.getZ();
 		this.active = !(world.isBlockIndirectlyGettingPowered(pos) > 0);
 		if (this.active) {
-			List<EntityPlayer> entities = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(xCoord - this.getRange(), yCoord - this.getRange(), zCoord - this.getRange(), xCoord + this.getRange() + 1, yCoord + this.getRange() + 1, zCoord + this.getRange() + 1));
+			/*List<EntityPlayer> entities = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(xCoord - this.getRange(), yCoord - this.getRange(), zCoord - this.getRange(), xCoord + this.getRange() + 1, yCoord + this.getRange() + 1, zCoord + this.getRange() + 1));
 			// this.players.clear();
 			// boolean c = false;
 			// TileEntityWirelessPeripheral te = (TileEntityWirelessPeripheral)
@@ -48,7 +38,8 @@ public class TileEntityJammerBase extends TileEntityTomsMod {
 				if (entity instanceof EntityPlayer) {
 					EntityPlayer player = (EntityPlayer) entity;
 					if (player.getDistance(xCoord, yCoord, zCoord) < this.getRange()) {
-						{
+						PlayerHandler.getPlayerHandler(player).tabletHandler.jammers.add(this);
+						/*{
 							ItemStack held = player.getHeldItemMainhand();
 							if (held != null && held.getItem() == CoreInit.Tablet) {
 								Tablet tab = (Tablet) held.getItem();
@@ -111,8 +102,8 @@ public class TileEntityJammerBase extends TileEntityTomsMod {
 									item.getTagCompound().setInteger("jz", zCoord);
 								}
 							}
-						}
-					}
+						}*/
+			/*	}
 				}
 			}
 			// this.connected = c;
@@ -123,7 +114,9 @@ public class TileEntityJammerBase extends TileEntityTomsMod {
 			// }
 			// }
 			this.markDirty();
-			markBlockForUpdate(pos);
+			markBlockForUpdate(pos);*/
+		}else{
+			TMWorldHandler.removeJammer(this);
 		}
 	}
 
@@ -222,4 +215,16 @@ public class TileEntityJammerBase extends TileEntityTomsMod {
 	public int getRange() {
 		return 32;
 	}
+
+
+	@Override
+	public boolean isValid() {
+		return !isInvalid();
+	}
+
+	@Override
+	public boolean isAccessible(double x, double y, double z) {
+		return isValid() && pos.distanceSqToCenter(x, y, z) <= getRange() * getRange();
+	}
+
 }

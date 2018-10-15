@@ -11,18 +11,17 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.network.INBTPacketReceiver;
-import com.tom.apis.TomsModUtils;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.tileentity.TileEntityDefenseStation;
 import com.tom.defense.tileentity.TileEntityDefenseStation.DefenseStationConfig;
 import com.tom.defense.tileentity.inventory.ContainerDefenseStation;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiDefenseStation extends GuiTomsMod implements INBTPacketReceiver {
+public class GuiDefenseStation extends GuiTomsLib implements INBTPacketReceiver {
 	private GuiButtonDefenseStationSelection buttonSelection;
 	private TileEntityDefenseStation te;
 	private GuiButton whiteListButton;
@@ -142,7 +141,7 @@ public class GuiDefenseStation extends GuiTomsMod implements INBTPacketReceiver 
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:watercollector"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.watercollector",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "BIB",
+      "IWI",
+      "BRB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "item": "minecraft:redstone",
+        "data": 0
+      },
+      "W": {
+        "item": "minecraft:water_bucket",
+        "data": 0
+      },
+      "I": {
+        "item": "minecraft:iron_bars",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 700
+}

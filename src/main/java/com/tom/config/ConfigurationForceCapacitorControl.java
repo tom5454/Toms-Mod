@@ -2,8 +2,6 @@ package com.tom.config;
 
 import java.util.List;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -15,15 +13,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.IConfigurable.IConfigurationOption;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.tileentity.TileEntityForceCapacitor;
 import com.tom.defense.tileentity.inventory.ContainerSecurityStation.SlotPowerLinkCard;
+import com.tom.lib.utils.RenderUtil;
 
 import com.tom.core.tileentity.gui.GuiConfigurator.GuiButtonConfig;
-import com.tom.core.tileentity.gui.GuiTomsMod;
 
 public final class ConfigurationForceCapacitorControl implements IConfigurationOption {
 	private IInventory inventory;
@@ -43,9 +42,9 @@ public final class ConfigurationForceCapacitorControl implements IConfigurationO
 	@SideOnly(Side.CLIENT)
 	public void renderBackground(Minecraft mc, int x, int y) {
 		mc.renderEngine.bindTexture(securitySlotLocation);
-		Render.drawTexturedRect(x + 1, y + 21, 18, 18);
+		RenderUtil.drawTexturedRect(x + 1, y + 21, 18, 18);
 		mc.renderEngine.bindTexture(powerlinkSlotLocation);
-		Render.drawTexturedRect(x + 19, y + 21, 18, 18);
+		RenderUtil.drawTexturedRect(x + 19, y + 21, 18, 18);
 	}
 
 	@Override
@@ -127,17 +126,17 @@ public final class ConfigurationForceCapacitorControl implements IConfigurationO
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float partTicks) {
 			if (controlType) {
 				displayString = I18n.format("tomsmod.gui.forcecap_iconDrainAll");
 			} else {
 				displayString = I18n.format("tomsmod.gui.forcecap_iconEqual");
 			}
-			super.drawButton(mc, mouseX, mouseY);
+			super.drawButton(mc, mouseX, mouseY, partTicks);
 		}
 
 		@Override
-		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
+		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsLib gui) {
 			if (this.visible) {
 				if (hovered) {
 					gui.drawHoveringTextI(I18n.format(controlType ? "tomsmod.gui.forcecap_tooltipDrainAll" : "tomsmod.gui.forcecap_tooltipEqual"), mouseX, mouseY);

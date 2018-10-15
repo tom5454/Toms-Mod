@@ -1,7 +1,6 @@
 package com.tom.toolsAndCombat;
 
-import static com.tom.api.recipes.RecipeHelper.addRecipe;
-import static com.tom.api.recipes.RecipeHelper.addShapelessRecipe;
+import static com.tom.api.recipes.RecipeHelper.*;
 import static com.tom.core.CoreInit.registerItem;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import com.tom.toolsAndCombat.item.PortableComparator;
 
 @Mod(modid = ToolsInit.modid, name = ToolsInit.modName, version = Configs.version, dependencies = Configs.coreDependencies)
 public class ToolsInit {
-	public static final String modid = Configs.ModidL + "|toolsandcombat";
+	public static final String modid = Configs.ModidL + "toolsandcombat";
 	public static final String modName = Configs.ModName + " Tools And Combat";
 	public static final Logger log = LogManager.getLogger(modName);
 	public static CreativeTabs tabTomsModToolsAndCombat = CoreInit.tabTomsModToolsAndCombat;
@@ -52,18 +51,18 @@ public class ToolsInit {
 		if (!Config.toolsNeedHammer) {
 			toolShape = new String[][]{{"MMM", " S ", " S "}, {"MM ", "MS ", " S "}, {" M ", " S ", " S "}, {" MM", " S ", " S "}, {" M ", " M ", " S "}};
 		}
-		if (Config.enableHardRecipes) {
+		/*if (Config.enableHardRecipes) {
 			log.warn("Hard mode enabled");
 			flintToolMaterial = EnumHelper.addToolMaterial("flintToolMaterial", 0, 150, 2F, 1F, 1);
 			copperToolMaterial = EnumHelper.addToolMaterial("copperToolMaterial", 1, 300, 2.5F, 1.5F, 4);
 			bronzeToolMaterial = EnumHelper.addToolMaterial("bronzeToolMaterial", 2, 512, 3.2F, 2.5F, 8);
 			steelToolMaterial = EnumHelper.addToolMaterial("steelToolMaterial", 3, 800, 3.8F, 3F, 10);
-		} else {
-			flintToolMaterial = EnumHelper.addToolMaterial("flintToolMaterial", 0, 200, 3F, 1.5F, 2);
-			copperToolMaterial = EnumHelper.addToolMaterial("copperToolMaterial", 1, 400, 3.5F, 1.8F, 6);
-			bronzeToolMaterial = EnumHelper.addToolMaterial("bronzeToolMaterial", 2, 580, 4.2F, 2.5F, 12);
-			steelToolMaterial = EnumHelper.addToolMaterial("steelToolMaterial", 3, 900, 4.8F, 3F, 15);
-		}
+		} else {*/
+		flintToolMaterial = EnumHelper.addToolMaterial("flintToolMaterial", 0, 200, 3F, 1.5F, 2);
+		copperToolMaterial = EnumHelper.addToolMaterial("copperToolMaterial", 1, 400, 3.5F, 1.8F, 6);
+		bronzeToolMaterial = EnumHelper.addToolMaterial("bronzeToolMaterial", 2, 580, 4.2F, 2.5F, 12);
+		steelToolMaterial = EnumHelper.addToolMaterial("steelToolMaterial", 3, 900, 4.8F, 3F, 15);
+		//}
 		flint = new ToolGroup(flintToolMaterial, -3.2F, ToolGroup.defaultHead, "", 0).setUnlocalizedName("flint").setCreativeTab(tabTomsModToolsAndCombat);
 		copper = new ToolGroup(copperToolMaterial, -2.6F, null, "plateCopper", TMResource.COPPER.getMaterialLevel()).setUnlocalizedName("copper").setCreativeTab(tabTomsModToolsAndCombat);
 		bronze = new ToolGroup(bronzeToolMaterial, -2.2F, null, "plateBronze", TMResource.BRONZE.getMaterialLevel()).setUnlocalizedName("bronze").setCreativeTab(tabTomsModToolsAndCombat);

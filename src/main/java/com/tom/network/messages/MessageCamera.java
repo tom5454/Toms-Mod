@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 import com.tom.api.tileentity.ILookDetector;
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 
 import com.tom.core.tileentity.TileEntityCamera;
 

@@ -5,10 +5,10 @@ import net.minecraft.item.ItemStack;
 
 import com.tom.api.energy.IEnergyStorageTile;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TMLogger;
 import com.tom.config.Config;
 import com.tom.energy.EnergyInit;
 import com.tom.storage.tileentity.TMTank;
+import com.tom.util.TMLogger;
 
 import com.tom.core.block.BlockHidden;
 import com.tom.core.block.EnderMemory;

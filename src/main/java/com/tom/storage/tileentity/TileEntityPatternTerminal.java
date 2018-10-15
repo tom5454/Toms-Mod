@@ -14,10 +14,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.tileentity.IPatternTerminal;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
@@ -29,8 +29,7 @@ import com.tom.storage.handler.StorageNetworkGrid.CraftingPatternProperties;
 import com.tom.storage.handler.StorageNetworkGrid.ICraftingRecipeContainer;
 import com.tom.storage.handler.StorageNetworkGrid.IGridInputListener;
 import com.tom.storage.item.ItemCard.CardType;
-
-import com.tom.core.tileentity.gui.GuiTomsMod;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityPatternTerminal extends TileEntityBasicTerminal implements IPatternTerminal, IGridInputListener, IInventoryChangedListener, INBTPacketReceiver {
 	private InventoryBasic recipeInv;
@@ -332,7 +331,7 @@ public class TileEntityPatternTerminal extends TileEntityBasicTerminal implement
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void sendUpdate(GuiTomsMod gui, int id, int extra) {
+	public void sendUpdate(GuiTomsLib gui, int id, int extra) {
 		gui.sendButtonUpdate(id, pos, extra);
 	}
 

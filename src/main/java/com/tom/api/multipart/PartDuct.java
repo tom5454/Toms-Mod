@@ -15,12 +15,12 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import com.tom.api.grid.IGrid;
-import com.tom.api.grid.IGridDevice;
 import com.tom.api.tileentity.ICable;
-import com.tom.apis.Ticker;
-import com.tom.apis.TomsModUtils;
-import com.tom.handler.WorldHandler;
+import com.tom.lib.api.grid.IGrid;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.handler.WorldHandler;
+import com.tom.lib.utils.Ticker;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.container.IPartInfo;

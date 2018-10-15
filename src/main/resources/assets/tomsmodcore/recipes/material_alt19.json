@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 65,
+    "count": 1
+  },
+  "pattern": [
+    " BB",
+    "BCB",
+    "CB "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "B": {
+      "ore": "dyeWhite",
+      "type": "forge:ore_dict"
+    },
+    "C": {
+      "item": "minecraft:clay_ball",
+      "data": 0
+    }
+  }
+}

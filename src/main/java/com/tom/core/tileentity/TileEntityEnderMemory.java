@@ -1,27 +1,23 @@
 package com.tom.core.tileentity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
-import net.minecraftforge.fml.common.Optional;
+import com.tom.api.helpers.ComputerHelper;
+import com.tom.api.tileentity.TileEntityTomsModNoTicking;
+import com.tom.handler.TMPlayerHandler;
+import com.tom.lib.api.tileentity.ITMPeripheral;
+import com.tom.lib.utils.EmptyEntry;
+import com.tom.util.TomsModUtils;
 
-import com.tom.api.helpers.ComputerCraftHelper;
-import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.lib.Configs;
-import com.tom.lib.GlobalFields;
-
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeripheral {
+public class TileEntityEnderMemory extends TileEntityTomsModNoTicking implements ITMPeripheral {
+	public static Map<Integer, List<IComputer>> EnderMemoryIComputerAccess = new HashMap<>();
 	/**
 	 * { <br>
 	 * {*public { <br>
@@ -34,21 +30,14 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 	 *
 	 * } }
 	 */
+	public static HashMap<Integer, Entry<String, Object>> globals = new HashMap<>();
 	public String playerName = "";
-	private List<IComputerAccess> computers = new ArrayList<>();
+	//private List<IComputer> computers = new ArrayList<>();
 	public String pName = "tm_ender_memory";
-	public String[] methods = {"listMethods", "setPublic", "setPrivate", "getPublic", "getPrivate", "getPublicPlayerName", "getPlayerName", "queuePublicEvent", "queuePrivateEvent", "queuePublicDescEvent", "queuePrivateDescEvent"};
+	public String[] methods = {"listMethods", "setPublic", "setPrivate", "getPublic", "getPrivate", "getPublicPlayerName",
+			"getPlayerName", "queuePublicEvent", "queuePrivateEvent", "queuePublicDescEvent", "queuePrivateDescEvent",
+			"attactGlobalEventQueue", "detactGlobalEventQueue"};
 	private String name = "tileEntityEnderMemory";
-
-	// private int eventCooldown = 0;
-	public TileEntityEnderMemory() {
-		super();
-	}
-
-	@Override
-	public void validate() {
-
-	}
 
 	@Override
 	public String getType() {
@@ -65,17 +54,17 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+	public Object[] call(IComputer computer, String method, Object[] arguments) throws LuaException {
 		Object[] ret = {false, new Object()};
 		boolean retB = false;
-		int m = method;
-		if (m == 0) {
+		switch(method){
+		case "listMethods":
 			Object[] o = new Object[methods.length];
 			for (int i = 0;i < o.length;i++) {
 				o[i] = methods[i];
 			}
 			return o;
-		} else if (m == 1) {
+		case "setPublic":
 			if (arguments.length < 2) {
 				throw new LuaException("Too few arguments (expected num channel, Object)");
 			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 2)) {
@@ -88,12 +77,13 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
 				} else {
 					// Everything good
-					GlobalFields.EnderMemoryObj[0][0][channel][0] = this.playerName;
-					GlobalFields.EnderMemoryObj[0][0][channel][1] = arguments[1];
+					Entry<String, Object> e = new EmptyEntry<>(playerName, arguments[1]);
+					globals.put(channel, e);
 					retB = true;
 				}
 			}
-		} else if (m == 2) {
+			break;
+		case "setPrivate":
 			if (arguments.length < 2) {
 				throw new LuaException("Too few arguments (expected num channel, Object)");
 			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 2)) {
@@ -105,8 +95,14 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 				} else if (channel < 0) {
 					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
 				} else {
-					// Everything good
-					int[] list = find(GlobalFields.EnderMemoryObj[1], this.playerName);
+					TMPlayerHandler p = getPlayerHandler();
+					if(p != null){
+						// Everything good
+						p.EnderMemoryPrivate.put(channel, arguments[1]);
+					}else{
+						throw new LuaException("Missing player");
+					}
+					/*int[] list = find(GlobalFields.EnderMemoryObj[1], this.playerName);
 					boolean found = list[0] == 1;
 					if (found) {
 						int pos = list[1];
@@ -117,52 +113,62 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 						// TomsMathHelper.fillObjectSimple(65536);
 						GlobalFields.EnderMemoryObj[1][pos][0][0] = this.playerName;
 						GlobalFields.EnderMemoryObj[1][pos][1][channel] = arguments[1];
+					}*/
+					retB = true;
+				}
+			}
+			break;
+		case "getPublic":
+			if (arguments.length < 1) {
+				throw new LuaException("Too few arguments (expected num channel)");
+			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 1)) {
+				throw new LuaException("Bad argument #1 (expected number)");
+			} else {
+				int channel = MathHelper.floor((Double) arguments[0] - 1);
+				if (channel > 65535) {
+					throw new LuaException("Bad argument #1 (too big number (" + (channel + 1) + ") maximum value is 65536 )");
+				} else if (channel < 0) {
+					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
+				} else {
+					// Everything good
+					Entry<String, Object> e = globals.get(channel);
+					ret[1] = e == null ? null : e.getValue();
+					retB = true;
+				}
+			}
+			break;
+		case "getPrivate":
+			if (arguments.length < 1) {
+				throw new LuaException("Too few arguments (expected num channel)");
+			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 1)) {
+				throw new LuaException("Bad argument #1 (expected number)");
+			} else {
+				int channel = MathHelper.floor((Double) arguments[0] - 1);
+				if (channel > 65535) {
+					throw new LuaException("Bad argument #1 (too big number (" + (channel + 1) + ") maximum value is 65536 )");
+				} else if (channel < 0) {
+					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
+				} else {
+					TMPlayerHandler p = getPlayerHandler();
+					if(p != null){
+						// Everything good
+						ret[1] = p.EnderMemoryPrivate.get(channel);
+					}else{
+						throw new LuaException("Missing player");
 					}
 					retB = true;
-				}
-			}
-		} else if (m == 3) {
-			if (arguments.length < 1) {
-				throw new LuaException("Too few arguments (expected num channel)");
-			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 1)) {
-				throw new LuaException("Bad argument #1 (expected number)");
-			} else {
-				int channel = MathHelper.floor((Double) arguments[0] - 1);
-				if (channel > 65535) {
-					throw new LuaException("Bad argument #1 (too big number (" + (channel + 1) + ") maximum value is 65536 )");
-				} else if (channel < 0) {
-					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
-				} else {
-					// Everything good
-					ret[1] = GlobalFields.EnderMemoryObj[0][0][channel][1];
-					retB = true;
-				}
-			}
-		} else if (m == 4) {
-			if (arguments.length < 1) {
-				throw new LuaException("Too few arguments (expected num channel)");
-			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 1)) {
-				throw new LuaException("Bad argument #1 (expected number)");
-			} else {
-				int channel = MathHelper.floor((Double) arguments[0] - 1);
-				if (channel > 65535) {
-					throw new LuaException("Bad argument #1 (too big number (" + (channel + 1) + ") maximum value is 65536 )");
-				} else if (channel < 0) {
-					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
-				} else {
-					// Everything good
-					retB = true;
-					int[] list = find(GlobalFields.EnderMemoryObj[1], this.playerName);
+					/*int[] list = find(GlobalFields.EnderMemoryObj[1], this.playerName);
 					boolean found = list[0] == 1;
 					if (found) {
 						int pos = list[1];
 						ret[1] = GlobalFields.EnderMemoryObj[1][pos][1][channel];
 					} else {
 						ret[1] = null;
-					}
+					}*/
 				}
 			}
-		} else if (m == 5) {
+			break;
+		case "getPublicPlayerName":
 			if (arguments.length < 1) {
 				throw new LuaException("Too few arguments (expected int channel)");
 			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 1)) {
@@ -176,14 +182,16 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 				} else {
 					// Everything good
 					retB = true;
-					ret[1] = GlobalFields.EnderMemoryObj[0][0][channel][0];
+					Entry<String, Object> e = globals.get(channel);
+					ret[1] = e == null ? null : e.getKey();
 				}
 			}
-		} else if (m == 6) {
+			break;
+		case "getPlayerName":
 			ret[1] = this.playerName;
 			retB = true;
-			/** queuePublicEvent */
-		} else if (m == 7) {
+			break;
+		case "queuePublicEvent":
 			if (arguments.length < 1) {
 				throw new LuaException("Too few arguments (expected int channel)");
 			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 1)) {
@@ -196,12 +204,13 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
 				} else {
 					retB = true;
-					for (List<IComputerAccess> c : GlobalFields.EnderMemoryIComputerAccess.values()) {
-						ComputerCraftHelper.queueEvent(c, "enderMemoryPublicEvent", new Object[]{channel + 1, this.playerName});
+					for (List<IComputer> c : EnderMemoryIComputerAccess.values()) {
+						ComputerHelper.queueEvent(c, "enderMemoryPublicEvent", new Object[]{channel + 1, this.playerName});
 					}
 				}
 			}
-		} else if (m == 8) {
+			break;
+		case "queuePrivateEvent":
 			if (arguments.length < 1) {
 				throw new LuaException("Too few arguments (expected int channel)");
 			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 1)) {
@@ -214,15 +223,23 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
 				} else {
 					retB = true;
-					Set<Entry<String, List<IComputerAccess>>> set = GlobalFields.EnderMemoryIComputerAccess.entrySet();
-					for (Entry<String, List<IComputerAccess>> cSet : set) {
+					TMPlayerHandler p = getPlayerHandler();
+					if(p != null){
+						// Everything good
+						ComputerHelper.queueEvent(p.EnderMemoryIComputerAccess, "enderMemoryPrivateEvent", new Object[]{channel + 1});
+					}else{
+						throw new LuaException("Missing player");
+					}
+					/*Set<Entry<String, List<IComputer>>> set = EnderMemoryIComputerAccess.entrySet();
+					for (Entry<String, List<IComputer>> cSet : set) {
 						if (cSet.getKey().equals(this.playerName)) {
-							ComputerCraftHelper.queueEvent(cSet.getValue(), "enderMemoryPrivateEvent", new Object[]{channel + 1});
+							ComputerHelper.queueEvent(cSet.getValue(), "enderMemoryPrivateEvent", new Object[]{channel + 1});
 						}
-					}
+					}*/
 				}
 			}
-		} else if (m == 9) {
+			break;
+		case "queuePublicDescEvent":
 			if (arguments.length < 2) {
 				throw new LuaException("Too few arguments (expected int channel, Object)");
 			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 2)) {
@@ -235,12 +252,13 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
 				} else {
 					retB = true;
-					for (List<IComputerAccess> c : GlobalFields.EnderMemoryIComputerAccess.values()) {
-						ComputerCraftHelper.queueEvent(c, "enderMemoryPublicDescEvent", new Object[]{channel + 1, this.playerName, arguments[1]});
+					for (List<IComputer> c : EnderMemoryIComputerAccess.values()) {
+						ComputerHelper.queueEvent(c, "enderMemoryPublicDescEvent", new Object[]{channel + 1, this.playerName, arguments[1]});
 					}
 				}
 			}
-		} else if (m == 10) {
+			break;
+		case "queuePrivateDescEvent":
 			if (arguments.length < 1) {
 				throw new LuaException("Too few arguments (expected int channel, Object)");
 			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 1)) {
@@ -253,45 +271,83 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
 				} else {
 					retB = true;
-					Set<Entry<String, List<IComputerAccess>>> set = GlobalFields.EnderMemoryIComputerAccess.entrySet();
-					for (Entry<String, List<IComputerAccess>> cSet : set) {
+					/*Set<Entry<String, List<IComputer>>> set = EnderMemoryIComputerAccess.entrySet();
+					for (Entry<String, List<IComputer>> cSet : set) {
 						if (cSet.getKey().equals(this.playerName)) {
-							ComputerCraftHelper.queueEvent(cSet.getValue(), "enderMemoryPrivateDescEvent", new Object[]{channel + 1, arguments[1]});
+							ComputerHelper.queueEvent(cSet.getValue(), "enderMemoryPrivateDescEvent", new Object[]{channel + 1, arguments[1]});
 						}
+					}*/
+					TMPlayerHandler p = getPlayerHandler();
+					if(p != null){
+						// Everything good
+						ComputerHelper.queueEvent(p.EnderMemoryIComputerAccess, "enderMemoryPrivateDescEvent", new Object[]{channel + 1, arguments[1]});
+					}else{
+						throw new LuaException("Missing player");
 					}
 				}
 			}
+			break;
+		case "attactGlobalEventQueue":
+			if (arguments.length < 0) {
+				throw new LuaException("Too few arguments (expected int channel)");
+			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 0)) {
+				throw new LuaException("Bad argument #1 (expected number)");
+			} else {
+				int channel = MathHelper.floor((Double) arguments[0] - 1);
+				if (channel > 65535) {
+					throw new LuaException("Bad argument #1 (too big number (" + (channel + 1) + ") maximum value is 65536 )");
+				} else if (channel < 0) {
+					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
+				} else {
+					TomsModUtils.getOrPut(EnderMemoryIComputerAccess, channel, ArrayList::new).add(computer);
+				}
+			}
+			break;
+		case "detactGlobalEventQueue":
+			if (arguments.length < 0) {
+				throw new LuaException("Too few arguments (expected int channel)");
+			} else if (!(arguments[0] instanceof Double) && !(arguments.length < 0)) {
+				throw new LuaException("Bad argument #1 (expected number)");
+			} else {
+				int channel = MathHelper.floor((Double) arguments[0] - 1);
+				if (channel > 65535) {
+					throw new LuaException("Bad argument #1 (too big number (" + (channel + 1) + ") maximum value is 65536 )");
+				} else if (channel < 0) {
+					throw new LuaException("Bad argument #1 (too small number (" + (channel + 1) + ") minimum value is 1 )");
+				} else {
+					List<IComputer> c = EnderMemoryIComputerAccess.get(channel);
+					if(c != null){
+						c.remove(computer);
+					}
+				}
+			}
+			break;
 		}
 		ret[0] = retB;
 		return ret;
 	}
 
 	@Override
-	public void attach(IComputerAccess computer) {
-		computers.add(computer);
-		if (GlobalFields.EnderMemoryIComputerAccess.containsKey(playerName)) {
-			GlobalFields.EnderMemoryIComputerAccess.remove(playerName);
-			GlobalFields.EnderMemoryIComputerAccess.put(playerName, computers);
-		} else {
-			GlobalFields.EnderMemoryIComputerAccess.put(playerName, computers);
-		}
+	public void attach(IComputer computer) {
+		//computers.add(computer);
+		//EnderMemoryIComputerAccess.put(playerName, computers);
 		// System.out.println("attach");
 		// this.attach(computer);
-	}
-
-	@Override
-	public void detach(IComputerAccess computer) {
-		computers.remove(computer);
-		if (!GlobalFields.EnderMemoryIComputerAccess.containsValue(computers)) {
-			GlobalFields.EnderMemoryIComputerAccess.remove(playerName);
-			GlobalFields.EnderMemoryIComputerAccess.put(playerName, computers);
+		TMPlayerHandler p = getPlayerHandler();
+		if(p != null){
+			p.EnderMemoryIComputerAccess.add(computer);
 		}
-		// this.detach(computer);
 	}
 
 	@Override
-	public boolean equals(IPeripheral other) {
-		return (other.getType() == this.getType());
+	public void detach(IComputer computer) {
+		//computers.remove(computer);
+		//EnderMemoryIComputerAccess.put(playerName, computers);
+		// this.detach(computer);
+		TMPlayerHandler p = getPlayerHandler();
+		if(p != null){
+			p.EnderMemoryIComputerAccess.remove(computer);
+		}
 	}
 
 	@Override
@@ -307,19 +363,19 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 		return tag;
 	}
 
-	@Override
+	/*@Override
 	public void updateEntity() {
 		/*if(this.eventCooldown == 0){
 			for(Object[][] o : GlobalFields.enderMemoryEvent[0]){
-		
+
 			}
 			for(Object[] o : GlobalFields.enderMemoryEvent[1][0]){
-		
+
 			}
 			this.eventCooldown = 10;
 		}
 		if(this.eventCooldown > 0) this.eventCooldown--;*/
-	}
+	/*}
 
 	private static int[] find(Object[][][] table, String pName) {
 		int[] returnData = {0, 0};
@@ -336,5 +392,8 @@ public class TileEntityEnderMemory extends TileEntityTomsMod implements IPeriphe
 			}
 		}
 		return returnData;
+	}*/
+	public TMPlayerHandler getPlayerHandler(){
+		return TMPlayerHandler.getPlayerHandlerForName(pName);
 	}
 }

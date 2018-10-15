@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:plasticprocessing"
+  ],
+  "level": "tomsMod.craftingLevel.mv",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.plasticprocessor",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "SAS",
+      "ECE",
+      "SMS"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "A": {
+        "ore": "plateAluminum",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframesteel",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "normalecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "M": {
+        "item": "tomsmodfactory:tm.mixer",
+        "data": 1
+      }
+    }
+  },
+  "crafting_time": 2000
+}

@@ -14,10 +14,10 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import com.tom.api.block.BlockMultiblockController;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
-import com.tom.apis.TomsModUtils;
 import com.tom.factory.FactoryInit;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityElectrolyzer extends TileEntityMultiblockController {
 	public TileEntityElectrolyzer() {

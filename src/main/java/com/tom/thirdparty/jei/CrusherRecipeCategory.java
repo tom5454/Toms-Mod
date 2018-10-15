@@ -11,17 +11,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
-import com.tom.apis.RecipeData;
 import com.tom.lib.Configs;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.thirdparty.jei.CrusherRecipeCategory.CrusherRecipeJEI;
+import com.tom.util.RecipeData;
 
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public class CrusherRecipeCategory implements IRecipeCategory<CrusherRecipeJEI> {
 	public static List<CrusherRecipeJEI> get() {
@@ -33,7 +35,7 @@ public class CrusherRecipeCategory implements IRecipeCategory<CrusherRecipeJEI> 
 			// data.itemstack3, data.itemstack4, data.itemstack5,
 			// data.itemstack6, data.itemstack7, data.itemstack8,
 			// data.itemstack9};
-			CrusherRecipeJEI cr = new CrusherRecipeJEI(data.itemstack0, data.itemstack1);
+			CrusherRecipeJEI cr = new CrusherRecipeJEI(data.itemstack0, data.itemstack1, data.id);
 			recipes.add(cr);
 		}
 		return recipes;
@@ -62,21 +64,23 @@ public class CrusherRecipeCategory implements IRecipeCategory<CrusherRecipeJEI> 
 
 	}
 
-	public static class CrusherRecipeJEI extends BlankRecipeWrapper {
+	public static class CrusherRecipeJEI implements IRecipeWrapper {
 		@Nullable
 		private final ItemStack input;
 		@Nonnull
 		private final ItemStack output;
+		private final String id;
 
-		public CrusherRecipeJEI(ItemStack input, ItemStack output) {
+		public CrusherRecipeJEI(ItemStack input, ItemStack output, String id) {
 			this.input = input;
 			this.output = output;
+			this.id = id;
 		}
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInput(ItemStack.class, input);
-			ingredients.setOutput(ItemStack.class, output);
+			ingredients.setInput(VanillaTypes.ITEM, input);
+			ingredients.setOutput(VanillaTypes.ITEM, output);
 		}
 	}
 
@@ -93,6 +97,12 @@ public class CrusherRecipeCategory implements IRecipeCategory<CrusherRecipeJEI> 
 		recipeLayout.getItemStacks().init(1, false, x + 55, y);
 		recipeLayout.getItemStacks().set(0, recipe.input);
 		recipeLayout.getItemStacks().set(1, recipe.output);
+		recipeLayout.getItemStacks().addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+			if (slotIndex == 1) {
+				if(Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
+					tooltip.add(TextFormatting.GRAY + recipe.id);
+			}
+		});
 	}
 
 	@Override

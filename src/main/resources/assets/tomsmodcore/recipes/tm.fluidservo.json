@@ -1,0 +1,30 @@
+{
+  "result": {
+    "item": "tomsmodtransport:tm.fluidservo",
+    "data": 0,
+    "count": 2
+  },
+  "pattern": [
+    "PGP",
+    "NRN"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "item": "tomsmodcore:plate",
+      "data": 11
+    },
+    "R": {
+      "item": "minecraft:redstone",
+      "data": 0
+    },
+    "G": {
+      "ore": "blockGlassColorless",
+      "type": "forge:ore_dict"
+    },
+    "N": {
+      "ore": "nuggetIron",
+      "type": "forge:ore_dict"
+    }
+  }
+}

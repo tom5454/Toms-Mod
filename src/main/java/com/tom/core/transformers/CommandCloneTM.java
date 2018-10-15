@@ -23,8 +23,6 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
-import com.tom.core.Tweaks;
-
 public class CommandCloneTM extends CommandClone {// Tweaks.checkAndLogCloneMessage(args,
 													// sender, server,
 													// blockpos1, blockpos1, i);
@@ -50,7 +48,7 @@ public class CommandCloneTM extends CommandClone {// Tweaks.checkAndLogCloneMess
 			StructureBoundingBox structureboundingbox = new StructureBoundingBox(blockpos, blockpos1);
 			StructureBoundingBox structureboundingbox1 = new StructureBoundingBox(blockpos2, blockpos2.add(structureboundingbox.getLength()));
 			int i = structureboundingbox.getXSize() * structureboundingbox.getYSize() * structureboundingbox.getZSize();
-			Tweaks.checkAndLogCloneMessage(args, sender, server, blockpos1, blockpos1, i);
+			Transformers.checkAndLogCloneMessage(args, sender, server, blockpos1, blockpos1, i);
 			boolean flag = false;
 			Block block = null;
 			Predicate<IBlockState> predicate = null;

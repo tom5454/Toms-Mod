@@ -16,9 +16,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource.CraftingMaterial;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.BlockTreeTap;
 

@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:advmultiblockparts"
+  ],
+  "level": "tomsMod.craftingLevel.mv",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:mbfuelrod",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "MPM",
+      "CIC",
+      "MPM"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateChrome",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "plateLead",
+        "type": "forge:ore_dict"
+      },
+      "I": {
+        "item": "minecraft:redstone_block",
+        "data": 0
+      },
+      "M": {
+        "item": "tomsmodfactory:mbadvcasing",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 2500
+}

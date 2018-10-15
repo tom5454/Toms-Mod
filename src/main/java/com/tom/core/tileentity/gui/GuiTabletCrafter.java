@@ -3,10 +3,12 @@ package com.tom.core.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
+
 import com.tom.core.tileentity.TileEntityTabletCrafter;
 import com.tom.core.tileentity.inventory.ContainerTabletCrafter;
 
-public class GuiTabletCrafter extends GuiTomsMod {
+public class GuiTabletCrafter extends GuiTomsLib {
 
 	public GuiTabletCrafter(InventoryPlayer playerInv, TileEntityTabletCrafter te) {
 		super(new ContainerTabletCrafter(playerInv, te), "tabletCrafter");

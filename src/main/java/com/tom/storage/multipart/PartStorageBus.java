@@ -14,10 +14,10 @@ import com.tom.api.inventory.IStorageInventory.BasicFilter.IFilteringInformation
 import com.tom.api.inventory.IStorageInventory.BasicFilter.Mode;
 import com.tom.api.inventory.IStorageInventory.FilteredStorageInventory;
 import com.tom.api.multipart.IGuiMultipart;
-import com.tom.apis.TomsModUtils;
 import com.tom.storage.handler.StorageNetworkGrid.IChannelLoadListener;
 import com.tom.storage.tileentity.gui.GuiStorageBus;
 import com.tom.storage.tileentity.inventory.ContainerStorageBus;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.multipart.MultipartHelper;

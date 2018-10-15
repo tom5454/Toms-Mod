@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 66,
+    "count": 2
+  },
+  "pattern": [
+    " T ",
+    "T T",
+    " T "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "T": {
+      "ore": "plateTin",
+      "type": "forge:ore_dict"
+    }
+  }
+}

@@ -2,13 +2,12 @@ package com.tom.energy.item;
 
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,12 +48,7 @@ public class PortableEnergyCell extends ItemEnergyContainer {
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced) {
-		super.addInformation(itemStack, player, list, isAdvanced);
-		double energy = this.getEnergyStored(itemStack);
-		double per = energy / 100000;
-		// System.out.println(per);
-		int p = MathHelper.floor(per);
-		list.add(I18n.format("tomsMod.tooltip.charge") + ": " + this.getMaxEnergyStored(itemStack) + "/" + energy + " " + p / 10D + "%");
+	public void addInformation(ItemStack itemStack, World player, List list, ITooltipFlag isAdvanced) {
+		list.add(getInfo(itemStack));
 	}
 }

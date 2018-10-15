@@ -22,9 +22,9 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.common.capabilities.Capability;
 
-import com.tom.apis.BlockData;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
+import com.tom.util.BlockData;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityHidden extends TileEntity {
 	public static final Map<String, BiFunction<Integer, Integer, Integer>> ID_MAPPER_FUNC_LIST = new HashMap<>();

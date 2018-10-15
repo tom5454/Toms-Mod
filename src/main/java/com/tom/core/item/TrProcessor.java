@@ -3,6 +3,7 @@ package com.tom.core.item;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,8 +21,7 @@ public class TrProcessor extends Item {
 	@Override
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced) {
-		super.addInformation(itemStack, player, list, isAdvanced);
+	public void addInformation(ItemStack itemStack, World player, List list, ITooltipFlag isAdvanced) {
 		if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("tier")) {
 			int tier = itemStack.getTagCompound().getInteger("tier");
 			String d = itemStack.getTagCompound().hasKey("d") ? itemStack.getTagCompound().getString("d") : "ap";

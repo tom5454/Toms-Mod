@@ -3,10 +3,10 @@
     "textures": {
         "up": "tomsmodcore:blocks/Gray",
         "down": "tomsmodcore:blocks/Gray",
-        "north": "blocks/tm/jammerOn",
-         "east": "blocks/tm/jammerOn",
-        "south": "blocks/tm/jammerOn",
-         "west": "blocks/tm/jammerOn",
+        "north": "tomsmodcore:blocks/jammerOn",
+         "east": "tomsmodcore:blocks/jammerOn",
+        "south": "tomsmodcore:blocks/jammerOn",
+         "west": "tomsmodcore:blocks/jammerOn",
         "particle": "tomsmodcore:blocks/Gray"
     }
 }

@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:configurablechest"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodtransport:tm.opencrate",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PSP",
+      "PCP",
+      "PTP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plankWood",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "chest",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "stickWood",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "item": "minecraft:trapdoor",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 200
+}

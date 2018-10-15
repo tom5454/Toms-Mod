@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodfactory:tm.componentsblock",
+    "data": 4,
+    "count": 4
+  },
+  "pattern": [
+    "SRS",
+    "R R",
+    "SRS"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "ore": "rodSteel",
+      "type": "forge:ore_dict"
+    },
+    "S": {
+      "ore": "plateSteel",
+      "type": "forge:ore_dict"
+    }
+  }
+}

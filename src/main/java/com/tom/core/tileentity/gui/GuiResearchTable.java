@@ -8,18 +8,16 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiListExtended.IGuiListEntry;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -33,21 +31,23 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.research.IScanningInformation;
 import com.tom.api.research.Research;
 import com.tom.api.research.ResearchComplexity;
-import com.tom.apis.TomsModUtils;
-import com.tom.apis.TomsModUtils.GuiRenderRunnable;
 import com.tom.core.CoreInit;
 import com.tom.core.research.ResearchHandler;
 import com.tom.core.research.ResearchHandler.ResearchInformation;
+import com.tom.lib.utils.RenderUtil;
+import com.tom.lib.utils.TomsUtils.GuiRenderRunnable;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.TileEntityResearchTable;
 import com.tom.core.tileentity.gui.GuiResearchTable.GuiResearchSelection.GuiResearchSelectionList.ResearchEntry;
 import com.tom.core.tileentity.inventory.ContainerResearchTable;
 
-public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
+public class GuiResearchTable extends GuiTomsLib implements INBTPacketReceiver {
 	private GuiButtonCopy copyButton;
 	private GuiButtonResearchStart researchButton;
 	private GuiButtonMenu menuButton;
@@ -84,8 +84,8 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 			p2 = p2 == 0 && p2Per != 0 ? 1 : p2;
 			this.drawTexturedModalRect(guiLeft + 25, guiTop + 6 + 16 - p2, 0, 234 - p2, 2, p2);
 		} else {
-			Render.setColourWithAlphaPercent(0xFF0000, 70);
-			Render.drawRect(guiLeft + 25, guiTop + 6, 2, 16);
+			RenderUtil.setColourWithAlphaPercent(0xFF0000, 70);
+			RenderUtil.drawRect(guiLeft + 25, guiTop + 6, 2, 16);
 			GlStateManager.color(1, 1, 1, 1);
 		}
 		double p3 = p3Per / 100D * 23;// max:23
@@ -193,12 +193,12 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 					researchButton.enabled = flag && hasPaper && hasInk;
 					if (te.currentResearch != null && !te.completed) {
 						if (!hasPaper) {
-							Render.setColourWithAlphaPercent(0xFF0000, 30);
-							Render.drawRect(guiLeft + 6, guiTop + 24, 16, 16);
+							RenderUtil.setColourWithAlphaPercent(0xFF0000, 30);
+							RenderUtil.drawRect(guiLeft + 6, guiTop + 24, 16, 16);
 						}
 						if (!hasInk) {
-							Render.setColourWithAlphaPercent(0xFF0000, 30);
-							Render.drawRect(guiLeft + 6, guiTop + 6, 16, 16);
+							RenderUtil.setColourWithAlphaPercent(0xFF0000, 30);
+							RenderUtil.drawRect(guiLeft + 6, guiTop + 6, 16, 16);
 						}
 					}
 				} else {
@@ -206,8 +206,8 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 					mc.fontRenderer.drawString(I18n.format("tomsmod.gui.running"), guiLeft + 33, guiTop + 55, 0xFFFFFFFF);
 					boolean hasInk = te.getField(0) > 0;
 					if (!hasInk) {
-						Render.setColourWithAlphaPercent(0xFF0000, 30);
-						Render.drawRect(guiLeft + 6, guiTop + 6, 16, 16);
+						RenderUtil.setColourWithAlphaPercent(0xFF0000, 30);
+						RenderUtil.drawRect(guiLeft + 6, guiTop + 6, 16, 16);
 					}
 				}
 				if (te.craftingError > 0) {
@@ -238,7 +238,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -265,7 +265,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				FontRenderer fontrenderer = mc.fontRenderer;
 				mc.getTextureManager().bindTexture(gui);
@@ -310,7 +310,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(gui);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -429,7 +429,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 			private boolean showCompletedLast = true;
 
 			@Override
-			public void drawScreen(int mouseXIn, int mouseYIn, float p_148128_3_) {
+			public void drawScreen(int mouseXIn, int mouseYIn, float partialTicks) {
 				if (this.visible) {
 					if (showCompletedLast && !showCompleted) {
 						List<ResearchEntry> toRemove = new ArrayList<>();
@@ -455,7 +455,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 					GlStateManager.disableLighting();
 					GlStateManager.disableFog();
 					Tessellator tessellator = Tessellator.getInstance();
-					VertexBuffer worldrenderer = tessellator.getBuffer();
+					BufferBuilder worldrenderer = tessellator.getBuffer();
 					// Forge: background rendering moved into separate method.
 					this.drawContainerBackground(tessellator);
 					int k = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
@@ -465,7 +465,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 						this.drawListHeader(k, l, tessellator);
 					}
 
-					this.drawSelectionBox(k, l, mouseXIn, mouseYIn);
+					this.drawSelectionBox(k, l, mouseXIn, mouseYIn, partialTicks);
 					GlStateManager.color(1, 1, 1, 1);
 					GlStateManager.disableDepth();
 					int i1 = 4;
@@ -547,14 +547,15 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 				}
 
 				@Override
-				public void setSelected(int id, int p_178011_2_, int p_178011_3_) {
+				public void updatePosition(int p_192633_1_, int p_192633_2_, int p_192633_3_, float p_192633_4_) {
+
 				}
 
 				@Override
-				public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks) {
 					this.button.x = x + listWidth / 7 + 1;
 					this.button.y = y;
-					this.button.drawButton(mc, mouseX, mouseY);
+					this.button.drawButton(mc, mouseX, mouseY, partialTicks);
 				}
 
 				@Override
@@ -592,7 +593,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 					 * Draws this button to the screen.
 					 */
 					@Override
-					public void drawButton(final Minecraft mc, final int mouseX, final int mouseY) {
+					public void drawButton(final Minecraft mc, final int mouseX, final int mouseY, float pt) {
 						if (this.visible) {
 							FontRenderer fontrenderer = mc.fontRenderer;
 							mc.getTextureManager().bindTexture(LIST_TEXTURE);
@@ -622,20 +623,15 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 
 							this.drawCenteredString(fontrenderer, I18n.format(research.getUnlocalizedName()), this.x + this.width / 2, this.y + (this.height - 8) / 2, j);
 							if (this.hovered && (!this.enabled)) {
-								hoverRender.add(new Runnable() {
-
-									@Override
-									public void run() {
-										List<String> textLines = new ArrayList<>();
-										textLines.add(TextFormatting.RED + I18n.format("tomsmod.gui.missing") + ":");
-										for (int k = 0;k < missing.size();k++) {
-											IScanningInformation info = missing.get(k);
-											String name = I18n.format(info.getUnlocalizedName());
-											info.addTooltip(textLines, name, isShiftKeyDown(), mc.gameSettings.advancedItemTooltips);
-										}
-										drawHoveringText(textLines, mouseX, mouseY);
+								hoverRender.add(() -> {
+									List<String> textLines = new ArrayList<>();
+									textLines.add(TextFormatting.RED + I18n.format("tomsmod.gui.missing") + ":");
+									for (int k = 0;k < missing.size();k++) {
+										IScanningInformation info = missing.get(k);
+										String name = I18n.format(info.getUnlocalizedName());
+										info.addTooltip(textLines, name, isShiftKeyDown(), mc.gameSettings.advancedItemTooltips);
 									}
-
+									drawHoveringText(textLines, mouseX, mouseY);
 								});
 							}
 						}
@@ -672,15 +668,6 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 				}
 
 				@Override
-				public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
-				}
-
-				@Override
-				public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-					mc.fontRenderer.drawString(this.name, mc.currentScreen.width / 2 - this.width / 2, y + slotHeight - mc.fontRenderer.FONT_HEIGHT - 1, 16777215);
-				}
-
-				@Override
 				public boolean mousePressed(int slotIndex, int p_148278_2_, int p_148278_3_, int p_148278_4_, int p_148278_5_, int p_148278_6_) {
 					return false;
 				}
@@ -690,6 +677,16 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 
 				}
 
+				@Override
+				public void updatePosition(int p_192633_1_, int p_192633_2_, int p_192633_3_, float p_192633_4_) {
+
+				}
+
+				@Override
+				public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks) {
+					mc.fontRenderer.drawString(this.name, mc.currentScreen.width / 2 - this.width / 2, y + slotHeight - mc.fontRenderer.FONT_HEIGHT - 1, 16777215);
+				}
+
 			}
 
 			@SideOnly(Side.CLIENT)
@@ -697,14 +694,15 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 				private GuiListButton button = new GuiListButton(0, 0, 0);
 
 				@Override
-				public void setSelected(int id, int p_178011_2_, int p_178011_3_) {
+				public void updatePosition(int p_192633_1_, int p_192633_2_, int p_192633_3_, float p_192633_4_) {
+
 				}
 
 				@Override
-				public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
+				public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks) {
 					this.button.x = x + listWidth / 7 + 1;
 					this.button.y = y;
-					this.button.drawButton(mc, mouseX, mouseY);
+					this.button.drawButton(mc, mouseX, mouseY, partialTicks);
 				}
 
 				@Override
@@ -732,7 +730,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 					 * Draws this button to the screen.
 					 */
 					@Override
-					public void drawButton(Minecraft mc, final int mouseX, final int mouseY) {
+					public void drawButton(Minecraft mc, final int mouseX, final int mouseY, float pt) {
 						if (this.visible) {
 							FontRenderer fontrenderer = mc.fontRenderer;
 							mc.getTextureManager().bindTexture(LIST_TEXTURE);
@@ -814,7 +812,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;

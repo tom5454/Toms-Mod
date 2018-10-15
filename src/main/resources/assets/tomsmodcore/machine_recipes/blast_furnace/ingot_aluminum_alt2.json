@@ -1,0 +1,19 @@
+{
+  "heat": 1700,
+  "time": 5000,
+  "in2": {
+    "item": "tomsmodcore:gem",
+    "data": 30,
+    "count": 1
+  },
+  "in1": {
+    "item": "tomsmodcore:material",
+    "data": 8,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:ingot",
+    "data": 29,
+    "count": 1
+  }
+}

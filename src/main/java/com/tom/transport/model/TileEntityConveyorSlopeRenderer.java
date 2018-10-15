@@ -12,10 +12,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.client.TileEntitySpecialRendererTomsMod;
 import com.tom.transport.block.ConveyorBeltSlope;
 import com.tom.transport.tileentity.TileEntityConveyorBeltSlope;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityConveyorSlopeRenderer extends TileEntitySpecialRendererTomsMod<TileEntityConveyorBeltSlope> {
 	private ModelBelt model = new ModelBelt();

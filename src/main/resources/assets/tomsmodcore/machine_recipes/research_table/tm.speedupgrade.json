@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:speedupgrade"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.speedupgrade",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "RBR",
+      "BFB",
+      "RCR"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "item": "minecraft:redstone_block",
+        "data": 0
+      },
+      "B": {
+        "ore": "plateBlueMetal",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "coilElectrum",
+        "type": "forge:ore_dict"
+      },
+      "F": {
+        "id": "upgradeFrame",
+        "type": "tomsmodcore:material"
+      }
+    }
+  },
+  "crafting_time": 1800
+}

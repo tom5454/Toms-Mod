@@ -1,7 +1,6 @@
 package com.tom.defense;
 
-import static com.tom.core.CoreInit.registerBlock;
-import static com.tom.core.CoreInit.registerItem;
+import static com.tom.core.CoreInit.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +17,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
@@ -40,7 +38,7 @@ import com.tom.defense.tileentity.TileEntityForceConverter;
 import com.tom.defense.tileentity.TileEntityForceField;
 import com.tom.defense.tileentity.TileEntityForceFieldProjector;
 import com.tom.defense.tileentity.TileEntitySecurityStation;
-import com.tom.handler.WorldHandler;
+import com.tom.handler.TMWorldHandler;
 import com.tom.lib.Configs;
 import com.tom.recipes.OreDict;
 import com.tom.worldgen.WorldGen;
@@ -49,17 +47,17 @@ import com.tom.core.block.BlockOre;
 
 @Mod(modid = DefenseInit.modid, name = DefenseInit.modName, version = Configs.version, dependencies = Configs.coreDependencies)
 public class DefenseInit {
-	public static final String modid = Configs.ModidL + "|defense";
+	public static final String modid = Configs.ModidL + "defense";
 	public static final String modName = Configs.ModName + " Defense";
 	public static final Logger log = LogManager.getLogger(modName);
 
 	public static ItemMultiTool multiTool;
 	public static IdentityCard identityCard;
 	public static Item rangeUpgrade, rangeWidthUpgrade, rangeHeightUpgrade, projectorLens, projectorFieldType,
-			fieldUpgrade, efficiencyUpgrade, crushedMonazit;
+	fieldUpgrade, efficiencyUpgrade, crushedMonazit;
 
 	public static Block forceConverter, forceCapacitor, securityStation, fieldProjector, blockForce, defenseStation,
-			oreMonazit;
+	oreMonazit;
 
 	@EventHandler
 	public static void PreLoad(FMLPreInitializationEvent PreEvent) {
@@ -105,12 +103,12 @@ public class DefenseInit {
 			CoreInit.addOnlyBlockToGameRegisty(blockForce, blockForce.getUnlocalizedName().substring(5));
 			registerBlock(defenseStation, defenseStation.getUnlocalizedName().substring(5));
 			/** TileEntities */
-			GameRegistry.registerTileEntity(TileEntityForceConverter.class, Configs.Modid + ":forceTransformer");
-			GameRegistry.registerTileEntity(TileEntityForceCapacitor.class, Configs.Modid + ":forceCapacitor");
-			GameRegistry.registerTileEntity(TileEntitySecurityStation.class, Configs.Modid + ":securityStation");
-			GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, Configs.Modid + ":FFProjector");
-			GameRegistry.registerTileEntity(TileEntityForceField.class, Configs.Modid + ":forceField");
-			GameRegistry.registerTileEntity(TileEntityDefenseStation.class, Configs.Modid + ":defenseStation");
+			registerTileEntity(TileEntityForceConverter.class, "forceTransformer");
+			registerTileEntity(TileEntityForceCapacitor.class, "forceCapacitor");
+			registerTileEntity(TileEntitySecurityStation.class, "securityStation");
+			registerTileEntity(TileEntityForceFieldProjector.class, "FFProjector");
+			registerTileEntity(TileEntityForceField.class, "forceField");
+			registerTileEntity(TileEntityDefenseStation.class, "defenseStation");
 		}
 		registerBlock(oreMonazit, oreMonazit.getUnlocalizedName().substring(5));
 		registerItem(crushedMonazit, crushedMonazit.getUnlocalizedName().substring(5));
@@ -133,11 +131,11 @@ public class DefenseInit {
 	};
 
 	public static void registerPlaceables() {
-		WorldHandler.addPlaceable(Blocks.LEVER);
-		WorldHandler.addPlaceable(Blocks.STONE_BUTTON);
-		WorldHandler.addPlaceable(Blocks.WOODEN_BUTTON);
-		WorldHandler.addPlaceable(Blocks.COBBLESTONE);
-		WorldHandler.addPlaceable(Blocks.REDSTONE_BLOCK);
+		TMWorldHandler.addPlaceable(Blocks.LEVER);
+		TMWorldHandler.addPlaceable(Blocks.STONE_BUTTON);
+		TMWorldHandler.addPlaceable(Blocks.WOODEN_BUTTON);
+		TMWorldHandler.addPlaceable(Blocks.COBBLESTONE);
+		TMWorldHandler.addPlaceable(Blocks.REDSTONE_BLOCK);
 	}
 
 	private static boolean hadPreInit = false;

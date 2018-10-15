@@ -9,11 +9,11 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.tom.api.item.IIdentityCard;
 import com.tom.api.tileentity.IGuiTile;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.tileentity.inventory.ContainerSecurityStation.SlotIndentityCard;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 

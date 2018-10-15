@@ -13,6 +13,7 @@ public class Keys {
 	public static KeyBinding MENU;
 	public static KeyBinding CONFIG;
 	public static KeyBinding PROFILE, SHOW_TETXURE_MAP;
+	public static KeyBinding FUNCTION1, FUNCTION2, FUNCTION3, FUNCTION4;
 
 	public static boolean isPressed(KeyBinding key) {
 		return key != null ? key.isPressed() : false;

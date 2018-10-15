@@ -2,6 +2,7 @@
     "variants": {
         "state=0": { "model": "tomsmodcore:antenna"},
         "state=1": { "model": "tomsmodcore:antennaCNF"},
-        "state=2": { "model": "tomsmodcore:antennaO"}
+        "state=2": { "model": "tomsmodcore:antennamissing"},
+        "state=3": { "model": "tomsmodcore:antennaO"}
     }
 }

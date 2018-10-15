@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:batterybox"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:battery",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      " - ",
+      "TBT",
+      "TRT"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "ore": "ingotBlueMetal",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "item": "minecraft:redstone",
+        "data": 0
+      },
+      "T": {
+        "ore": "plateTin",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "cableCopper",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 300
+}

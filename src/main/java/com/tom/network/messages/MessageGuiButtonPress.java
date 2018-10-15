@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 
 import com.tom.api.multipart.IGuiMultipart;
 import com.tom.api.tileentity.IGuiTile;
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;
 import mcmultipart.api.container.IMultipartContainer;

@@ -18,7 +18,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
 import com.tom.api.inventory.StoredItemStack;
-import com.tom.apis.TomsModUtils;
 import com.tom.storage.block.BlockInterface;
 import com.tom.storage.block.BlockInterface.InterfaceFacing;
 import com.tom.storage.handler.AutoCraftingHandler;
@@ -27,6 +26,7 @@ import com.tom.storage.handler.InventoryCache;
 import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.storage.handler.StorageNetworkGrid.ICraftingPatternListener;
 import com.tom.storage.handler.StorageNetworkGrid.ICraftingRecipeContainer;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityInterface extends TileEntityChannel implements AutoCraftingHandler.ICraftingHandler<StoredItemStack>, ISidedInventory {
 	/** Pattern, Phantom, Normal */

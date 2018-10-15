@@ -7,8 +7,8 @@ import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.IEnergyContainerItem;
-import com.tom.apis.TomsModUtils;
 import com.tom.factory.tileentity.TileEntityMachineBase;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.block.BlockCharger;
 
@@ -109,7 +109,7 @@ public class TileEntityCharger extends TileEntityMachineBase {
 			return 0;
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
 

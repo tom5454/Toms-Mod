@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:laserengraver"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.laserengraver",
+      "data": 1,
+      "count": 1
+    },
+    "pattern": [
+      "IMI",
+      "CFC",
+      "IOI"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "C": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "F": {
+        "item": "tomsmodcore:machineframetitanium",
+        "data": 0
+      },
+      "I": {
+        "ore": "plateTitanium",
+        "type": "forge:ore_dict"
+      },
+      "M": {
+        "ore": "moduleLaser",
+        "type": "forge:ore_dict"
+      },
+      "O": {
+        "ore": "obsidian",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1300
+}

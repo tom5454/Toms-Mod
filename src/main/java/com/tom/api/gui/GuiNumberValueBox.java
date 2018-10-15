@@ -45,7 +45,7 @@ public class GuiNumberValueBox {
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(TEXTURE);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -79,8 +79,8 @@ public class GuiNumberValueBox {
 	public void draw(int mouseX, int mouseY, boolean drawButtons) {
 		Minecraft mc = Minecraft.getMinecraft();
 		if (drawButtons) {
-			nextNum.drawButton(mc, mouseX, mouseY);
-			prevNum.drawButton(mc, mouseX, mouseY);
+			nextNum.drawButton(mc, mouseX, mouseY, 0);
+			prevNum.drawButton(mc, mouseX, mouseY, 0);
 		}
 		this.drawText(mc.fontRenderer, color);
 	}

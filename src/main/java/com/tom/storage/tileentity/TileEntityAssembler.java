@@ -15,11 +15,11 @@ import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler.ReturnData;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.StorageNetworkGrid.ICraftingPatternListener;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityAssembler extends TileEntityTomsMod implements IEnergyReceiver, ICraftingPatternListener {
 	private EnergyStorage energy = new EnergyStorage(10000);
@@ -48,7 +48,7 @@ public class TileEntityAssembler extends TileEntityTomsMod implements IEnergyRec
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return canConnectEnergy(from, type) ? energy.getMaxEnergyStored() : 0;
 	}
 

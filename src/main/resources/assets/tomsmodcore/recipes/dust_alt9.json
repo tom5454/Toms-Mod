@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodcore:dust",
+    "data": 28,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "ore": "ingotBronze",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "itemMortar",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

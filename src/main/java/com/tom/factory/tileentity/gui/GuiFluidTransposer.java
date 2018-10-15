@@ -12,13 +12,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.apis.TomsModUtils;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityFluidTransposer;
 import com.tom.factory.tileentity.inventory.ContainerFluidTransposer;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiFluidTransposer extends GuiTomsMod {
+public class GuiFluidTransposer extends GuiTomsLib {
 	private TileEntityFluidTransposer te;
 	private GuiButtonMode buttonMode;
 
@@ -72,7 +71,7 @@ public class GuiFluidTransposer extends GuiTomsMod {
 		ySize = 176;
 		labelList.clear();
 		super.initGui();
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 150, guiTop + 15, te.getTank()).setUV(176, 0), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 150, guiTop + 15, te.getTank()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
 		buttonMode = new GuiButtonMode(0, guiLeft + 114, guiTop + 54);
 		buttonList.add(buttonMode);
 	}
@@ -88,7 +87,7 @@ public class GuiFluidTransposer extends GuiTomsMod {
 		}
 
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

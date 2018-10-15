@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:ingot",
+    "data": 9,
+    "count": 1
+  },
+  "pattern": [
+    "NNN",
+    "NNN",
+    "NNN"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "N": {
+      "ore": "nuggetBlueMetal",
+      "type": "forge:ore_dict"
+    }
+  }
+}

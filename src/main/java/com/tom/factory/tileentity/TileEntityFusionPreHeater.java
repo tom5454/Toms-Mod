@@ -24,9 +24,9 @@ import com.tom.api.block.BlockMultiblockController;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.item.IFuelRod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.FactoryInit;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityFusionPreHeater extends TileEntityMultiblockController {
 	public static final FluidStack Deuterium = new FluidStack(CoreInit.Deuterium.get(), 1);

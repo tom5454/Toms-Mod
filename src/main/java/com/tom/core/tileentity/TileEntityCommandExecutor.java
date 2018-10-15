@@ -1,9 +1,8 @@
 package com.tom.core.tileentity;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Set;
-
-import mapwriterTm.map.Marker.RenderType;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,114 +16,28 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.MathHelper;
 
-import net.minecraftforge.fml.common.Optional;
-
+import com.tom.api.map.RenderType;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.core.Minimap;
-import com.tom.lib.Configs;
+import com.tom.core.map.MapHandler;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
+import com.tom.util.TomsModUtils;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.ILuaObject;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPeripheral {
+public class TileEntityCommandExecutor extends TileEntityTomsMod implements ITMCompatPeripheral {
 
 	@Override
 	public String getType() {
 		return "CommandExecutor";
 	}
 
-	/*private List<Coords> cams = new ArrayList<Coords>();
-	private static final boolean mineCamera = Loader.isModLoaded("MineCamera");*/
 	@Override
 	public String[] getMethodNames() {
-		/*if(mineCamera && Config.enableMineCamera)
-			return new String[]{"execute","help","replaceItemInSlot","addCameraToList","executeCameraCreation"};
-		else*/
 		return new String[]{"help", "getServerStats", "waypoints", "getPlayerNBT", "setPlayerNBT", "getNewNBTTagCompound", "getNewNBTTagList", "getNewNBTIntArray"};
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
-		/*if(method == 0){
-			if(a.length > 1 && a[0] instanceof String && a[1] instanceof String){
-				String p = (String) a[0];
-				String cmd = (String) a[1];
-				if(cmd.substring(0, 1).equals("/") || cmd.substring(0, 1).equals("\\")){
-					cmd = cmd.substring(0, 1);
-				}
-				EntityPlayer player = worldObj.getPlayerEntityByName(p);
-				if(player != null && !this.worldObj.isRemote){
-					MinecraftServer minecraftserver = TomsModUtils.getServer();
-					if(minecraftserver!=null) minecraftserver.getCommandManager().executeCommand(player, cmd);
-				}
-			}*/
+	public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 		if (method == 0) {
-			/*if(mineCamera && Config.enableMineCamera){
-				return new Object[]{this.getMethodNames()[0] + "(player,command) Execute command for player",this.getMethodNames()[2] +
-						"(player,item/block name,slot,amount,[tag in JSON format]) Replace item in the player's slot",
-						this.getMethodNames()[3] + "(x,y,z,yaw,pitch) add the values to list",this.getMethodNames()[4] + "(player) Execute /" +
-								Config.minecameraCommand + " for the player."};
-			}else{*/
 			return new Object[]{"Advanced Command Block is an extended command block", this.getMethodNames()[2] + "(player,item/block name,slot,[amount],[tag in JSON format]) Replace " + "item in the player's slot", this.getMethodNames()[3] + " returns information about the server. Returns Is " + "Singleplayer, Current Player Count, " + "Is Hardcore, Build Limit, Level Name", this.getMethodNames()[4] + "(String[] arguments) runs the waypoint " + "editor interface, Arguments = " + "Arguments in the command", this.getMethodNames()[5] + "(player) get the player's " + "NBTTagCompound", this.getMethodNames()[6] + "(player,nbt string) sets the player's " + "NBT", this.getMethodNames()[7] + "() Returns a new instance of the " + "NBTTagCompound", this.getMethodNames()[8] + "() Returns a new " + "instance of the NBTTagList", this.getMethodNames()[9] + "() " + "Returns a new instance of the NBTTagIntArray"};
-			/*}*/
-			/*}else if(method == 1){
-			if(a.length > 2 && a[0] instanceof String && a[2] instanceof Double){
-				double amountD = a.length > 3 && a[3] instanceof Double ? (Double) a[3] : 1;
-				int amount = MathHelper.floor_double(amountD);
-				int slot = MathHelper.floor_double((Double) a[2]);
-				NBTBase tag = null;
-				if(a.length > 4 && a[4] instanceof String){
-					try {
-						tag = JsonToNBT.getTagFromJson((String) a[4]);
-					} catch (NBTException e) {
-						throw new LuaException("Invalid NBT "+e.toString());
-					}
-				}
-				String iName = (String) a[1];
-				String p = (String) a[0];
-				String[] miNameS = iName.split(":");
-				String modId = miNameS.length > 0 ? miNameS[0] : null;
-				String name = miNameS.length > 1 ? miNameS[1] : null;
-				String metaS = miNameS.length == 3 ? miNameS[2] : null;
-				if((modId != null && name != null)){
-					ItemStack is = null;
-					Block b = findBlock(modId, name);
-					if(b == null){
-						Item i = findItem(modId, name);
-						if(i == null) throw new LuaException("Invalid item name/id");
-						is = new ItemStack(i,amount);
-					}else{
-						is = new ItemStack(b,amount);
-					}
-					//if(is == null) throw new LuaException("Invalid item name/id");
-					if(tag != null) is.setTagCompound(tag instanceof NBTTagCompound ? (NBTTagCompound) tag : new NBTTagCompound());
-					if(tag != null && !(tag instanceof NBTTagCompound)) is.getTagCompound().setTag("tag", tag);
-					int meta = 0;
-					if(metaS != null){
-						try{
-							meta = Integer.getInteger(metaS);
-						}catch (Exception e){
-							throw new LuaException("Invalid item name/id");
-						}
-					}
-					is.setItemDamage(meta);
-					EntityPlayer player = worldObj.getPlayerEntityByName(p);
-					if(player != null){
-						InventoryPlayer inv = player.inventory;
-						if(inv != null){
-							inv.setInventorySlotContents(slot, is);
-							inv.markDirty();
-						}
-					}
-				}
-			}else{
-				throw new LuaException("Invalid arguments, excepted (string player,string item/block name,number slot,[number amount],[string tag in JSON format])");
-			}*/
 		} else if (method == 1) {
 			MinecraftServer s = TomsModUtils.getServer();
 			if (s != null) {
@@ -172,22 +85,12 @@ public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPer
 					beam = args.length > 11 ? RenderType.fromString(args[11]) : RenderType.NORMAL;
 					label = args.length > 12 ? RenderType.fromString(args[12]) : RenderType.NORMAL;
 					beamTexture = args.length > 13 ? args[13] : "normal";
-					// colorB = /*args.length > index+1 ?
-					// Integer.parseInt(args[index],16) :
-					// 0xff000000;*/0xff000000;
-					// colorBA = /*args.length > index+2 ?
-					// Integer.parseInt(args[index+1],16) :
-					// 0xffffffff*/0xffffffff;
-					// bordered = /*args.length > index+3 ?
-					// args[index+2].equalsIgnoreCase("true") : */!isIcon;
-					// borderedA = /*args.length > index+4 ?
-					// args[index+3].equalsIgnoreCase("true") :*/ true;
 				} catch (NumberFormatException e) {
 					throw new LuaException("Invalid numbers");
 				}
 				EntityPlayer p = this.world.getPlayerEntityByName(player);
 				if (p != null) {
-					Minimap.sendWaypointCreation(group, x, y, z, dim, name, icon, color, beam, label, reloadable, beamTexture, (EntityPlayerMP) p);
+					MapHandler.sendWaypointCreation(group, x, y, z, dim, name, icon, color, beam, label, reloadable, beamTexture, (EntityPlayerMP) p);
 					// cs.addChatMessage(new
 					// ChatComponentText(EnumChatFormatting.GREEN+"Success"));
 				}
@@ -197,7 +100,7 @@ public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPer
 				String player = args[3];
 				EntityPlayer p = world.getPlayerEntityByName(player);
 				if (p != null) {
-					Minimap.sendWaypointRemove(group, name, (EntityPlayerMP) p);
+					MapHandler.sendWaypointRemove(group, name, (EntityPlayerMP) p);
 				}
 			}
 		} else if (method == 3) {
@@ -252,28 +155,7 @@ public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPer
 		return null;
 	}
 
-	/*private static Block findBlock(String modId, String name) {
-		return Block.blockRegistry.getObject(new ResourceLocation(modId, name));
-	}
-	private static Item findItem(String modId, String name) {
-		return Item.itemRegistry.getObject(new ResourceLocation(modId, name));
-	}*/
-	@Override
-	public void attach(IComputerAccess computer) {
-
-	}
-
-	@Override
-	public void detach(IComputerAccess computer) {
-
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		return false;
-	}
-
-	public static class LuaNBTTagCompound implements ILuaObject {
+	public static class LuaNBTTagCompound implements ITMLuaObject {
 		final NBTTagCompound base;
 
 		public LuaNBTTagCompound() {
@@ -290,7 +172,8 @@ public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPer
 		}
 
 		@Override
-		public Object[] callMethod(ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+		public Object[] call(IComputer context, String m, Object[] a) throws LuaException {
+			int method = Arrays.binarySearch(getMethodNames(), m);
 			if (method == 0)
 				return new Object[]{this.toString()};
 			else if (method == 1) {
@@ -423,9 +306,14 @@ public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPer
 		public String toString() {
 			return base != null ? base.toString() : "{}";
 		}
+
+		@Override
+		public long getID() {
+			return 0;
+		}
 	}
 
-	public static class LuaNBTTagList implements ILuaObject {
+	public static class LuaNBTTagList implements ITMLuaObject {
 		final NBTTagList base;
 
 		public LuaNBTTagList() {
@@ -442,7 +330,8 @@ public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPer
 		}
 
 		@Override
-		public Object[] callMethod(ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+		public Object[] call(IComputer context, String m, Object[] a) throws LuaException {
+			int method = Arrays.binarySearch(getMethodNames(), m);
 			if (method == 0)
 				return new Object[]{this.toString()};
 			else if (method == 1) {
@@ -492,9 +381,14 @@ public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPer
 		public String toString() {
 			return base != null ? base.toString() : "[]";
 		}
+
+		@Override
+		public long getID() {
+			return 0;
+		}
 	}
 
-	public static class LuaNBTTagIntArray implements ILuaObject {
+	public static class LuaNBTTagIntArray implements ITMLuaObject {
 		int[] array;
 
 		public LuaNBTTagIntArray(int[] in) {
@@ -511,7 +405,8 @@ public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPer
 		}
 
 		@Override
-		public Object[] callMethod(ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+		public Object[] call(IComputer context, String m, Object[] a) throws LuaException {
+			int method = Arrays.binarySearch(getMethodNames(), m);
 			if (method == 0) {
 				if (a.length > 0 && a[0] instanceof Double) {
 					int entry = MathHelper.floor((Double) a[0]) - 1;
@@ -548,6 +443,11 @@ public class TileEntityCommandExecutor extends TileEntityTomsMod implements IPer
 				ret = ret + "," + i;
 			}
 			return "[" + ret.substring(1) + "]";
+		}
+
+		@Override
+		public long getID() {
+			return 0;
 		}
 	}
 }

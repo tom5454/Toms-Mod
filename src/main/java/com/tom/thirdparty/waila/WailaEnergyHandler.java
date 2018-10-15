@@ -39,7 +39,7 @@ public class WailaEnergyHandler implements IWailaDataProvider {
 				for (int i = 0;i < tag.getInteger("size");i++) {
 					NBTTagCompound t = tag.getCompoundTag(accessor.getSide().getName() + "_" + i);
 					if (!t.hasNoTags())
-						currenttip.add(I18n.format("tomsMod.waila.energyStored") + " " + TextFormatting.values()[t.getInteger("c")] + t.getString("type") + TextFormatting.RESET + ": " + t.getInteger("MaxEnergy") + "/" + t.getDouble("Energy"));
+						currenttip.add(I18n.format("tomsMod.waila.energyStored") + " " + TextFormatting.values()[t.getInteger("c")] + t.getString("type") + TextFormatting.RESET + ": " + t.getLong("MaxEnergy") + "/" + t.getDouble("Energy"));
 				}
 			}
 		}
@@ -62,21 +62,14 @@ public class WailaEnergyHandler implements IWailaDataProvider {
 					for (EnumFacing side : EnumFacing.VALUES) {
 						EnergyType c = eL.get(i);
 						double energyStored = s.getEnergyStored(side, c);
-						int maxEnergyStored = s.getMaxEnergyStored(side, c);
+						long maxEnergyStored = s.getMaxEnergyStored(side, c);
 						NBTTagCompound t = new NBTTagCompound();
 						t.setDouble("Energy", energyStored);
-						t.setInteger("MaxEnergy", maxEnergyStored);
+						t.setLong("MaxEnergy", maxEnergyStored);
 						t.setString("type", c.toString());
 						t.setInteger("c", c.getColor().ordinal());
 						tag.setTag(side.getName() + "_" + i, t);
 					}
-					// chatText.add(new
-					// TextComponentTranslation("tomsMod.chat.energyStored",new
-					// TextComponentString(c.toString()).setChatStyle(new
-					// Style().setColor(c.getColor())),energyStored,
-					// maxEnergyStored));
-					// chatText.add(new TextComponentString((energyStored /
-					// maxEnergyStored * 100) + "%"));
 				}
 				tag.setBoolean("integrated", s instanceof IIntegratedMultimeter);
 			}

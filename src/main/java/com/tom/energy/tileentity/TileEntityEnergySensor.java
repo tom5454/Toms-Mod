@@ -13,7 +13,7 @@ import com.tom.api.energy.IEnergyHandler;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.IPeripheralProxyControllable;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
@@ -83,7 +83,7 @@ public class TileEntityEnergySensor extends TileEntityTomsMod implements IEnergy
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return MathHelper.floor(Math.pow(10, this.energyRate));
 	}
 
@@ -107,7 +107,7 @@ public class TileEntityEnergySensor extends TileEntityTomsMod implements IEnergy
 		tag.setInteger("direction2",this.direction2);
 		tag.setInteger("direction2Opposite",this.directionO2);
 		tag.setInteger("energyRate", this.energyRate);
-	
+
 	}
 	@Override
 	public void writeToPacket(ByteBuf buf){
@@ -117,7 +117,7 @@ public class TileEntityEnergySensor extends TileEntityTomsMod implements IEnergy
 		buf.writeInt(direction2);
 		buf.writeInt(directionO2);
 	}
-	
+
 	@Override
 	public void readFromPacket(ByteBuf buf){
 		 this.d = buf.readInt();

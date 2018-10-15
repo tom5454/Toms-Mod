@@ -3,12 +3,11 @@ package com.tom.factory.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityPlateBlendingMachine;
 import com.tom.factory.tileentity.inventory.ContainerPlateBlendingMachine;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiPlateBlendingMachine extends GuiTomsMod {
+public class GuiPlateBlendingMachine extends GuiTomsLib {
 	private TileEntityPlateBlendingMachine te;
 
 	public GuiPlateBlendingMachine(InventoryPlayer playerInv, TileEntityPlateBlendingMachine te) {

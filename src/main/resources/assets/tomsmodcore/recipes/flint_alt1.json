@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "minecraft:flint",
+    "data": 0,
+    "count": 9
+  },
+  "ingredients": [
+    {
+      "ore": "blockFlint",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

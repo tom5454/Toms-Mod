@@ -1,7 +1,6 @@
 package com.tom.factory.tileentity;
 
-import static com.tom.api.energy.EnergyType.HV;
-import static com.tom.api.energy.EnergyType.LV;
+import static com.tom.api.energy.EnergyType.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +14,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.IBlockAccess;
 
+import com.tom.api.block.IItemTile;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.config.Config;
 import com.tom.config.ConfigurationOptionMachine;
 import com.tom.defense.ForceDeviceControlType;
@@ -34,8 +35,9 @@ import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockMachineBase;
 import com.tom.factory.block.SteamAlloySmelter;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.TomsModUtils;
 
-public abstract class TileEntityMachineBase extends TileEntityTomsMod implements ISidedInventory, IEnergyReceiver, IConfigurable {
+public abstract class TileEntityMachineBase extends TileEntityTomsMod implements ISidedInventory, IEnergyReceiver, IConfigurable, IItemTile {
 	protected InventoryBasic inv = new InventoryBasic("", false, this.getSizeInventory());
 	protected EnergyType TYPE = HV;
 	public boolean active = false;
@@ -137,7 +139,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return getEnergy().getMaxEnergyStored();
 	}
 
@@ -527,5 +529,15 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	@Override
 	public String getConfigName() {
 		return getBlockType().getUnlocalizedName() + ".name";
+	}
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		ItemStack s = new ItemStack(state.getBlock(), 1, getType());
+		s.setTagCompound(new NBTTagCompound());
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToStackNBT(tag);
+		s.getTagCompound().setTag("BlockEntityTag", tag);
+		s.getTagCompound().setBoolean("stored", true);
+		drops.add(s);
 	}
 }

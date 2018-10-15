@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 5,
+    "count": 1
+  },
+  "pattern": [
+    "GG"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "item": "minecraft:glowstone_dust",
+      "data": 0
+    }
+  }
+}

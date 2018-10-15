@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmoddefense:oremonazit",
+    "data": 1,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmoddefense:tm.crushedmonazit",
+    "data": 1,
+    "count": 2
+  }
+}

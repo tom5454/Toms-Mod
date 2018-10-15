@@ -1,6 +1,7 @@
 {
     "variants": {
         "type=0": { "model": "tomsmodcore:oreoil"},
-        "type=1": { "model": "tomsmodcore:oreoilsand"}
+        "type=1": { "model": "tomsmodcore:oreoilsand"},
+        "type=2": { "model": "tomsmodcore:oreoilredsand"}
     }
 }

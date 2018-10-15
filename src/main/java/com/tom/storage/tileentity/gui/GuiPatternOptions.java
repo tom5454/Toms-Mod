@@ -23,21 +23,20 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import com.tom.api.gui.GuiNumberValueBox;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.api.inventory.SlotPhantom;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.tileentity.IPatternTerminal;
-import com.tom.apis.TomsModUtils;
+import com.tom.client.GuiButtonTransparent;
 import com.tom.lib.Keys;
 import com.tom.storage.handler.ICraftable;
-import com.tom.storage.tileentity.gui.GuiCraftingAmountSelection.GuiButtonHidden;
 import com.tom.storage.tileentity.gui.GuiPatternTerminal.GuiButtonUseContainerItems;
 import com.tom.storage.tileentity.inventory.ContainerPatternOptions;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver {
+public class GuiPatternOptions extends GuiTomsLib implements INBTPacketReceiver {
 	private ItemStack backButton;
-	private GuiButtonHidden buttonBack;
+	private GuiButtonTransparent buttonBack;
 	private IPatternTerminal te;
 	private GuiNumberValueBox timeBox;
 	private GuiButtonEncode buttonEncode;
@@ -68,7 +67,7 @@ public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver 
 		ySize = 248;
 		labelList.clear();
 		super.initGui();
-		buttonBack = new GuiButtonHidden(0, guiLeft + 220, guiTop + 2, 18, 18);
+		buttonBack = new GuiButtonTransparent(0, guiLeft + 220, guiTop + 2, 18, 18);
 		buttonList.add(buttonBack);
 		timeBox = new GuiNumberValueBox(1, guiLeft + 100, guiTop + 110, 1024, 1);
 		timeBox.addToList(buttonList);
@@ -280,7 +279,7 @@ public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver 
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(GUI);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -306,7 +305,7 @@ public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver 
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(GUI);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -332,7 +331,7 @@ public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver 
 		 * Draws this button to the screen.
 		 */
 		@Override
-		public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float pt) {
 			if (this.visible) {
 				mc.getTextureManager().bindTexture(LIST_TEXTURE);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

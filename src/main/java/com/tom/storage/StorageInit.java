@@ -1,8 +1,6 @@
 package com.tom.storage;
 
-import static com.tom.core.CoreInit.addBlockToGameRegistry;
-import static com.tom.core.CoreInit.registerBlock;
-import static com.tom.core.CoreInit.registerItem;
+import static com.tom.core.CoreInit.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +14,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import com.tom.api.block.BlockGridDevice;
 import com.tom.core.CoreInit;
@@ -84,14 +81,14 @@ import com.tom.storage.tileentity.TileEntityUltimateTank;
 
 @Mod(modid = StorageInit.modid, name = StorageInit.modName, version = Configs.version, dependencies = Configs.coreDependencies)
 public class StorageInit {
-	public static final String modid = Configs.ModidL + "|storage";
+	public static final String modid = Configs.ModidL + "storage";
 	public static final String modName = Configs.ModName + " Storage";
 	public static final Logger log = LogManager.getLogger(modName);
 	public static Block exportBus, importBus, partInterface, storageBus, cable;
 	public static Block limitableChest, assembler, tankBasic, tankAdv, tankElite, tankUltimate, quantumTank,
-			storageController, router, advRouter, smallFluixReactor;
+	storageController, router, advRouter, smallFluixReactor;
 	public static BlockGridDevice drive, basicTerminal, energyAcceptor, blockInterface, craftingController,
-			patternTerminal, craftingTerminal;
+	patternTerminal, craftingTerminal;
 	public static ItemStorageCell itemStorageCell;
 	public static Item card, craftingPattern, processor, ram, board, chipset, towerBoard, heatSink, fan;
 	public static ItemPartTerminal partTerminal, partCraftingTerminal, partPatternTerminal;
@@ -179,30 +176,30 @@ public class StorageInit {
 		addBlockToGameRegistry(partCraftingTerminal, partCraftingTerminal.getUnlocalizedName().substring(5));
 		addBlockToGameRegistry(partPatternTerminal, partPatternTerminal.getUnlocalizedName().substring(5));
 		/** TileEntities */
-		GameRegistry.registerTileEntity(TileEntityLimitableChest.class, Configs.Modid + ":limitableChest");
-		GameRegistry.registerTileEntity(TileEntityBasicTerminal.class, Configs.Modid + ":terminal");
-		GameRegistry.registerTileEntity(TileEntityDrive.class, Configs.Modid + ":drive");
-		GameRegistry.registerTileEntity(TileEntityEnergyAcceptor.class, Configs.Modid + ":energyAcceptor");
-		GameRegistry.registerTileEntity(TileEntityInterface.class, Configs.Modid + ":interface");
-		GameRegistry.registerTileEntity(TileEntityCraftingController.class, Configs.Modid + ":craftingController");
-		GameRegistry.registerTileEntity(TileEntityPatternTerminal.class, Configs.Modid + ":patternTerminal");
-		GameRegistry.registerTileEntity(TileEntityAssembler.class, Configs.Modid + ":mAssembler");
-		GameRegistry.registerTileEntity(TileEntityBasicTank.class, Configs.Modid + ":basicTank");
-		GameRegistry.registerTileEntity(TileEntityAdvTank.class, Configs.Modid + ":advTank");
-		GameRegistry.registerTileEntity(TileEntityEliteTank.class, Configs.Modid + ":eliteTank");
-		GameRegistry.registerTileEntity(TileEntityUltimateTank.class, Configs.Modid + ":ultimateTank");
-		GameRegistry.registerTileEntity(TileEntityCraftingTerminal.class, Configs.Modid + ":craftingTerminal");
-		GameRegistry.registerTileEntity(TileEntityStorageNetworkController.class, Configs.Modid + ":storageController");
-		GameRegistry.registerTileEntity(TileEntityRouter.class, Configs.Modid + ":storageRouter");
-		GameRegistry.registerTileEntity(TileEntityAdvRouter.class, Configs.Modid + ":advStorageRouter");
+		registerTileEntity(TileEntityLimitableChest.class, "limitableChest");
+		registerTileEntity(TileEntityBasicTerminal.class, "terminal");
+		registerTileEntity(TileEntityDrive.class, "drive");
+		registerTileEntity(TileEntityEnergyAcceptor.class, "energyAcceptor");
+		registerTileEntity(TileEntityInterface.class, "interface");
+		registerTileEntity(TileEntityCraftingController.class, "craftingController");
+		registerTileEntity(TileEntityPatternTerminal.class, "patternTerminal");
+		registerTileEntity(TileEntityAssembler.class, "mAssembler");
+		registerTileEntity(TileEntityBasicTank.class, "basicTank");
+		registerTileEntity(TileEntityAdvTank.class, "advTank");
+		registerTileEntity(TileEntityEliteTank.class, "eliteTank");
+		registerTileEntity(TileEntityUltimateTank.class, "ultimateTank");
+		registerTileEntity(TileEntityCraftingTerminal.class, "craftingTerminal");
+		registerTileEntity(TileEntityStorageNetworkController.class, "storageController");
+		registerTileEntity(TileEntityRouter.class, "storageRouter");
+		registerTileEntity(TileEntityAdvRouter.class, "advStorageRouter");
 		/** Multiparts */
-		GameRegistry.registerTileEntity(PartStorageNetworkCable.class, Configs.Modid + ":part:storageNetworkCable");
-		GameRegistry.registerTileEntity(PartExportBus.class, Configs.Modid + ":part:exportBus");
-		GameRegistry.registerTileEntity(PartImportBus.class, Configs.Modid + ":part:importBus");
-		GameRegistry.registerTileEntity(PartStorageBus.class, Configs.Modid + ":part:storageBus");
-		GameRegistry.registerTileEntity(PartBasicTerminal.class, Configs.Modid + ":part:basicTerminal");
-		GameRegistry.registerTileEntity(PartCraftingTerminal.class, Configs.Modid + ":part:craftingTerminal");
-		GameRegistry.registerTileEntity(PartPatternTerminal.class, Configs.Modid + ":part:patternTerminal");
+		registerTileEntity(PartStorageNetworkCable.class, "part_storageNetworkCable");
+		registerTileEntity(PartExportBus.class, "part_exportBus");
+		registerTileEntity(PartImportBus.class, "part_importBus");
+		registerTileEntity(PartStorageBus.class, "part_storageBus");
+		registerTileEntity(PartBasicTerminal.class, "part_basicTerminal");
+		registerTileEntity(PartCraftingTerminal.class, "part_craftingTerminal");
+		registerTileEntity(PartPatternTerminal.class, "part_patternTerminal");
 		CacheRegistry.init();
 		hadPreInit = true;
 		CoreInit.tryLoadAfterPreInit(log);

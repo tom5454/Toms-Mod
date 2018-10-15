@@ -10,23 +10,15 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
-import com.tom.lib.Configs;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.HolotapeReader;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityHolotapeReader extends TileEntityTomsMod implements IPeripheral, IInventory {
-	private List<IComputerAccess> computers = new ArrayList<>();
+public class TileEntityHolotapeReader extends TileEntityTomsMod implements ITMCompatPeripheral, IInventory {
+	private List<IComputer> computers = new ArrayList<>();
 	public InventoryBasic holotape = new InventoryBasic("", false, 1);
 	// public boolean isValidH = false;
 	public boolean hasH = false;
@@ -43,7 +35,7 @@ public class TileEntityHolotapeReader extends TileEntityTomsMod implements IPeri
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
+	public Object[] callMethod(IComputer computer, int method, Object[] arguments) throws LuaException {
 		if (method == 0) {
 			return new Object[]{this.isValidHolotape()};
 		} else if (method == 1) {
@@ -65,18 +57,13 @@ public class TileEntityHolotapeReader extends TileEntityTomsMod implements IPeri
 	}
 
 	@Override
-	public void attach(IComputerAccess computer) {
+	public void attach(IComputer computer) {
 		computers.add(computer);
 	}
 
 	@Override
-	public void detach(IComputerAccess computer) {
+	public void detach(IComputer computer) {
 		computers.remove(computer);
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		return other == this;
 	}
 
 	@Override
@@ -104,7 +91,7 @@ public class TileEntityHolotapeReader extends TileEntityTomsMod implements IPeri
 		//buf.writeBoolean(this.isValidHolotape());
 		//buf.writeInt(direction);
 	}
-	
+
 	@Override
 	public void readFromPacket(ByteBuf buf){
 		//this.hasH = buf.readBoolean();
@@ -116,7 +103,7 @@ public class TileEntityHolotapeReader extends TileEntityTomsMod implements IPeri
 		this.worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 	}*/
 	public boolean isValidHolotape() {
-		if (holotape != null) {
+		if (!holotape.getStackInSlot(0).isEmpty()) {
 			if (holotape.getStackInSlot(0).getTagCompound() == null)
 				holotape.getStackInSlot(0).setTagCompound(new NBTTagCompound());
 			return (holotape.getStackInSlot(0).getTagCompound().hasKey("w") && holotape.getStackInSlot(0).getTagCompound().getBoolean("w"));
@@ -128,7 +115,7 @@ public class TileEntityHolotapeReader extends TileEntityTomsMod implements IPeri
 	@Override
 	public void updateEntity() {
 		if (!world.isRemote) {
-			this.hasH = this.holotape != null;
+			this.hasH = !this.holotape.getStackInSlot(0).isEmpty();
 			IBlockState state = world.getBlockState(pos);
 			if (hasH) {
 				if (this.isValidHolotape()) {

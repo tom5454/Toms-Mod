@@ -4,21 +4,22 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.item.IControllerBoard;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
+import com.tom.util.TomsModUtils;
 
 public class ItemBoard extends Item implements IModelRegisterRequired, IControllerBoard {
 	public ItemBoard() {
@@ -69,7 +70,7 @@ public class ItemBoard extends Item implements IModelRegisterRequired, IControll
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		if (GuiScreen.isShiftKeyDown()) {
 			tooltip.add(TomsModUtils.formatYesNoMessage("tomsMod.tooltip.board.canBeInTower", canBeInsertedIntoTower(stack)));
 			tooltip.add(I18n.format("tomsMod.tooltip.board.processor", TomsModUtils.join(getCompatibleProcessorSlotTypes(stack))));
@@ -91,8 +92,8 @@ public class ItemBoard extends Item implements IModelRegisterRequired, IControll
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		for (BoardTypes t : BoardTypes.VALUES) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))for (BoardTypes t : BoardTypes.VALUES) {
 			subItems.add(new ItemStack(this, 1, t.ordinal()));
 		}
 	}

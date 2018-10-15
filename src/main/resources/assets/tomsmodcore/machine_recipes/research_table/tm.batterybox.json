@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:batterybox"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:tm.batterybox",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "W-W",
+      "BBB",
+      "WWW"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "item": "tomsmodenergy:battery",
+        "data": 0
+      },
+      "W": {
+        "ore": "plankWood",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "cableCopper",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 900
+}

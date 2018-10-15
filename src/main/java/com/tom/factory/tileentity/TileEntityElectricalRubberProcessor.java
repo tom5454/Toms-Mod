@@ -14,10 +14,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.energy.EnergyStorage;
 import com.tom.core.CoreInit;
-import com.tom.core.CoreInit.FluidSupplier;
 import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.recipes.OreDict;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.FluidSupplier;
 
 public class TileEntityElectricalRubberProcessor extends TileEntityMachineBase implements ITileFluidHandler {
 	private EnergyStorage energy = new EnergyStorage(10000, 100);
@@ -83,6 +83,12 @@ public class TileEntityElectricalRubberProcessor extends TileEntityMachineBase i
 			s.setExtra(1);
 			checkItems(s, 2, MAX_PROCESS_TIME, 0, -1);
 			setOut(0, s);
+		} else if (OreDict.isOre(inv.getStackInSlot(0), "leavesRubber")) {
+			ItemStackChecker s = new ItemStackChecker(ItemStack.EMPTY);
+			s.setExtra(1);
+			s.setExtra2(1);
+			checkItems(s, 2, MAX_PROCESS_TIME, 0, -1);
+			setOut(0, s);
 		} else if (tankCresin.getFluidAmount() >= 200) {
 			ItemStackChecker s = new ItemStackChecker(CraftingMaterial.RUBBER.getStackNormal());
 			checkItems(s, 2, MAX_PROCESS_TIME, -1, -1);
@@ -114,6 +120,12 @@ public class TileEntityElectricalRubberProcessor extends TileEntityMachineBase i
 				p = Math.min(p, tankIn.getCapacity() - tankIn.getFluidAmount());
 				tankIn.fillInternal(new FluidStack(CoreInit.resin.get(), p), true);
 				progress = Math.max(0, progress - p);
+				energy.extractEnergy(0.5D * p, false);
+				return;
+			} else if (stack.isEmpty() && s.getExtra2() == 1) {
+				p = Math.min(p, tankIn.getCapacity() - tankIn.getFluidAmount());
+				tankIn.fillInternal(new FluidStack(CoreInit.resin.get(), p), true);
+				progress = Math.max(0, progress - p*5);
 				energy.extractEnergy(0.5D * p, false);
 				return;
 			}
@@ -163,7 +175,7 @@ public class TileEntityElectricalRubberProcessor extends TileEntityMachineBase i
 		return MathHelper.ceil(energy.getEnergyStored());
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
 

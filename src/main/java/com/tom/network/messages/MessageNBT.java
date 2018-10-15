@@ -23,10 +23,10 @@ import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.network.INBTPacketReceiver.IANBTPacketReceiver;
 import com.tom.api.network.INBTPacketSender;
 import com.tom.api.tileentity.IConfigurable;
-import com.tom.apis.TMLogger;
-import com.tom.apis.TomsModUtils;
-import com.tom.network.MessageBase;
+import com.tom.lib.network.MessageBase;
 import com.tom.network.NetworkHandler;
+import com.tom.util.TMLogger;
+import com.tom.util.TomsModUtils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
@@ -120,8 +120,43 @@ public class MessageNBT extends MessageBase<MessageNBT> {
 
 	private void handleClient() {
 		Minecraft mc = Minecraft.getMinecraft();
-		if (mc.currentScreen instanceof INBTPacketReceiver) {
-			((INBTPacketReceiver) mc.currentScreen).receiveNBTPacket(tag);
+		if (pos != null) {
+			if (isMultipart && partPos >= 0) {
+				IMultipartContainer container = MultipartHelper.getContainer(mc.world, pos).orElse(null);
+				if (container == null) { return; }
+				Optional<IPartInfo> part = container.get(SlotRegistry.INSTANCE.getSlotFromID(partPos));
+				if (!part.isPresent())
+					return;
+				if (part.get().getTile() instanceof IANBTPacketReceiver) {
+					((IANBTPacketReceiver) part.get().getTile()).receiveNBTPacket(tag, mc.player);
+				} else if (part.get().getTile() instanceof INBTPacketReceiver) {
+					((INBTPacketReceiver) part.get().getTile()).receiveNBTPacket(tag);
+				}
+			} else if (isConfiguration) {
+				TileEntity tile = mc.world.getTileEntity(pos);
+				IConfigurable c = tile.getCapability(Capabilities.CONFIGURABLE, partPos == -1 ? null : EnumFacing.VALUES[partPos]);
+				if (c != null) {
+					if (c instanceof IANBTPacketReceiver) {
+						((IANBTPacketReceiver) c).receiveNBTPacket(tag, mc.player);
+					} else {
+						((INBTPacketReceiver) c).receiveNBTPacket(tag);
+					}
+				}
+			} else {
+				TileEntity tile = mc.world.getTileEntity(pos);
+				if (tile instanceof IANBTPacketReceiver) {
+					((IANBTPacketReceiver) tile).receiveNBTPacket(tag, mc.player);
+					tile.markDirty();
+				} else if (tile instanceof INBTPacketReceiver) {
+					((INBTPacketReceiver) tile).receiveNBTPacket(tag);
+					tile.markDirty();
+				}
+			}
+
+		}else{
+			if (mc.currentScreen instanceof INBTPacketReceiver) {
+				((INBTPacketReceiver) mc.currentScreen).receiveNBTPacket(tag);
+			}
 		}
 	}
 

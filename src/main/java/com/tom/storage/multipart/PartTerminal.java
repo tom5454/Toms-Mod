@@ -11,7 +11,6 @@ import com.google.common.base.Function;
 import com.tom.api.inventory.IStorageInventory;
 import com.tom.api.multipart.IGuiMultipart;
 import com.tom.api.tileentity.IConfigurable;
-import com.tom.apis.TomsModUtils;
 import com.tom.config.ConfigurationTerminal;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
@@ -26,6 +25,7 @@ import com.tom.storage.multipart.block.StorageNetworkCable.CableColor;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
 import com.tom.storage.tileentity.TileEntityBasicTerminal.TerminalColor;
 import com.tom.storage.tileentity.gui.GuiTerminalBase;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.container.IPartInfo;

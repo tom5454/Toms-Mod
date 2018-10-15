@@ -19,13 +19,13 @@ import com.tom.api.inventory.IStorageInventory.IUpdateable;
 import com.tom.api.item.IStorageCell;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.ISecuredTileEntity;
-import com.tom.apis.TomsModUtils;
 import com.tom.client.ICustomModelledTileEntity;
 import com.tom.config.ConfigurationOptionDrive;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.storage.block.Drive;
 import com.tom.storage.handler.StorageNetworkGrid.IChannelLoadListener;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityDrive extends TileEntityChannel implements IInventory, ICustomModelledTileEntity, IChannelLoadListener, IConfigurable, ISecuredTileEntity {
 	public InventoryBasic inv = new InventoryBasic("drive", false, 11);
@@ -402,12 +402,7 @@ public class TileEntityDrive extends TileEntityChannel implements IInventory, IC
 	}
 
 	@Override
-	public boolean isConnected(EnumFacing side) {
-		return (connections & (1 << side.ordinal())) == 0;
-	}
-
-	@Override
-	public boolean isValidConnection(EnumFacing side) {
+	public boolean canConnectTo(EnumFacing side) {
 		return (connections & (1 << side.ordinal())) == 0;
 	}
 

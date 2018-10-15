@@ -5,13 +5,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.apis.TomsModUtils;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityCokeOven;
 import com.tom.factory.tileentity.inventory.ContainerCokeOven;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiCokeOven extends GuiTomsMod {
+public class GuiCokeOven extends GuiTomsLib {
 	private TileEntityCokeOven te;
 
 	public GuiCokeOven(InventoryPlayer playerInv, TileEntityCokeOven te) {

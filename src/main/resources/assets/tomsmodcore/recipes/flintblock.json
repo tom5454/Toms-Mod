@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:flintblock",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "FFF",
+    "FFF",
+    "FFF"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "F": {
+      "ore": "itemFlint",
+      "type": "forge:ore_dict"
+    }
+  }
+}

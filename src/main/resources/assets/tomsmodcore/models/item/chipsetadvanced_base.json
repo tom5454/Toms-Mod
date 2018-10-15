@@ -1,0 +1,6 @@
+{
+  "parent": "tomsmodcore:item/platesbase",
+  "textures": {
+    "block": "tomsmodcore:items/chipsetAdvBase"
+  }
+}

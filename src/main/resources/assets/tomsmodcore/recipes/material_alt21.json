@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 58,
+    "count": 4
+  },
+  "pattern": [
+    "PPP",
+    "PBP",
+    "PPP"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:paper",
+      "data": 0
+    },
+    "B": {
+      "ore": "dyeBlue",
+      "type": "forge:ore_dict"
+    }
+  }
+}

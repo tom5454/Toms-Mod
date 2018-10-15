@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "minecraft:coal_ore",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:crushed",
+    "data": 31,
+    "count": 2
+  }
+}

@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 
 import com.tom.api.item.ILinkContainer;
 import com.tom.api.tileentity.ILinkable;
-import com.tom.apis.ExtraBlockHitInfo;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.ExtraBlockHitInfo;
+import com.tom.util.TomsModUtils;
 
 public class Linker extends Item implements ILinkContainer {
 	public Linker() {

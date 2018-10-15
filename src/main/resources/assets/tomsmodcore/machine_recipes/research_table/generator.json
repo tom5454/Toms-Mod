@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:basiclvmachines"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:generator",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "P- ",
+      "-B-",
+      "_F_"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "pipeSteel",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "tomsmodfactory:tm.steelboiler",
+        "data": 0
+      },
+      "F": {
+        "item": "minecraft:furnace",
+        "data": 0
+      },
+      "-": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "_": {
+        "item": "minecraft:heavy_weighted_pressure_plate",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 1000
+}

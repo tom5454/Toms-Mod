@@ -6,8 +6,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
 import com.tom.api.block.BlockMultiblockCasing.CasingConnectionType;
-import com.tom.apis.MultiblockBlockChecker;
 import com.tom.factory.FactoryInit;
+import com.tom.util.MultiblockBlockChecker;
 
 import com.tom.core.tileentity.TileEntityHidden.BlockProperties;
 

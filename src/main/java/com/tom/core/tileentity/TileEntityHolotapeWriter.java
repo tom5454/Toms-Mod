@@ -12,29 +12,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
-import net.minecraftforge.fml.common.Optional;
-
 import com.tom.api.energy.EnergyStorage;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
-import com.tom.lib.Configs;
+import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.HolotapeWriter;
 
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = Configs.COMPUTERCRAFT)
-public class TileEntityHolotapeWriter extends TileEntityTomsMod implements IPeripheral, IEnergyReceiver, ISidedInventory {
-
+public class TileEntityHolotapeWriter extends TileEntityTomsMod implements ITMCompatPeripheral, IEnergyReceiver, ISidedInventory {
+	public TileEntityHolotapeWriter() {
+	}
 	protected EnergyStorage storage = new EnergyStorage(100000, 1000);
-	private List<IComputerAccess> computers = new ArrayList<>();
+	private List<IComputer> computers = new ArrayList<>();
 	public InventoryBasic inv = new InventoryBasic("", false, 1);
 	private double i = 0;
 	public boolean isWriting = false;
@@ -45,7 +38,6 @@ public class TileEntityHolotapeWriter extends TileEntityTomsMod implements IPeri
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-
 		super.readFromNBT(tag);
 		storage.readFromNBT(tag);
 		this.inv.setInventorySlotContents(0, TomsModUtils.loadItemStackFromNBT(tag.getCompoundTag("holotape")));
@@ -57,7 +49,6 @@ public class TileEntityHolotapeWriter extends TileEntityTomsMod implements IPeri
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-
 		super.writeToNBT(tag);
 		storage.writeToNBT(tag);
 		tag.setTag("holotape", inv.getStackInSlot(0).writeToNBT(new NBTTagCompound()));
@@ -76,19 +67,16 @@ public class TileEntityHolotapeWriter extends TileEntityTomsMod implements IPeri
 
 	@Override
 	public double receiveEnergy(EnumFacing from, EnergyType type, double maxReceive, boolean simulate) {
-
 		return this.canConnectEnergy(from, type) ? storage.receiveEnergy(maxReceive, simulate) : 0;
 	}
 
 	@Override
 	public double getEnergyStored(EnumFacing from, EnergyType type) {
-
 		return storage.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
-
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return storage.getMaxEnergyStored();
 	}
 
@@ -103,7 +91,7 @@ public class TileEntityHolotapeWriter extends TileEntityTomsMod implements IPeri
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] a) throws LuaException, InterruptedException {
+	public Object[] callMethod(IComputer computer, int method, Object[] a) throws LuaException {
 		if (method == 0) {
 			if (!inv.getStackInSlot(0).isEmpty()) {
 				if (inv.getStackInSlot(0).getTagCompound() == null)
@@ -129,7 +117,7 @@ public class TileEntityHolotapeWriter extends TileEntityTomsMod implements IPeri
 				throw new LuaException("No Holotape in the machine!");
 			}
 		} else if (method == 1) {
-			return new Object[]{this.isValidHolotape()};
+			return new Object[]{isValidH};
 		} else if (method == 2) {
 			if (this.isWriting) {
 				double p = Math.floor(((this.iMax - this.i) / this.iMax) * 1000) / 10D;
@@ -138,22 +126,17 @@ public class TileEntityHolotapeWriter extends TileEntityTomsMod implements IPeri
 				return new Object[]{false, 0};
 			}
 		}
-		return null;
+		return new Object[0];
 	}
 
 	@Override
-	public void attach(IComputerAccess computer) {
+	public void attach(IComputer computer) {
 		computers.add(computer);
 	}
 
 	@Override
-	public void detach(IComputerAccess computer) {
+	public void detach(IComputer computer) {
 		computers.remove(computer);
-	}
-
-	@Override
-	public boolean equals(IPeripheral other) {
-		return other == this;
 	}
 
 	@Override
@@ -169,7 +152,7 @@ public class TileEntityHolotapeWriter extends TileEntityTomsMod implements IPeri
 			} else if (i != 0 && this.isWriting) {
 				i = 0;
 			} else if (i == 0 && this.isWriting) {
-				for (IComputerAccess c : this.computers) {
+				for (IComputer c : this.computers) {
 					c.queueEvent("holotape_done", new Object[]{c.getAttachmentName(), this.inv.getStackInSlot(0).getTagCompound().getString("name")});
 				}
 				this.isWriting = false;
@@ -192,13 +175,6 @@ public class TileEntityHolotapeWriter extends TileEntityTomsMod implements IPeri
 			}
 		}
 	}
-	/*@Override
-	public void writeToPacket(NBTTagCompound buf){
-		buf.setBoolean(this.holotape != null);
-		buf.setBoolean(this.isValidHolotape());
-		buf.setBoolean(isWriting);
-		buf.writeInt(direction);
-	}*/
 
 	public boolean isValidHolotape() {
 		if (!inv.getStackInSlot(0).isEmpty()) {

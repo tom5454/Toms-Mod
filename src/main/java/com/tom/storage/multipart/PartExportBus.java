@@ -14,9 +14,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import com.tom.api.multipart.IGuiMultipart;
-import com.tom.apis.TomsModUtils;
 import com.tom.storage.tileentity.gui.GuiExportBus;
 import com.tom.storage.tileentity.inventory.ContainerExportBus;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.api.slot.EnumFaceSlot;
 import mcmultipart.api.slot.IPartSlot;

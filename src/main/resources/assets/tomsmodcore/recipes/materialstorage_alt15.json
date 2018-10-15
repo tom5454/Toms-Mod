@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:materialstorage",
+    "data": 6,
+    "count": 1
+  },
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "I": {
+      "ore": "ingotChrome",
+      "type": "forge:ore_dict"
+    }
+  }
+}

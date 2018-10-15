@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmoddefense:projectorfieldtypecontroller",
+    "data": 3,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "tomsmoddefense:projectorfieldtypecontroller",
+      "data": 3
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

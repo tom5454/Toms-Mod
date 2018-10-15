@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -22,7 +20,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.apis.TomsModUtils;
+import com.tom.lib.utils.RenderUtil;
 import com.tom.storage.handler.AutoCraftingHandler;
 import com.tom.storage.handler.ICache;
 import com.tom.storage.handler.ICraftable;
@@ -30,6 +28,7 @@ import com.tom.storage.handler.InventoryCache;
 import com.tom.storage.handler.NetworkCache;
 import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.storage.handler.StorageNetworkGrid.ICraftingReportScreen;
+import com.tom.util.TomsModUtils;
 
 import io.netty.buffer.ByteBuf;
 
@@ -160,7 +159,7 @@ public class StoredItemStack implements ICraftable {
 						memoryUsage += pulled;
 						operations += 1;
 						s.stackSize = pulled;
-					
+
 					}*/
 					ItemStack s = storedItemStack.stack.copy();
 					AutoCraftingHandler.addCraftableToList(new StoredItemStack(s, pull), requiredStacksToPull);
@@ -472,8 +471,8 @@ public class StoredItemStack implements ICraftable {
 			ItemStack stack = this.stack.copy();
 			stack.setCount(1);
 			if (s.missing > 0) {
-				Render.setColourWithAlphaPercent(0xFF0000, 50);
-				Render.drawRect(posX, posY, 67, 22);
+				RenderUtil.setColourWithAlphaPercent(0xFF0000, 50);
+				RenderUtil.drawRect(posX, posY, 67, 22);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			}
 			screen.renderItemInGui(stack, posX + 45, posY + 3, -20, -20, 0xFFFFFF);

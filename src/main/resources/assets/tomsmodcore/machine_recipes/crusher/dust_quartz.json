@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "minecraft:quartz",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:dust",
+    "data": 18,
+    "count": 1
+  }
+}

@@ -5,14 +5,13 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.apis.TomsModUtils;
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.factory.tileentity.TileEntityAdvBoiler;
 import com.tom.factory.tileentity.TileEntityRefinery;
 import com.tom.factory.tileentity.inventory.ContainerRefinery;
+import com.tom.util.TomsModUtils;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiRefinery extends GuiTomsMod {
+public class GuiRefinery extends GuiTomsLib {
 	private TileEntityRefinery te;
 
 	public GuiRefinery(InventoryPlayer playerInv, TileEntityRefinery te) {
@@ -53,9 +52,9 @@ public class GuiRefinery extends GuiTomsMod {
 		ySize = 176;
 		labelList.clear();
 		super.initGui();
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 8, guiTop + 20, te.getTankIn()).setUV(176, 0), labelList);
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 100, guiTop + 20, te.getTankOut1()).setUV(176, 0), labelList);
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 120, guiTop + 20, te.getTankOut2()).setUV(176, 0), labelList);
-		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 140, guiTop + 20, te.getTankOut3()).setUV(176, 0), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 8, guiTop + 20, te.getTankIn()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 100, guiTop + 20, te.getTankOut1()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 120, guiTop + 20, te.getTankOut2()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
+		TomsModUtils.addRunnableToLabelList(new GuiFluidTank(this, null, guiLeft + 140, guiTop + 20, te.getTankOut3()).setUV(176, 0).setUV2(125, 138).setPaddingAndSize(4, 20, 55), labelList);
 	}
 }

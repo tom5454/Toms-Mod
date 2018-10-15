@@ -25,8 +25,9 @@ import com.tom.thirdparty.jei.PlasticRecipeCategory.PlasticRecipeJEI;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public class PlasticRecipeCategory implements IRecipeCategory<PlasticRecipeJEI> {
 	public static List<PlasticRecipeJEI> get() {
@@ -37,10 +38,6 @@ public class PlasticRecipeCategory implements IRecipeCategory<PlasticRecipeJEI> 
 
 	@Nonnull
 	private IDrawable background = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/jei/jeiCrusher.png"), 2, 80, 110, 150);
-	@Nonnull
-	private final IDrawable tankOverlay = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/resSelect.png"), 102, 124, 12, 47);
-	@Nonnull
-	private final IDrawable tankBackground = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/resSelect.png"), 78, 120, 20, 55);
 
 	@Override
 	public String getUid() {
@@ -64,13 +61,9 @@ public class PlasticRecipeCategory implements IRecipeCategory<PlasticRecipeJEI> 
 
 	@Override
 	public void drawExtras(Minecraft minecraft) {
-		tankBackground.draw(minecraft, -4, -4);
-		tankBackground.draw(minecraft, 18, -4);
-		tankBackground.draw(minecraft, 40, -4);
-		tankBackground.draw(minecraft, 62, -4);
 	}
 
-	public static class PlasticRecipeJEI extends BlankRecipeWrapper {
+	public static class PlasticRecipeJEI implements IRecipeWrapper {
 		private final List<List<ItemStack>> inputs;
 		private final ItemStack output;
 		private final List<FluidStack> fluidInputs;
@@ -94,9 +87,9 @@ public class PlasticRecipeCategory implements IRecipeCategory<PlasticRecipeJEI> 
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInputLists(ItemStack.class, inputs);
-			ingredients.setOutput(ItemStack.class, output);
-			ingredients.setInputs(FluidStack.class, fluidInputs);
+			ingredients.setInputLists(VanillaTypes.ITEM, inputs);
+			ingredients.setOutput(VanillaTypes.ITEM, output);
+			ingredients.setInputs(VanillaTypes.FLUID, fluidInputs);
 		}
 	}
 
@@ -109,17 +102,21 @@ public class PlasticRecipeCategory implements IRecipeCategory<PlasticRecipeJEI> 
 	public void setRecipe(IRecipeLayout recipeLayout, PlasticRecipeJEI recipe, IIngredients ingredients) {
 		int x = 5;
 		int y = 60;
-		int tankY = 0;
+		int tankY = -5;
 		recipeLayout.getItemStacks().init(0, true, x, y);
 		recipeLayout.getItemStacks().init(1, true, x + 18, y);
 		recipeLayout.getItemStacks().init(2, true, x + 73, y);
 		for (int i = 0;i < 2;i++)
-			recipeLayout.getIngredientsGroup(ItemStack.class).set(i, recipe.inputs.get(i));
+			recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(i, recipe.inputs.get(i));
 		recipeLayout.getItemStacks().set(2, recipe.output);
-		recipeLayout.getFluidStacks().init(0, true, 0, tankY, 12, 47, 20000, true, tankOverlay);
-		recipeLayout.getFluidStacks().init(1, true, 22, tankY, 12, 47, 10000, true, tankOverlay);
-		recipeLayout.getFluidStacks().init(2, true, 44, tankY, 12, 47, 10000, true, tankOverlay);
-		recipeLayout.getFluidStacks().init(3, true, 66, tankY, 12, 47, 10000, true, tankOverlay);
+		recipeLayout.getFluidStacks().init(0, true, 0, tankY, 16, 58, 20000, true, JEIHandler.tankOverlay);
+		recipeLayout.getFluidStacks().init(1, true, 22, tankY, 16, 58, 10000, true, JEIHandler.tankOverlay);
+		recipeLayout.getFluidStacks().init(2, true, 44, tankY, 16, 58, 10000, true, JEIHandler.tankOverlay);
+		recipeLayout.getFluidStacks().init(3, true, 66, tankY, 16, 58, 10000, true, JEIHandler.tankOverlay);
+		recipeLayout.getFluidStacks().setBackground(0, JEIHandler.tankBackground);
+		recipeLayout.getFluidStacks().setBackground(1, JEIHandler.tankBackground);
+		recipeLayout.getFluidStacks().setBackground(2, JEIHandler.tankBackground);
+		recipeLayout.getFluidStacks().setBackground(3, JEIHandler.tankBackground);
 		recipeLayout.getFluidStacks().set(0, recipe.fluidInputs.get(0));
 		recipeLayout.getFluidStacks().set(1, recipe.fluidInputs.get(1));
 		recipeLayout.getFluidStacks().set(2, recipe.fluidInputs.get(2));

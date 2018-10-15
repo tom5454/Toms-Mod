@@ -9,7 +9,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 public class PortableComparator extends Item {
 

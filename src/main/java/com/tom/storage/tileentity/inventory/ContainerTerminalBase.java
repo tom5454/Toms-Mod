@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -31,8 +29,8 @@ import com.google.common.collect.Lists;
 
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.tileentity.IGuiTile;
-import com.tom.apis.TomsModUtils;
-import com.tom.handler.PlayerHandler;
+import com.tom.handler.TMPlayerHandler;
+import com.tom.lib.utils.RenderUtil;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.storage.handler.AutoCraftingHandler;
@@ -43,6 +41,7 @@ import com.tom.storage.handler.StorageData;
 import com.tom.storage.handler.StorageNetworkGrid.ControllMode;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
 import com.tom.storage.tileentity.gui.GuiTerminalBase;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.inventory.ContainerConfigurator.SlotData;
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
@@ -129,8 +128,8 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 		@SideOnly(Side.CLIENT)
 		public void drawSlot(GuiTerminalBase gui, int mouseX, int mouseY) {
 			if (mouseX >= gui.getGuiLeft() + xDisplayPosition - 1 && mouseY >= gui.getGuiTop() + yDisplayPosition - 1 && mouseX < gui.getGuiLeft() + xDisplayPosition + 17 && mouseY < gui.getGuiTop() + yDisplayPosition + 17) {
-				Render.setColourWithAlphaPercent(0xFFFFFF, 60);
-				Render.drawRect(gui.getGuiLeft() + xDisplayPosition, gui.getGuiTop() + yDisplayPosition, 16, 16);
+				RenderUtil.setColourWithAlphaPercent(0xFFFFFF, 60);
+				RenderUtil.drawRect(gui.getGuiLeft() + xDisplayPosition, gui.getGuiTop() + yDisplayPosition, 16, 16);
 			}
 			if (gui.powered == TileEntityBasicTerminal.TerminalState.ACTIVE) {
 				if (stack != null) {
@@ -187,7 +186,7 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 
 	@Override
 	public final void buttonPressed(EntityPlayer player, int id, int extra) {
-		PlayerHandler playerH = PlayerHandler.getPlayerHandlerForName(player.getName());
+		TMPlayerHandler playerH = TMPlayerHandler.getPlayerHandlerForName(player.getName());
 		if (id == 0) {
 			playerH.setItemSorting(extra);
 		} else if (id == 1) {
@@ -278,7 +277,7 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 			mainTag.setInteger("s", itemList.size());
 			mainTag.setInteger("v", craftables.size());
 			mainTag.setTag("a", cList);
-			PlayerHandler playerH = PlayerHandler.getPlayerHandlerForName(player.getName());
+			TMPlayerHandler playerH = TMPlayerHandler.getPlayerHandlerForName(player.getName());
 			int comp = playerH.getItemSortingMode(), search = playerH.getSearchBoxType(),
 					controll = playerH.controllMode.ordinal();
 			if (comp != sortingData || search != searchType || controll != controllMode || playerH.wideTerminal != wideTerm || playerH.tallTerminal != tallTerm)
@@ -319,7 +318,7 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 						AutoCraftingHandler.CompiledCalculatedCrafting c = te.getData().compileCalculatedCrafting(currentReport);
 						NBTTagCompound mainTag = new NBTTagCompound();
 						mainTag.setBoolean("r", true);
-						PlayerHandler playerH = PlayerHandler.getPlayerHandlerForName(player.getName());
+						TMPlayerHandler playerH = TMPlayerHandler.getPlayerHandlerForName(player.getName());
 						int termMode = playerH.controllMode.ordinal();
 						termMode = TomsModUtils.setBit(termMode, 4, playerH.wideTerminal);
 						termMode = TomsModUtils.setBit(termMode, 5, playerH.tallTerminal);
@@ -343,7 +342,7 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 				}
 				dataSent = true;
 			} else {
-				PlayerHandler playerH = PlayerHandler.getPlayerHandlerForName(player.getName());
+				TMPlayerHandler playerH = TMPlayerHandler.getPlayerHandlerForName(player.getName());
 				if (wideTerm != playerH.wideTerminal || playerH.tallTerminal != tallTerm) {
 					wideTerm = playerH.wideTerminal;
 					tallTerm = playerH.tallTerminal;

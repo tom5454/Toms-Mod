@@ -1,19 +1,21 @@
 package com.tom.core.item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,11 +23,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.item.ItemCraftingTool;
+import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.recipes.handler.MachineCraftingHandler;
 
-public class Hammer extends ItemCraftingTool {
+public class Hammer extends ItemCraftingTool implements IModelRegisterRequired {
 	@Override
 	public int getDurability(ItemStack stack) {
 		return TMResource.getDurability(stack.getMetadata());
@@ -38,14 +42,14 @@ public class Hammer extends ItemCraftingTool {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, playerIn, tooltip, advanced);
 		tooltip.add(I18n.format("tomsMod.tooltip.tier") + ": " + TMResource.get(stack.getMetadata()).getToolTier());
 	}
 
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		TMResource.addHammersToList(subItems, itemIn);
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))TMResource.addHammersToList(subItems, this);
 	}
 
 	@Override
@@ -74,9 +78,8 @@ public class Hammer extends ItemCraftingTool {
 			return true;
 		}
 	}
-
 	@Override
-	public float getStrVsBlock(ItemStack stack, IBlockState state) {
+	public float getDestroySpeed(ItemStack stack, IBlockState state) {
 		int tool = TMResource.get(stack.getMetadata()).getToolTier();
 		return MachineCraftingHandler.getHammerResult(tool, state, itemRand) != null ? tool * 10F : 1.0F;
 	}
@@ -85,5 +88,12 @@ public class Hammer extends ItemCraftingTool {
 	public boolean canHarvestBlock(IBlockState state, ItemStack stack) {
 		int tool = TMResource.get(stack.getMetadata()).getToolTier();
 		return MachineCraftingHandler.getHammerResult(tool, state, itemRand) != null ? true : false;
+	}
+
+	@Override
+	public void registerModels() {
+		List<ItemStack> stackList = new ArrayList<>();
+		TMResource.addHammersToList(stackList, this);
+		for (ItemStack s : stackList)CoreInit.registerRender(s, "tomsmodcore:resources/" + s.getUnlocalizedName().substring(5));
 	}
 }

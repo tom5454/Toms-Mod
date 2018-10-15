@@ -20,10 +20,10 @@ import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.item.ILinkContainer;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.energy.EnergyInit;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityTabletCrafter extends TileEntityTomsMod implements IEnergyReceiver, ISidedInventory {
 	private EnergyStorage energy = new EnergyStorage(1000000, 10000, 1000);
@@ -127,7 +127,7 @@ public class TileEntityTabletCrafter extends TileEntityTomsMod implements IEnerg
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return this.energy.getMaxEnergyStored();
 	}
 
@@ -170,9 +170,9 @@ public class TileEntityTabletCrafter extends TileEntityTomsMod implements IEnerg
 						this.inv.getStackInSlot(6).getTagCompound().setInteger("x", x);
 						this.inv.getStackInSlot(6).getTagCompound().setInteger("y", y);
 						this.inv.getStackInSlot(6).getTagCompound().setInteger("z", z);
-						TileEntityTabletController te = (TileEntityTabletController) tile;
-						int id = te.connectNewTablet();
-						this.inv.getStackInSlot(6).getTagCompound().setInteger("id", id);
+						//TileEntityTabletController te = (TileEntityTabletController) tile;
+						/*int id = te.connectNewTablet();
+						this.inv.getStackInSlot(6).getTagCompound().setInteger("id", id);*/
 					}
 				} else {
 					this.inv.setInventorySlotContents(6, this.inv.getStackInSlot(11));
@@ -289,9 +289,9 @@ public class TileEntityTabletCrafter extends TileEntityTomsMod implements IEnerg
 						this.inv.getStackInSlot(i).getTagCompound().setInteger("x", x);
 						this.inv.getStackInSlot(i).getTagCompound().setInteger("y", y);
 						this.inv.getStackInSlot(i).getTagCompound().setInteger("z", z);
-						TileEntityTabletController te = (TileEntityTabletController) tile;
-						int id = te.connectNewTablet();
-						this.inv.getStackInSlot(i).getTagCompound().setInteger("id", id);
+						//TileEntityTabletController te = (TileEntityTabletController) tile;
+						//int id = te.connectNewTablet();
+						//this.inv.getStackInSlot(i).getTagCompound().setInteger("id", id);
 					}
 					this.inv.getStackInSlot(i).getTagCompound().setInteger("Energy", 1000);
 				}

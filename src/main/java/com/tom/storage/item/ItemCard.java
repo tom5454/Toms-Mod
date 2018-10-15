@@ -39,9 +39,9 @@ public class ItemCard extends Item implements IModelRegisterRequired {
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		for (CardType t : CardType.VALUES) {
-			subItems.add(new ItemStack(itemIn, 1, t.ordinal()));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (this.isInCreativeTab(tab))for (CardType t : CardType.VALUES) {
+			subItems.add(new ItemStack(this, 1, t.ordinal()));
 		}
 	}
 

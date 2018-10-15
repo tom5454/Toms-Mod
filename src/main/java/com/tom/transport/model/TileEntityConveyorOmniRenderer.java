@@ -11,10 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.client.TileEntitySpecialRendererTomsMod;
 import com.tom.transport.tileentity.TileEntityConveyorBase;
 import com.tom.transport.tileentity.TileEntityConveyorOmniBase;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityConveyorOmniRenderer extends TileEntitySpecialRendererTomsMod<TileEntityConveyorOmniBase> {
 	private ModelBelt model = new ModelBelt();

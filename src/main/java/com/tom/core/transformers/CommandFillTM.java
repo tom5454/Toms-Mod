@@ -22,8 +22,6 @@ import net.minecraft.world.World;
 
 import com.google.common.collect.Lists;
 
-import com.tom.core.Tweaks;
-
 public class CommandFillTM extends CommandFill// Tweaks.checkAndLogFillMessage(args,
 												// sender, server, blockpos2,
 												// blockpos3, j);
@@ -58,7 +56,7 @@ public class CommandFillTM extends CommandFill// Tweaks.checkAndLogFillMessage(a
 			BlockPos blockpos2 = new BlockPos(Math.min(blockpos.getX(), blockpos1.getX()), Math.min(blockpos.getY(), blockpos1.getY()), Math.min(blockpos.getZ(), blockpos1.getZ()));
 			BlockPos blockpos3 = new BlockPos(Math.max(blockpos.getX(), blockpos1.getX()), Math.max(blockpos.getY(), blockpos1.getY()), Math.max(blockpos.getZ(), blockpos1.getZ()));
 			int i = (blockpos3.getX() - blockpos2.getX() + 1) * (blockpos3.getY() - blockpos2.getY() + 1) * (blockpos3.getZ() - blockpos2.getZ() + 1);
-			Tweaks.checkAndLogFillMessage(args, sender, server, blockpos2, blockpos3, i);
+			Transformers.checkAndLogFillMessage(args, sender, server, blockpos2, blockpos3, i);
 			World world = sender.getEntityWorld();
 
 			for (int j = blockpos2.getZ();j <= blockpos3.getZ();j += 16) {

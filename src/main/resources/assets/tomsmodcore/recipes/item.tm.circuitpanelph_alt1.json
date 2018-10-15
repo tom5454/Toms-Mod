@@ -1,0 +1,26 @@
+{
+  "result": {
+    "item": "tomsmodcore:item.tm.circuitpanelph",
+    "data": 0,
+    "count": 3
+  },
+  "ingredients": [
+    {
+      "id": "small",
+      "type": "tomsmodcore:circuitpanel"
+    },
+    {
+      "id": "small",
+      "type": "tomsmodcore:circuitpanel"
+    },
+    {
+      "id": "small",
+      "type": "tomsmodcore:circuitpanel"
+    },
+    {
+      "item": "tomsmodcore:tm.photoactivecan",
+      "data": 0
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

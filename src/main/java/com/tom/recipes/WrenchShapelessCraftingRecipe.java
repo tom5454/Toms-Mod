@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import net.minecraftforge.oredict.OreDictionary;
@@ -51,14 +52,6 @@ public class WrenchShapelessCraftingRecipe implements IRecipe {
 			}
 		}
 		input.add(OreDictionary.getOres("tomsmodwrench"));
-	}
-
-	/**
-	 * Returns the size of the recipe area
-	 */
-	@Override
-	public int getRecipeSize() {
-		return input.size();
 	}
 
 	@Override
@@ -140,10 +133,30 @@ public class WrenchShapelessCraftingRecipe implements IRecipe {
 	 * Returns the input for this recipe, any mod accessing this value should
 	 * never manipulate the values in this array as it will effect the recipe
 	 * itself.
-	 * 
+	 *
 	 * @return The recipes input vales.
 	 */
 	public NonNullList<Object> getInput() {
 		return this.input;
+	}
+
+	@Override
+	public IRecipe setRegistryName(ResourceLocation name) {
+		return null;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return null;
+	}
+
+	@Override
+	public Class<IRecipe> getRegistryType() {
+		return null;
+	}
+
+	@Override
+	public boolean canFit(int width, int height) {
+		return (width == 2 && height == 1) || (height == 2 && width == 1);
 	}
 }

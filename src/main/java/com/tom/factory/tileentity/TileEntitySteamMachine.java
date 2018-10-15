@@ -12,10 +12,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.block.SteamAlloySmelter;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.TomsModUtils;
 
 public abstract class TileEntitySteamMachine extends TileEntityTomsMod implements ITileFluidHandler, ISidedInventory {
 	protected FluidTank tank = new FluidTank(2000);

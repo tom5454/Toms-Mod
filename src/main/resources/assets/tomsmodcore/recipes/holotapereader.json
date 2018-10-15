@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:holotapereader",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "III",
+    "IRI",
+    "IBI"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "B": {
+      "ore": "ingotBlueMetal",
+      "type": "forge:ore_dict"
+    },
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "I": {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    }
+  }
+}

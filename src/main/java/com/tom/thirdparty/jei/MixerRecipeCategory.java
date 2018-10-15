@@ -14,16 +14,17 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.fluids.FluidStack;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.factory.tileentity.TileEntityMixer;
 import com.tom.lib.Configs;
 import com.tom.thirdparty.jei.MixerRecipeCategory.MixerRecipeJEI;
+import com.tom.util.TomsModUtils;
 
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.recipe.IRecipeWrapper;
 
 public class MixerRecipeCategory implements IRecipeCategory<MixerRecipeJEI> {
 	public static List<MixerRecipeJEI> get(MixerRecipeCategory c) {
@@ -35,11 +36,7 @@ public class MixerRecipeCategory implements IRecipeCategory<MixerRecipeJEI> {
 	}
 
 	@Nonnull
-	private final IDrawable background = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/jei/jeiCrusher.png"), 145, 120, 85, 80);
-	@Nonnull
-	private final IDrawable tankOverlay = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/resSelect.png"), 102, 124, 12, 47);
-	@Nonnull
-	private final IDrawable tankBackground = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/resSelect.png"), 78, 120, 20, 55);
+	private final IDrawable background = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/jei/jeiCrusher.png"), 125, 120, 120, 80);
 
 	@Override
 	public String getUid() {
@@ -63,11 +60,9 @@ public class MixerRecipeCategory implements IRecipeCategory<MixerRecipeJEI> {
 
 	@Override
 	public void drawExtras(Minecraft minecraft) {
-		tankBackground.draw(minecraft, -27, 6);
-		tankBackground.draw(minecraft, 76, 6);
 	}
 
-	public class MixerRecipeJEI extends BlankRecipeWrapper {
+	public class MixerRecipeJEI implements IRecipeWrapper {
 		@Nullable
 		private final Object[] recipe;
 
@@ -78,17 +73,16 @@ public class MixerRecipeCategory implements IRecipeCategory<MixerRecipeJEI> {
 		@Override
 		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 			if ((Boolean) recipe[2]) {
-				tankBackground.draw(minecraft, -4, 6);
-				minecraft.fontRenderer.drawString(I18n.format("tomsmod.jei.electricalRequired"), 0, 63, 4210752);
+				minecraft.fontRenderer.drawString(I18n.format("tomsmod.jei.electricalRequired"), 0, 70, 4210752);
 			}
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInputs(FluidStack.class, TomsModUtils.getFluidStack((Object[][]) recipe[1], true));
-			ingredients.setOutputs(FluidStack.class, TomsModUtils.getFluidStack((Object[][]) recipe[1], false));
-			ingredients.setInputs(ItemStack.class, (List<ItemStack>) recipe[0]);
+			ingredients.setInputs(VanillaTypes.FLUID, TomsModUtils.getFluidStack((Object[][]) recipe[1], true));
+			ingredients.setOutputs(VanillaTypes.FLUID, TomsModUtils.getFluidStack((Object[][]) recipe[1], false));
+			ingredients.setInputs(VanillaTypes.ITEM, (List<ItemStack>) recipe[0]);
 		}
 	}
 
@@ -99,7 +93,7 @@ public class MixerRecipeCategory implements IRecipeCategory<MixerRecipeJEI> {
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, MixerRecipeJEI recipe, IIngredients ingredients) {
-		int x = 21;
+		int x = 41;
 		int y = 21;
 		int tankY = 10;
 		recipeLayout.getItemStacks().init(0, true, x, y);
@@ -107,11 +101,14 @@ public class MixerRecipeCategory implements IRecipeCategory<MixerRecipeJEI> {
 		recipeLayout.getItemStacks().init(2, true, x, y + 18);
 		recipeLayout.getItemStacks().init(3, true, x + 18, y + 18);
 		for (int i = 0;i < 4;i++)
-			recipeLayout.getIngredientsGroup(ItemStack.class).set(i, getItemStack(((List<?>) recipe.recipe[0]).get(i)));
-		recipeLayout.getFluidStacks().init(0, true, -23, tankY, 12, 47, 10000, true, tankOverlay);
-		recipeLayout.getFluidStacks().init(1, false, 80, tankY, 12, 47, 10000, true, tankOverlay);
+			recipeLayout.getIngredientsGroup(VanillaTypes.ITEM).set(i, getItemStack(((List<?>) recipe.recipe[0]).get(i)));
+		recipeLayout.getFluidStacks().init(0, true, 0, tankY, 16, 58, 10000, true, JEIHandler.tankOverlay);
+		recipeLayout.getFluidStacks().init(1, false, 80, tankY, 16, 58, 10000, true, JEIHandler.tankOverlay);
 		if ((Boolean) recipe.recipe[2])
-			recipeLayout.getFluidStacks().init(2, true, 0, tankY, 12, 47, 10000, true, tankOverlay);
+			recipeLayout.getFluidStacks().init(2, true, 23, tankY, 16, 58, 10000, true, JEIHandler.tankOverlay);
+		recipeLayout.getFluidStacks().setBackground(0, JEIHandler.tankBackground);
+		recipeLayout.getFluidStacks().setBackground(1, JEIHandler.tankBackground);
+		if ((Boolean) recipe.recipe[2])recipeLayout.getFluidStacks().setBackground(2, JEIHandler.tankBackground);
 		recipeLayout.getFluidStacks().set(0, (FluidStack) ((Object[][]) recipe.recipe[1])[0][0]);
 		recipeLayout.getFluidStacks().set(1, (FluidStack) ((Object[][]) recipe.recipe[1])[1][0]);
 		if ((Boolean) recipe.recipe[2]) {

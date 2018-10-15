@@ -1,7 +1,6 @@
 package com.tom.energy.tileentity;
 
-import static com.tom.api.energy.EnergyType.HV;
-import static com.tom.api.energy.EnergyType.MV;
+import static com.tom.api.energy.EnergyType.*;
 
 import java.util.List;
 
@@ -72,14 +71,14 @@ public class TileEntityTransformerMHV extends TileEntityTomsMod implements IEner
 				if (container == null) {
 					return 0;
 				}
-			
+
 				if (fOut != null) {
 					ISlottedPart part = container.getPartInSlot(PartSlot.getFaceSlot(fOut));
 					if (part instanceof IMicroblock.IFaceMicroblock && !((IMicroblock.IFaceMicroblock) part).isFaceHollow()) {
 						return 0;
 					}
 				}
-			
+
 				ISlottedPart part = container.getPartInSlot(PartSlot.CENTER);
 				try{
 					if (part instanceof PartDuct<?>) {
@@ -114,7 +113,7 @@ public class TileEntityTransformerMHV extends TileEntityTomsMod implements IEner
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return 0;
 	}
 

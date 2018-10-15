@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmodcore:oreenderium",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:crushede",
+    "data": 25,
+    "count": 2
+  }
+}

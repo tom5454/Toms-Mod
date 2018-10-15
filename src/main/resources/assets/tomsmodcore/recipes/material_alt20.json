@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 59,
+    "count": 1
+  },
+  "pattern": [
+    "PPP",
+    "PPP",
+    "PPP"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "id": "blueprintPaper",
+      "type": "tomsmodcore:material"
+    }
+  }
+}

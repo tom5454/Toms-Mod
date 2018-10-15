@@ -23,9 +23,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.TileEntityResearchTable;
 import com.tom.core.tileentity.TileEntityResearchTable.ResearchTableType;
@@ -54,7 +54,7 @@ public class ResearchTable extends BlockContainerTomsMod {
 	public IBlockState getStateFromMeta(int meta)
 	{
 	    EnumFacing enumfacing = EnumFacing.getHorizontal(meta % 4).rotateY();
-	
+
 	    if (enumfacing.getAxis() == EnumFacing.Axis.Y)
 	    {
 	        enumfacing = EnumFacing.NORTH;
@@ -62,7 +62,7 @@ public class ResearchTable extends BlockContainerTomsMod {
 	    //System.out.println(enumfacing);
 	    return this.getDefaultState().withProperty(FACING, enumfacing).withProperty(STATE, (meta-1) / 4);
 	}
-	
+
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{//System.out.println("getMeta");

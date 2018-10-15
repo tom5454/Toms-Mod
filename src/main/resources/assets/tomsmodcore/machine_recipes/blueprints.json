@@ -1,0 +1,70 @@
+{
+	"blueprints": [
+		{
+			"circuit": false,
+			"chipset": false,
+			"id": "advfluixreactor",
+			"unlocalized_name": "tomsmod.blueprint.advfluixreactor"
+		},
+		{
+			"circuit": false,
+			"chipset": false,
+			"id": "basicfluixreactor",
+			"unlocalized_name": "tomsmod.blueprint.basicfluixreactor"
+		},
+		{
+			"circuit": true,
+			"chipset": false,
+			"id": "basiccirc",
+			"unlocalized_name": "tomsmod.blueprint.basiccirc"
+		},
+		{
+			"circuit": true,
+			"chipset": false,
+			"id": "normcirc",
+			"unlocalized_name": "tomsmod.blueprint.normcirc"
+		},
+		{
+			"circuit": true,
+			"chipset": false,
+			"id": "advcirc",
+			"unlocalized_name": "tomsmod.blueprint.advcirc"
+		},
+		{
+			"circuit": true,
+			"chipset": false,
+			"id": "elitecirc",
+			"unlocalized_name": "tomsmod.blueprint.elitecirc"
+		},
+		{
+			"circuit": false,
+			"chipset": true,
+			"id": "basicchip",
+			"unlocalized_name": "tomsmod.blueprint.basicchip"
+		},
+		{
+			"circuit": false,
+			"chipset": true,
+			"id": "normchip",
+			"unlocalized_name": "tomsmod.blueprint.normchip"
+		},
+		{
+			"circuit": false,
+			"chipset": true,
+			"id": "advchip",
+			"unlocalized_name": "tomsmod.blueprint.advchip"
+		},
+		{
+			"circuit": false,
+			"chipset": true,
+			"id": "elitechip",
+			"unlocalized_name": "tomsmod.blueprint.elitechip"
+		},
+		{
+			"circuit": false,
+			"chipset": false,
+			"id": "elitecirctemplate",
+			"unlocalized_name": "tomsmod.blueprint.elitecirctemplate"
+		}
+	]
+}

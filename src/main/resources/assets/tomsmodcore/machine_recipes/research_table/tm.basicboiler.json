@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:basicboiler"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.basicboiler",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PPP",
+      "PGP",
+      "BFB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "F": {
+        "item": "minecraft:furnace",
+        "data": 0
+      },
+      "G": {
+        "ore": "blockGlass",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 300
+}

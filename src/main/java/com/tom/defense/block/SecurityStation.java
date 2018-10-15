@@ -8,12 +8,12 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -79,24 +79,8 @@ public class SecurityStation extends BlockContainerTomsMod {
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		TileEntity tile = worldIn.getTileEntity(pos);
-		ItemStack stack = new ItemStack(this);
-		if (tile instanceof TileEntitySecurityStation) {
-			NBTTagCompound tag = new NBTTagCompound();
-			((TileEntitySecurityStation) tile).writeToStackNBT(tag);
-			stack.setTagCompound(new NBTTagCompound());
-			stack.getTagCompound().setTag("BlockEntityTag", tag);
-			stack.getTagCompound().setBoolean("stored", true);
-		}
-		spawnAsEntity(worldIn, pos, stack);
-		super.breakBlock(worldIn, pos, state);
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("stored")) {
 			tooltip.add(I18n.format("tomsMod.tooltip.itemsStored"));
 		}

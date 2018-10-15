@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fml.common.FMLLog;
 
-import com.tom.apis.RecipeData;
+import com.tom.util.RecipeData;
 
 public class MultiblockCrafterRecipeHandler {
 	public static Map<Block, List<RecipeData>> recipeList = new HashMap<Block, List<RecipeData>>();

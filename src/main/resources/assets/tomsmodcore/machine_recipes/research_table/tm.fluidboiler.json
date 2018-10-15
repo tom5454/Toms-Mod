@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:liquidfueledboiler"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.fluidboiler",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PRP",
+      "PCP",
+      "BbB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "ore": "brickRefined",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "b": {
+        "item": "tomsmodfactory:tm.basicboiler",
+        "data": 0
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebronze",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 700
+}

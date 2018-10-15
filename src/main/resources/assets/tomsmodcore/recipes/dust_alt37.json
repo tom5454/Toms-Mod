@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodcore:dust",
+    "data": 27,
+    "count": 2
+  },
+  "ingredients": [
+    {
+      "ore": "dustGold",
+      "type": "forge:ore_dict"
+    },
+    {
+      "ore": "dustSilver",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

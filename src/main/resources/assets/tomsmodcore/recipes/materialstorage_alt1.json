@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:materialstorage",
+    "data": 5,
+    "count": 1
+  },
+  "pattern": [
+    "GGG",
+    "GGG",
+    "GGG"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "ore": "gemSkyQuartz",
+      "type": "forge:ore_dict"
+    }
+  }
+}

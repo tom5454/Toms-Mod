@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmodcore:oreplatinum",
+    "data": 1,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:crushedn",
+    "data": 5,
+    "count": 3
+  }
+}

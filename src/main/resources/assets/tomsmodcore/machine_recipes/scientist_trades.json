@@ -1,0 +1,219 @@
+{
+  "trades": [
+    {
+      "in": {
+        "item": "tomsmodcore:material",
+        "data": 48,
+        "count": 3
+      },
+      "max": 0,
+      "level": 1,
+      "random_in_max": 7,
+      "sell": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 1
+      },
+      "random_sell_max": 1
+    },
+    {
+      "in": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 1
+      },
+      "max": 3,
+      "level": 1,
+      "sell": {
+        "item": "tomsmodcore:material",
+        "data": 48,
+        "count": 1
+      },
+      "random_in_max": 2,
+      "random_sell_max": 3
+    },
+    {
+      "in": {
+        "ctype": "a",
+        "count": 3,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "max": 4,
+      "level": 2,
+      "random_in_max": 7,
+      "sell": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 1
+      },
+      "random_sell_max": 4
+    },
+    {
+      "in": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 2
+      },
+      "max": 16,
+      "level": 2,
+      "sell": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "random_in_max": 6,
+      "random_sell_max": 3
+    },
+    {
+      "in": {
+        "ctype": "a",
+        "count": 3,
+        "id": "normalecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "max": 4,
+      "level": 2,
+      "random_in_max": 7,
+      "sell": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 2
+      },
+      "random_sell_max": 8
+    },
+    {
+      "in": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 4
+      },
+      "max": 16,
+      "level": 2,
+      "sell": {
+        "ctype": "a",
+        "count": 1,
+        "id": "normalecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "random_in_max": 12,
+      "random_sell_max": 3
+    },
+    {
+      "in": {
+        "ctype": "a",
+        "count": 3,
+        "id": "advecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "max": 4,
+      "level": 2,
+      "random_in_max": 7,
+      "sell": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 5
+      },
+      "random_sell_max": 20
+    },
+    {
+      "in": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 10
+      },
+      "max": 16,
+      "level": 2,
+      "sell": {
+        "ctype": "a",
+        "count": 1,
+        "id": "advecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "random_in_max": 30,
+      "random_sell_max": 3
+    },
+    {
+      "in": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 8
+      },
+      "max": 1,
+      "level": 3,
+      "sell": {
+        "nbt": {
+          "id": "elitecirctemplate"
+        },
+        "item": "tomsmodcore:tm.blueprint",
+        "data": 0,
+        "count": 1
+      },
+      "random_in_max": 16,
+      "in2": {
+        "nbt": {
+          "id": "basicfluixreactor"
+        },
+        "item": "tomsmodcore:tm.blueprint",
+        "data": 0,
+        "count": 1
+      }
+    },
+    {
+      "in": {
+        "ctype": "a",
+        "count": 3,
+        "id": "eliteecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "max": 4,
+      "level": 4,
+      "random_in_max": 7,
+      "sell": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 12
+      },
+      "random_sell_max": 48
+    },
+    {
+      "in": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 24
+      },
+      "max": 16,
+      "level": 4,
+      "sell": {
+        "ctype": "a",
+        "count": 1,
+        "id": "eliteecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "random_in_max": 72,
+      "random_sell_max": 3
+    },
+    {
+      "in2_count": 55,
+      "in": {
+        "item": "minecraft:emerald",
+        "data": 0,
+        "count": 32
+      },
+      "max": 1,
+      "level": 5,
+      "sell": {
+        "nbt": {
+          "id": "advfluixreactor"
+        },
+        "item": "tomsmodcore:tm.blueprint",
+        "data": 0,
+        "count": 1
+      },
+      "random_in_max": 48,
+      "random_in2_max": 64,
+      "in2": "ingotPlatinum"
+    }
+  ]
+}

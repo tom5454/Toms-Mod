@@ -9,36 +9,27 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
-import com.tom.lib.Configs;
+import com.tom.util.TomsModUtils;
 
-import com.tom.energy.tileentity.TileEntityBatteryBox;
 import com.tom.energy.tileentity.TileEntityEnergyStorage;
 
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-
-@Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheralProvider", modid = Configs.COMPUTERCRAFT)
-public abstract class BlockEnergyStorage extends BlockContainerTomsMod implements IPeripheralProvider {
+public abstract class BlockEnergyStorage extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
 	public BlockEnergyStorage(Material material) {
@@ -95,13 +86,6 @@ public abstract class BlockEnergyStorage extends BlockContainerTomsMod implement
 	}
 
 	@Override
-	@Optional.Method(modid = Configs.COMPUTERCRAFT)
-	public IPeripheral getPeripheral(World world, BlockPos pos, EnumFacing side) {
-		TileEntity te = world.getTileEntity(pos);
-		return te instanceof TileEntityEnergyStorage ? (IPeripheral) te : null;
-	}
-
-	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
 	}
@@ -119,10 +103,9 @@ public abstract class BlockEnergyStorage extends BlockContainerTomsMod implement
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, player, tooltip, advanced);
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		if (stack.hasTagCompound()) {
-			tooltip.add(I18n.format("tomsMod.tooltip.energyStored", stack.getTagCompound().getCompoundTag("BlockEntityTag").getDouble("energy")));
+			tooltip.add(I18n.format("tomsMod.tooltip.energyStored", stack.getTagCompound().getCompoundTag("BlockEntityTag").getDouble("Energy")));
 		}
 	}
 
@@ -134,20 +117,6 @@ public abstract class BlockEnergyStorage extends BlockContainerTomsMod implement
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return Items.AIR;
-	}
-
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		TileEntity tile = worldIn.getTileEntity(pos);
-		ItemStack stack = new ItemStack(this);
-		if (tile instanceof TileEntityBatteryBox) {
-			NBTTagCompound tag = new NBTTagCompound();
-			((TileEntityEnergyStorage) tile).writeToStackNBT(tag);
-			stack.setTagCompound(new NBTTagCompound());
-			stack.getTagCompound().setTag("BlockEntityTag", tag);
-		}
-		spawnAsEntity(worldIn, pos, stack);
-		super.breakBlock(worldIn, pos, state);
 	}
 
 	@Override

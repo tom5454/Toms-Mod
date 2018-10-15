@@ -1,7 +1,10 @@
 package com.tom.core.item;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,10 +22,12 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.block.IModelRegisterRequired;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource;
 import com.tom.core.TMResource.CraftingMaterial;
 import com.tom.core.TMResource.Type;
+import com.tom.recipes.ICustomJsonIngerdient;
 
 public class ResourceItem extends Item {
 	public ResourceItem(Type type) {
@@ -46,14 +51,16 @@ public class ResourceItem extends Item {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList itemList) {
-		for (TMResource r : TMResource.VALUES) {
-			if (r.isValid(type))
-				itemList.add(r.getStackNormal(type));
+	public void getSubItems(CreativeTabs tab, NonNullList itemList) {
+		if(this.isInCreativeTab(tab)){
+			for (TMResource r : TMResource.VALUES) {
+				if (r.isValid(type))
+					itemList.add(r.getStackNormal(type));
+			}
 		}
 	}
 
-	public static class CraftingItem extends Item {
+	public static class CraftingItem extends Item implements IModelRegisterRequired, ICustomJsonIngerdient {
 		public CraftingItem() {
 			this.setUnlocalizedName("material");
 			setHasSubtypes(true);
@@ -62,9 +69,11 @@ public class ResourceItem extends Item {
 		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void getSubItems(Item item, CreativeTabs tab, NonNullList itemList) {
-			for (CraftingMaterial r : CraftingMaterial.VALUES) {
-				itemList.add(r.getStackNormal());
+		public void getSubItems(CreativeTabs tab, NonNullList itemList) {
+			if(this.isInCreativeTab(tab)){
+				for (CraftingMaterial r : CraftingMaterial.VALUES) {
+					itemList.add(r.getStackNormal());
+				}
 			}
 		}
 
@@ -113,13 +122,30 @@ public class ResourceItem extends Item {
 
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-			CraftingMaterial.get(stack.getMetadata()).getTooltip(stack, playerIn, tooltip, advanced);
+		public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
+			CraftingMaterial.get(stack.getMetadata()).getTooltip(stack, world, tooltip, advanced);
 		}
 
 		@Override
 		public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
 			return CraftingMaterial.inited ? CraftingMaterial.get(stack.getMetadata()).initCapabilities(stack, nbt) : null;
+		}
+
+		@Override
+		public void registerModels() {
+			for (CraftingMaterial t : CraftingMaterial.VALUES) {
+				CoreInit.registerRender(this, t.ordinal(), "tomsmodcore:resources/crafting/" + t.getName());
+			}
+		}
+
+		@Override
+		public Map<String, Object> serialize(ItemStack stack, boolean serializeCount) {
+			System.out.println("Serializing CraftingItem");
+			Map<String, Object> ret = new HashMap<>();
+			ret.put("type", "tomsmodcore:material");
+			ret.put("id", CraftingMaterial.get(stack.getMetadata()).getName());
+			if(serializeCount)ret.put("count", stack.getCount());
+			return ret;
 		}
 	}
 }

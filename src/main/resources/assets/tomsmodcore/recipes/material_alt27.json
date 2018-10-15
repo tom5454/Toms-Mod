@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 34,
+    "count": 2
+  },
+  "pattern": [
+    "GG",
+    "GG"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "ore": "dustGlass",
+      "type": "forge:ore_dict"
+    }
+  }
+}

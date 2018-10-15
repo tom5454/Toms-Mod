@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:refinery"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.refinery",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "SAS",
+      "GCG",
+      "SFS"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "A": {
+        "ore": "plateAluminum",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframesteel",
+        "data": 0
+      },
+      "F": {
+        "item": "tomsmodfactory:tm.advboiler",
+        "data": 0
+      },
+      "G": {
+        "ore": "blockGlass",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1600
+}

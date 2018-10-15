@@ -1,0 +1,33 @@
+{
+  "researches": [
+    "tomsmodcore:conveyorbelts"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodtransport:tm.conveyorbeltfast",
+      "data": 0,
+      "count": 4
+    },
+    "pattern": [
+      "RTR",
+      "CTC"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "ore": "itemRubber",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "plateCopper",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "ore": "plateTin",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 100
+}

@@ -7,9 +7,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 
-import com.tom.apis.TomsModUtils;
 import com.tom.client.TileEntitySpecialRendererTomsMod;
 import com.tom.defense.tileentity.TileEntityForceCapacitor;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityForceCapacitorRenderer extends TileEntitySpecialRendererTomsMod<TileEntityForceCapacitor> {
 

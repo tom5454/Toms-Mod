@@ -1,0 +1,48 @@
+{
+  "researches": [
+    "tomsmodcore:hvmachines"
+  ],
+  "level": "tomsMod.craftingLevel.esoldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.coilerplant",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "STS",
+      "-MF",
+      "SES"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "S": {
+        "ore": "plateChrome",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "item": "tomsmodenergy:transformermhv",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "advecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "F": {
+        "item": "tomsmodcore:machineframechrome",
+        "data": 0
+      },
+      "M": {
+        "item": "tomsmodfactory:tm.coilerplant",
+        "data": 1
+      },
+      "-": {
+        "ore": "cableEnderium",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 2800
+}

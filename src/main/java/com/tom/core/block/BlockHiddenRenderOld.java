@@ -14,8 +14,8 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.client.CustomModelLoader;
-import com.tom.client.ModelHidden;
 import com.tom.core.CoreInit;
+import com.tom.core.model.ModelHidden;
 
 import com.tom.core.tileentity.TileEntityHidden;
 

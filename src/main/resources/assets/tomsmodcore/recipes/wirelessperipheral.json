@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:wirelessperipheral",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "IEI",
+    "ERE",
+    "IEI"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "E": {
+      "id": "chargedEnder",
+      "type": "tomsmodcore:material"
+    },
+    "I": {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    }
+  }
+}

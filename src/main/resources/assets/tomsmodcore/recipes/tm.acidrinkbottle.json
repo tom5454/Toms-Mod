@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:tm.acidrinkbottle",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "IRI",
+    "IBI",
+    "IRI"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "R": {
+      "item": "minecraft:redstone",
+      "data": 0
+    },
+    "B": {
+      "item": "minecraft:glass_bottle",
+      "data": 0
+    },
+    "I": {
+      "ore": "dyeBlack",
+      "type": "forge:ore_dict"
+    }
+  }
+}

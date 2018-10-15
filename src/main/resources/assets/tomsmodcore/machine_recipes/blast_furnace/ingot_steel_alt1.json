@@ -1,0 +1,19 @@
+{
+  "heat": 0,
+  "time": 2000,
+  "in2": {
+    "item": "minecraft:air",
+    "data": 0,
+    "count": 0
+  },
+  "in1": {
+    "item": "minecraft:iron_ingot",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:ingot",
+    "data": 26,
+    "count": 1
+  }
+}

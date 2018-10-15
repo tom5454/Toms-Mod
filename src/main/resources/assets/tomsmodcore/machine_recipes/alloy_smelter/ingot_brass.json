@@ -1,0 +1,17 @@
+{
+  "in2": {
+    "item": "tomsmodcore:ingot",
+    "data": 24,
+    "count": 1
+  },
+  "in1": {
+    "item": "tomsmodcore:ingot",
+    "data": 2,
+    "count": 3
+  },
+  "out": {
+    "item": "tomsmodcore:ingot",
+    "data": 19,
+    "count": 4
+  }
+}

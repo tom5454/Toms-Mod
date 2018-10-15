@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:materialstorage",
+    "data": 10,
+    "count": 1
+  },
+  "pattern": [
+    "GGG",
+    "GGG",
+    "GGG"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "ore": "gemFluix",
+      "type": "forge:ore_dict"
+    }
+  }
+}

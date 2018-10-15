@@ -25,10 +25,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.IHeatSource;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.factory.block.BasicBoiler;
 import com.tom.lib.Configs;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityBasicBoiler extends TileEntityTomsMod implements ITileFluidHandler, IInventory, IHeatSource {
 	private FluidTank tankWater = new FluidTank(Configs.BASIC_TANK_SIZE);

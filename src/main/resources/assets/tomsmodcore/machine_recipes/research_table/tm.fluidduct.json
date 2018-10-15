@@ -1,0 +1,45 @@
+{
+  "researches": [
+    "tomsmodcore:fluidduct"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodtransport:tm.fluidduct",
+      "data": 0,
+      "count": 6
+    },
+    "ingredients": [
+      {
+        "item": "tomsmodtransport:tm.fluidductopaque",
+        "data": 0
+      },
+      {
+        "item": "tomsmodtransport:tm.fluidductopaque",
+        "data": 0
+      },
+      {
+        "item": "tomsmodtransport:tm.fluidductopaque",
+        "data": 0
+      },
+      {
+        "item": "tomsmodtransport:tm.fluidductopaque",
+        "data": 0
+      },
+      {
+        "item": "tomsmodtransport:tm.fluidductopaque",
+        "data": 0
+      },
+      {
+        "item": "tomsmodtransport:tm.fluidductopaque",
+        "data": 0
+      },
+      {
+        "ore": "blockGlass",
+        "type": "forge:ore_dict"
+      }
+    ],
+    "type": "forge:ore_shapeless"
+  },
+  "crafting_time": 20
+}

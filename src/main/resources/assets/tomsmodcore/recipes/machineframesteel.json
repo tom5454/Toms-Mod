@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodcore:machineframesteel",
+    "data": 0,
+    "count": 4
+  },
+  "pattern": [
+    "CCC",
+    "CHC",
+    "CCC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "C": {
+      "ore": "plateSteel",
+      "type": "forge:ore_dict"
+    },
+    "H": {
+      "ore": "itemHammer_lvl2",
+      "type": "forge:ore_dict"
+    }
+  }
+}

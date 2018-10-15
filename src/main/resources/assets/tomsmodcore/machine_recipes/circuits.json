@@ -1,0 +1,60 @@
+{
+	"circuits": [
+		{
+			"id": "basicecirc",
+			"unlocalized_name": "basic_circuit",
+			"size": 0,
+			"component": "basic",
+			"meta": 0,
+			"model": "tomsmodcore:circuitbasic",
+			"etchingTime": 100
+		},
+		{
+			"id": "normalecirc",
+			"unlocalized_name": "normal_circuit",
+			"size": 0,
+			"component": "normal",
+			"meta": 1,
+			"model": "tomsmodcore:circuitnormal",
+			"etchingTime": 200
+		},
+		{
+			"id": "advecirc",
+			"unlocalized_name": "adv_circuit",
+			"size": 1,
+			"component": "adv",
+			"meta": 2,
+			"model": "tomsmodcore:circuitadvanced",
+			"etchingTime": 500
+		},
+		{
+			"id": "eliteecirc",
+			"unlocalized_name": "elite_circuit",
+			"size": 1,
+			"component": "adv",
+			"meta": 3,
+			"model": "tomsmodcore:circuitelite",
+			"etchingTime": 1000
+		}
+	],
+	"models": [
+		{
+			"meta": 0,
+			"model": "tomsmodcore:small_circuit",
+			"raw_model": "tomsmodcore:small_circuit_raw",
+			"ua_model": "tomsmodcore:small_circuit_ua",
+			"ph_model": "tomsmodcore:small_circuit_ph",
+			"name": "small",
+			"size": 3
+		},
+		{
+			"meta": 1,
+			"model": "tomsmodcore:large_circuit",
+			"raw_model": "tomsmodcore:large_circuit_raw",
+			"ua_model": "tomsmodcore:large_circuit_ua",
+			"ph_model": "tomsmodcore:large_circuit_ph",
+			"name": "large",
+			"size": 1
+		}
+	]
+}

@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodfactory:tm.componentsblock",
+    "data": 6,
+    "count": 4
+  },
+  "pattern": [
+    "SS",
+    "SS"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "S": {
+      "ore": "plateSteel",
+      "type": "forge:ore_dict"
+    }
+  }
+}

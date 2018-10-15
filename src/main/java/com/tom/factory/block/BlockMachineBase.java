@@ -11,6 +11,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +19,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -36,12 +36,12 @@ import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.api.energy.EnergyType;
 import com.tom.api.item.ISwitch;
-import com.tom.apis.EmptyEntry;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.factory.tileentity.TileEntityMachineBase;
+import com.tom.lib.utils.EmptyEntry;
 import com.tom.recipes.AdvancedCraftingRecipes;
+import com.tom.util.TomsModUtils;
 
 public abstract class BlockMachineBase extends BlockContainerTomsMod implements IModelRegisterRequired {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
@@ -96,19 +96,6 @@ public abstract class BlockMachineBase extends BlockContainerTomsMod implements 
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		TileEntityMachineBase te = (TileEntityMachineBase) worldIn.getTileEntity(pos);
-		ItemStack s = new ItemStack(this, 1, te.getType());
-		s.setTagCompound(new NBTTagCompound());
-		NBTTagCompound tag = new NBTTagCompound();
-		te.writeToStackNBT(tag);
-		s.getTagCompound().setTag("BlockEntityTag", tag);
-		s.getTagCompound().setBoolean("stored", true);
-		spawnAsEntity(worldIn, pos, s);
-		super.breakBlock(worldIn, pos, state);
-	}
-
-	@Override
 	public int quantityDropped(Random random) {
 		return 0;
 	}
@@ -126,14 +113,14 @@ public abstract class BlockMachineBase extends BlockContainerTomsMod implements 
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack(itemIn, 1, 0));
-		list.add(new ItemStack(itemIn, 1, 1));
-		list.add(new ItemStack(itemIn, 1, 2));
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
+		list.add(new ItemStack(this, 1, 0));
+		list.add(new ItemStack(this, 1, 1));
+		list.add(new ItemStack(this, 1, 2));
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
 		tooltip.add(I18n.format("tomsMod.tooltip.accepts", EnergyType.get(stack.getMetadata()).toTooltip()));
 		if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("stored")) {

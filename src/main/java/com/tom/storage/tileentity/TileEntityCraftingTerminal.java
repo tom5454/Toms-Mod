@@ -2,10 +2,9 @@ package com.tom.storage.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -14,25 +13,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 
 import com.tom.api.network.INBTPacketReceiver.IANBTPacketReceiver;
-import com.tom.apis.TomsModUtils;
 import com.tom.storage.handler.ICraftingTerminal;
 import com.tom.storage.tileentity.inventory.ContainerCraftingTerminal;
 import com.tom.storage.tileentity.inventory.ContainerCraftingTerminal.SlotTerminalCrafting;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityCraftingTerminal extends TileEntityBasicTerminal implements IANBTPacketReceiver, ICraftingTerminal {
 	public InventoryCraftResult craftResult = new InventoryCraftResult();
-	public InventoryCrafting craftingInv = new InventoryCrafting(new Container() {
-
-		@Override
-		public boolean canInteractWith(EntityPlayer playerIn) {
-			return true;
-		}
-
-		@Override
-		public void onCraftMatrixChanged(IInventory inventoryIn) {
-			craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingInv, world));
-		};
-	}, 3, 3);
+	public InventoryBasic craftingInv = new InventoryBasic("", false, 9);
 
 	@Override
 	public void buttonPressed(EntityPlayer player, int id, int extra) {
@@ -147,7 +135,7 @@ public class TileEntityCraftingTerminal extends TileEntityBasicTerminal implemen
 			net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack1, craftingInv);
 			slot.onCrafting(stack1);
 			net.minecraftforge.common.ForgeHooks.setCraftingPlayer(player);
-			NonNullList<ItemStack> aitemstack = CraftingManager.getInstance().getRemainingItems(this.craftingInv, world);
+			NonNullList<ItemStack> aitemstack = CraftingManager.getRemainingItems(TomsModUtils.wrapCraftingInv(craftingInv, player, craftResult), world);
 			net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
 
 			for (int i = 0;i < aitemstack.size();++i) {
@@ -203,12 +191,12 @@ public class TileEntityCraftingTerminal extends TileEntityBasicTerminal implemen
 	}
 
 	@Override
-	public InventoryCrafting getCraftingInv() {
+	public IInventory getCraftingInv() {
 		return craftingInv;
 	}
 
 	@Override
-	public IInventory getCraftResult() {
+	public InventoryCraftResult getCraftResult() {
 		return craftResult;
 	}
 }

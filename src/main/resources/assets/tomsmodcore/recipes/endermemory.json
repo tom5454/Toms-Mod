@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "tomsmodcore:endermemory",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "BRB",
+    "RCR",
+    "BRB"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "B": {
+      "ore": "ingotBlueMetal",
+      "type": "forge:ore_dict"
+    },
+    "R": {
+      "item": "minecraft:redstone",
+      "data": 0
+    },
+    "C": {
+      "id": "chargedEnder",
+      "type": "tomsmodcore:material"
+    }
+  }
+}

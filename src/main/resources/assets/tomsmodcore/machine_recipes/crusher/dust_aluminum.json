@@ -1,0 +1,12 @@
+{
+  "in": {
+    "item": "tomsmodcore:ingot",
+    "data": 29,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:dust",
+    "data": 29,
+    "count": 1
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "result": {
+    "item": "tomsmodcore:restable",
+    "data": 0,
+    "count": 2
+  },
+  "pattern": [
+    "BSI",
+    "WCW",
+    "RPR"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:paper",
+      "data": 0
+    },
+    "B": {
+      "item": "minecraft:glass_bottle",
+      "data": 0
+    },
+    "R": {
+      "item": "minecraft:stick",
+      "data": 0
+    },
+    "S": {
+      "ore": "slabWood",
+      "type": "forge:ore_dict"
+    },
+    "C": {
+      "item": "minecraft:crafting_table",
+      "data": 0
+    },
+    "W": {
+      "ore": "plankWood",
+      "type": "forge:ore_dict"
+    },
+    "I": {
+      "ore": "dyeBlack",
+      "type": "forge:ore_dict"
+    }
+  }
+}

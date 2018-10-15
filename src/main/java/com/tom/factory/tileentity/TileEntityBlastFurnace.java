@@ -15,11 +15,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockBlastFurnace;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
+import com.tom.util.TomsModUtils;
 
 public class TileEntityBlastFurnace extends TileEntityTomsMod implements ISidedInventory {
 	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());

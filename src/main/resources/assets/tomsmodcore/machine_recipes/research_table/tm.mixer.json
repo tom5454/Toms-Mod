@@ -1,0 +1,44 @@
+{
+  "researches": [
+    "tomsmodcore:mixer"
+  ],
+  "level": "tomsMod.craftingLevel.electrical",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.mixer",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "PGP",
+      "ECE",
+      "PMP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "G": {
+        "ore": "glassHardened",
+        "type": "forge:ore_dict"
+      },
+      "M": {
+        "item": "tomsmodfactory:tm.steammixer",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 1500
+}

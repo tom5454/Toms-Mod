@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:basicbronzemachines"
+  ],
+  "level": "tomsMod.craftingLevel.basic",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.steam.crusher",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "DFD",
+      "-C-",
+      "P-P"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "blockPiston",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebronze",
+        "data": 0
+      },
+      "D": {
+        "ore": "gemDiamond",
+        "type": "forge:ore_dict"
+      },
+      "F": {
+        "ore": "itemFlint",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "pipeBronze",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 300
+}

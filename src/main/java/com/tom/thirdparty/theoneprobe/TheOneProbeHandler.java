@@ -3,6 +3,7 @@ package com.tom.thirdparty.theoneprobe;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -107,7 +108,7 @@ public class TheOneProbeHandler implements Function<ITheOneProbe, Void>, IProbeI
 					break;
 				}
 			}
-			this.text = net.minecraft.client.resources.I18n.format(text, args);
+			this.text = I18n.format(text, args);
 		}
 
 		@Override
@@ -169,7 +170,7 @@ public class TheOneProbeHandler implements Function<ITheOneProbe, Void>, IProbeI
 
 	@Override
 	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-		// Block block = blockState.getBlock();
+		//Block block = blockState.getBlock();
 		TileEntity tile = world.getTileEntity(data.getPos());
 		EnumFacing side = data.getSideHit();
 		if (tile instanceof TileEntityTomsMod) {
@@ -204,7 +205,7 @@ public class TheOneProbeHandler implements Function<ITheOneProbe, Void>, IProbeI
 						for (int i = 0;i < eL.size();i++) {
 							EnergyType c = eL.get(i);
 							double energyStored = s.getEnergyStored(side, c);
-							int maxEnergyStored = s.getMaxEnergyStored(side, c);
+							long maxEnergyStored = s.getMaxEnergyStored(side, c);
 							probeInfo.horizontal().text(translate("tomsMod.top.energyType")).text(" " + c.getColor() + c.toString());
 							probeInfo.progress(MathHelper.floor(energyStored), maxEnergyStored, probeInfo.defaultProgressStyle().alternateFilledColor(0xFF11d7fe).filledColor(0xFF00abce));
 						}

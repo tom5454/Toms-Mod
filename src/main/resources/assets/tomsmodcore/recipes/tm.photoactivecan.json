@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "tomsmodcore:tm.photoactivecan",
+    "data": 0,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "id": "photoactiveCan",
+      "type": "tomsmodcore:material"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

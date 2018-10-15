@@ -2,7 +2,9 @@ package com.tom.energy.item;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,8 +20,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.energy.IEnergyContainerItem;
-import com.tom.apis.TomsModUtils;
 import com.tom.energy.EnergyInit;
+import com.tom.util.TomsModUtils;
 
 public class PortableSolarPanel extends Item implements IEnergyContainerItem {
 	@Override
@@ -28,7 +30,7 @@ public class PortableSolarPanel extends Item implements IEnergyContainerItem {
 		if (is.getTagCompound() == null)
 			is.setTagCompound(new NBTTagCompound());
 		if (world.isDaytime()) {
-			float biomeTemp = world.getBiomeForCoordsBody(new BlockPos(entity)).getTemperature();
+			float biomeTemp = world.getBiomeForCoordsBody(new BlockPos(entity)).getDefaultTemperature();
 			int light = world.getLightFor(EnumSkyBlock.SKY, new BlockPos(entity));
 			int tier = is.getTagCompound().hasKey("tier") ? is.getTagCompound().getInteger("tier") : 0;
 			double e = ((tier + 1) * 20000) * (light / 15);
@@ -122,7 +124,7 @@ public class PortableSolarPanel extends Item implements IEnergyContainerItem {
 	}
 
 	@Override
-	public int getMaxEnergyStored(ItemStack container) {
+	public long getMaxEnergyStored(ItemStack container) {
 
 		return 1000;
 	}
@@ -130,34 +132,37 @@ public class PortableSolarPanel extends Item implements IEnergyContainerItem {
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean isAdvanced) {
-		super.addInformation(itemStack, player, list, isAdvanced);
-		float biomeTemp = player.world.getBiomeForCoordsBody(new BlockPos(player)).getTemperature();
-		long ticks = player.world.getWorldTime();
-		if (player.world.isDaytime()) {
-			int light = player.world.getLightFor(EnumSkyBlock.SKY, new BlockPos(player));
-			int tier = itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tier") ? itemStack.getTagCompound().getInteger("tier") : 0;
-			double e = ((tier + 1) * 20000) * (light / 15);
-			double tempPer = biomeTemp * 0.2;
-			e /= (0.8D + tempPer);
-			// long div = ticks / 12000;
-			long ticksCR = ticks - 6000;
-			long ticksC = ticksCR < 0 ? -ticksCR : ticksCR;
-			double ticksM = (6000 / e) - (ticksC / e);
-			/*double energy = itemStack.getTagCompound().hasKey("Energy") ? itemStack.getTagCompound().getDouble("Energy") : 0;
+	public void addInformation(ItemStack itemStack, World world, List list, ITooltipFlag isAdvanced) {
+		EntityPlayer player = Minecraft.getMinecraft().player;
+		if(player != null && world != null){
+			float biomeTemp = world.getBiomeForCoordsBody(new BlockPos(player)).getDefaultTemperature();
+			long ticks = world.getWorldTime();
+			if (world.isDaytime()) {
+				int light = world.getLightFor(EnumSkyBlock.SKY, new BlockPos(player));
+				int tier = itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("tier") ? itemStack.getTagCompound().getInteger("tier") : 0;
+				double e = ((tier + 1) * 20000) * (light / 15);
+				double tempPer = biomeTemp * 0.2;
+				e /= (0.8D + tempPer);
+				// long div = ticks / 12000;
+				long ticksCR = ticks - 6000;
+				long ticksC = ticksCR < 0 ? -ticksCR : ticksCR;
+				double ticksM = (6000 / e) - (ticksC / e);
+				/*double energy = itemStack.getTagCompound().hasKey("Energy") ? itemStack.getTagCompound().getDouble("Energy") : 0;
 			if(energy < 1000){
 				energy = Math.min(energy + ticksM, 1000);
 				itemStack.getTagCompound().setDouble("Energy", energy);
 			}*/
-			double ticksM2 = (ticksM / 0.6D);
-			double ticksM3 = Math.floor(ticksM2 * 1000) / 5;
-			double energy = Math.floor(this.getEnergyStored(itemStack) * 100) / 100;
-			double per = energy * 100 / 1000;
-			int p = MathHelper.floor(per);
-			list.add(I18n.format("tomsMod.tooltip.charge") + ": " + this.getMaxEnergyStored(itemStack) + "/" + energy + " " + p + "%");
-			TomsModUtils.addActiveTag(list, true);
-			list.add(I18n.format("tomsMod.tooltip.tier") + ": " + (tier + 1));
-			list.add(I18n.format("tomsMod.tooltip.efficiency", ticksM3 + "%"));
+				double ticksM2 = (ticksM / 0.6D);
+				double ticksM3 = Math.floor(ticksM2 * 1000) / 5;
+				double energy = Math.floor(this.getEnergyStored(itemStack) * 100) / 100;
+				double per = energy * 100 / 1000;
+				int p = MathHelper.floor(per);
+				list.add(I18n.format("tomsMod.tooltip.charge") + ": " + this.getMaxEnergyStored(itemStack) + "/" + energy + " " + p + "%");
+				TomsModUtils.addActiveTag(list, true);
+				list.add(I18n.format("tomsMod.tooltip.tier") + ": " + (tier + 1));
+				list.add(I18n.format("tomsMod.tooltip.efficiency", ticksM3 + "%"));
+			} else
+				TomsModUtils.addActiveTag(list, false);
 		} else
 			TomsModUtils.addActiveTag(list, false);
 		/*double energy = this.getEnergyStored(itemStack);

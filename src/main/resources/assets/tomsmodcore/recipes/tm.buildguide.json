@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodcore:tm.buildguide",
+    "data": 0,
+    "count": 1
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:book",
+      "data": 0
+    },
+    {
+      "ore": "tomsmodwrench",
+      "type": "forge:ore_dict"
+    }
+  ],
+  "type": "forge:ore_shapeless"
+}

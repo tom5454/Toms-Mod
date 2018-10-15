@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "tomsmodcore:materialstorage2",
+    "data": 10,
+    "count": 1
+  },
+  "pattern": [
+    "GGG",
+    "GGG",
+    "GGG"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "G": {
+      "ore": "ingotRedAlloy",
+      "type": "forge:ore_dict"
+    }
+  }
+}

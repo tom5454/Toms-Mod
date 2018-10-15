@@ -9,12 +9,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.tom.api.energy.EnergyStorage;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.research.ResearchHandler;
 import com.tom.factory.block.SteamSolderingStation;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler.CraftingLevel;
 import com.tom.recipes.handler.AdvancedCraftingHandler.ReturnData;
+import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.TileEntityResearchTable;
 
@@ -228,7 +228,7 @@ public class TileEntitySolderingStation extends TileEntityMachineBase {
 		}
 	}
 
-	public int getMaxEnergyStored() {
+	public long getMaxEnergyStored() {
 		return energy.getMaxEnergyStored();
 	}
 

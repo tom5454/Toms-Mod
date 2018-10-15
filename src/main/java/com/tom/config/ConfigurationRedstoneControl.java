@@ -2,8 +2,6 @@ package com.tom.config;
 
 import java.util.List;
 
-import mapwriterTm.util.Render;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -19,6 +17,7 @@ import com.tom.api.tileentity.IConfigurable.IConfigurationOption;
 import com.tom.api.tileentity.IConfigurable.SecurityCardInventory;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.ForceDeviceControlType;
+import com.tom.lib.utils.RenderUtil;
 
 public final class ConfigurationRedstoneControl implements IConfigurationOption {
 	private IInventory inventory;
@@ -35,7 +34,7 @@ public final class ConfigurationRedstoneControl implements IConfigurationOption 
 	@SideOnly(Side.CLIENT)
 	public void renderBackground(Minecraft mc, int x, int y) {
 		mc.renderEngine.bindTexture(securitySlotLocation);
-		Render.drawTexturedRect(x + 1, y + 1, 18, 18);
+		RenderUtil.drawTexturedRect(x + 1, y + 1, 18, 18);
 	}
 
 	@Override

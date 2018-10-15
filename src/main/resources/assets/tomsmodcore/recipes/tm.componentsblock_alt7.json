@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "tomsmodfactory:tm.componentsblock",
+    "data": 2,
+    "count": 2
+  },
+  "pattern": [
+    "SAS",
+    "-B-",
+    "SAS"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "A": {
+      "ore": "plateAluminum",
+      "type": "forge:ore_dict"
+    },
+    "B": {
+      "ore": "plateBronze",
+      "type": "forge:ore_dict"
+    },
+    "S": {
+      "ore": "plateSteel",
+      "type": "forge:ore_dict"
+    },
+    "-": {
+      "ore": "pipeSteel",
+      "type": "forge:ore_dict"
+    }
+  }
+}

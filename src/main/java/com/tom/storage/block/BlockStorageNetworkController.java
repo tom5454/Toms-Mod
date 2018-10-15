@@ -20,10 +20,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
-import com.tom.apis.TomsModUtils;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.storage.tileentity.TileEntityStorageNetworkController;
+import com.tom.util.TomsModUtils;
 
 public class BlockStorageNetworkController extends BlockContainerTomsMod {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);

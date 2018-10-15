@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "tomsmodstorage:tm.cable",
+    "data": 9,
+    "count": 8
+  },
+  "pattern": [
+    "CCC",
+    "CWC",
+    "CCC"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "C": {
+      "ore": "storageNetworkCable_normal",
+      "type": "forge:ore_dict"
+    },
+    "W": {
+      "ore": "dyeLightGray",
+      "type": "forge:ore_dict"
+    }
+  }
+}

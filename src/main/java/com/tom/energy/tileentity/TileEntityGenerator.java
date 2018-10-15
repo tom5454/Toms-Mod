@@ -24,7 +24,7 @@ import com.tom.api.energy.EnergyType;
 import com.tom.api.energy.IEnergyProvider;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.apis.TomsModUtils;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.block.Generator;
 
@@ -151,7 +151,7 @@ public class TileEntityGenerator extends TileEntityTomsMod implements IEnergyPro
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from, EnergyType type) {
+	public long getMaxEnergyStored(EnumFacing from, EnergyType type) {
 		return type == LV ? energy.getMaxEnergyStored() : 0;
 	}
 

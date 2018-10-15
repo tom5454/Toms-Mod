@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import com.google.common.base.Function;
 
-import com.tom.apis.EmptyEntry;
+import com.tom.lib.utils.EmptyEntry;
 
 public class CacheRegistry {
 	private static final Map<Class<? extends ICache<?>>, Entry<ResourceLocation, Function<StorageData, ? extends ICache<?>>>> cacheMap = new HashMap<>();

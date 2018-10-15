@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:advsteamfurnace"
+  ],
+  "level": "tomsMod.craftingLevel.bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.steam.adv.furnace",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PPP",
+      "PGP",
+      "BFB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "F": {
+        "item": "minecraft:furnace",
+        "data": 0
+      },
+      "G": {
+        "item": "tomsmodfactory:tm.steam.furnace",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 800
+}

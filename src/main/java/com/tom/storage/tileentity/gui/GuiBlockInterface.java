@@ -3,12 +3,11 @@ package com.tom.storage.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
+import com.tom.api.gui.GuiTomsLib;
 import com.tom.storage.tileentity.TileEntityInterface;
 import com.tom.storage.tileentity.inventory.ContainerBlockInterface;
 
-import com.tom.core.tileentity.gui.GuiTomsMod;
-
-public class GuiBlockInterface extends GuiTomsMod {
+public class GuiBlockInterface extends GuiTomsLib {
 
 	public GuiBlockInterface(InventoryPlayer playerInv, TileEntityInterface te) {
 		super(new ContainerBlockInterface(playerInv, te), "interfaceGui");

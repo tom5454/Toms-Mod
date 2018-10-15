@@ -6,9 +6,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import com.tom.api.grid.IGrid;
-import com.tom.api.grid.IGridDevice;
-import com.tom.handler.WorldHandler;
+import com.tom.lib.api.grid.IGrid;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.handler.WorldHandler;
 
 public abstract class TileEntityGridDeviceBase<G extends IGrid<?, G>> extends TileEntityTomsMod implements IGridDevice<G> {
 	protected G grid;
@@ -107,13 +107,13 @@ public abstract class TileEntityGridDeviceBase<G extends IGrid<?, G>> extends Ti
 	}
 
 	@Override
-	public boolean isConnected(EnumFacing side) {
-		return true;
+	public final boolean isConnected(EnumFacing side) {
+		return canConnectTo(side);
 	}
 
 	@Override
-	public boolean isValidConnection(EnumFacing side) {
-		return true;
+	public final boolean isValidConnection(EnumFacing side) {
+		return canConnectTo(side);
 	}
 
 	@Override
@@ -192,5 +192,8 @@ public abstract class TileEntityGridDeviceBase<G extends IGrid<?, G>> extends Ti
 				secondTick = false;
 			});
 		});
+	}
+	public boolean canConnectTo(EnumFacing f){
+		return true;
 	}
 }

@@ -12,9 +12,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 
 import com.tom.api.multipart.IGuiMultipart;
-import com.tom.apis.TomsModUtils;
 import com.tom.storage.tileentity.gui.GuiImportBus;
 import com.tom.storage.tileentity.inventory.ContainerImportBus;
+import com.tom.util.TomsModUtils;
 
 import mcmultipart.api.slot.EnumFaceSlot;
 import mcmultipart.api.slot.IPartSlot;

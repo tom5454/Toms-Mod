@@ -1,0 +1,13 @@
+{
+  "tier": 2,
+  "in": {
+    "item": "tomsmodcore:plate",
+    "data": 24,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:cable",
+    "data": 24,
+    "count": 3
+  }
+}

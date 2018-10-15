@@ -1,0 +1,15 @@
+{
+  "blueprint": "basicchip",
+  "in": {
+    "item": "tomsmodcore:tm.cchipsetbase",
+    "data": 0,
+    "count": 1
+  },
+  "level": 0,
+  "time": 200,
+  "out": {
+    "item": "tomsmodcore:tm.cchipset",
+    "data": 0,
+    "count": 1
+  }
+}

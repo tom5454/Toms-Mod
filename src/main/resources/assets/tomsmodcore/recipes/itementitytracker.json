@@ -1,0 +1,35 @@
+{
+  "result": {
+    "item": "tomsmodcore:itementitytracker",
+    "data": 0,
+    "count": 1
+  },
+  "pattern": [
+    "BGB",
+    "RPR",
+    "BSB"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "P": {
+      "ore": "paneGlassColorless",
+      "type": "forge:ore_dict"
+    },
+    "B": {
+      "ore": "plateBlueMetal",
+      "type": "forge:ore_dict"
+    },
+    "R": {
+      "id": "chargedRedstone",
+      "type": "tomsmodcore:material"
+    },
+    "S": {
+      "ore": "blockPlatinum",
+      "type": "forge:ore_dict"
+    },
+    "G": {
+      "ore": "ingotGreenium",
+      "type": "forge:ore_dict"
+    }
+  }
+}

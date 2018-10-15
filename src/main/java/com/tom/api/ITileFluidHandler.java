@@ -18,8 +18,8 @@ import net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
-import com.tom.apis.PredicatedLinkedHashMap;
-import com.tom.core.CoreInit.FluidSupplier;
+import com.tom.util.FluidSupplier;
+import com.tom.util.PredicatedLinkedHashMap;
 
 public interface ITileFluidHandler {
 	IFluidHandler getTankOnSide(EnumFacing f);

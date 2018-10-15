@@ -1,6 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "up": "blocks/monitorSide","down": "blocks/monitorSide","north": "blocks/monitor16","east": "blocks/monitorSide","south": "blocks/monitorSide","west": "blocks/monitorSide","particle": "blocks/monitorSide"
+        "up": "tomsmodcore:blocks/monitorSide",
+        "down": "tomsmodcore:blocks/monitorSide",
+        "north": "tomsmodcore:blocks/monitor16",
+        "east": "tomsmodcore:blocks/monitorSide",
+        "south": "tomsmodcore:blocks/monitorSide",
+        "west": "tomsmodcore:blocks/monitorSide",
+        "particle": "tomsmodcore:blocks/monitorSide"
     }
 }

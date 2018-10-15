@@ -5,7 +5,7 @@ import java.util.Map;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 
-import com.tom.apis.MultiblockBlockChecker;
+import com.tom.util.MultiblockBlockChecker;
 
 public interface IMultiblockController {
 	boolean getMultiblock(IBlockState state);
