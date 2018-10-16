@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.IConfigurable.IConfigurationOption;
 import com.tom.client.GuiButtonRedstoneMode;
@@ -136,7 +136,7 @@ public final class ConfigurationForceCapacitorControl implements IConfigurationO
 		}
 
 		@Override
-		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsLib gui) {
+		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
 			if (this.visible) {
 				if (hovered) {
 					gui.drawHoveringTextI(I18n.format(controlType ? "tomsmod.gui.forcecap_tooltipDrainAll" : "tomsmod.gui.forcecap_tooltipEqual"), mouseX, mouseY);

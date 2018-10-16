@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.core.tileentity.gui.GuiConfigurator.GuiButtonConfig;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.lib.utils.RenderUtil;
 
 @SideOnly(Side.CLIENT)
@@ -34,13 +34,13 @@ public class GuiButtonPowerSharing extends GuiButtonConfig {
 			this.drawTexturedModalRect(this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
 			this.drawTexturedModalRect(this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
 			this.mouseDragged(mc, mouseX, mouseY);
-			mc.getTextureManager().bindTexture(GuiTomsLib.LIST_TEXTURE);
+			mc.getTextureManager().bindTexture(GuiTomsMod.LIST_TEXTURE);
 			RenderUtil.drawTexturedRect(x + 2, y + 2, 16, 16, (controlType ? 114 : 98) / 256D, 191 / 256D);
 		}
 	}
 
 	@Override
-	public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsLib gui) {
+	public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
 		if (this.visible) {
 			if (hovered) {
 				gui.drawHoveringTextI(I18n.format(controlType ? "tomsmod.gui.powersharingOn" : "tomsmod.gui.powersharingOff"), mouseX, mouseY);

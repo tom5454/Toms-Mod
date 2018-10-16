@@ -11,15 +11,15 @@ import net.minecraft.item.ItemSword;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 
 @SideOnly(Side.CLIENT)
 public class GuiButtonMatchMeta extends GuiButton {
-	private final GuiTomsLib gui;
+	private final GuiTomsMod gui;
 	public boolean use;
 	private static final ItemStack stack = new ItemStack(Items.DIAMOND_SWORD, 1, ((ItemSword) Items.DIAMOND_SWORD).getMaxDamage(new ItemStack(Items.DIAMOND_SWORD)) / 2);
 
-	public GuiButtonMatchMeta(int buttonId, int x, int y, GuiTomsLib gui) {
+	public GuiButtonMatchMeta(int buttonId, int x, int y, GuiTomsMod gui) {
 		super(buttonId, x, y, 16, 16, "");
 		this.gui = gui;
 	}
@@ -30,7 +30,7 @@ public class GuiButtonMatchMeta extends GuiButton {
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partTicks) {
 		if (this.visible) {
-			mc.getTextureManager().bindTexture(GuiTomsLib.LIST_TEXTURE);
+			mc.getTextureManager().bindTexture(GuiTomsMod.LIST_TEXTURE);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 			GlStateManager.enableBlend();
@@ -43,7 +43,7 @@ public class GuiButtonMatchMeta extends GuiButton {
 			gui.renderItemInGui(stack, this.x + 1, this.y + 1, -200, -200, f);
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.popMatrix();
-			mc.getTextureManager().bindTexture(GuiTomsLib.LIST_TEXTURE);
+			mc.getTextureManager().bindTexture(GuiTomsMod.LIST_TEXTURE);
 			if (!use)
 				this.drawTexturedModalRect(this.x, this.y, 191, 161, this.width, this.height);
 			this.mouseDragged(mc, mouseX, mouseY);

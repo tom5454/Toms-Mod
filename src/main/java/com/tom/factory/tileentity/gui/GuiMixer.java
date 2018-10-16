@@ -5,12 +5,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.factory.tileentity.TileEntityMixer;
 import com.tom.factory.tileentity.inventory.ContainerMixer;
 import com.tom.util.TomsModUtils;
 
-public class GuiMixer extends GuiTomsLib {
+public class GuiMixer extends GuiTomsMod {
 	private TileEntityMixer te;
 
 	public GuiMixer(InventoryPlayer playerInv, TileEntityMixer te) {

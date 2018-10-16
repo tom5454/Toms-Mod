@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.client.GuiButtonTransparent;
 import com.tom.lib.utils.RenderUtil;
 import com.tom.storage.handler.StorageNetworkGrid.IStorageTerminalGui;
@@ -164,7 +164,7 @@ public class GuiCraftingAmountSelection extends GuiScreen {
 			this.zLevel = 0.0F;
 			this.itemRender.zLevel = 0.0F;
 			if (hasBg) {
-				List<String> list = stack.getTooltip(mc.player, GuiTomsLib.getTooltipFlag());
+				List<String> list = stack.getTooltip(mc.player, GuiTomsMod.getTooltipFlag());
 				if (extraInfo != null && extraInfo.length > 0) {
 					list.addAll(TomsModUtils.getStringList(extraInfo));
 				}

@@ -1,6 +1,6 @@
 package com.tom.api.gui;
 
-import static com.tom.api.gui.GuiTomsLib.LIST_TEXTURE;
+import static com.tom.api.gui.GuiTomsMod.LIST_TEXTURE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +34,12 @@ public class GuiFluidTank extends Gui implements GuiRenderRunnable {
 	private static final int TANK_HEIGHT = 60;
 	private Minecraft mc = Minecraft.getMinecraft();
 	public int posX, posY, u, v, padding, w, h, u2, v2;
-	private GuiTomsLib gui;
+	private GuiTomsMod gui;
 	private ResourceLocation tankTex, tankTex2;
 	public String name;
 	public FluidTank tank;
 
-	public GuiFluidTank(GuiTomsLib gui, String name, int xPos, int yPos, FluidTank tank) {
+	public GuiFluidTank(GuiTomsMod gui, String name, int xPos, int yPos, FluidTank tank) {
 		this.gui = gui;
 		this.name = name;
 		this.tank = tank;

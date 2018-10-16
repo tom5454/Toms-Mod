@@ -3,11 +3,11 @@ package com.tom.factory.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.factory.tileentity.TileEntityCoilerPlant;
 import com.tom.factory.tileentity.inventory.ContainerCoiler;
 
-public class GuiCoiler extends GuiTomsLib {
+public class GuiCoiler extends GuiTomsMod {
 	private TileEntityCoilerPlant te;
 
 	public GuiCoiler(InventoryPlayer playerInv, TileEntityCoilerPlant te) {

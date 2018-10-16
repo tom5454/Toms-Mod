@@ -5,12 +5,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.factory.tileentity.TileEntityPlasticProcessor;
 import com.tom.factory.tileentity.inventory.ContainerPlasticProcessor;
 import com.tom.util.TomsModUtils;
 
-public class GuiPlasticProcessor extends GuiTomsLib {
+public class GuiPlasticProcessor extends GuiTomsMod {
 	private TileEntityPlasticProcessor te;
 
 	public GuiPlasticProcessor(InventoryPlayer playerInv, TileEntityPlasticProcessor te) {

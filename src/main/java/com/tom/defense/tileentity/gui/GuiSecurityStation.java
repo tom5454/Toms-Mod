@@ -14,7 +14,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.tileentity.AccessType;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.DefenseInit;
@@ -23,7 +23,7 @@ import com.tom.defense.tileentity.TileEntitySecurityStation;
 import com.tom.defense.tileentity.inventory.ContainerSecurityStation;
 import com.tom.util.TomsModUtils;
 
-public class GuiSecurityStation extends GuiTomsLib {
+public class GuiSecurityStation extends GuiTomsMod {
 	private GuiButtonRedstoneMode buttonRedstone;
 	private GuiSecurityButton buttonBlockModification, buttonConfiguration, buttonFieldTransport, buttonStayInArea,
 	buttonHaveInventory, buttonSwitch, buttonRightsModification;

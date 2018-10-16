@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.terminal.TerminalObject;
 import com.tom.api.terminal.TerminalObjectTypes;
 import com.tom.core.entity.EntityCamera;
@@ -21,7 +21,7 @@ import com.tom.network.messages.MessageTabGuiAction;
 
 import com.tom.core.tileentity.inventory.ContainerTablet;
 
-public class GuiTablet extends GuiTomsLib {
+public class GuiTablet extends GuiTomsMod {
 	private ItemStack tabStack;
 	private int i = 0;
 	private boolean cur = false;

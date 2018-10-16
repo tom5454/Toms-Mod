@@ -5,12 +5,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.factory.tileentity.TileEntityBasicBoiler;
 import com.tom.factory.tileentity.inventory.ContainerBasicBoiler;
 import com.tom.util.TomsModUtils;
 
-public class GuiBasicBoiler extends GuiTomsLib {
+public class GuiBasicBoiler extends GuiTomsMod {
 	private TileEntityBasicBoiler te;
 
 	public GuiBasicBoiler(InventoryPlayer playerInv, TileEntityBasicBoiler te) {

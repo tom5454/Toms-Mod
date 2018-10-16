@@ -3,11 +3,11 @@ package com.tom.factory.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.factory.tileentity.TileEntityUVLightbox;
 import com.tom.factory.tileentity.inventory.ContainerUVLightbox;
 
-public class GuiUVLightbox extends GuiTomsLib {
+public class GuiUVLightbox extends GuiTomsMod {
 	private TileEntityUVLightbox te;
 
 	public GuiUVLightbox(InventoryPlayer playerInv, TileEntityUVLightbox te) {

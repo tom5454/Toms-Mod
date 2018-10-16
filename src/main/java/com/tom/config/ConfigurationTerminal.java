@@ -21,7 +21,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.tileentity.IConfigurable.IConfigurationOption;
 import com.tom.config.ConfigurationTerminal.SliderHandler.Handler;
 import com.tom.storage.multipart.block.StorageNetworkCable.CableColor;
@@ -200,7 +200,7 @@ public final class ConfigurationTerminal implements IConfigurationOption {
 		}
 
 		@Override
-		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsLib gui) {
+		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
 			if (this.visible) {
 				if (hovered) {
 					gui.drawHoveringTextI(tooltip, mouseX, mouseY);

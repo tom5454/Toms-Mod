@@ -14,7 +14,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.tileentity.IPatternTerminal;
@@ -331,7 +331,7 @@ public class TileEntityPatternTerminal extends TileEntityBasicTerminal implement
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void sendUpdate(GuiTomsLib gui, int id, int extra) {
+	public void sendUpdate(GuiTomsMod gui, int id, int extra) {
 		gui.sendButtonUpdate(id, pos, extra);
 	}
 

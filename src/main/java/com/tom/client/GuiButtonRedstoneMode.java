@@ -7,7 +7,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.lib.utils.RenderUtil;
 
@@ -41,7 +41,7 @@ public class GuiButtonRedstoneMode extends GuiButtonConfig {
 	}
 
 	@Override
-	public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsLib gui) {
+	public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
 		if (this.visible) {
 			if (hovered) {
 				gui.drawHoveringTextI(I18n.format(controlType.name), mouseX, mouseY);

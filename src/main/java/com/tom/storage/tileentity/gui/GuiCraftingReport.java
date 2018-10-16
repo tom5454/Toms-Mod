@@ -24,7 +24,7 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.lib.utils.RenderUtil;
 import com.tom.network.messages.MessageCraftingReportSync.MessageType;
@@ -351,7 +351,7 @@ public class GuiCraftingReport extends GuiScreen implements INBTPacketReceiver, 
 			this.zLevel = 0.0F;
 			this.itemRender.zLevel = 0.0F;
 			if (hasBg) {
-				List<String> list = stack.getTooltip(mc.player, GuiTomsLib.getTooltipFlag());
+				List<String> list = stack.getTooltip(mc.player, GuiTomsMod.getTooltipFlag());
 				// list.add(I18n.format("tomsmod.gui.amount", stack.stackSize));
 				if (extraInfo != null && extraInfo.length > 0) {
 					list.addAll(TomsModUtils.getStringList(extraInfo));

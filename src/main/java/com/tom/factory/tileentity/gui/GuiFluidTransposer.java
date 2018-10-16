@@ -12,12 +12,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.factory.tileentity.TileEntityFluidTransposer;
 import com.tom.factory.tileentity.inventory.ContainerFluidTransposer;
 import com.tom.util.TomsModUtils;
 
-public class GuiFluidTransposer extends GuiTomsLib {
+public class GuiFluidTransposer extends GuiTomsMod {
 	private TileEntityFluidTransposer te;
 	private GuiButtonMode buttonMode;
 

@@ -38,12 +38,12 @@ import com.tom.lib.utils.TomsUtils;
 import com.tom.network.messages.MessageGuiButtonPress;
 
 @SideOnly(Side.CLIENT)
-public abstract class GuiTomsLib extends GuiContainer {
+public abstract class GuiTomsMod extends GuiContainer {
 	protected ResourceLocation gui;
 	public List<GuiFluidTank> tanks = new ArrayList<>();
 	public static final ResourceLocation LIST_TEXTURE = new ResourceLocation("tomsmod:textures/gui/resSelect.png");
 
-	public GuiTomsLib(Container inv, String guiTexture) {
+	public GuiTomsMod(Container inv, String guiTexture) {
 		super(inv);
 		this.gui = new ResourceLocation(createGuiLocation(guiTexture));
 	}

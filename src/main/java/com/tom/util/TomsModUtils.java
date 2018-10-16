@@ -1313,6 +1313,7 @@ public final class TomsModUtils extends TomsUtils {
 					} finally {
 						IOUtils.closeQuietly(w);
 					}
+					loadJson(root + "/" + path, p, gson, parser, false);
 				}
 			} catch(IllegalStateException | JsonParseException e){
 				Config.error("Error parsing json", e);

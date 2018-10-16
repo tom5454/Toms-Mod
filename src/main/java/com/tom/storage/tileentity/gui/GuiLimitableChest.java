@@ -9,12 +9,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.lib.utils.RenderUtil;
 import com.tom.storage.tileentity.TileEntityLimitableChest;
 import com.tom.storage.tileentity.inventory.ContainerLimitableChest;
 
-public class GuiLimitableChest extends GuiTomsLib {
+public class GuiLimitableChest extends GuiTomsMod {
 	private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 	// private static final ResourceLocation LIST_TEXTURE = new
 	// ResourceLocation("tomsmod:textures/gui/resSelect.png");

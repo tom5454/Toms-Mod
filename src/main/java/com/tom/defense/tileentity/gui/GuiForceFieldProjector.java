@@ -7,14 +7,14 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiNumberValueBox;
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.gui.GuiNumberValueBox.GuiButtonNextNum;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.tileentity.TileEntityForceFieldProjector;
 import com.tom.defense.tileentity.inventory.ContainerForceFieldProjector;
 import com.tom.util.TomsModUtils;
 
-public class GuiForceFieldProjector extends GuiTomsLib {
+public class GuiForceFieldProjector extends GuiTomsMod {
 	private TileEntityForceFieldProjector te;
 	private GuiButtonRedstoneMode buttonRedstone;
 	private GuiNumberValueBox offsetX, offsetY, offsetZ;

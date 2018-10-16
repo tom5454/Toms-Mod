@@ -3,11 +3,11 @@ package com.tom.factory.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.factory.tileentity.TileEntityWireMill;
 import com.tom.factory.tileentity.inventory.ContainerWireMill;
 
-public class GuiWireMill extends GuiTomsLib {
+public class GuiWireMill extends GuiTomsMod {
 	private TileEntityWireMill te;
 
 	public GuiWireMill(InventoryPlayer playerInv, TileEntityWireMill te) {

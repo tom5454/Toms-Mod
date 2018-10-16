@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.ITerminal;
 import com.tom.storage.handler.StorageNetworkGrid.CraftingPatternProperties;
@@ -26,7 +26,7 @@ public interface IPatternTerminal extends ITerminal {
 	boolean hasPattern();
 
 	@SideOnly(Side.CLIENT)
-	void sendUpdate(GuiTomsLib gui, int id, int extra);
+	void sendUpdate(GuiTomsMod gui, int id, int extra);
 
 	void sendUpdate(NBTTagCompound message);
 

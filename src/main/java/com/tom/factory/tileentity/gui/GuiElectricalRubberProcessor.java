@@ -6,12 +6,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.math.MathHelper;
 
 import com.tom.api.gui.GuiFluidTank;
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.factory.tileentity.TileEntityElectricalRubberProcessor;
 import com.tom.factory.tileentity.inventory.ContainerElectricalRubberProcessor;
 import com.tom.util.TomsModUtils;
 
-public class GuiElectricalRubberProcessor extends GuiTomsLib {
+public class GuiElectricalRubberProcessor extends GuiTomsMod {
 	private TileEntityElectricalRubberProcessor te;
 
 	public GuiElectricalRubberProcessor(InventoryPlayer playerInv, TileEntityElectricalRubberProcessor te) {

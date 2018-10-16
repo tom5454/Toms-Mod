@@ -11,7 +11,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.tileentity.TileEntityDefenseStation;
@@ -21,7 +21,7 @@ import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.util.TomsModUtils;
 
-public class GuiDefenseStation extends GuiTomsLib implements INBTPacketReceiver {
+public class GuiDefenseStation extends GuiTomsMod implements INBTPacketReceiver {
 	private GuiButtonDefenseStationSelection buttonSelection;
 	private TileEntityDefenseStation te;
 	private GuiButton whiteListButton;

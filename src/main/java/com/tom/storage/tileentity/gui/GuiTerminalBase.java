@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.multipart.IGuiMultipart;
 import com.tom.api.network.INBTPacketReceiver;
@@ -47,7 +47,7 @@ import mcmultipart.api.container.IPartInfo;
 import mcmultipart.api.multipart.MultipartHelper;
 import mcmultipart.api.slot.IPartSlot;
 
-public class GuiTerminalBase extends GuiTomsLib implements INBTPacketReceiver, IStorageTerminalGui {
+public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, IStorageTerminalGui {
 	/** Amount scrolled in Creative mode inventory (0 = top, 1 = bottom) */
 	protected float currentScroll;
 	/** True if the scrollbar is being dragged */

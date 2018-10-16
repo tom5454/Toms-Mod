@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.tom.api.gui.GuiNumberValueBox;
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.gui.GuiNumberValueBox.GuiButtonNextNum;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.defense.ProjectorLensConfigEntry;
@@ -27,7 +27,7 @@ import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.util.TomsModUtils;
 
-public class GuiProjectorLensConfigurationMain extends GuiTomsLib implements INBTPacketReceiver {
+public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INBTPacketReceiver {
 	private int selected = -1, showing = 0;
 	private List<ProjectorLensConfigEntry> entryList = new ArrayList<>();
 	private List<GuiButtonEntry> list = new ArrayList<>();
@@ -217,7 +217,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsLib implements INB
 		}
 	}
 
-	public static class GuiProjectorLensConfig extends GuiTomsLib implements INBTPacketReceiver {
+	public static class GuiProjectorLensConfig extends GuiTomsMod implements INBTPacketReceiver {
 		private GuiTextField fieldName;
 		private ProjectorLensConfigEntry entry;
 		private boolean textFieldFoucusedLast;

@@ -3,12 +3,12 @@ package com.tom.energy.tileentity.gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 
 import com.tom.energy.tileentity.TileEntityCharger;
 import com.tom.energy.tileentity.inventory.ContainerCharger;
 
-public class GuiCharger extends GuiTomsLib {
+public class GuiCharger extends GuiTomsMod {
 
 	private TileEntityCharger te;
 

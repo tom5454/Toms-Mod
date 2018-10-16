@@ -23,7 +23,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import com.tom.api.gui.GuiNumberValueBox;
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.inventory.SlotPhantom;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.tileentity.IPatternTerminal;
@@ -34,7 +34,7 @@ import com.tom.storage.tileentity.gui.GuiPatternTerminal.GuiButtonUseContainerIt
 import com.tom.storage.tileentity.inventory.ContainerPatternOptions;
 import com.tom.util.TomsModUtils;
 
-public class GuiPatternOptions extends GuiTomsLib implements INBTPacketReceiver {
+public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver {
 	private ItemStack backButton;
 	private GuiButtonTransparent buttonBack;
 	private IPatternTerminal te;

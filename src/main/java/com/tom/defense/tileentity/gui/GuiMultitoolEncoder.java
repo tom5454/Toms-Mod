@@ -7,10 +7,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.defense.tileentity.inventory.ContainerMultitoolEncoder;
 
-public class GuiMultitoolEncoder extends GuiTomsLib {
+public class GuiMultitoolEncoder extends GuiTomsMod {
 	private GuiButton buttonWrite, buttonConfigure;
 
 	public GuiMultitoolEncoder(EntityPlayer player, ItemStack stack) {

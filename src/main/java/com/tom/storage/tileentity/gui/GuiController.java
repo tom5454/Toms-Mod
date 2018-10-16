@@ -13,7 +13,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.client.EventHandlerClient;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
@@ -21,7 +21,7 @@ import com.tom.storage.tileentity.TileEntityStorageNetworkController;
 import com.tom.storage.tileentity.TileEntityStorageNetworkController.ControllerState;
 import com.tom.storage.tileentity.inventory.ContainerController;
 
-public class GuiController extends GuiTomsLib {
+public class GuiController extends GuiTomsMod {
 	private GuiTextField text;
 	private GuiButtonOnOff onOff;
 	private TileEntityStorageNetworkController te;

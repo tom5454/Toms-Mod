@@ -5,11 +5,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.factory.tileentity.TileEntityBlastFurnace;
 import com.tom.factory.tileentity.inventory.ContainerBlastFurnace;
 
-public class GuiBlastFurnace extends GuiTomsLib {
+public class GuiBlastFurnace extends GuiTomsMod {
 
 	public GuiBlastFurnace(InventoryPlayer playerInv, TileEntityBlastFurnace te) {
 		super(new ContainerBlastFurnace(playerInv, te), "");

@@ -3,24 +3,24 @@ package com.tom.thirdparty.jei;
 import java.awt.Rectangle;
 import java.util.List;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 
 import mezz.jei.api.gui.IAdvancedGuiHandler;
 
-public class GuiTankHandler implements IAdvancedGuiHandler<GuiTomsLib> {
+public class GuiTankHandler implements IAdvancedGuiHandler<GuiTomsMod> {
 
 	@Override
-	public Class<GuiTomsLib> getGuiContainerClass() {
-		return GuiTomsLib.class;
+	public Class<GuiTomsMod> getGuiContainerClass() {
+		return GuiTomsMod.class;
 	}
 
 	@Override
-	public List<Rectangle> getGuiExtraAreas(GuiTomsLib guiContainer) {
+	public List<Rectangle> getGuiExtraAreas(GuiTomsMod guiContainer) {
 		return null;
 	}
 
 	@Override
-	public Object getIngredientUnderMouse(GuiTomsLib gui, int mouseX, int mouseY) {
+	public Object getIngredientUnderMouse(GuiTomsMod gui, int mouseX, int mouseY) {
 		return gui.getFluidUnderMouse(mouseX, mouseY);
 	}
 

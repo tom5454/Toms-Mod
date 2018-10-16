@@ -31,7 +31,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.research.IScanningInformation;
 import com.tom.api.research.Research;
@@ -47,7 +47,7 @@ import com.tom.core.tileentity.TileEntityResearchTable;
 import com.tom.core.tileentity.gui.GuiResearchTable.GuiResearchSelection.GuiResearchSelectionList.ResearchEntry;
 import com.tom.core.tileentity.inventory.ContainerResearchTable;
 
-public class GuiResearchTable extends GuiTomsLib implements INBTPacketReceiver {
+public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 	private GuiButtonCopy copyButton;
 	private GuiButtonResearchStart researchButton;
 	private GuiButtonMenu menuButton;

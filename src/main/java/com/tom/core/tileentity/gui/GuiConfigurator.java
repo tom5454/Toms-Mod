@@ -18,7 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import com.tom.api.gui.GuiTomsLib;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.handler.ConfiguratorHandler.ConfigurableDevice;
@@ -29,7 +29,7 @@ import com.tom.network.messages.MessageNBT.MessageNBTRequest;
 import com.tom.core.tileentity.inventory.ContainerConfigurator;
 import com.tom.core.tileentity.inventory.ContainerConfigurator.ContainerConfiguratorChoose;
 
-public class GuiConfigurator extends GuiTomsLib implements INBTPacketReceiver {
+public class GuiConfigurator extends GuiTomsMod implements INBTPacketReceiver {
 	private IConfigurable te;
 	private int invX, invY;
 
@@ -131,7 +131,7 @@ public class GuiConfigurator extends GuiTomsLib implements INBTPacketReceiver {
 			super(buttonId, x, y, buttonText);
 		}
 
-		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsLib gui) {
+		public void postDraw(Minecraft mc, int mouseX, int mouseY, GuiTomsMod gui) {
 		}
 	}
 
@@ -165,7 +165,7 @@ public class GuiConfigurator extends GuiTomsLib implements INBTPacketReceiver {
 		return new Rectangle(guiLeft + xSize / 2 - w / 2, y, w, h);
 	}
 
-	public static class GuiConfiguratorChoose extends GuiTomsLib implements INBTPacketReceiver {
+	public static class GuiConfiguratorChoose extends GuiTomsMod implements INBTPacketReceiver {
 		private List<ConfigurableDevice> d = new ArrayList<>();
 
 		public GuiConfiguratorChoose(World world, BlockPos pos, EntityPlayer player) {
