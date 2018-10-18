@@ -60,7 +60,7 @@ public class TileEntityGenerator extends TileEntityTomsMod implements IEnergyPro
 					IInventory inv = TileEntityHopper.getInventoryAtPosition(world, invP.getX(), invP.getY(), invP.getZ());
 					if (inv != null)
 						s = TileEntityHopper.putStackInInventoryAllSlots(inv, inv, s, facing);
-					if (s != null) {
+					if (!s.isEmpty()) {
 						EntityItem item = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, fss.getItem().getContainerItem(fss));
 						item.motionX = facing.getFrontOffsetX() * 0.3;
 						item.motionZ = facing.getFrontOffsetZ() * 0.3;
@@ -68,7 +68,7 @@ public class TileEntityGenerator extends TileEntityTomsMod implements IEnergyPro
 					}
 				}
 			} else {
-				if (fss != null) {
+				if (!fss.isEmpty()) {
 					EntityItem item = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, fss);
 					world.spawnEntity(item);
 				}

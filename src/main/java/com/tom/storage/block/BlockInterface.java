@@ -48,7 +48,7 @@ public class BlockInterface extends BlockGridDevice {
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote && CoreInit.isWrench(playerIn, hand)) {
 			if (playerIn.isSneaking())
-				worldIn.setBlockToAir(pos);
+				TomsModUtils.breakBlock(worldIn, pos);
 			else {
 				state = state.withProperty(FACING, InterfaceFacing.VALUES[(state.getValue(FACING).ordinal() + 1) % InterfaceFacing.VALUES.length]);
 				TomsModUtils.setBlockState(worldIn, pos, state);

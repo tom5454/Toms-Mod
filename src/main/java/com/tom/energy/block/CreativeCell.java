@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.core.CoreInit;
+import com.tom.util.TomsModUtils;
 
 import com.tom.energy.tileentity.TileEntityCreativeCell;
 
@@ -32,7 +33,7 @@ public class CreativeCell extends BlockContainerTomsMod {
 		if (is != null && CoreInit.isWrench(player, hand)) {
 			if (!world.isRemote) {
 				if (player.isSneaking()) {
-					world.setBlockToAir(pos);
+					TomsModUtils.breakBlock(world, pos);
 					return true;
 				}
 				TileEntityCreativeCell te = (TileEntityCreativeCell) world.getTileEntity(pos);
@@ -41,7 +42,6 @@ public class CreativeCell extends BlockContainerTomsMod {
 					te.outputSides &= ~(1 << side.ordinal());
 				else
 					te.outputSides |= 1 << side.ordinal();
-				// System.out.println(" "+te.outputSides);
 				te.markBlockForUpdate(pos);
 				te.markDirty();
 			}

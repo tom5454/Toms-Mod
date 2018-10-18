@@ -55,6 +55,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.JsonUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -1360,5 +1361,12 @@ public final class TomsModUtils extends TomsUtils {
 		{
 			IOUtils.closeQuietly(bufferedreader);
 		}
+	}
+	public static void breakBlock(World world, BlockPos pos){
+		IBlockState state = world.getBlockState(pos);
+		NonNullList<ItemStack> drops = NonNullList.create();
+		state.getBlock().getDrops(drops, world, pos, state, 0);
+		drops.forEach(d -> Block.spawnAsEntity(world, pos, d));
+		world.setBlockToAir(pos);
 	}
 }

@@ -8,4 +8,5 @@ import net.minecraft.world.IBlockAccess;
 
 public interface IItemTile {
 	void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune);
+	default boolean dropInventory(){return true;}
 }

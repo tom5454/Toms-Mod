@@ -40,7 +40,7 @@ public abstract class BlockContainerTomsMod extends BlockContainer implements IC
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntity te = worldIn.getTileEntity(pos);
-		if (te != null && !(te instanceof IItemTile)) {
+		if (te != null && (!(te instanceof IItemTile) || ((IItemTile)te).dropInventory())) {
 			if (te instanceof IInventory) {
 				// InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)
 				// te);

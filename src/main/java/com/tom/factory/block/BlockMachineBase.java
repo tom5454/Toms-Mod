@@ -167,7 +167,7 @@ public abstract class BlockMachineBase extends BlockContainerTomsMod implements 
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		if (!worldIn.isRemote) {
 			if (playerIn.isSneaking() && CoreInit.isWrench(playerIn, hand)) {
-				worldIn.setBlockToAir(pos);
+				TomsModUtils.breakBlock(worldIn, pos);
 				return true;
 			}
 			if (heldItem.getItem() instanceof ISwitch && ((ISwitch) heldItem.getItem()).isSwitch(heldItem, playerIn)) {

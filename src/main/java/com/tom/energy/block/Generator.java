@@ -59,17 +59,17 @@ public class Generator extends BlockContainerTomsMod {
 	{
 	    this.setDefaultFacing(worldIn, pos, state);
 	}
-	
+
 	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)
 	{
 	    if (!worldIn.isRemote)
 	    {
-	
+
 	        /*Block block = worldIn.getBlockState(pos.north()).getBlock();
 	        Block block1 = worldIn.getBlockState(pos.south()).getBlock();
 	        Block block2 = worldIn.getBlockState(pos.west()).getBlock();
 	        Block block3 = worldIn.getBlockState(pos.east()).getBlock();
-	
+
 	        if (enumfacing == EnumFacing.NORTH && block.isFullBlock() && !block1.isFullBlock())
 	        {
 	            enumfacing = EnumFacing.SOUTH;
@@ -86,7 +86,7 @@ public class Generator extends BlockContainerTomsMod {
 	        {
 	            enumfacing = EnumFacing.WEST;
 	        }
-	
+
 	        worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
 	        worldIn.setBlockState(pos, state.withProperty(ACTIVE, false), 2);
 	        System.out.println("on block Added "+enumfacing.toString());
@@ -141,7 +141,7 @@ public class Generator extends BlockContainerTomsMod {
 		ItemStack heldItem = playerIn.getHeldItem(hand);
 		if (heldItem != null) {
 			TileEntityGenerator te = (TileEntityGenerator) worldIn.getTileEntity(pos);
-			if (te.isItemValidForSlot(0, heldItem) && te.fuelStack == null) {
+			if (te.isItemValidForSlot(0, heldItem) && te.fuelStack.isEmpty()) {
 				ItemStack leftStack = TileEntityHopper.putStackInInventoryAllSlots(te, te, heldItem.splitStack(1), side);
 				if (leftStack != null) {
 					EntityItem item = new EntityItem(worldIn, pos.getX() + 0.5D, pos.getY() + 1, pos.getZ() + 0.5D, leftStack);

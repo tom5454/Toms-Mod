@@ -37,10 +37,10 @@ public class EnderPlayerSensor extends BlockContainerTomsMod {
 		ItemStack heldItem = player.getHeldItem(hand);
 		if (!world.isRemote) {
 			TileEntityEnderSensor te = (TileEntityEnderSensor) world.getTileEntity(pos);
-			if (te.camoStack != null && heldItem != null && CoreInit.isWrench(player, hand)) {
+			if (!te.camoStack.isEmpty() && !heldItem.isEmpty() && CoreInit.isWrench(player, hand)) {
 				if (player.isSneaking()) {
 					ItemStack camoStack = te.camoStack;
-					te.camoStack = null;
+					te.camoStack = ItemStack.EMPTY;
 					EntityItem itemEntity = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), camoStack);
 					if (!player.capabilities.isCreativeMode)
 						world.spawnEntity(itemEntity);
@@ -53,9 +53,9 @@ public class EnderPlayerSensor extends BlockContainerTomsMod {
 						}
 					}
 				}
-			} else if (te.camoStack == null) {
-				if (heldItem != null && heldItem.getItem() instanceof ItemBlock) {
-					ItemStack camoStack = null;
+			} else if (te.camoStack.isEmpty()) {
+				if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemBlock) {
+					ItemStack camoStack = ItemStack.EMPTY;
 					if (player.capabilities.isCreativeMode) {
 						camoStack = heldItem.copy();
 						camoStack.setCount(1);

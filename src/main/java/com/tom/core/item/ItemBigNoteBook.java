@@ -8,6 +8,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -37,23 +38,34 @@ public class ItemBigNoteBook extends Item implements ICustomCraftingHandler {
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		if (player.isSneaking() && !world.isRemote) {
-			if (stack.getTagCompound() == null)
-				stack.setTagCompound(new NBTTagCompound());
-			NBTTagCompound tag = stack.getTagCompound();
-			String owner = tag.getString("owner");
-			if (owner.equals(player.getName()))
-				return EnumActionResult.FAIL;
-			else {
-				tag.setString("owner", player.getName());
-				ResearchHandler.getHandlerFromName(player.getName());
-				return EnumActionResult.SUCCESS;
-			}
+			return setOwner(player, stack) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
 		} else
 			return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
+	}
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
+		if (player.isSneaking() && !world.isRemote) {
+			ItemStack stack = player.getHeldItem(handIn);
+			return setOwner(player, stack) ? new ActionResult<>(EnumActionResult.SUCCESS, stack) : new ActionResult<>(EnumActionResult.FAIL, stack);
+		}else
+			return super.onItemRightClick(world, player, handIn);
+	}
+
+	private boolean setOwner(EntityPlayer player, ItemStack stack){
+		if (stack.getTagCompound() == null)
+			stack.setTagCompound(new NBTTagCompound());
+		NBTTagCompound tag = stack.getTagCompound();
+		String owner = tag.getString("owner");
+		if (owner.equals(player.getName()))
+			return false;
+		else {
+			tag.setString("owner", player.getName());
+			ResearchHandler.getHandlerFromName(player.getName());
+			return true;
+		}
 	}
 
 	@Override
 	public void onUsing(EntityPlayer crafter, ItemStack returnStack, IInventory crafingTableInventory, ItemStack stack) {
-
 	}
 }

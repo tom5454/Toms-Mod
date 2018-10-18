@@ -42,7 +42,7 @@ public abstract class BlockTankBase extends BlockContainerTomsMod {
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote && playerIn.isSneaking() && CoreInit.isWrench(playerIn, hand)) {
-			worldIn.setBlockToAir(pos);
+			TomsModUtils.breakBlock(worldIn, pos);
 			return true;
 		}
 		TileEntity te = worldIn.getTileEntity(pos);
