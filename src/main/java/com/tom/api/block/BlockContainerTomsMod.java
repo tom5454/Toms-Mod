@@ -1,8 +1,12 @@
 package com.tom.api.block;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockPistonExtension;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -17,6 +21,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.tom.util.TomsModUtils;
 
 public abstract class BlockContainerTomsMod extends BlockContainer implements ICustomItemBlock {
 	public BlockContainerTomsMod(Material material, MapColor mapColor) {
@@ -110,5 +116,48 @@ public abstract class BlockContainerTomsMod extends BlockContainer implements IC
 	public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack) {
 		super.harvestBlock(worldIn, player, pos, state, te, stack);
 		worldIn.setBlockToAir(pos);
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+		IBlockState state = world.getBlockState(pos);
+		for (IProperty<?> prop : state.getProperties().keySet())
+		{
+			if ((prop.getName().equals("facing") || prop.getName().equals("rotation")) && prop.getValueClass() == EnumFacing.class)
+			{
+				Block block = state.getBlock();
+				if (!(block instanceof BlockBed) && !(block instanceof BlockPistonExtension))
+				{
+					IBlockState newState;
+					//noinspection unchecked
+					IProperty<EnumFacing> facingProperty = (IProperty<EnumFacing>) prop;
+					EnumFacing facing = state.getValue(facingProperty);
+					java.util.Collection<EnumFacing> validFacings = facingProperty.getAllowedValues();
+
+					// rotate horizontal facings clockwise
+					if (validFacings.size() == 4 && !validFacings.contains(EnumFacing.UP) && !validFacings.contains(EnumFacing.DOWN))
+					{
+						newState = state.withProperty(facingProperty, facing.rotateY());
+					}
+					else
+					{
+						// rotate other facings about the axis
+						EnumFacing rotatedFacing = facing.rotateAround(axis.getAxis());
+						if (validFacings.contains(rotatedFacing))
+						{
+							newState = state.withProperty(facingProperty, rotatedFacing);
+						}
+						else // abnormal facing property, just cycle it
+						{
+							newState = state.cycleProperty(facingProperty);
+						}
+					}
+
+					TomsModUtils.setBlockState(world, pos, newState);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

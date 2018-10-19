@@ -14,8 +14,8 @@ import com.tom.handler.WrenchHandler;
 
 public class ItemWrench extends Item implements IWrench {
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		return WrenchHandler.use(playerIn.getHeldItem(hand), playerIn, worldIn, pos, side, hitX, hitY, hitZ, hand) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+		return WrenchHandler.use(player.getHeldItem(hand), player, world, pos, side, hitX, hitY, hitZ, hand) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
 	}
 
 	@Override

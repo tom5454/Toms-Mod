@@ -530,6 +530,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	public String getConfigName() {
 		return getBlockType().getUnlocalizedName() + ".name";
 	}
+
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
 		ItemStack s = new ItemStack(state.getBlock(), 1, getType());

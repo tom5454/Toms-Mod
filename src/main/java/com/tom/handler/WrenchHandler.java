@@ -62,7 +62,8 @@ public class WrenchHandler {
 	}
 
 	private static boolean useNormal(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c) {
-		return false;
+		IBlockState s = world.getBlockState(pos);
+		return s.getBlock().rotateBlock(world, pos, side);
 	}
 	/*private static boolean useCrafting(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float a, float b, float c){
 		boolean ret = false;
