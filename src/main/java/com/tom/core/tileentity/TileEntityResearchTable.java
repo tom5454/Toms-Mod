@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryBasic;
@@ -39,11 +40,13 @@ import com.tom.api.research.IScanningInformation;
 import com.tom.api.research.Research;
 import com.tom.api.research.ResearchComplexity;
 import com.tom.api.tileentity.IGuiTile;
+import com.tom.api.tileentity.IResearchGui;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.core.research.ResearchHandler;
 import com.tom.core.research.ResearchHandler.ResearchInformation;
+import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.recipes.OreDict;
@@ -54,7 +57,7 @@ import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.ResearchTable;
 
-public class TileEntityResearchTable extends TileEntityTomsMod implements ISidedInventory, IGuiTile, ITileFluidHandler, IEnergyReceiver {
+public class TileEntityResearchTable extends TileEntityTomsMod implements ISidedInventory, IGuiTile, ITileFluidHandler, IEnergyReceiver, IResearchGui {
 	/**
 	 * 0: Big Note Book, 1:Note Book, 2:Ink, 3-6: Research Components,
 	 * 7-15:Crafting in, 16:Crafting out, 17:Paper, 18:Crafting Extra
@@ -259,7 +262,9 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 	}
 
 	private boolean checkPower() {
-		return (type == ResearchTableType.BRONZE ? steam.getFluidAmount() > 1000 : (type == ResearchTableType.ELECTRICAL ? energy.getEnergyStored() > 10 : true)) && (Config.researchTableRequiresOpenUI ? containerCounter < 10 : true);
+		return (type == ResearchTableType.BRONZE ? steam.getFluidAmount() > 1000 :
+			(type == ResearchTableType.ELECTRICAL || type == ResearchTableType.MV_ELECTRICAL || type == ResearchTableType.HV_ELECTRICAL ?
+					energy.getEnergyStored() > 10 : true)) && (Config.researchTableRequiresOpenUI ? containerCounter < 10 : true);
 	}
 
 	private void handlePower(double m) {
@@ -583,7 +588,12 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 	}
 
 	public static enum ResearchTableType implements IStringSerializable {
-		WOODEN(CraftingLevel.BASIC_WOODEN, ResearchComplexity.BASIC, -1, "wooden"), BRONZE(CraftingLevel.BRONZE, ResearchComplexity.BRONZE, 0, "bronze"), ELECTRICAL(CraftingLevel.BASIC_ELECTRICAL, ResearchComplexity.ELECTRICAL, 1, "electrical"), MV_ELECTRICAL(CraftingLevel.HV_ELECTRICAL, ResearchComplexity.MV, 2, "electrical"), HV_ELECTRICAL(CraftingLevel.HV_ELECTRICAL, ResearchComplexity.ADVANCED, 3, "electrical"),;
+		WOODEN(CraftingLevel.BASIC_WOODEN, ResearchComplexity.BASIC, -1, "wooden"),
+		BRONZE(CraftingLevel.BRONZE, ResearchComplexity.BRONZE, 0, "bronze"),
+		ELECTRICAL(CraftingLevel.BASIC_ELECTRICAL, ResearchComplexity.ELECTRICAL, 1, "electrical"),
+		MV_ELECTRICAL(CraftingLevel.HV_ELECTRICAL, ResearchComplexity.MV, 2, "electrical"),
+		HV_ELECTRICAL(CraftingLevel.HV_ELECTRICAL, ResearchComplexity.ADVANCED, 3, "electrical"),
+		;
 		public static final ResearchTableType[] VALUES = values();
 		private final CraftingLevel level;
 		private final ResearchComplexity researchLevel;
@@ -631,7 +641,12 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 	public TileEntityResearchTable getMaster() {
 		return getMaster(state == null ? world.getBlockState(pos) : state);
 	}
-
+	private int getState(){
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() != CoreInit.researchTable)
+			return -1;
+		return state.getValue(ResearchTable.STATE);
+	}
 	public TileEntityResearchTable getMaster(IBlockState s) {
 		int state = s.getValue(ResearchTable.STATE);
 		if (state == 0)
@@ -706,5 +721,18 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 
 	public void containerOpen() {
 		containerCounter = 0;
+	}
+
+	@Override
+	public ItemStack getIcon() {
+		int st = getState();
+		return st == 2 ? new ItemStack(Blocks.CRAFTING_TABLE) : (st == 1 ? new ItemStack(CoreInit.blueprint) : ItemStack.EMPTY);
+	}
+
+	@Override
+	public void openGui(EntityPlayer pl) {
+		TileEntityResearchTable table = getMaster();
+		if(table != null)
+			pl.openGui(CoreInit.modInstance, table == this ? GuiIDs.researchTable.ordinal() : GuiIDs.research.ordinal(), world, table.pos.getX(), table.pos.getY(), table.pos.getZ());
 	}
 }

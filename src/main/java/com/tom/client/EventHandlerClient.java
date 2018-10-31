@@ -3,7 +3,6 @@ package com.tom.client;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +58,7 @@ import com.google.common.collect.Maps;
 import com.tom.api.inventory.ITooltipSlot;
 import com.tom.core.CoreInit;
 import com.tom.handler.EventHandler;
+import com.tom.lib.Configs;
 import com.tom.lib.GlobalFields;
 import com.tom.lib.utils.EmptyEntry;
 import com.tom.lib.utils.RenderUtil;
@@ -73,7 +73,6 @@ import scala.actors.threadpool.Arrays;
 @SideOnly(Side.CLIENT)
 public class EventHandlerClient {
 	protected static EventHandlerClient instance;
-	private List<ResourceLocation> loadedLocations = new ArrayList<>();
 	// private Map<Predicate<ItemStack>, Entry<String, String>> tooltipOverride
 	// = new HashMap<>();
 	private Map<Item, Entry<String, String>> tooltipOverrideFast = new HashMap<>();
@@ -144,21 +143,16 @@ public class EventHandlerClient {
 	@SubscribeEvent
 	public void onRegisterTexture(TextureStitchEvent.Pre event) {
 		TMLogger.info("Adding fluid textures");
-		loadedLocations.clear();
-		//lcdFont = new LCDFontRenderer(mc.gameSettings, Configs.lcdFont, mc.renderEngine, false);
+		lcdFont = new LCDFontRenderer(mc.gameSettings, Configs.lcdFont, mc.renderEngine, false);
 		TextureMap map = event.getMap();
 		for (Entry<String, Fluid> entry : CoreInit.fluidList.entrySet()) {
-			if (!loadedLocations.contains(entry.getValue().getFlowing())) {
-				map.registerSprite(entry.getValue().getFlowing());
-				loadedLocations.add(entry.getValue().getFlowing());
-			}
-			if (!loadedLocations.contains(entry.getValue().getStill())) {
-				map.registerSprite(entry.getValue().getStill());
-				loadedLocations.add(entry.getValue().getStill());
-			}
+			map.registerSprite(entry.getValue().getFlowing());
+			map.registerSprite(entry.getValue().getStill());
 		}
+		map.registerSprite(new ResourceLocation("tomsmod:gui/gearbox_on"));
 		textureIns++;
 	}
+
 
 	@SubscribeEvent
 	public void onTick(TickEvent.ClientTickEvent event) {

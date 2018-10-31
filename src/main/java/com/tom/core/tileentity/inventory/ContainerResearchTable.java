@@ -47,7 +47,7 @@ public class ContainerResearchTable extends ContainerTomsMod {
 
 	/**
 	 * 0: Big Note Book, 1:Note Book, 2:Ink, 3-6: Research Components,
-	 * 7-15:Crafting in, 16:Crafting out, 17:Paper
+	 * 7-15:Crafting in, 16:Crafting out, 17:Paper, 18:Crafting Extra
 	 */
 	private TileEntityResearchTable te;
 	private int lastTotalCraftingTime = -1;

@@ -129,25 +129,29 @@ public class ResearchTable extends BlockContainerTomsMod {
 			BlockPos parentPos = pos.offset(facing.rotateYCCW());
 			IBlockState parentState = worldIn.getBlockState(parentPos);
 			if (parentState != null && parentState.getBlock() == this) {
-				parentState.getBlock().onBlockActivated(worldIn, parentPos, parentState, player, hand, side, hitX, hitY, hitZ);
+				((ResearchTable)parentState.getBlock()).click(heldItem, worldIn, parentPos, player, false);
 			}
 		} else if (blockState == 2) {
-			if (heldItem != null && heldItem.getItem() == CoreInit.researchTableUpgrade) {
-				TileEntityResearchTable te = (TileEntityResearchTable) worldIn.getTileEntity(pos);
-				byte b = te.upgrade(heldItem.getMetadata());
-				if (b == 2) {
-					if (!player.capabilities.isCreativeMode)
-						heldItem.splitStack(1);
-				} else if (b == 1) {
-					player.openGui(CoreInit.modInstance, GuiIDs.researchTable.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-				} else if (b == 3) {
-					TomsModUtils.sendNoSpamTranslateWithTag(player, new Style(), heldItem.getUnlocalizedName() + ".name", "tomsMod.chat.upgradeFailed");
-				}
-			} else {
-				player.openGui(CoreInit.modInstance, GuiIDs.researchTable.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-			}
+			click(heldItem, worldIn, pos, player, true);
 		}
 		return true;
+	}
+
+	private void click(ItemStack heldItem, World worldIn, BlockPos pos, EntityPlayer player, boolean master){
+		if (heldItem.getItem() == CoreInit.researchTableUpgrade) {
+			TileEntityResearchTable te = (TileEntityResearchTable) worldIn.getTileEntity(pos);
+			byte b = te.upgrade(heldItem.getMetadata());
+			if (b == 2) {
+				if (!player.capabilities.isCreativeMode)
+					heldItem.splitStack(1);
+			} else if (b == 1) {
+				player.openGui(CoreInit.modInstance, master ? GuiIDs.researchTable.ordinal() : GuiIDs.research.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+			} else if (b == 3) {
+				TomsModUtils.sendNoSpamTranslateWithTag(player, new Style(), heldItem.getUnlocalizedName() + ".name", "tomsMod.chat.upgradeFailed");
+			}
+		} else {
+			player.openGui(CoreInit.modInstance, master ? GuiIDs.researchTable.ordinal() : GuiIDs.research.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+		}
 	}
 
 	@Override

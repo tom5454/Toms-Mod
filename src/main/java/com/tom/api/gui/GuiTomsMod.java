@@ -14,6 +14,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -318,5 +320,15 @@ public abstract class GuiTomsMod extends GuiContainer {
 		GL11.glColor4f(1, 1, 1, 1);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
+	}
+	public final void renderGearbox(int x, int y, boolean on){
+		if(on){
+			mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			TextureAtlasSprite textureSprite = mc.getTextureMapBlocks().getAtlasSprite("tomsmod:gui/gearbox_on");
+			this.drawTexturedModalRect(x, y, textureSprite, 16, 16);
+		}else{
+			mc.getTextureManager().bindTexture(new ResourceLocation("tomsmod:textures/gui/gearbox_off.png"));
+			RenderUtil.drawTexturedRect(x, y, 16, 16);
+		}
 	}
 }

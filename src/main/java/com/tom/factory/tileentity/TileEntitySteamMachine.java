@@ -22,6 +22,7 @@ public abstract class TileEntitySteamMachine extends TileEntityTomsMod implement
 	protected InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
 	protected ItemStackChecker out;
 	protected int progress = -1;
+	public boolean clientCanRun;
 
 	@Override
 	public boolean isEmpty() {
@@ -128,7 +129,7 @@ public abstract class TileEntitySteamMachine extends TileEntityTomsMod implement
 	@Override
 	public void updateEntity() {
 		if (!world.isRemote) {
-			if (tank.getFluidAmount() > 1200) {
+			if (canRun()) {
 				update0();
 				if (progress > 0) {
 					if (process()) {
@@ -200,5 +201,8 @@ public abstract class TileEntitySteamMachine extends TileEntityTomsMod implement
 				out = s;
 			}
 		}
+	}
+	public boolean canRun(){
+		return tank.getFluidAmount() > 1200;
 	}
 }

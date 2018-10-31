@@ -16,6 +16,7 @@ import com.tom.core.tileentity.inventory.ContainerTomsMod;
 public class ContainerSteamCrusher extends ContainerTomsMod {
 	private TileEntitySteamCrusher te;
 	private int lastProgress;
+	private boolean lastCanRun;
 
 	public ContainerSteamCrusher(InventoryPlayer playerInv, TileEntitySteamCrusher te) {
 		this.te = te;
@@ -34,12 +35,15 @@ public class ContainerSteamCrusher extends ContainerTomsMod {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
+		boolean canRun = te.canRun();
 		for (IContainerListener crafter : listeners) {
 			// if(lastEnergy !=
 			// te.getClientEnergyStored())crafter.sendProgressBarUpdate(this, 0,
 			// te.getClientEnergyStored());
 			if (lastProgress != te.getField(0))
 				crafter.sendWindowProperty(this, 0, te.getField(0));
+			if(lastCanRun != canRun)
+				crafter.sendWindowProperty(this, 1, canRun ? 1 : 0);
 			// if(lastMaxProgress !=
 			// te.getField(1))crafter.sendProgressBarUpdate(this, 2,
 			// te.getField(1));
@@ -55,6 +59,7 @@ public class ContainerSteamCrusher extends ContainerTomsMod {
 		// if(id == 0)te.clientEnergy = data;
 		if (id == 0)
 			te.setField(0, data);
+		else if(id == 1)te.clientCanRun = data != 0;
 		// else if(id == 2)te.setField(1, data);
 	}
 }

@@ -26,6 +26,7 @@ public class GuiSteamCrusher extends GuiTomsMod {
 		// 12, p1);
 		if (te.getField(0) > 0)
 			drawTexturedModalRect(guiLeft + 65, guiTop + 35, 176, 65, p2, 16);
+		renderGearbox(guiLeft + 150, guiTop + 10, te.clientCanRun);
 	}
 
 	@Override

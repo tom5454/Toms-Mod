@@ -191,7 +191,7 @@ public class GuiHandler implements IGuiHandler {
 		cokeOven, blastFurnace, solderingStation, fluidTransposer, industrialBlastFurnace, refinery, charger,
 		geoBoiler, fluidBoiler, advFluidBoiler, uvLightbox, plasticProcessor, steamMixer, mixer, laserEngraver,
 		mbfuelrod, storageNetworkController, configuratorChoose, rubberBoiler, patternOptionsPart, rubberProcessor,
-		craftingProgress, eRubberProcessor,
+		craftingProgress, eRubberProcessor, research,
 
 		;
 		private static final GuiIDs[] VALUES = values();
@@ -343,6 +343,8 @@ public class GuiHandler implements IGuiHandler {
 		case craftingProgress:
 			TomsModUtils.sendChatTranslate(player, "WIP");
 			return null;
+		case research:
+			return new ContainerResearchTable(player.inventory, (TileEntityResearchTable) world.getTileEntity((new BlockPos(x, y, z))));
 		default:
 			break;
 		}
@@ -488,6 +490,8 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiElectricalRubberProcessor(player.inventory, (TileEntityElectricalRubberProcessor) world.getTileEntity(new BlockPos(x, y, z)));
 		case mbfuelrod:
 			return new GuiMBFuelRod(player.inventory, (TileEntityMultiblockController) world.getTileEntity(new BlockPos(x, y, z)));
+		case research:
+			return new GuiResearchTable(player.inventory, (TileEntityResearchTable) world.getTileEntity((new BlockPos(x, y, z))));
 		default:
 			break;
 		}
