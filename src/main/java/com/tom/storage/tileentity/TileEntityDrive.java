@@ -14,6 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
 import com.tom.api.grid.GridEnergyStorage;
+import com.tom.api.grid.StorageNetworkGrid.IChannelLoadListener;
 import com.tom.api.inventory.IStorageInventory;
 import com.tom.api.inventory.IStorageInventory.IUpdateable;
 import com.tom.api.item.IStorageCell;
@@ -24,7 +25,6 @@ import com.tom.config.ConfigurationOptionDrive;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.storage.block.Drive;
-import com.tom.storage.handler.StorageNetworkGrid.IChannelLoadListener;
 import com.tom.util.TomsModUtils;
 
 public class TileEntityDrive extends TileEntityChannel implements IInventory, ICustomModelledTileEntity, IChannelLoadListener, IConfigurable, ISecuredTileEntity {
@@ -45,7 +45,7 @@ public class TileEntityDrive extends TileEntityChannel implements IInventory, IC
 	public void updateEntity() {
 		if (!world.isRemote) {
 			// grid.getData().addInventory(inv);
-			grid.getData().addEnergyStorage(energy);
+			grid.getSData().addEnergyStorage(energy);
 			drain = 1;
 			if (updateCells())
 				markBlockForUpdate(pos);
@@ -91,9 +91,13 @@ public class TileEntityDrive extends TileEntityChannel implements IInventory, IC
 					world.profiler.endStartSection("handlePower");
 					drain += (((IStorageCell) inv.getStackInSlot(i).getItem()).getPowerDrain(inv.getStackInSlot(i), world, pos, grid) / 10D);
 					world.profiler.endStartSection("update");
+					if(dataList[i] != null && !dataList[i].isValid()){
+						dataList[i].saveAndInvalidate();
+						dataList[i] = ((IStorageCell) inv.getStackInSlot(i).getItem()).getData(inv.getStackInSlot(i), world, pos, priority * 10 + priorities[i], grid);
+					}
 					if (dataList[i] != null) {
 						world.profiler.startSection("addToList");
-						grid.getData().addInventory(dataList[i]);
+						grid.getSData().addInventory(dataList[i]);
 						world.profiler.endStartSection("updateData");
 						((IUpdateable) dataList[i]).update(inv.getStackInSlot(i), null, priority * 10 + priorities[i]);
 						world.profiler.endSection();
@@ -107,7 +111,8 @@ public class TileEntityDrive extends TileEntityChannel implements IInventory, IC
 						needsSync = true;
 					}
 					if (dataList[i] != null) {
-						grid.getData().removeInventory(dataList[i]);
+						grid.getSData().removeInventory(dataList[i]);
+						dataList[i].saveAndInvalidate();
 						dataList[i] = null;
 					}
 				}
@@ -118,7 +123,8 @@ public class TileEntityDrive extends TileEntityChannel implements IInventory, IC
 					clientLeds[i] = -2;
 					needsSync = true;
 					if (dataList[i] != null) {
-						grid.getData().removeInventory(dataList[i]);
+						grid.getSData().removeInventory(dataList[i]);
+						dataList[i].saveAndInvalidate();
 						dataList[i] = null;
 					}
 				}
@@ -275,8 +281,8 @@ public class TileEntityDrive extends TileEntityChannel implements IInventory, IC
 	public void markDirty() {
 		for (int i = 0;i < 10;i++) {
 			if (dataList[i] != null) {
-				grid.getData().removeInventory(dataList[i]);
-				dataList[i].saveIfNeeded();
+				grid.getSData().removeInventory(dataList[i]);
+				dataList[i].saveAndInvalidate();
 				dataList[i] = null;
 			}
 		}
@@ -321,10 +327,11 @@ public class TileEntityDrive extends TileEntityChannel implements IInventory, IC
 	public void invalidateGrid() {
 		for (int i = 0;i < 10;i++) {
 			if (dataList[i] != null) {
-				grid.getData().removeInventory(dataList[i]);
+				dataList[i].saveAndInvalidate();
+				grid.getSData().removeInventory(dataList[i]);
 			}
 		}
-		grid.getData().removeEnergyStorage(energy);
+		grid.getSData().removeEnergyStorage(energy);
 		super.invalidateGrid();
 	}
 
@@ -364,7 +371,7 @@ public class TileEntityDrive extends TileEntityChannel implements IInventory, IC
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		connections = message.getByte("s");
 		priority = message.getInteger("p");
 		markDirty();

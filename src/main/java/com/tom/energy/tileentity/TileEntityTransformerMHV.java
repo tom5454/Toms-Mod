@@ -1,6 +1,6 @@
 package com.tom.energy.tileentity;
 
-import static com.tom.api.energy.EnergyType.*;
+import static com.tom.lib.api.energy.EnergyType.*;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyHandler;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyHandler;
 
 import com.tom.energy.block.TransformerMH;
 

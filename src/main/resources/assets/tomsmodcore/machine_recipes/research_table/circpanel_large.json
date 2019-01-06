@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:advcircuit"
+  ],
+  "level": "e_soldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:item.tm.circuitpanel",
+      "data": 1,
+      "count": 1
+    },
+    "pattern": [
+      "_C_",
+      "RGR",
+      "_P_"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "sheetPlastic",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "ore": "itemRubber",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "plateCopper",
+        "type": "forge:ore_dict"
+      },
+      "G": {
+        "ore": "meshGlass",
+        "type": "forge:ore_dict"
+      },
+      "_": {
+        "id": "small",
+        "type": "tomsmodcore:circuitpanel"
+      }
+    }
+  },
+  "crafting_time": 800
+}

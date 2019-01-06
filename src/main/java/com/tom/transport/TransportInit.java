@@ -18,6 +18,7 @@ import com.tom.core.CoreInit;
 import com.tom.core.IMod;
 import com.tom.lib.Configs;
 import com.tom.transport.block.BlockOpenCrate;
+import com.tom.transport.block.ConveyorBeltExtract;
 import com.tom.transport.block.ConveyorBeltFast;
 import com.tom.transport.block.ConveyorBeltOmniFast;
 import com.tom.transport.block.ConveyorBeltOmniSlow;
@@ -32,6 +33,7 @@ import com.tom.transport.multipart.PartFluidDuctOpaque;
 import com.tom.transport.multipart.PartFluidServo;
 import com.tom.transport.multipart.PartSteamDuct;
 import com.tom.transport.tileentity.TileEntityConveyorBeltSlope;
+import com.tom.transport.tileentity.TileEntityConveyorExtract;
 import com.tom.transport.tileentity.TileEntityConveyorFast;
 import com.tom.transport.tileentity.TileEntityConveyorOmniFast;
 import com.tom.transport.tileentity.TileEntityConveyorOmniSlow;
@@ -45,7 +47,7 @@ public class TransportInit {
 	public static final Logger log = LogManager.getLogger(modName);
 	public static Block fluidDuct, steamDuct, fluidDuctOpaque, fluidServo, conveyorBeltSlow, conveyorBeltFast,
 	conveyorBeltDouble, conveyorBeltSlope, conveyorBeltSlopeDouble, conveyorBeltOmnidirectionalSlow,
-	conveyorBeltOmnidirectionalFast, conveyorBeltVerticalSlow, conveyorBeltVerticalFast, openCrate;
+	conveyorBeltOmnidirectionalFast, conveyorBeltVerticalSlow, conveyorBeltVerticalFast, openCrate, conveyorBeltExtract;
 
 	@EventHandler
 	public static void PreLoad(FMLPreInitializationEvent PreEvent) {
@@ -60,8 +62,8 @@ public class TransportInit {
 		conveyorBeltOmnidirectionalSlow = new ConveyorBeltOmniSlow().setCreativeTab(tabTomsModTransport).setUnlocalizedName("tm.conveyorBeltOmniSlow");
 		conveyorBeltOmnidirectionalFast = new ConveyorBeltOmniFast().setCreativeTab(tabTomsModTransport).setUnlocalizedName("tm.conveyorBeltOmniFast");
 		conveyorBeltSlope = new ConveyorBeltSlope().setCreativeTab(tabTomsModTransport).setUnlocalizedName("tm.conveyorBeltSlope");
+		conveyorBeltExtract = new ConveyorBeltExtract().setCreativeTab(tabTomsModTransport).setUnlocalizedName("tm.conveyorBeltExtract");
 		openCrate = new BlockOpenCrate().setCreativeTab(tabTomsModTransport).setUnlocalizedName("tm.openCrate");
-		// conveyorBeltSlope = new ConveyorSlope();
 		/** Multiparts */
 		fluidDuct = new FluidDuct().setCreativeTab(tabTomsModTransport).setUnlocalizedName("tm.fluidDuct");
 		fluidServo = new FluidServo().setCreativeTab(tabTomsModTransport).setUnlocalizedName("tm.fluidServo");
@@ -74,6 +76,7 @@ public class TransportInit {
 		registerBlock(conveyorBeltOmnidirectionalSlow);
 		registerBlock(conveyorBeltOmnidirectionalFast);
 		registerBlock(conveyorBeltSlope);
+		registerBlock(conveyorBeltExtract);
 		registerBlock(openCrate);
 		/** Multiparts */
 		registerBlock(fluidDuct);
@@ -86,6 +89,7 @@ public class TransportInit {
 		registerTileEntity(TileEntityConveyorOmniSlow.class, "conveyorOmniSlow");
 		registerTileEntity(TileEntityConveyorOmniFast.class, "conveyorOmniFast");
 		registerTileEntity(TileEntityConveyorBeltSlope.class, "conveyorSlope");
+		registerTileEntity(TileEntityConveyorExtract.class, "conveyorExtracting");
 		registerTileEntity(TileEntityOpenCrate.class, "openCrate");
 		/** Multiparts */
 		registerTileEntity(PartFluidDuctOpaque.class, "part_fluidDuctO");

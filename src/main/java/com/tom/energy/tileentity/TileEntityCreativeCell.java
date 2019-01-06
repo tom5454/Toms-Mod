@@ -4,9 +4,9 @@ import java.util.List;
 
 import net.minecraft.util.EnumFacing;
 
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyProvider;
 import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyProvider;
 
 public class TileEntityCreativeCell extends TileEntityTomsMod implements IEnergyProvider {
 	private static final EnergyType[] TYPES = new EnergyType[]{EnergyType.LV, EnergyType.MV, EnergyType.HV};

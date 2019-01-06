@@ -1,17 +1,17 @@
 package com.tom.energy.tileentity;
 
-import static com.tom.api.energy.EnergyType.HV;
+import static com.tom.lib.api.energy.EnergyType.HV;
 
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.lib.Configs;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyReceiver;
 
 public class TileEntityFusionCharger extends TileEntityTomsMod implements IEnergyReceiver {
 	private EnergyStorage energy = new EnergyStorage(Configs.ChargerMaxEnergy, Configs.InjectorMaxEnergyInput);

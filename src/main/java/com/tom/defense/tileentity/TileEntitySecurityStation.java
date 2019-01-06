@@ -27,7 +27,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.UsernameCache;
 
 import com.tom.api.block.IItemTile;
-import com.tom.api.energy.EnergyStorage;
 import com.tom.api.item.IIdentityCard;
 import com.tom.api.item.IPowerLinkCard;
 import com.tom.api.item.ISecurityStationLinkCard;
@@ -35,7 +34,6 @@ import com.tom.api.item.ISwitch;
 import com.tom.api.tileentity.AccessType;
 import com.tom.api.tileentity.IForceDevice;
 import com.tom.api.tileentity.IForcePowerStation;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.ISecurityStation;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.core.CoreInit;
@@ -44,9 +42,10 @@ import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.block.ForceCapacitor;
 import com.tom.defense.item.IdentityCard;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.lib.api.energy.EnergyStorage;
 import com.tom.util.TomsModUtils;
 
-public class TileEntitySecurityStation extends TileEntityTomsMod implements IForceDevice, ISecurityStation, ISidedInventory, IGuiTile, IItemTile {
+public class TileEntitySecurityStation extends TileEntityTomsMod implements IForceDevice, ISecurityStation, ISidedInventory, IItemTile {
 	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
 	public ForceDeviceControlType rsMode = ForceDeviceControlType.LOW_REDSTONE;
 	private EnergyStorage energy = new EnergyStorage(10000, 1000);

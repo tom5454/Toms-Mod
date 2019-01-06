@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:advmultiblockparts"
   ],
-  "level": "tomsMod.craftingLevel.mv",
+  "level": "mv",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:mbadvcasing",

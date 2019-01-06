@@ -152,7 +152,7 @@ public abstract class PartTerminal extends PartChannelModule implements ITermina
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		color = new TerminalColor(message.getInteger("color"), /*message.getInteger("colorAlt")*/0);
 		markBlockForUpdate(pos);
 	}
@@ -184,7 +184,7 @@ public abstract class PartTerminal extends PartChannelModule implements ITermina
 
 	@Override
 	public BlockPos getSecurityStationPos() {
-		return grid.getData().getSecurityStationPos();
+		return grid.getSData().getSecurityStationPos();
 	}
 
 	@Override
@@ -215,7 +215,7 @@ public abstract class PartTerminal extends PartChannelModule implements ITermina
 
 	@Override
 	public void sendUpdate(int id, int extra, GuiTerminalBase gui) {
-		gui.sendButtonUpdateT(id, this, extra, getPos2());
+		gui.sendButtonUpdateToTile(id, extra);
 	}
 
 	@Override
@@ -225,7 +225,7 @@ public abstract class PartTerminal extends PartChannelModule implements ITermina
 
 	@Override
 	public StorageData getData() {
-		return grid.getData();
+		return grid.getSData();
 	}
 
 	@Override

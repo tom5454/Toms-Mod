@@ -4,8 +4,8 @@ import static com.tom.core.CoreInit.log;
 
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 
-import com.tom.api.map.IMapAPI;
 import com.tom.core.map.MapHandler;
+import com.tom.lib.api.map.IMapAPI;
 
 public class IMCHandler {
 	public static void receive(IMCMessage msg) throws Exception {

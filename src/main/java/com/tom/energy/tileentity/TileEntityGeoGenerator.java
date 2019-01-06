@@ -1,6 +1,6 @@
 package com.tom.energy.tileentity;
 
-import static com.tom.api.energy.EnergyType.LV;
+import static com.tom.lib.api.energy.EnergyType.LV;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.block.IItemTile;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyProvider;
 import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyProvider;
 import com.tom.util.TomsModUtils;
 
 import com.tom.energy.block.GeoGenerator;

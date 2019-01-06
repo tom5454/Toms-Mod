@@ -109,7 +109,6 @@ import com.tom.handler.IMCHandler;
 import com.tom.handler.TMPlayerHandler;
 import com.tom.handler.TMWorldHandler;
 import com.tom.lib.Configs;
-import com.tom.lib.GlobalFields;
 import com.tom.lib.utils.EmptyEntry;
 import com.tom.lib.utils.Modids;
 import com.tom.lib.utils.ReflectionUtils;
@@ -874,7 +873,7 @@ public final class CoreInit {
 		TMResource.NETHER_QUARTZ.storageBlock = new EmptyEntry<>(Blocks.QUARTZ_BLOCK, 0);
 		TMResource.OBSIDIAN.storageBlock = new EmptyEntry<>(Blocks.OBSIDIAN, 0);
 		TMResource.REDSTONE.storageBlock = new EmptyEntry<>(Blocks.REDSTONE_BLOCK, 0);
-		VillageInit.init();
+		VillageHandler.init();
 		log.info("Loading Recipes");
 		if(RecipeHelper.genJson())CraftingRecipes.init();
 		FurnaceRecipes.init();
@@ -1035,7 +1034,6 @@ public final class CoreInit {
 		if (Config.enableResearchSystem)
 			event.registerServerCommand(new CommandResearch());
 		event.registerServerCommand(new CommandTMReload());
-		GlobalFields.EnderMemoryObj = new Object[][][][]{{new Object[65536][2]}, TomsModUtils.fillObject(65536)};
 		Config.printWarnings();
 		log.info("Loading Completed");
 	}
@@ -1196,7 +1194,7 @@ public final class CoreInit {
 
 		@Override
 		public ItemStack getTabIconItem() {
-			return new ItemStack(magnifyingGlass);
+			return new ItemStack(buildGuide);
 		}
 
 	};

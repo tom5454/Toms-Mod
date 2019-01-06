@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.tom.api.tileentity.IAccessPoint;
 import com.tom.api.tileentity.TileEntityTomsMod;
-import com.tom.lib.api.tileentity.ITMPeripheral.IComputer;
 import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
 
 import dan200.computercraft.api.peripheral.IComputerAccess;

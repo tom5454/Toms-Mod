@@ -9,10 +9,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.google.common.base.Function;
 
 import com.tom.api.inventory.IStorageInventory;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
 import com.tom.storage.tileentity.gui.GuiTerminalBase;
 
-public interface ITerminal {
+public interface ITerminal extends IPacketReceiver {
 	int getTerminalMode();
 
 	void setClientState(TileEntityBasicTerminal.TerminalState powered);

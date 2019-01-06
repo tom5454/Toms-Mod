@@ -1,6 +1,6 @@
 package com.tom.core.tileentity;
 
-import static com.tom.api.energy.EnergyType.LV;
+import static com.tom.lib.api.energy.EnergyType.LV;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -32,18 +32,18 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.core.CoreInit;
 import com.tom.core.font.Font;
 import com.tom.core.font.Font.CustomFont;
 import com.tom.lib.Configs;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyReceiver;
 import com.tom.lib.api.tileentity.ITMPeripheral;
+import com.tom.lib.utils.IDList;
 import com.tom.thirdparty.waila.IIntegratedMultimeter;
 import com.tom.util.DualOutputStream;
-import com.tom.util.IDList;
 import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.BlockMonitorBase;

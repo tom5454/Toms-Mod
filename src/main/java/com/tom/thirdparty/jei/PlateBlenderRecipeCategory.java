@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextFormatting;
 
 import com.tom.lib.Configs;
 import com.tom.recipes.handler.MachineCraftingHandler;
-import com.tom.thirdparty.jei.PlateBlenderRecipeCategory.PlateBlenderRecipeJEI;
+import com.tom.thirdparty.jei.PlateBlenderRecipeCategory.PlateBenderRecipeJEI;
 import com.tom.util.RecipeData;
 
 import mezz.jei.api.gui.IDrawable;
@@ -25,17 +25,13 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 
-public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderRecipeJEI> {
-	public static List<PlateBlenderRecipeJEI> get() {
-		List<PlateBlenderRecipeJEI> recipes = new ArrayList<>();
-		List<RecipeData> recipeList = MachineCraftingHandler.getPlateBlenderRecipes();
+public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBenderRecipeJEI> {
+	public static List<PlateBenderRecipeJEI> get() {
+		List<PlateBenderRecipeJEI> recipes = new ArrayList<>();
+		List<RecipeData> recipeList = MachineCraftingHandler.getPlateBenderRecipes();
 		for (int i = 0;i < recipeList.size();i++) {
 			RecipeData data = recipeList.get(i);
-			// ItemStack[] array = {data.itemstack1, data.itemstack2,
-			// data.itemstack3, data.itemstack4, data.itemstack5,
-			// data.itemstack6, data.itemstack7, data.itemstack8,
-			// data.itemstack9};
-			PlateBlenderRecipeJEI cr = new PlateBlenderRecipeJEI(data.itemstack0, data.itemstack1, data.energy, data.id);
+			PlateBenderRecipeJEI cr = new PlateBenderRecipeJEI(data.itemstack0, data.itemstack1, data.energy, data.id);
 			recipes.add(cr);
 		}
 		return recipes;
@@ -46,12 +42,12 @@ public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderR
 
 	@Override
 	public String getUid() {
-		return JEIConstants.PLATE_BLENDER_ID;
+		return JEIConstants.PLATE_BENDER;
 	}
 
 	@Override
 	public String getTitle() {
-		return I18n.format("tomsmod.jei.plateBlender");
+		return I18n.format("tomsmod.jei.plateBender");
 	}
 
 	@Override
@@ -69,7 +65,7 @@ public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderR
 		return Configs.ModName;
 	}
 
-	public static class PlateBlenderRecipeJEI implements IRecipeWrapper {
+	public static class PlateBenderRecipeJEI implements IRecipeWrapper {
 		@Nullable
 		private final ItemStack input;
 		@Nonnull
@@ -77,7 +73,7 @@ public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderR
 		private final int level;
 		private final String id;
 
-		public PlateBlenderRecipeJEI(ItemStack input, ItemStack output, int level, String id) {
+		public PlateBenderRecipeJEI(ItemStack input, ItemStack output, int level, String id) {
 			this.input = input;
 			this.output = output;
 			this.level = level;
@@ -102,7 +98,7 @@ public class PlateBlenderRecipeCategory implements IRecipeCategory<PlateBlenderR
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, PlateBlenderRecipeJEI recipeWrapper, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, PlateBenderRecipeJEI recipeWrapper, IIngredients ingredients) {
 		int x = 6;
 		int y = 21;
 		recipeLayout.getItemStacks().init(0, true, x, y);

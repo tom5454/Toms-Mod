@@ -29,6 +29,7 @@ public class ContainerExportBus extends ContainerTomsMod {
 		addSlotToContainer(new SlotPhantom(bus.filterInv, i + 2, x + 36, y));
 		addSlotToContainer(new SlotSpeedCard(bus.upgradeInv, 0, 140, 36, 8));
 		addPlayerSlots(playerInv, 8, 94);
+		syncHandler.setReceiver(bus);
 	}
 
 	@Override

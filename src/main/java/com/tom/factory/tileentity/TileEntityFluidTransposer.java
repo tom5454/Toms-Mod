@@ -12,14 +12,13 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.factory.block.FluidTransposer;
+import com.tom.lib.api.energy.EnergyStorage;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 import com.tom.util.TomsModUtils;
 
-public class TileEntityFluidTransposer extends TileEntityMachineBase implements ITileFluidHandler, IGuiTile {
+public class TileEntityFluidTransposer extends TileEntityMachineBase implements ITileFluidHandler {
 	private EnergyStorage energy = new EnergyStorage(20000, 1000);
 	private FluidTank tank = new FluidTank(10000);
 	private boolean isExtract = false;
@@ -133,8 +132,8 @@ public class TileEntityFluidTransposer extends TileEntityMachineBase implements 
 		return isExtract;
 	}
 
-	public void setMode(int mode) {
-		isExtract = mode == 1;
+	public void setMode(boolean mode) {
+		isExtract = mode;
 	}
 
 	@Override

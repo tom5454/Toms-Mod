@@ -34,11 +34,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.api.block.IModelRegisterRequired;
-import com.tom.api.energy.EnergyType;
 import com.tom.api.item.ISwitch;
 import com.tom.core.CoreInit;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.factory.tileentity.TileEntityMachineBase;
+import com.tom.lib.api.energy.EnergyType;
 import com.tom.lib.utils.EmptyEntry;
 import com.tom.recipes.AdvancedCraftingRecipes;
 import com.tom.util.TomsModUtils;

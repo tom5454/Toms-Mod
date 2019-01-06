@@ -7,13 +7,17 @@
   "pattern": [
     "CBC",
     "BHB",
-    "CBC"
+    "bBb"
   ],
   "type": "forge:ore_shaped",
   "key": {
     "B": {
       "ore": "plateBrass",
       "type": "forge:ore_dict"
+    },
+    "b": {
+      "item": "minecraft:brick_block",
+      "data": 0
     },
     "C": {
       "ore": "plateBronze",

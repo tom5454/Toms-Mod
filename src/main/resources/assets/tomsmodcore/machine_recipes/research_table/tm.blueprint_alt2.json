@@ -7,7 +7,7 @@
   "researches": [
     "tomsmodcore:soldering"
   ],
-  "level": "tomsMod.craftingLevel.bronze",
+  "level": "bronze",
   "recipe": {
     "result": {
       "nbt": {

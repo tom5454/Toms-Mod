@@ -83,17 +83,17 @@ public class GuiStorageBus extends GuiMultipartBase {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			sendButtonUpdateP(0, te, (((PartStorageBus) te).isWhiteList() ? 0 : 1));
+			sendButtonUpdateToTile(0, (((PartStorageBus) te).isWhiteList() ? 0 : 1));
 		} else if (button.id == 1) {
-			sendButtonUpdateP(1, te, (((PartStorageBus) te).isCheckMeta() ? 0 : 1));
+			sendButtonUpdateToTile(1, (((PartStorageBus) te).isCheckMeta() ? 0 : 1));
 		} else if (button.id == 2) {
-			sendButtonUpdateP(2, te, (((PartStorageBus) te).isCheckNBT() ? 0 : 1));
+			sendButtonUpdateToTile(2, (((PartStorageBus) te).isCheckNBT() ? 0 : 1));
 		} else if (button.id == 3) {
-			sendButtonUpdateP(3, te, (((PartStorageBus) te).isCheckMod() ? 0 : 1));
+			sendButtonUpdateToTile(3, (((PartStorageBus) te).isCheckMod() ? 0 : 1));
 		} else if (button.id == 4) {
-			sendButtonUpdateP(4, te, (((PartStorageBus) te).isCanViewAll() ? 0 : 1));
+			sendButtonUpdateToTile(4, (((PartStorageBus) te).isCanViewAll() ? 0 : 1));
 		} else if (button.id == 5) {
-			sendButtonUpdateP(5, te, (((PartStorageBus) te).getMode().ordinal() + 1));
+			sendButtonUpdateToTile(5, (((PartStorageBus) te).getMode().ordinal() + 1));
 		}
 	}
 

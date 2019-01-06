@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "tomsmodcore:material",
+    "data": 51,
+    "count": 1
+  },
+  "pattern": [
+    "WW",
+    "WW"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "W": {
+      "ore": "cableCopper",
+      "type": "forge:ore_dict"
+    }
+  }
+}

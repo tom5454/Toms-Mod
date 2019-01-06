@@ -47,7 +47,7 @@ public class AlloySmelterRecipeCategory implements IRecipeCategory<AlloySmelterR
 
 	@Override
 	public String getUid() {
-		return JEIConstants.ALLOY_SMELTER_ID;
+		return JEIConstants.ALLOY_SMELTER;
 	}
 
 	@Override

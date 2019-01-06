@@ -17,25 +17,26 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
+import com.tom.api.grid.StorageNetworkGrid.ControllMode;
+import com.tom.api.grid.StorageNetworkGrid.IStorageTerminalGui;
+import com.tom.api.grid.StorageNetworkGrid.SearchType;
 import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.multipart.IGuiMultipart;
-import com.tom.api.network.INBTPacketReceiver;
 import com.tom.client.GuiButtonTransparent;
 import com.tom.handler.TMPlayerHandler;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 import com.tom.storage.StorageInit;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.ITerminal;
-import com.tom.storage.handler.StorageNetworkGrid.ControllMode;
-import com.tom.storage.handler.StorageNetworkGrid.IStorageTerminalGui;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
 import com.tom.storage.tileentity.inventory.ContainerTerminalBase;
 import com.tom.storage.tileentity.inventory.ContainerTerminalBase.SlotAction;
@@ -47,7 +48,7 @@ import mcmultipart.api.container.IPartInfo;
 import mcmultipart.api.multipart.MultipartHelper;
 import mcmultipart.api.slot.IPartSlot;
 
-public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, IStorageTerminalGui {
+public class GuiTerminalBase extends GuiTomsMod implements IPacketReceiver, IStorageTerminalGui {
 	/** Amount scrolled in Creative mode inventory (0 = top, 1 = bottom) */
 	protected float currentScroll;
 	/** True if the scrollbar is being dragged */
@@ -58,9 +59,10 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 	 */
 	protected boolean wasClicking;
 	protected GuiTextField searchField;
-	protected int slotIDUnderMouse = -1, sortData, searchType, controllMode, rowCount;
+	protected int slotIDUnderMouse = -1, sortData, controllMode, rowCount;
 	protected String searchLast = "";
 	protected boolean jeiSync = false, tallTerm, wideTerm;
+	protected SearchType searchType;
 	protected static final ResourceLocation creativeInventoryTabs = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
 	public Comparator<ICraftable> comparator = new ICraftable.CraftableComparatorAmount(false);
 	protected GuiButtonSortingType buttonSortingType;
@@ -162,7 +164,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 	}
 
 	public static class GuiButtonSearchType extends GuiButton {
-		public int type = 0;
+		public SearchType type = SearchType.AUTO_DEF;
 
 		public GuiButtonSearchType(int buttonId, int x, int y) {
 			super(buttonId, x, y, 16, 16, "");
@@ -181,7 +183,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 				GlStateManager.enableBlend();
 				GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 				GlStateManager.blendFunc(770, 771);
-				this.drawTexturedModalRect(this.x, this.y, 191 + type * 16, 34, this.width, this.height);
+				this.drawTexturedModalRect(this.x, this.y, 128 + type.ordinal() * 16, 225, this.width, this.height);
 				// this.drawTexturedModalRect(this.xPosition + this.width / 2,
 				// this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width
 				// / 2, this.height);
@@ -282,13 +284,14 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		boolean isReport = message.getBoolean("r");
 		if (!isReport) {
 			this.getContainer().receiveClientNBTPacket(message);
 			int data = message.getInteger("d");
 			int searchBoxType = message.getInteger("t");
-			boolean canLoseFocus = searchBoxType % 2 == 1;
+			searchType = SearchType.get(searchBoxType);
+			boolean canLoseFocus = !searchType.defSelected;
 			// terminalType = message.getInteger("c");
 			if (searchField != null) {
 				searchField.setCanLoseFocus(canLoseFocus);
@@ -296,11 +299,10 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 					searchField.setFocused(true);
 				}
 			}
-			jeiSync = searchBoxType > 1;
+			jeiSync = searchType.jei;
 			ICraftable.CraftableSorting type = TMPlayerHandler.getSortingType(data);
 			comparator = type.getComparator(TMPlayerHandler.getSortingDir(data));
 			sortData = data;
-			searchType = searchBoxType;
 			byte termMode = message.getByte("cm");
 			controllMode = termMode % 0x10;
 			wideTerm = TomsModUtils.getBit(termMode, 4);
@@ -314,7 +316,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 			GuiCraftingReport r = new GuiCraftingReport(this, skipResult);
 			mc.displayGuiScreen(r);
 			if (message.getBoolean("c"))
-				r.receiveNBTPacket(message);
+				r.receiveNBTPacket(pl, message);
 			skipResult = false;
 		}
 	}
@@ -390,7 +392,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		super.updateScreen();
 		buttonDirection.dir = TMPlayerHandler.getSortingDir(sortData);
 		buttonSortingType.type = TMPlayerHandler.getSortingType(sortData).ordinal();
-		buttonSearchType.type = searchType;
+		buttonSearchType.type = searchType == null ? SearchType.AUTO_DEF : searchType;
 		buttonViewType.type = getContainer().terminalType;
 		powered = te.getTerminalState();
 		buttonCtrlMode.type = controllMode;
@@ -439,7 +441,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 			drawHoveringText(TomsModUtils.getStringList(I18n.format("tomsMod.storage.sorting_" + buttonSortingType.type)), mouseX, mouseY);
 		}
 		if (buttonSearchType.isMouseOver()) {
-			drawHoveringText(TomsModUtils.getStringList(I18n.format("tomsMod.storage.search_" + buttonSearchType.type)), mouseX, mouseY);
+			drawHoveringText(TomsModUtils.getStringList(I18n.format("tomsMod.storage." + buttonSearchType.type.loc)), mouseX, mouseY);
 		}
 		if (buttonViewType.isMouseOver()) {
 			drawHoveringText(TomsModUtils.getStringList(I18n.format("tomsMod.storage.view_" + buttonViewType.type)), mouseX, mouseY);
@@ -624,27 +626,27 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		if (button.id == 0) {
 			ICraftable.CraftableSorting type = ICraftable.CraftableSorting.get(TMPlayerHandler.getSortingType(sortData).ordinal() + 1);
 			boolean dir = TMPlayerHandler.getSortingDir(sortData);
-			sendButtonUpdate(0, TMPlayerHandler.getItemSortingMode(type, dir));
+			sendButtonUpdateToContainer(0, TMPlayerHandler.getItemSortingMode(type, dir));
 		} else if (button.id == 1) {
 			ICraftable.CraftableSorting type = TMPlayerHandler.getSortingType(sortData);
 			boolean dir = !TMPlayerHandler.getSortingDir(sortData);
-			sendButtonUpdate(0, TMPlayerHandler.getItemSortingMode(type, dir));
+			sendButtonUpdateToContainer(0, TMPlayerHandler.getItemSortingMode(type, dir));
 		} else if (button.id == 2) {
-			sendButtonUpdate(1, searchType + 1);
+			sendButtonUpdateToContainer(1, searchType.ordinal() + 1);
 		} else if (button.id == 3) {
 			te.sendUpdate(0, getContainer().terminalType + 1, this);
 		} else if (button.id == 4) {
-			sendButtonUpdate(3);
+			sendButtonUpdateToContainer(3, 0);
 		} else if (button.id == 5) {
 			int termMode = controllMode + 1;
 			termMode = TomsModUtils.setBit(termMode, 4, wideTerm);
 			termMode = TomsModUtils.setBit(termMode, 5, tallTerm);
-			sendButtonUpdate(2, termMode);
+			sendButtonUpdateToContainer(2, termMode);
 		} else if (button.id == 6) {
 			int termMode = controllMode;
 			termMode = TomsModUtils.setBit(termMode, 4, wideTerm);
 			termMode = TomsModUtils.setBit(termMode, 5, !tallTerm);
-			sendButtonUpdate(2, termMode);
+			sendButtonUpdateToContainer(2, termMode);
 		}
 	}
 
@@ -705,20 +707,6 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		}
 	}
 
-	public void sendButtonUpdateT(int id, ITerminal term, BlockPos pos) {
-		if (term instanceof IGuiMultipart)
-			sendButtonUpdateP(id, (IGuiMultipart) term);
-		else
-			sendButtonUpdate(id, pos);
-	}
-
-	public void sendButtonUpdateT(int id, ITerminal term, int extraData, BlockPos pos) {
-		if (term instanceof IGuiMultipart)
-			sendButtonUpdateP(id, (IGuiMultipart) term, extraData);
-		else
-			sendButtonUpdate(id, pos, extraData);
-	}
-
 	public void bindList() {
 		mc.renderEngine.bindTexture(LIST_TEXTURE);
 	}
@@ -738,7 +726,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 	public boolean isPullOne(int mouseButton) {
 		switch (ctrlm()) {
 		case AE:
-			return isCtrlKeyDown();
+			return mouseButton == 1 && isShiftKeyDown();
 		case RS:
 			return mouseButton == 2;
 		default:
@@ -749,7 +737,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 	public boolean isTransferOne(int mouseButton) {
 		switch (ctrlm()) {
 		case AE:
-			return isShiftKeyDown() && isCtrlKeyDown();
+			return isShiftKeyDown() && isCtrlKeyDown();//not in AE
 		case RS:
 			return isShiftKeyDown() && mouseButton == 2;
 		default:
@@ -809,7 +797,7 @@ public class GuiTerminalBase extends GuiTomsMod implements INBTPacketReceiver, I
 		int termMode = controllMode;
 		termMode = TomsModUtils.setBit(termMode, 4, wide);
 		termMode = TomsModUtils.setBit(termMode, 5, tall);
-		sendButtonUpdate(2, termMode);
+		sendButtonUpdateToContainer(2, termMode);
 	}
 
 	@Override

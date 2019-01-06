@@ -2,13 +2,9 @@ package com.tom.defense.tileentity.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.item.IIdentityCard;
 import com.tom.api.item.IPowerLinkCard;
@@ -18,7 +14,6 @@ import com.tom.defense.tileentity.TileEntitySecurityStation;
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerSecurityStation extends ContainerTomsMod {
-	private int powerLast = -1, lastRS = -1, cardLast = -1;
 	private TileEntitySecurityStation te;
 
 	public ContainerSecurityStation(InventoryPlayer inv, TileEntitySecurityStation te) {
@@ -42,41 +37,15 @@ public class ContainerSecurityStation extends ContainerTomsMod {
 		}
 		this.addPlayerSlots(inv, 8, 129);
 		this.te = te;
+		syncHandler.registerInventoryFieldShort(te, 0);
+		syncHandler.registerShort(1, te::getCompiledRightsFromEditingCard, i -> te.setField(1, i));
+		syncHandler.registerEnum(2, () -> te.rsMode, e -> te.rsMode = e, ForceDeviceControlType.VALUES);
+		syncHandler.setReceiver(te);
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return true;
-	}
-
-	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		int compiledEditingCard = te.getCompiledRightsFromEditingCard();
-		for (IContainerListener crafter : listeners) {
-			if (te.getField(0) != powerLast) {
-				crafter.sendWindowProperty(this, 0, te.getField(0));
-			}
-			if (te.rsMode.ordinal() != lastRS) {
-				crafter.sendWindowProperty(this, 2, te.rsMode.ordinal());
-			}
-
-			if (compiledEditingCard != this.cardLast) {
-				crafter.sendWindowProperty(this, 1, compiledEditingCard);
-			}
-		}
-		powerLast = te.getField(2);
-		this.cardLast = compiledEditingCard;
-		lastRS = te.rsMode.ordinal();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int value) {
-		if (id == 2) {
-			te.rsMode = ForceDeviceControlType.get(value);
-		} else
-			te.setField(id, value);
+		return te.isUsableByPlayer(playerIn);
 	}
 
 	public static class SlotIndentityCard extends Slot {

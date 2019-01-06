@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,14 +117,14 @@ public class RecipeHelper {
 					@Override
 					public JsonElement serialize(ItemStack src, Type typeOfSrc, JsonSerializationContext context) {
 						if(src.getItem() instanceof ICustomJsonIngerdient){
-							return context.serialize(((ICustomJsonIngerdient)src.getItem()).serialize(src, false));
-						}else{
-							Map<String, Object> map = new HashMap<>();
-							map.put("item", src.getItem().getRegistryName().toString());
-							map.put("data", src.getMetadata());
-							if(src.hasTagCompound())map.put("nbt", TomsModUtils.gson.fromJson(src.getTagCompound().toString(), Object.class));
-							return context.serialize(map);
+							Map<String, Object> ser = ((ICustomJsonIngerdient)src.getItem()).serialize(src, false);
+							if(ser != null)return context.serialize(ser);
 						}
+						Map<String, Object> map = new HashMap<>();
+						map.put("item", src.getItem().getRegistryName().toString());
+						map.put("data", src.getMetadata());
+						if(src.hasTagCompound())map.put("nbt", TomsModUtils.gson.fromJson(src.getTagCompound().toString(), Object.class));
+						return context.serialize(map);
 					}
 				}).registerTypeAdapter(Item.class, new JsonSerializer<Item>() {
 
@@ -147,6 +149,14 @@ public class RecipeHelper {
 						return context.serialize(map);
 						//}
 					}
+				}).registerTypeAdapter(Condition.class, new JsonSerializer<Condition>() {
+
+					@Override
+					public JsonElement serialize(Condition src, Type typeOfSrc, JsonSerializationContext context) {
+						Map<String, Object> map = new HashMap<>();
+						src.serialize(map);
+						return context.serialize(map);
+					}
 				}).create();
 			}
 		}
@@ -170,13 +180,21 @@ public class RecipeHelper {
 			}
 		}
 	}
-
+	public static String getItemName(ItemStack stack){
+		if(stack.getItem() instanceof ICustomJsonIngerdient){
+			String ser = ((ICustomJsonIngerdient)stack.getItem()).getCustomName(stack);
+			if(ser != null)return ser.toLowerCase();
+		}
+		return stack.getItem().delegate.name().getResourcePath().toLowerCase();
+	}
 	public static void addShapelessRecipe(ItemStack output, Object... inputs) {
 		if(genJson){
 			CoreInit.initRunnables.add(() -> {
 				Map<String, Object> map = new HashMap<>();
-				encodeShapeless(map, output, inputs);
-				writeRecipe(map, output.getItem().delegate.name().getResourcePath());
+				List<Condition> cond = new ArrayList<>();
+				encodeShapeless(map, output, cond, inputs);
+				if(!cond.isEmpty())map.put("conditions", cond);
+				writeRecipe(map, getItemName(output));
 			});
 			//register(new ShapelessOreRecipe(new ResourceLocation("tomsmod:shapeless"), output, inputs));
 		}
@@ -186,8 +204,10 @@ public class RecipeHelper {
 		if(genJson){
 			CoreInit.initRunnables.add(() -> {
 				Map<String, Object> map = new HashMap<>();
-				encodeShaped(map, output, inputs);
-				String fName = writeRecipe(map, output.getItem().delegate.name().getResourcePath());
+				List<Condition> cond = new ArrayList<>();
+				encodeShaped(map, output, cond, inputs);
+				if(!cond.isEmpty())map.put("conditions", cond);
+				String fName = writeRecipe(map, getItemName(output));
 				String name = "tomsmodcore:" + fName;
 				if(output.getItem() == TMResource.Type.PLATE.getItem()){
 					map = new HashMap<>();
@@ -348,7 +368,7 @@ public class RecipeHelper {
 		in.getParentFile().mkdirs();
 		return in;
 	}
-	private static Integer parseShaped(Map<String, Object> map, Object[] recipe) {
+	private static Integer parseShaped(Map<String, Object> map, Object[] recipe, List<Condition> cond) {
 		int width = 0, height = 0;
 		List<String> pattern = new ArrayList<>();
 		Map<String, Object> key = new HashMap<>();
@@ -357,21 +377,35 @@ public class RecipeHelper {
 		String shape = "";
 		int idx = 0;
 		Integer extra = null;
+		boolean run = true;
+		while(run){
+			run = false;
+			if (recipe[idx] instanceof Boolean) {
+				map.put("mirrored", recipe[idx]);
+				if (recipe[idx+1] instanceof Object[])
+					recipe = (Object[])recipe[idx+1];
+				else
+					idx++;
+				run = true;
+			}
 
-		if (recipe[idx] instanceof Boolean) {
-			map.put("mirrored", recipe[idx]);
-			if (recipe[idx+1] instanceof Object[])
-				recipe = (Object[])recipe[idx+1];
-			else
-				idx = 1;
-		}
+			if (recipe[idx] instanceof Integer) {
+				extra = (Integer) recipe[idx];
+				if (recipe[idx+1] instanceof Object[])
+					recipe = (Object[])recipe[idx+1];
+				else
+					idx++;
+				run = true;
+			}
 
-		if (recipe[idx] instanceof Integer) {
-			extra = (Integer) recipe[idx];
-			if (recipe[idx+1] instanceof Object[])
-				recipe = (Object[])recipe[idx+1];
-			else
-				idx++;
+			if (recipe[idx] instanceof Condition) {
+				cond.addAll(((Condition) recipe[idx]).toList());
+				if (recipe[idx+1] instanceof Object[])
+					recipe = (Object[])recipe[idx+1];
+				else
+					idx++;
+				run = true;
+			}
 		}
 
 		if (recipe[idx] instanceof String[]) {
@@ -469,7 +503,8 @@ public class RecipeHelper {
 			CoreInit.initRunnables.add(() -> {
 				Map<String, Object> map = new HashMap<>();
 				Map<String, Object> rmap = new HashMap<>();
-				Integer extraD = encodeShaped(rmap, out, recipe);
+				List<Condition> cond = new ArrayList<>();
+				Integer extraD = encodeShaped(rmap, out, cond, recipe);
 				map.put("recipe", rmap);
 				if(extra != null && !extra.isEmpty())map.put("secondary", new ItemStackWCount(extra));
 				map.put("crafting_time", craftingTime);
@@ -479,7 +514,8 @@ public class RecipeHelper {
 					if(e.delegate == null || e.delegate.name() == null)log.error("Research delegate is null: " + e.getName());
 					return e.delegate != null && e.delegate.name() != null;
 				}).map(e -> e.delegate.name().toString()).collect(Collectors.toList()));
-				writeAdvRecipe(map, out.getItem().delegate.name().getResourcePath());
+				if(!cond.isEmpty())map.put("conditions", cond);
+				writeAdvRecipe(map, getItemName(out));
 			});
 		}
 	}
@@ -488,7 +524,8 @@ public class RecipeHelper {
 			CoreInit.initRunnables.add(() -> {
 				Map<String, Object> map = new HashMap<>();
 				Map<String, Object> rmap = new HashMap<>();
-				Integer extraD = encodeShapeless(rmap, out, recipe);
+				List<Condition> cond = new ArrayList<>();
+				Integer extraD = encodeShapeless(rmap, out, cond, recipe);
 				map.put("recipe", rmap);
 				if(extra != null && !extra.isEmpty())map.put("secondary", new ItemStackWCount(extra));
 				map.put("crafting_time", craftingTime);
@@ -498,18 +535,19 @@ public class RecipeHelper {
 					if(e.delegate == null || e.delegate.name() == null)log.error("Research delegate is null: " + e.getName());
 					return e.delegate != null && e.delegate.name() != null;
 				}).map(e -> e.delegate.name().toString()).collect(Collectors.toList()));
-				writeAdvRecipe(map, out.getItem().delegate.name().getResourcePath());
+				if(!cond.isEmpty())map.put("conditions", cond);
+				writeAdvRecipe(map, getItemName(out));
 			});
 		}
 	}
-	private static Integer encodeShaped(Map<String, Object> map, ItemStack output, Object... inputs){
+	private static Integer encodeShaped(Map<String, Object> map, ItemStack output, List<Condition> cond, Object... inputs){
 		map.put("type", "forge:ore_shaped");
 		//map.put("group", output.getItem().delegate.name().toString());
-		Integer extraD = parseShaped(map, inputs);
+		Integer extraD = parseShaped(map, inputs, cond);
 		map.put("result", new ItemStackWCount(output));
 		return extraD;
 	}
-	private static Integer encodeShapeless(Map<String, Object> map, ItemStack output, Object... inputs){
+	private static Integer encodeShapeless(Map<String, Object> map, ItemStack output, List<Condition> cond, Object... inputs){
 		map.put("type", "forge:ore_shapeless");
 		Integer extraD = null;
 		if (inputs[0] instanceof Integer) {
@@ -519,7 +557,8 @@ public class RecipeHelper {
 			inputs = r;
 		}
 		//map.put("group", output.getItem().delegate.name().toString());
-		map.put("ingredients", Arrays.stream(inputs).map(RecipeHelper::serialize).toArray());
+		map.put("ingredients", Arrays.stream(inputs).peek(e -> {if(e instanceof Condition)cond.add((Condition) e);}).
+				filter(e -> !(e instanceof Condition)).map(RecipeHelper::serialize).toArray());
 		map.put("result", new ItemStackWCount(output));
 		return extraD;
 	}
@@ -542,13 +581,19 @@ public class RecipeHelper {
 		if(genJson()){
 			CoreInit.initRunnables.add(() -> {
 				Map<String, Object> map = new HashMap<>();
-				Map<String, String> m = new HashMap<>();
-				map.put("ingredients", m);
-				m.put("circuit", "com.tom.core.TMResource$tomsmod_circuit");
-				m.put("circuitcomp", "com.tom.core.TMResource$tomsmod_circuitcomp");
-				m.put("circuitpanel", "com.tom.core.TMResource$tomsmod_circuitpanel");
-				m.put("material", "com.tom.core.TMResource$tomsmod_material");
-				m.put("chipset", "com.tom.core.TMResource$tomsmod_chipset");
+				Map<String, String> ingr = new HashMap<>();
+				map.put("ingredients", ingr);
+				Map<String, String> cond = new HashMap<>();
+				map.put("conditions", cond);
+
+				ingr.put("circuit", "com.tom.core.TMResource$tomsmod_circuit");
+				ingr.put("circuitcomp", "com.tom.core.TMResource$tomsmod_circuitcomp");
+				ingr.put("circuitpanel", "com.tom.core.TMResource$tomsmod_circuitpanel");
+				ingr.put("material", "com.tom.core.TMResource$tomsmod_material");
+				ingr.put("chipset", "com.tom.core.TMResource$tomsmod_chipset");
+
+				cond.put("config", "com.tom.core.TMResource$tomsmod_config");
+
 				writeRecipe(map, "_factories", "recipes", "_f");
 			});
 		}
@@ -573,6 +618,63 @@ public class RecipeHelper {
 			if(JOptionPane.showConfirmDialog(null, "Recipe Generation Complete. Restart?", "Restart", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
 				throw new RuntimeException("Game aborted");
 			}
+		}
+	}
+	public static class Condition {
+		public static final Condition FALSE = new Condition("forge:false");
+		private final String id;
+		private final Object[] obj;
+		public Condition(String id, Object... objects) {
+			this.id = id;
+			this.obj = objects;
+		}
+		public Collection<Condition> toList() {
+			if(id == null)return Arrays.asList((Condition[])obj);
+			return Collections.singletonList(this);
+		}
+		public Condition(Condition... conditions) {
+			id = null;
+			obj = conditions;
+		}
+		public void serialize(Map<String, Object> map){
+			if(id == null){
+				toSingle().serialize(map);
+			}else{
+				map.put("type", id);
+				for (int i = 0;i < obj.length;i+=2) {
+					String key = (String) obj[i];
+					Object val = obj[i+1];
+					map.put(key, val);
+				}
+			}
+		}
+		public Condition toSingle(){
+			if(id != null)return this;
+			if(obj.length == 1)return (Condition) obj[0];
+			return new Condition("forge:and", "values", Arrays.asList((Condition[])obj));
+		}
+		public Condition not(){
+			return new Condition("forge:not", "value", toSingle());
+		}
+		public Condition and(Condition... conditions){
+			if(id == null){
+				Condition[] cond = Arrays.copyOf((Condition[]) obj, obj.length + conditions.length);
+				System.arraycopy(conditions, 0, cond, obj.length, conditions.length);
+				return new Condition(cond);
+			}else{
+				Condition[] cond = Arrays.copyOf(conditions, conditions.length+1);
+				cond[conditions.length] = this;
+				return new Condition(cond);
+			}
+		}
+		public Condition or(Condition... conditions){
+			List<Condition> list = new ArrayList<>();
+			list.addAll(toList());
+			list.addAll(Arrays.asList(conditions));
+			return new Condition("forge:or", "values", list);
+		}
+		public static Condition isModLoaded(String modid){
+			return new Condition("forge:mod_loaded", "modid", modid);
 		}
 	}
 }

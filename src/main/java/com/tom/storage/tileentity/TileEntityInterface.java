@@ -17,15 +17,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.ICraftingPatternListener;
+import com.tom.api.grid.StorageNetworkGrid.ICraftingRecipeContainer;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.storage.block.BlockInterface;
 import com.tom.storage.block.BlockInterface.InterfaceFacing;
 import com.tom.storage.handler.AutoCraftingHandler;
 import com.tom.storage.handler.ICache;
 import com.tom.storage.handler.InventoryCache;
-import com.tom.storage.handler.StorageNetworkGrid;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingPatternListener;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingRecipeContainer;
 import com.tom.util.TomsModUtils;
 
 public class TileEntityInterface extends TileEntityChannel implements AutoCraftingHandler.ICraftingHandler<StoredItemStack>, ISidedInventory {
@@ -36,34 +36,34 @@ public class TileEntityInterface extends TileEntityChannel implements AutoCrafti
 	private List<ItemStack> stacksToPush = new ArrayList<>();
 
 	/*ICraftingRecipe recipe = new ICraftingRecipe(){
-	
+
 		@Override
 		public boolean isStoredOnly() {
 			return false;
 		}
-	
+
 		@Override
 		public List<ItemStack> getOutputs() {
 			return TomsModUtils.getListFromArray(new ItemStack(Blocks.stone));
 		}
-	
+
 		@Override
 		public List<ItemStack> getInputs() {
 			return TomsModUtils.getListFromArray(new ItemStack(Blocks.cobblestone));
 		}
-	
+
 		@Override
 		public int getTime() {
 			return 14;
 		}
-	
+
 		@Override
 		public boolean execute() {
 			System.out.println("execute");
 			ItemStack s = TomsModUtils.pushStackToNeighbours(new ItemStack(Blocks.cobblestone), worldObj, pos, EnumFacing.VALUES);
 			return s == null;
 		}
-	
+
 	};*/
 	@Override
 	public StorageNetworkGrid constructGrid() {
@@ -85,7 +85,7 @@ public class TileEntityInterface extends TileEntityChannel implements AutoCrafti
 	public void updateEntity(IBlockState currentState) {
 		if (!world.isRemote) {
 			if (isActiveForUpdate()) {
-				grid.getData().addCraftingHandler(this);
+				grid.getSData().addCraftingHandler(this);
 				for (int i = 0;i < stacksToPush.size();i++) {
 					ItemStack s = stacksToPush.get(i);
 					if (s != null) {
@@ -114,7 +114,7 @@ public class TileEntityInterface extends TileEntityChannel implements AutoCrafti
 					}
 				}
 			} else {
-				grid.getData().removeCraftingHandler(this);
+				grid.getSData().removeCraftingHandler(this);
 			}
 		}
 	}
@@ -344,7 +344,7 @@ public class TileEntityInterface extends TileEntityChannel implements AutoCrafti
 	@Override
 	public void onGridReload() {
 		loadRecipes();
-		grid.getData().addCraftingHandler(this);
+		grid.getSData().addCraftingHandler(this);
 	}
 
 	@Override

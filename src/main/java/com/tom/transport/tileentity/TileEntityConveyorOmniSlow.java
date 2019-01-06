@@ -15,4 +15,9 @@ public class TileEntityConveyorOmniSlow extends TileEntityConveyorOmniBase {
 		return TEXTURE;
 	}
 
+	@Override
+	public int getPowerUse() {
+		return 1;
+	}
+
 }

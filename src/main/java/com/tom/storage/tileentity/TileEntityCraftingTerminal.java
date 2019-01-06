@@ -12,13 +12,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 
-import com.tom.api.network.INBTPacketReceiver.IANBTPacketReceiver;
 import com.tom.storage.handler.ICraftingTerminal;
 import com.tom.storage.tileentity.inventory.ContainerCraftingTerminal;
 import com.tom.storage.tileentity.inventory.ContainerCraftingTerminal.SlotTerminalCrafting;
 import com.tom.util.TomsModUtils;
 
-public class TileEntityCraftingTerminal extends TileEntityBasicTerminal implements IANBTPacketReceiver, ICraftingTerminal {
+public class TileEntityCraftingTerminal extends TileEntityBasicTerminal implements ICraftingTerminal {
 	public InventoryCraftResult craftResult = new InventoryCraftResult();
 	public InventoryBasic craftingInv = new InventoryBasic("", false, 9);
 
@@ -38,16 +37,7 @@ public class TileEntityCraftingTerminal extends TileEntityBasicTerminal implemen
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setInteger("termMode", terminalMode);
-		NBTTagList list = new NBTTagList();
-		for (int i = 0;i < craftingInv.getSizeInventory();++i) {
-			if (craftingInv.getStackInSlot(i) != null) {
-				NBTTagCompound nbttagcompound = new NBTTagCompound();
-				nbttagcompound.setByte("Slot", (byte) i);
-				craftingInv.getStackInSlot(i).writeToNBT(nbttagcompound);
-				list.appendTag(nbttagcompound);
-			}
-		}
-		compound.setTag("crafting", list);
+		TomsModUtils.writeInventory("crafting", compound, craftingInv);
 		return compound;
 	}
 
@@ -55,22 +45,13 @@ public class TileEntityCraftingTerminal extends TileEntityBasicTerminal implemen
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		terminalMode = compound.getInteger("termMode");
-		NBTTagList list = compound.getTagList("crafting", 10);
-		craftingInv.clear();
-		for (int i = 0;i < list.tagCount();++i) {
-			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
-			int j = nbttagcompound.getByte("Slot") & 255;
-
-			if (j >= 0 && j < craftingInv.getSizeInventory()) {
-				craftingInv.setInventorySlotContents(j, TomsModUtils.loadItemStackFromNBT(nbttagcompound));
-			}
-		}
+		TomsModUtils.loadAllItems(compound, "crafting", craftingInv);
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message, EntityPlayer player) {
+	public void receiveNBTPacket(EntityPlayer player, NBTTagCompound message) {
 		if (message.hasKey("color")) {
-			super.receiveNBTPacket(message);
+			super.receiveNBTPacket(player, message);
 		} else {
 			ItemStack[][] stacks = new ItemStack[9][];
 			NBTTagList list = message.getTagList("i", 10);

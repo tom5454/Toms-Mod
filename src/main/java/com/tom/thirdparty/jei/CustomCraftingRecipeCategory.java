@@ -18,6 +18,7 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -29,6 +30,7 @@ import com.tom.thirdparty.jei.CustomCraftingRecipeCategory.CustomCrafingRecipeJE
 import com.tom.util.RecipeData;
 import com.tom.util.TomsModUtils;
 
+import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiIngredientGroup;
 import mezz.jei.api.gui.IGuiItemStackGroup;
@@ -56,9 +58,10 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 
 	@Nonnull
 	private final IDrawable background = JEIHandler.jeiHelper.getGuiHelper().createDrawable(new ResourceLocation("tomsmod:textures/gui/jei/advCrafting.png"), 5, 5, 130, 71);
+	private final ICraftingGridHelper craftingGridHelper = JEIHandler.jeiHelper.getGuiHelper().createCraftingGridHelper(0, 9);
 	@Override
 	public String getUid() {
-		return JEIConstants.CUSTOM_CRAFTING_ID;
+		return JEIConstants.CUSTOM_CRAFTING;
 	}
 
 	@Override
@@ -121,7 +124,7 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 		@Override
 		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 			if (level.isAdvanced()) {
-				String lvl = I18n.format(level.getName());
+				String lvl = I18n.format(level.getUnlocName());
 				minecraft.fontRenderer.drawString(I18n.format("tomsmod.jei.recipeLevel", lvl), -19, -5, 4210752);
 			}
 			//JEIHandler.recipeInfoIcon.draw(minecraft);
@@ -157,13 +160,16 @@ public class CustomCraftingRecipeCategory implements IRecipeCategory<CustomCrafi
 		recipeLayout.getItemStacks().init(8, true, x + 36, y + 36);
 		recipeLayout.getItemStacks().init(9, false, x + 94, y + 18);
 		recipeLayout.getItemStacks().init(10, false, x + 94, y + 45);
-		for (int i = 0;i < 10;i++)
-			setSlot(recipeLayout, inputs, i);
+		if(recipe.shaped && recipe.input instanceof IShapedRecipe){
+			IShapedRecipe rec = (IShapedRecipe) recipe.input;
+			craftingGridHelper.setInputs(recipeLayout.getItemStacks(), inputs, rec.getRecipeWidth(), rec.getRecipeHeight());
+		}else{
+			recipeLayout.setShapeless();
+			craftingGridHelper.setInputs(recipeLayout.getItemStacks(), inputs);
+		}
 		recipeLayout.getItemStacks().set(9, recipe.input.getRecipeOutput());
 		if (recipe.extra != null)
 			recipeLayout.getItemStacks().set(10, recipe.extra);
-		if (!recipe.shaped)
-			recipeLayout.setShapeless();
 		IGuiIngredientGroup<Research> gr = recipeLayout.getIngredientsGroup(JEIHandler.RESEARCH);
 		int i = 0;
 		for(Research r : recipe.requiredResearches){

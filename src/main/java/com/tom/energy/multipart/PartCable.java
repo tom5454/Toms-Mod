@@ -6,10 +6,10 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyHandler;
-import com.tom.api.energy.IEnergyStorageHandlerCapability;
 import com.tom.api.multipart.PartDuct;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyHandler;
+import com.tom.lib.api.energy.IEnergyStorageHandlerCapability;
 import com.tom.lib.api.grid.IGridUpdateListener;
 import com.tom.util.TomsModUtils;
 

@@ -40,4 +40,8 @@ public class ItemCircuitPanelPh extends Item implements IModelRegisterRequired, 
 		ret.put("photoactive", "true");
 		return ret;
 	}
+	@Override
+	public String getCustomName(ItemStack stack) {
+		return "circpanelph_" + ItemCircuit.panelTypes.get(stack.getMetadata());
+	}
 }

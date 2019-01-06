@@ -5,8 +5,8 @@ import net.minecraft.util.math.MathHelper;
 
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import com.tom.api.map.RenderType;
 import com.tom.core.map.MapHandler;
+import com.tom.lib.api.map.RenderType;
 import com.tom.lib.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;

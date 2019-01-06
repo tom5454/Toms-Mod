@@ -35,7 +35,7 @@ public class CrusherRecipeCategory implements IRecipeCategory<CrusherRecipeJEI> 
 			// data.itemstack3, data.itemstack4, data.itemstack5,
 			// data.itemstack6, data.itemstack7, data.itemstack8,
 			// data.itemstack9};
-			CrusherRecipeJEI cr = new CrusherRecipeJEI(data.itemstack0, data.itemstack1, data.id);
+			CrusherRecipeJEI cr = new CrusherRecipeJEI(data.itemstack0, data.itemstack1, data.id, data.energy);
 			recipes.add(cr);
 		}
 		return recipes;
@@ -46,7 +46,7 @@ public class CrusherRecipeCategory implements IRecipeCategory<CrusherRecipeJEI> 
 
 	@Override
 	public String getUid() {
-		return JEIConstants.CRUSHER_ID;
+		return JEIConstants.CRUSHER;
 	}
 
 	@Override
@@ -70,17 +70,23 @@ public class CrusherRecipeCategory implements IRecipeCategory<CrusherRecipeJEI> 
 		@Nonnull
 		private final ItemStack output;
 		private final String id;
+		private final int lvl;
 
-		public CrusherRecipeJEI(ItemStack input, ItemStack output, String id) {
+		public CrusherRecipeJEI(ItemStack input, ItemStack output, String id, int lvl) {
 			this.input = input;
 			this.output = output;
 			this.id = id;
+			this.lvl = lvl;
 		}
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
 			ingredients.setInput(VanillaTypes.ITEM, input);
 			ingredients.setOutput(VanillaTypes.ITEM, output);
+		}
+		@Override
+		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+			minecraft.fontRenderer.drawString(I18n.format("tomsmod.jei.recipeLevel", lvl), 5, 5, 4210752);
 		}
 	}
 

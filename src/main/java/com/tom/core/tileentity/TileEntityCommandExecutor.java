@@ -16,9 +16,9 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.MathHelper;
 
-import com.tom.api.map.RenderType;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.core.map.MapHandler;
+import com.tom.lib.api.map.RenderType;
 import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
 import com.tom.util.TomsModUtils;
 

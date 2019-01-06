@@ -1,6 +1,6 @@
 {
     "parent": "block/simple_facing",
     "textures": {
-        "side":"blocks/tm/holoDeviceSide","front":"blocks/tm/holoWriterW"
+        "side":"tomsmodcore:blocks/holoDeviceSide","front":"tomsmodcore:blocks/holoWriterW"
     }
 }

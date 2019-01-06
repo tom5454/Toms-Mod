@@ -37,13 +37,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -52,8 +50,6 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.google.common.collect.Maps;
 
 import com.tom.api.inventory.ITooltipSlot;
 import com.tom.core.CoreInit;
@@ -90,9 +86,6 @@ public class EventHandlerClient {
 		instance = this;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public static final Map<ResourceLocation, IModel> models = Maps.newHashMap();
-
 	@SubscribeEvent
 	public void renderOverlay(RenderGameOverlayEvent.Post event) {
 		if (event.getType() == ElementType.TEXT && showTextureMap) {
@@ -113,31 +106,6 @@ public class EventHandlerClient {
 			String text = s.get(i);
 			mc.fontRenderer.drawString(text, res.getScaledWidth() - width - 2, res.getScaledHeight() - (mc.fontRenderer.FONT_HEIGHT + 2) * (s.size() - i), color);
 		}
-	}
-
-	@SubscribeEvent
-	public void onModelBakeEvent(ModelBakeEvent event) {
-		models.clear();
-		/*{
-			Object object =  event.getModelRegistry().getObject(EnderPlayerSensor.SmartBlockModel.modelResourceLocation);
-			Object object2 =  event.getModelRegistry().getObject(EnderPlayerSensor.SmartBlockModel.modelTResourceLocation);
-			if (object instanceof IBakedModel && object2 instanceof IBakedModel) {
-				IBakedModel existingModel = (IBakedModel)object;
-				IBakedModel existingModel2 = (IBakedModel)object2;
-				EnderPlayerSensor.SmartBlockModel customModel = new EnderPlayerSensor.SmartBlockModel(existingModel,existingModel2);
-				event.getModelRegistry().putObject(EnderPlayerSensor.SmartBlockModel.modelResourceLocation, customModel);
-				//event.modelRegistry.putObject(EnderPlayerSensor.SmartBlockModel.modelTResourceLocation, customModel);
-			}
-		}
-		{
-			Object object =  event.getModelRegistry().getObject(BlockRsDoor.SmartBlockModel.modelResourceLocation);
-			if (object instanceof IBakedModel) {
-				IBakedModel existingModel = (IBakedModel)object;
-				BlockRsDoor.SmartBlockModel customModel = new BlockRsDoor.SmartBlockModel(existingModel);
-				event.getModelRegistry().putObject(BlockRsDoor.SmartBlockModel.modelResourceLocation, customModel);
-				//event.modelRegistry.putObject(EnderPlayerSensor.SmartBlockModel.modelTResourceLocation, customModel);
-			}
-		}*/
 	}
 
 	@SubscribeEvent

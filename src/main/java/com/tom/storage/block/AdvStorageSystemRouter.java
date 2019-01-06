@@ -20,11 +20,10 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.api.block.IModelRegisterRequired;
+import com.tom.api.grid.StorageNetworkGrid.IControllerTile;
 import com.tom.client.CustomModelLoader;
 import com.tom.core.CoreInit;
 import com.tom.storage.client.AdvRouterModel;
-import com.tom.storage.handler.StorageNetworkGrid.IAdvRouterTile;
-import com.tom.storage.handler.StorageNetworkGrid.IControllerTile;
 import com.tom.storage.tileentity.TileEntityAdvRouter;
 
 public class AdvStorageSystemRouter extends BlockContainerTomsMod implements IModelRegisterRequired {
@@ -111,7 +110,7 @@ public class AdvStorageSystemRouter extends BlockContainerTomsMod implements IMo
 			byte connect = 0;
 			for (EnumFacing f : EnumFacing.VALUES) {
 				TileEntity tile = world.getTileEntity(pos.offset(f));
-				if (tile instanceof IAdvRouterTile || tile instanceof IControllerTile) {
+				if (tile instanceof TileEntityAdvRouter || tile instanceof IControllerTile) {
 					connect |= 1 << (f.ordinal());
 				}
 			}

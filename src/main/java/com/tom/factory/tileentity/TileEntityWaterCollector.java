@@ -14,10 +14,14 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
 import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.handler.TMPlayerHandler;
+import com.tom.lib.api.tileentity.IOwnable;
 import com.tom.util.TomsModUtils;
 
-public class TileEntityWaterCollector extends TileEntityTomsMod implements ITileFluidHandler {
+public class TileEntityWaterCollector extends TileEntityTomsMod implements ITileFluidHandler, IOwnable {
 	private final FluidTank tank;
+	protected TMPlayerHandler playerHandler;
+	public String playerName;
 
 	public TileEntityWaterCollector() {
 		tank = new FluidTank(1000);
@@ -33,6 +37,7 @@ public class TileEntityWaterCollector extends TileEntityTomsMod implements ITile
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+		compound.setString("placer", playerName);
 		return compound;
 	}
 
@@ -40,6 +45,7 @@ public class TileEntityWaterCollector extends TileEntityTomsMod implements ITile
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		tank.readFromNBT(compound.getCompoundTag("tank"));
+		playerName = compound.getString("placer");
 	}
 
 	@Override
@@ -47,7 +53,7 @@ public class TileEntityWaterCollector extends TileEntityTomsMod implements ITile
 		if (world.isRemote)
 			return;
 		int rs = world.isBlockIndirectlyGettingPowered(pos);
-		if (rs > 0) {
+		if (rs > 0 && playerHandler != null && playerHandler.checkAndUseGridPower(1)) {
 			IBlockState b = world.getBlockState(pos.down());
 			if (b.getBlock() == Blocks.REDSTONE_BLOCK)
 				rs = 16;
@@ -88,5 +94,25 @@ public class TileEntityWaterCollector extends TileEntityTomsMod implements ITile
 		boolean e = isWaterBlock(EnumFacing.EAST);
 		boolean w = isWaterBlock(EnumFacing.WEST);
 		return TomsModUtils.getAllTrues(n, s, e, w);
+	}
+
+	@Override
+	public String getOwnerName() {
+		return playerName;
+	}
+
+	@Override
+	public void onLoad() {
+		tileOnLoad();
+	}
+
+	@Override
+	public void updatePlayerHandler() {
+		playerHandler = TMPlayerHandler.getPlayerHandlerForName(playerName);
+	}
+
+	@Override
+	public void setOwner(String owner) {
+		this.playerName = owner;
 	}
 }

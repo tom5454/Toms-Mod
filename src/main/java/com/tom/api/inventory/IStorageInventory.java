@@ -9,15 +9,16 @@ import net.minecraft.util.EnumFacing;
 
 import net.minecraftforge.items.IItemHandler;
 
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.IPrioritized;
+import com.tom.lib.api.IValidationChecker;
 import com.tom.lib.api.grid.IGridAccess;
 import com.tom.storage.handler.ICache;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.InventoryCache;
-import com.tom.storage.handler.StorageNetworkGrid;
-import com.tom.storage.handler.StorageNetworkGrid.IPrioritized;
 import com.tom.util.TomsModUtils;
 
-public interface IStorageInventory extends IPrioritized, IGridAccess<StorageNetworkGrid> {
+public interface IStorageInventory extends IPrioritized, IGridAccess<StorageNetworkGrid>, IValidationChecker {
 	<T extends ICraftable, C extends ICache<T>> List<T> getStacks(Class<C> cache);
 
 	<T extends ICraftable> T pullStack(T stack, long max);
@@ -33,6 +34,7 @@ public interface IStorageInventory extends IPrioritized, IGridAccess<StorageNetw
 
 	default void saveIfNeeded() {
 	}
+	void saveAndInvalidate();
 
 	public static interface IUpdateable {
 		void update(ItemStack stack, IItemHandler inv, int priority);
@@ -65,73 +67,73 @@ public interface IStorageInventory extends IPrioritized, IGridAccess<StorageNetw
 		public String getName() {
 			return inventory.getName();
 		}
-		
+
 		@Override
 		public int getSizeInventory() {
 			return inventory.getSizeInventory();
 		}
-		
+
 		@Override
 		public boolean hasCustomName() {
 			return inventory.hasCustomName();
 		}
-		
+
 		@Override
 		public ITextComponent getDisplayName() {
 			return inventory.getDisplayName();
 		}
-		
+
 		@Override
 		public ItemStack getStackInSlot(int index) {
 			ItemStack stack = inventory.getStackInSlot(index);
 			return filter.canInsert(stack) ? stack : null;
 		}
-		
+
 		@Override
 		public ItemStack decrStackSize(int index, int count) {
 			return inventory.decrStackSize(index, count);
 		}
-		
+
 		@Override
 		public ItemStack removeStackFromSlot(int index) {
 			return inventory.removeStackFromSlot(index);
 		}
-		
+
 		@Override
 		public void setInventorySlotContents(int index, ItemStack stack) {
 			inventory.setInventorySlotContents(index, stack);
 		}
-		
+
 		@Override
 		public int getInventoryStackLimit() {
 			return inventory.getInventoryStackLimit();
 		}
-		
+
 		@Override
 		public void markDirty() {
 			inventory.markDirty();
 		}
-		
+
 		@Override
 		public boolean isUseableByPlayer(EntityPlayer player) {
 			return inventory.isUseableByPlayer(player);
 		}
-		
+
 		@Override
 		public void openInventory(EntityPlayer player) {
 			inventory.openInventory(player);
 		}
-		
+
 		@Override
 		public void closeInventory(EntityPlayer player) {
 			inventory.closeInventory(player);
 		}
-		
+
 		@Override
 		public boolean isItemValidForSlot(int index, ItemStack stack) {
 			return inventory.isItemValidForSlot(index, stack) && filter.canInsert(stack) && filter.canInsert(inventory.getStackInSlot(index)) && checkSide(index, stack);
 		}
-		
+
 		private boolean checkSide(int slot, ItemStack stack) {
 			if(inventory instanceof ISidedInventory){
 				ISidedInventory sided = (ISidedInventory) inventory;
@@ -150,27 +152,27 @@ public interface IStorageInventory extends IPrioritized, IGridAccess<StorageNetw
 			}else
 				return true;
 		}
-		
+
 		@Override
 		public int getField(int id) {
 			return inventory.getField(id);
 		}
-		
+
 		@Override
 		public void setField(int id, int value) {
 			inventory.setField(id, value);
 		}
-		
+
 		@Override
 		public int getFieldCount() {
 			return inventory.getFieldCount();
 		}
-		
+
 		@Override
 		public void clear() {
 			inventory.clear();
 		}
-		
+
 		@Override
 		public boolean equals(Object arg0) {
 			return inventory.equals(arg0);
@@ -305,6 +307,17 @@ public interface IStorageInventory extends IPrioritized, IGridAccess<StorageNetw
 		@Override
 		public long getStorageValue() {
 			return inventory.getSlots() * 32;
+		}
+		boolean valid = true;
+		@Override
+		public void saveAndInvalidate() {
+			save();
+			valid = false;
+		}
+
+		@Override
+		public boolean isValid() {
+			return valid;
 		}
 
 	}

@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:wireprocessinglv"
   ],
-  "level": "tomsMod.craftingLevel.bronze",
+  "level": "bronze",
   "recipe": {
     "result": {
       "item": "tomsmodcore:emptycoil",

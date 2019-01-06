@@ -25,10 +25,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockGridDevice;
+import com.tom.api.grid.StorageNetworkGrid;
 import com.tom.api.tileentity.TileEntityGridDeviceBase;
 import com.tom.core.CoreInit;
 import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.storage.tileentity.TileEntityInterface;
 import com.tom.util.TomsModUtils;
 

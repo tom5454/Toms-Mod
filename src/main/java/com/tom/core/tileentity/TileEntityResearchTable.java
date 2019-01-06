@@ -1,6 +1,6 @@
 package com.tom.core.tileentity;
 
-import static com.tom.api.energy.EnergyType.LV;
+import static com.tom.lib.api.energy.EnergyType.LV;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,14 +32,10 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.event.ItemAdvCraftedEvent;
 import com.tom.api.research.IScanningInformation;
 import com.tom.api.research.Research;
 import com.tom.api.research.ResearchComplexity;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.IResearchGui;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.Config;
@@ -47,6 +43,9 @@ import com.tom.core.CoreInit;
 import com.tom.core.research.ResearchHandler;
 import com.tom.core.research.ResearchHandler.ResearchInformation;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyReceiver;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.recipes.OreDict;
@@ -57,7 +56,7 @@ import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.ResearchTable;
 
-public class TileEntityResearchTable extends TileEntityTomsMod implements ISidedInventory, IGuiTile, ITileFluidHandler, IEnergyReceiver, IResearchGui {
+public class TileEntityResearchTable extends TileEntityTomsMod implements ISidedInventory, ITileFluidHandler, IEnergyReceiver, IResearchGui {
 	/**
 	 * 0: Big Note Book, 1:Note Book, 2:Ink, 3-6: Research Components,
 	 * 7-15:Crafting in, 16:Crafting out, 17:Paper, 18:Crafting Extra
@@ -570,7 +569,7 @@ public class TileEntityResearchTable extends TileEntityTomsMod implements ISided
 		return state.getValue(ResearchTable.STATE) == 2 && state.getValue(ResearchTable.FACING) == f.getOpposite();
 	}
 
-	public ResearchHandler getResearchHanler() {
+	public ResearchHandler getResearchHandler() {
 		return inv.getStackInSlot(0) != null ? getResearchHandler(inv.getStackInSlot(0)) : null;
 	}
 

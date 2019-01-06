@@ -35,6 +35,8 @@ import com.tom.energy.block.BlockCharger;
 import com.tom.energy.block.BlockEnergyStorage;
 import com.tom.energy.block.BlockSolarPanel;
 import com.tom.energy.block.CreativeCell;
+import com.tom.energy.block.CreativeGridPowerSource;
+import com.tom.energy.block.FurnaceGridPowerGen;
 import com.tom.energy.block.FusionCharger;
 import com.tom.energy.block.FusionController;
 import com.tom.energy.block.FusionCore;
@@ -57,7 +59,9 @@ import com.tom.energy.block.WirelessCharger;
 import com.tom.energy.tileentity.TileEntityBatteryBox;
 import com.tom.energy.tileentity.TileEntityCharger;
 import com.tom.energy.tileentity.TileEntityCreativeCell;
+import com.tom.energy.tileentity.TileEntityCreativeGridPowerSource;
 import com.tom.energy.tileentity.TileEntityEnergySensor;
+import com.tom.energy.tileentity.TileEntityFurnaceGen;
 import com.tom.energy.tileentity.TileEntityFusionCharger;
 import com.tom.energy.tileentity.TileEntityFusionController;
 import com.tom.energy.tileentity.TileEntityFusionFluidExtractor;
@@ -97,7 +101,7 @@ public class EnergyInit {
 	public static Block wirelessCharger, hvEnergyCell, solarPanel, steamTurbine, steamTurbineMK2, geothermalGenerator, fluidGenerator, mvStorageController, hvStorageController;
 	public static Block FusionCore, FusionInjector, FusionCharger, FusionController, FusionFluidInjector, FusionFluidExtractor;
 	public static Block EnergyCellFrame, EnergyCellSide, EnergyCellCore;
-	public static Block transformerMHV, transformerLMV, /*transformerLaser, transformerHV, */charger/*, mvLaserReceiver, hvLaserReceiver*/;
+	public static Block transformerMHV, transformerLMV, /*transformerLaser, transformerHV, */charger/*, mvLaserReceiver, hvLaserReceiver*/,creativeGridPower, furnaceGridGen;
 	public static BlockEnergyStorage batteryBox, largeBatBox, mvBattery, mvCapacitor, hvCapacitor, hvBattery;
 
 	@EventHandler
@@ -137,6 +141,8 @@ public class EnergyInit {
 		// LavaGenerator().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.lavaGenerator");
 		CreativeCell = new CreativeCell().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.creativeEnergyCell").setBlockUnbreakable().setResistance(18000000F);
 		solarPanel = new BlockSolarPanel().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.solarPanelBasic");
+		creativeGridPower = new CreativeGridPowerSource().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.creativeGridPowerSource").setBlockUnbreakable().setResistance(18000000F);
+		furnaceGridGen = new FurnaceGridPowerGen().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("tm.furnaceGridGen");
 		// transformerLaser = new
 		// TransformerLaser().setCreativeTab(tabTomsModEnergy).setUnlocalizedName("transformerLaser");
 		// transformerHV = new
@@ -197,6 +203,8 @@ public class EnergyInit {
 		registerBlock(mvBattery);
 		registerBlock(hvCapacitor);
 		registerBlock(hvBattery);
+		registerBlock(creativeGridPower);
+		registerBlock(furnaceGridGen);
 		// GameRegistry.registerBlock(transformer,
 		// TransformerItemBlock.class,transformer.getUnlocalizedName().substring(5));
 		// registerBlock(EnergyCellFrame,
@@ -255,6 +263,8 @@ public class EnergyInit {
 		registerTileEntity(TileEntityMVBattery.class, "mvBattery");
 		registerTileEntity(TileEntityHVBattery.class, "hvBattery");
 		registerTileEntity(TileEntityLargeBatteryBox.class, "largeBatteryBox");
+		registerTileEntity(TileEntityCreativeGridPowerSource.class, "creativeGridPowerSource");
+		registerTileEntity(TileEntityFurnaceGen.class, "furnaceGridPowerSource");
 		/** Multiparts */
 		registerTileEntity(PartLVCable.class, "part_lvCable");
 		registerTileEntity(PartMVCable.class, "part_mvCable");

@@ -13,9 +13,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.energy.IEnergyContainerItem;
-import com.tom.api.energy.ItemEnergyContainer;
 import com.tom.energy.EnergyInit;
+import com.tom.lib.api.energy.IEnergyContainerItem;
+import com.tom.lib.api.energy.ItemEnergyContainer;
 
 public class PortableEnergyCell extends ItemEnergyContainer {
 	public PortableEnergyCell() {

@@ -5,9 +5,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.IEnergyContainerItem;
 import com.tom.factory.tileentity.TileEntityMachineBase;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.IEnergyContainerItem;
 import com.tom.util.TomsModUtils;
 
 import com.tom.energy.block.BlockCharger;

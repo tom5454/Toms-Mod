@@ -636,7 +636,7 @@ public abstract class PartDuct<G extends IGrid<?, G>> extends MultipartTomsMod i
 
 	@Override
 	public boolean isTickerValid() {
-		return isMaster && !world.isRemote && useServerTickHandler();
+		return isMaster && !world.isRemote && useServerTickHandler() && !isInvalid();
 	}
 
 	@Override
@@ -661,5 +661,9 @@ public abstract class PartDuct<G extends IGrid<?, G>> extends MultipartTomsMod i
 	@Override
 	public void onPartLoad() {
 		super.onPartLoad();
+	}
+	@Override
+	public List<IGridDevice<G>> listSubDevices() {
+		return new ArrayList<>(getModules());
 	}
 }

@@ -18,8 +18,8 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:gold_ingot",
-            "data": 0
+            "item": "tomsmodcore:ingot",
+            "data": 10
           }
         ]
       }

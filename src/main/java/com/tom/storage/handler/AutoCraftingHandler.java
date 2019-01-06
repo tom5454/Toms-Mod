@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Stack;
 
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,14 +20,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.base.Function;
 
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.IPrioritized;
 import com.tom.api.inventory.StoredItemStack;
+import com.tom.lib.api.IValidationChecker;
 import com.tom.lib.api.grid.IGridUpdateListener;
+import com.tom.lib.network.GuiSyncHandler;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageCraftingReportSync;
 import com.tom.network.messages.MessageCraftingReportSync.MessageType;
 import com.tom.util.TMLogger;
 import com.tom.util.TomsModUtils;
-import com.tom.network.messages.MessageNBT;
 
 public class AutoCraftingHandler {
 
@@ -208,7 +210,7 @@ public class AutoCraftingHandler {
 				ItemStack s = stack.copy();
 				int spaceInStack = stack.getMaxStackSize();
 				s.stackSize = stack.splitStack(Math.min(spaceInStack, stack.stackSize)).stackSize;
-		
+
 			}
 		}*/
 		stackList.add(stack.copy());
@@ -227,7 +229,7 @@ public class AutoCraftingHandler {
 				ItemStack s = stack.copy();
 				int spaceInStack = stack.getMaxStackSize();
 				s.stackSize = stack.splitStack(Math.min(spaceInStack, stack.stackSize)).stackSize;
-		
+
 			}
 		}*/
 		stackList.add(stack.copy());
@@ -318,18 +320,18 @@ public class AutoCraftingHandler {
 		stackList.add(new StoredItemStack(stack, stack.getCount()));
 	}
 
-	public static void sendCompiledCraftingTo(AutoCraftingHandler.CompiledCalculatedCrafting c, EntityPlayerMP player) {
+	public static void sendCompiledCraftingTo(AutoCraftingHandler.CompiledCalculatedCrafting c, GuiSyncHandler player) {
 		sendCompiledCraftingTo(c, player, new NBTTagCompound());
 	}
 
-	public static void sendCompiledCraftingTo(AutoCraftingHandler.CompiledCalculatedCrafting c, EntityPlayerMP player, NBTTagCompound extra) {
-		NetworkHandler.sendTo(new MessageCraftingReportSync(c.main, c.opertaions, c.memory, c.time, c.cpus, c.missingStacks.size(), c.recipes.size(), c.toPull.size(), extra), player);
+	public static void sendCompiledCraftingTo(AutoCraftingHandler.CompiledCalculatedCrafting c, GuiSyncHandler player, NBTTagCompound extra) {
+		player.forEach(p -> NetworkHandler.sendTo(new MessageCraftingReportSync(c.main, c.opertaions, c.memory, c.time, c.cpus, c.missingStacks.size(), c.recipes.size(), c.toPull.size(), extra), p));
 		sendTagList(c.missingStacks, player, MessageType.MISSING);
 		sendTagList(c.recipes, player, MessageType.RECIPE);
 		sendTagList(c.toPull, player, MessageType.NORMAL);
 	}
 
-	private static void sendTagList(List<NBTTagCompound> tagList, EntityPlayerMP player, MessageType id) {
+	private static void sendTagList(List<NBTTagCompound> tagList, GuiSyncHandler player, MessageType id) {
 		NBTTagCompound tag = new NBTTagCompound();
 		NBTTagList list = new NBTTagList();
 		tag.setTag("m", list);
@@ -339,7 +341,7 @@ public class AutoCraftingHandler {
 		for (int i = 0;i < tagList.size();i++) {
 			list.appendTag(tagList.get(i));
 		}
-		NetworkHandler.sendTo(new MessageNBT(tag), player);
+		player.sendNBTToGui(tag);
 	}
 
 	public static interface ICraftingRecipe<T extends ICraftable> {
@@ -366,7 +368,7 @@ public class AutoCraftingHandler {
 		int getSlot();
 	}
 
-	public static interface ICraftingHandler<T extends ICraftable> extends StorageNetworkGrid.IPrioritized, IGridUpdateListener {
+	public static interface ICraftingHandler<T extends ICraftable> extends IPrioritized, IGridUpdateListener, IValidationChecker {
 		List<ICraftingRecipe<T>> getRecipes();
 
 		boolean executeRecipe(ICraftingRecipe<T> recipe, boolean doExecute);
@@ -714,7 +716,7 @@ public class AutoCraftingHandler {
 
 	public static class SavedCraftingRecipe implements ISavedCraftingRecipe {
 		private ICraftable[] inputs, outputs;
-		private StorageNetworkGrid.CraftingPatternProperties p;
+		private CraftingPatternProperties p;
 
 		// private int[] lastTime;
 		// private boolean timed = false;
@@ -794,7 +796,7 @@ public class AutoCraftingHandler {
 		@Override
 		public void readFromNBT(NBTTagCompound tag) {
 			// TomsModUtils.getServer().profiler.startSection("readSavedCraftingRecipe");
-			p = StorageNetworkGrid.CraftingPatternProperties.loadFromNBT(tag);
+			p = CraftingPatternProperties.loadFromNBT(tag);
 			// lastTime = tag.getIntArray("lastTime");
 			// timed = tag.getBoolean("timed");
 			NBTTagList list = tag.getTagList("in", 10);
@@ -917,7 +919,7 @@ public class AutoCraftingHandler {
 			};
 		}
 
-		public static SavedCraftingRecipe createFromStacks(IInventory inv, IInventory resultInventory, StorageNetworkGrid.CraftingPatternProperties properties, ICraftable.CraftableProperties[] props) {
+		public static SavedCraftingRecipe createFromStacks(IInventory inv, IInventory resultInventory, CraftingPatternProperties properties, ICraftable.CraftableProperties[] props) {
 			SavedCraftingRecipe r = new SavedCraftingRecipe();
 			if (inv.getSizeInventory() > 8 && resultInventory.getSizeInventory() > 2) {
 				r.inputs = new ICraftable[inv.getSizeInventory()];
@@ -1001,11 +1003,11 @@ public class AutoCraftingHandler {
 		List<NBTTagCompound> recipes = new ArrayList<>();
 		List<NBTTagCompound> toPull = new ArrayList<>();
 
-		public void sendTo(EntityPlayerMP player) {
+		public void sendTo(GuiSyncHandler player) {
 			sendCompiledCraftingTo(this, player);
 		}
 
-		public void sendTo(EntityPlayerMP player, NBTTagCompound extra) {
+		public void sendTo(GuiSyncHandler player, NBTTagCompound extra) {
 			sendCompiledCraftingTo(this, player, extra);
 		}
 	}
@@ -1092,6 +1094,34 @@ public class AutoCraftingHandler {
 		public CraftingCalculationResult(Throwable e, CalculatedCrafting c) {
 			this.e = e;
 			this.c = c;
+		}
+	}
+	public static class CraftingPatternProperties {
+		public boolean storedOnly = false, useContainerItems = false;
+		// public boolean timed = false;
+		public int time = 1;
+
+		public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+			tag.setInteger("time", time);
+			tag.setBoolean("storedOnly", storedOnly);
+			tag.setBoolean("useContainerItems", useContainerItems);
+			return tag;
+		}
+
+		public static CraftingPatternProperties loadFromNBT(NBTTagCompound tag) {
+			CraftingPatternProperties p = new CraftingPatternProperties();
+			p.readFromNBT(tag);
+			return p;
+		}
+
+		private void readFromNBT(NBTTagCompound tag) {
+			time = tag.getInteger("time");
+			storedOnly = tag.getBoolean("storedOnly");
+			useContainerItems = tag.getBoolean("useContainerItems");
+		}
+
+		public CraftingPatternProperties copy() {
+			return loadFromNBT(writeToNBT(new NBTTagCompound()));
 		}
 	}
 }

@@ -39,6 +39,7 @@ public class GuiSteamMixer extends GuiTomsMod {
 		double p2 = p2Per * 51;
 		if (te.clientProgress > 0)
 			drawTexturedModalRect(guiLeft + 65, guiTop + 23, 176, 65, p2, 16);
+		renderGearbox(guiLeft + 150, guiTop + 10, te.clientCanRun);
 	}
 
 	@Override

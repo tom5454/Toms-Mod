@@ -1,5 +1,6 @@
 package com.tom.thirdparty.jei;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,8 @@ public class ResearchCategory implements IRecipeCategory<ResearchJEI> {
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInputs(JEIHandler.RESEARCH, research.getParents());
+			List<Research> parents = research.getParents();
+			ingredients.setInputs(JEIHandler.RESEARCH, parents == null ? Collections.emptyList() : parents);
 			ingredients.setInputs(VanillaTypes.ITEM, research.getResearchRequirements());
 			ingredients.setOutput(JEIHandler.RESEARCH, research);
 		}
@@ -77,10 +79,12 @@ public class ResearchCategory implements IRecipeCategory<ResearchJEI> {
 		gr.init(0, false, x+90, y + 30);
 		int i = 1;
 		gr.set(0, recipe.research);
-		for(Research r : recipe.research.getParents()){
-			int j = i++;
-			gr.init(j, true, x, y + j*18);
-			gr.set(j, r);
+		if(recipe.research.getParents() != null){
+			for(Research r : recipe.research.getParents()){
+				int j = i++;
+				gr.init(j, true, x, y + j*18);
+				gr.set(j, r);
+			}
 		}
 		x += 40;
 		y += 31;

@@ -26,6 +26,7 @@ public class GuiSteamSolderingStation extends GuiTomsMod {
 		drawTexturedModalRect(guiLeft + 69, guiTop + 23 - p1, 176, 16 - p1, 2, p1);
 		if (te.getField(0) > 0)
 			drawTexturedModalRect(guiLeft + 65, guiTop + 35, 176, 65, p2, 16);
+		renderGearbox(guiLeft + 150, guiTop + 10, te.clientCanRun);
 	}
 
 	@Override

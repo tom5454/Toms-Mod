@@ -25,12 +25,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.IModelRegisterRequired;
-import com.tom.api.energy.ItemEnergyContainer;
-import com.tom.api.map.RenderType;
 import com.tom.api.tileentity.TileEntityJammerBase;
 import com.tom.core.CoreInit;
 import com.tom.core.map.MapHandler;
 import com.tom.lib.GlobalFields;
+import com.tom.lib.api.energy.ItemEnergyContainer;
+import com.tom.lib.api.map.RenderType;
 import com.tom.util.TomsModUtils;
 
 public class ItemEntityTracker extends ItemEnergyContainer implements IModelRegisterRequired {

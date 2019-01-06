@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:uvlightbox"
   ],
-  "level": "tomsMod.craftingLevel.bronze",
+  "level": "bronze",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:tm.uvbox",

@@ -6,7 +6,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-import com.tom.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyStorage;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
@@ -103,7 +103,8 @@ public class TileEntityCrusher extends TileEntityMachineBase {
 
 	@Override
 	public void checkItems() {
-		ItemStackChecker s = MachineCraftingHandler.getCrusherOutput(inv.getStackInSlot(0));
+		int lvl = 3 - getMetaFromEnergyType(TYPE);
+		ItemStackChecker s = MachineCraftingHandler.getCrusherOutput(inv.getStackInSlot(0), lvl);
 		checkItems(s, 1, getMaxProgress(), 0, -1);
 		setOut(0, s);
 	}

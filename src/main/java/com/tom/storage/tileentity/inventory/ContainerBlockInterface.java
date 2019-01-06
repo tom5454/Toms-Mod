@@ -6,8 +6,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import com.tom.api.grid.StorageNetworkGrid.ICraftingRecipeContainer;
 import com.tom.api.inventory.SlotPhantom;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingRecipeContainer;
 import com.tom.storage.tileentity.TileEntityInterface;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
@@ -24,6 +24,7 @@ public class ContainerBlockInterface extends ContainerTomsMod {
 			addSlotToContainer(new Slot(te, i + 18, 8 + 18 * i, 38));
 		addPlayerSlots(playerInv, 8, 94);
 		this.te = te;
+		syncHandler.setReceiver(te);
 	}
 
 	@Override

@@ -4,9 +4,10 @@
     "data": 0,
     "count": 1
   },
+  "level": 1,
   "out": {
     "item": "tomsmodcore:material",
     "data": 9,
-    "count": 1
+    "count": 2
   }
 }

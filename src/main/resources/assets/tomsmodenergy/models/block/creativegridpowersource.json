@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "tomsmodenergy:blocks/creative_gen"
+    }
+}

@@ -70,6 +70,7 @@ import com.tom.transport.model.TileEntityConveyorRenderer;
 import com.tom.transport.model.TileEntityConveyorSlopeRenderer;
 import com.tom.transport.multipart.PartFluidDuct;
 import com.tom.transport.tileentity.TileEntityConveyorBeltSlope;
+import com.tom.transport.tileentity.TileEntityConveyorExtract;
 import com.tom.transport.tileentity.TileEntityConveyorFast;
 import com.tom.transport.tileentity.TileEntityConveyorOmniFast;
 import com.tom.transport.tileentity.TileEntityConveyorOmniSlow;
@@ -192,6 +193,7 @@ public class ClientProxy extends CommonProxy {
 		MultiblockRenderer.registerCustomModel(new ResourceLocation("tmobj:block/multiblock.obj"));
 		MultiblockRenderer.registerCustomModel(new ResourceLocation("tmobj:block/multiblockadv.obj"));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTemplate.class, new TileEntityTemplateSpecialRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorExtract.class, new TileEntityConveyorOmniRenderer());
 		// RenderingRegistry.registerEntityRenderingHandler(EntityCamera.class,
 		// new RenderEntityCamera(new ModelEntityCamera(), 0.5F));
 	}

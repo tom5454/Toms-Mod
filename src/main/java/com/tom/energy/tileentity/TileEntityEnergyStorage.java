@@ -11,10 +11,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 import com.tom.api.block.IItemTile;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyHandler;
 import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyHandler;
 import com.tom.lib.api.tileentity.ITMPeripheral;
 
 import com.tom.energy.block.BlockEnergyStorage;

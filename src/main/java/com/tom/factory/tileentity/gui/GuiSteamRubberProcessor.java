@@ -29,6 +29,7 @@ public class GuiSteamRubberProcessor extends GuiTomsMod {
 		drawTexturedModalRect(guiLeft + 39, guiTop + 51 - p1, 176, 101 - p1, 2, p1);
 		if (te.getField(0) > 0)
 			drawTexturedModalRect(guiLeft + 65, guiTop + 35, 176, 65, p2, 16);
+		renderGearbox(guiLeft + 150, guiTop + 10, te.clientCanRun);
 	}
 
 	@Override

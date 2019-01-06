@@ -39,4 +39,8 @@ public class ItemCircuitPanel extends Item implements IModelRegisterRequired, IC
 		if(serializeCount)ret.put("count", stack.getCount());
 		return ret;
 	}
+	@Override
+	public String getCustomName(ItemStack stack) {
+		return "circpanel_" + ItemCircuit.panelTypes.get(stack.getMetadata());
+	}
 }

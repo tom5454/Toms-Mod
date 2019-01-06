@@ -20,12 +20,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 
 import net.minecraftforge.fluids.FluidStack;
@@ -33,21 +31,24 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.inventory.SlotPhantom;
-import com.tom.api.multipart.IGuiMultipart;
-import com.tom.lib.network.LibNetworkHandler;
+import com.tom.lib.network.GuiSyncHandler;
 import com.tom.lib.utils.RenderUtil;
 import com.tom.lib.utils.TomsUtils;
-import com.tom.network.messages.MessageGuiButtonPress;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiTomsMod extends GuiContainer {
 	protected ResourceLocation gui;
 	public List<GuiFluidTank> tanks = new ArrayList<>();
 	public static final ResourceLocation LIST_TEXTURE = new ResourceLocation("tomsmod:textures/gui/resSelect.png");
+	public GuiSyncHandler syncHandler;
 
-	public GuiTomsMod(Container inv, String guiTexture) {
+	public GuiTomsMod(ContainerTomsMod inv, String guiTexture) {
 		super(inv);
 		this.gui = new ResourceLocation(createGuiLocation(guiTexture));
+		syncHandler = inv.getSyncHandler();
+		syncHandler.setReceiverGui(this);
 	}
 
 	public static String createGuiLocation(String in) {
@@ -59,36 +60,18 @@ public abstract class GuiTomsMod extends GuiContainer {
 		mc.getTextureManager().bindTexture(gui);
 		this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 	}
-	public final void sendButtonUpdate(int id, BlockPos pos) {
-		LibNetworkHandler.sendToServer(new MessageGuiButtonPress(id, pos));
+	public final void sendButtonUpdateToTile(int id, int extraData){
+		syncHandler.sendButtonToServer(id, extraData, true);
+	}
+	public final void sendButtonUpdateToContainer(int id, int extraData){
+		syncHandler.sendButtonToServer(id, extraData, false);
 	}
 
-	public final void sendButtonUpdate(int id, BlockPos pos, int extraData) {
-		LibNetworkHandler.sendToServer(new MessageGuiButtonPress(id, pos, extraData));
+	public final void sendNBTToTile(NBTTagCompound tag){
+		syncHandler.sendNBTToServer(tag, true);
 	}
-
-	public final void sendButtonUpdate(int id, TileEntity te) {
-		LibNetworkHandler.sendToServer(new MessageGuiButtonPress(id, te));
-	}
-
-	public final void sendButtonUpdate(int id, TileEntity te, int extraData) {
-		LibNetworkHandler.sendToServer(new MessageGuiButtonPress(id, te, extraData));
-	}
-
-	public final void sendButtonUpdateP(int id, IGuiMultipart te) {
-		LibNetworkHandler.sendToServer(new MessageGuiButtonPress(id, te));
-	}
-
-	public final void sendButtonUpdateP(int id, IGuiMultipart te, int extraData) {
-		LibNetworkHandler.sendToServer(new MessageGuiButtonPress(id, te, extraData));
-	}
-
-	public final void sendButtonUpdate(int id) {
-		LibNetworkHandler.sendToServer(new MessageGuiButtonPress(id));
-	}
-
-	public final void sendButtonUpdate(int id, int extraData) {
-		LibNetworkHandler.sendToServer(new MessageGuiButtonPress(id, extraData));
+	public final void sendNBTToContainer(NBTTagCompound tag){
+		syncHandler.sendNBTToServer(tag, false);
 	}
 
 	public final void renderItemInGui(ItemStack stack, int x, int y, int mouseX, int mouseY, boolean redBg) {

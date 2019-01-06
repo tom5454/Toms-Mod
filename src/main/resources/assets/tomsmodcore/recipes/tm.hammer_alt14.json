@@ -1,27 +1,27 @@
 {
   "result": {
     "item": "tomsmodcore:tm.hammer",
-    "data": 1,
+    "data": 31,
     "count": 1
   },
   "pattern": [
-    "PPP",
-    "PSP",
-    "HS "
+    " H",
+    "FS",
+    " S"
   ],
   "type": "forge:ore_shaped",
   "key": {
-    "P": {
-      "ore": "plateTitanium",
-      "type": "forge:ore_dict"
-    },
     "S": {
       "item": "minecraft:stick",
       "data": 0
     },
-    "H": {
-      "ore": "itemHammer_lvl2",
+    "F": {
+      "ore": "itemFlint",
       "type": "forge:ore_dict"
+    },
+    "H": {
+      "id": "flintHammerHead",
+      "type": "tomsmodcore:material"
     }
   }
 }

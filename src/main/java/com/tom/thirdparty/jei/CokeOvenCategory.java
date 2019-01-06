@@ -33,7 +33,7 @@ public class CokeOvenCategory implements IRecipeCategory<CokeOvenJEIRecipe> {
 
 	@Override
 	public String getUid() {
-		return JEIConstants.COKE_OVEN_ID;
+		return JEIConstants.COKE_OVEN;
 	}
 
 	@Override

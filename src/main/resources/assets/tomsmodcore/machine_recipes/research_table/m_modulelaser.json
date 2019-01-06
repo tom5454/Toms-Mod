@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:laserengraver"
+  ],
+  "level": "e_soldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:material",
+      "data": 64,
+      "count": 1
+    },
+    "pattern": [
+      "PDP",
+      "RDR",
+      "PGP"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "item": "minecraft:redstone_block",
+        "data": 0
+      },
+      "D": {
+        "ore": "gemRedDiamond",
+        "type": "forge:ore_dict"
+      },
+      "G": {
+        "ore": "glassPaneHardened",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1300
+}

@@ -23,7 +23,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.IModelRegisterRequired;
-import com.tom.api.energy.ItemEnergyContainer;
 import com.tom.api.item.ILinkContainer;
 import com.tom.api.item.IWirelessDevice;
 import com.tom.api.tileentity.IConnector;
@@ -31,6 +30,7 @@ import com.tom.client.CustomModelLoader;
 import com.tom.core.CoreInit;
 import com.tom.core.model.ModelTablet;
 import com.tom.handler.TMPlayerHandler;
+import com.tom.lib.api.energy.ItemEnergyContainer;
 import com.tom.util.TomsModUtils;
 
 public class Tablet extends ItemEnergyContainer implements ILinkContainer, IModelRegisterRequired, IWirelessDevice {

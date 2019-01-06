@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:basiclvmachines"
   ],
-  "level": "tomsMod.craftingLevel.bronze",
+  "level": "bronze",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:tm.electricfurnace",

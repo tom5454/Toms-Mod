@@ -1,0 +1,38 @@
+{
+  "researches": [
+    "tomsmodcore:advsteamcrusher"
+  ],
+  "level": "bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.steam.adv.crusher",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PgP",
+      "PGP",
+      "BBB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "g": {
+        "ore": "grinderSteel",
+        "type": "forge:ore_dict"
+      },
+      "G": {
+        "item": "tomsmodfactory:tm.steam.crusher",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 800
+}

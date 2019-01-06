@@ -1,0 +1,51 @@
+{
+  "researches": [
+    "tomsmodcore:hvmachines"
+  ],
+  "level": "hv",
+  "recipe": {
+    "result": {
+      "nbt": {
+        "Unbreakable": "1b"
+      },
+      "item": "minecraft:elytra",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "DND",
+      "WEW",
+      "F F"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "D": {
+        "item": "minecraft:diamond_block",
+        "data": 0
+      },
+      "E": {
+        "item": "minecraft:elytra",
+        "data": 0
+      },
+      "F": {
+        "item": "minecraft:feather",
+        "data": 0
+      },
+      "W": {
+        "ore": "plateTungstensteel",
+        "type": "forge:ore_dict"
+      },
+      "N": {
+        "item": "minecraft:nether_star",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 20000,
+  "conditions": [
+    {
+      "id": "unbreakableElytra",
+      "type": "tomsmodcore:config"
+    }
+  ]
+}

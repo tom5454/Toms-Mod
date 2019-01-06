@@ -22,8 +22,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 
 import com.tom.api.block.IItemTile;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.IEnergyStorage;
 import com.tom.api.item.IPowerLinkCard;
 import com.tom.api.item.ISecurityStationLinkCard;
 import com.tom.api.item.ISwitch;
@@ -31,7 +29,6 @@ import com.tom.api.tileentity.AccessType;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.IForceDevice;
 import com.tom.api.tileentity.IForcePowerStation;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.ISecurityStation;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.ConfigurationForceCapacitorControl;
@@ -40,10 +37,12 @@ import com.tom.defense.DefenseInit;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.block.ForceCapacitor;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.IEnergyStorage;
 import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
 import com.tom.util.TomsModUtils;
 
-public class TileEntityForceCapacitor extends TileEntityTomsMod implements ITMCompatPeripheral, ISidedInventory, IForcePowerStation, IGuiTile, IConfigurable, IItemTile {
+public class TileEntityForceCapacitor extends TileEntityTomsMod implements ITMCompatPeripheral, ISidedInventory, IForcePowerStation, IConfigurable, IItemTile {
 	private static final int DEFAULT_RANGE = 2;
 	private static final int RANGE_UPGRADE_INCREASE = 2;
 	private EnergyStorage energy = new EnergyStorage(10000000, 100000);
@@ -401,7 +400,7 @@ public class TileEntityForceCapacitor extends TileEntityTomsMod implements ITMCo
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		this.rsMode = ForceDeviceControlType.get(message.getInteger("r"));
 		this.powersharing = message.getBoolean("s");
 	}

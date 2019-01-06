@@ -69,9 +69,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -89,7 +86,6 @@ import com.google.gson.JsonParseException;
 import com.tom.api.gui.GuiNumberValueBox;
 import com.tom.api.multipart.IModule;
 import com.tom.api.multipart.MultipartTomsMod;
-import com.tom.client.EventHandlerClient;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.factory.FactoryInit;
@@ -477,38 +473,6 @@ public final class TomsModUtils extends TomsUtils {
 		if (field != null)
 			labelList.add(new GuiNumberValueBoxLabel(field));
 		return labelList;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static IModel getModelOBJ(ResourceLocation loc) {
-		if (!EventHandlerClient.models.containsKey(loc)) {
-			IModel model = null;
-			try {
-				model = OBJLoader.INSTANCE.loadModel(loc);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (model == null)
-				model = ModelLoaderRegistry.getMissingModel();
-			EventHandlerClient.models.put(loc, model);
-		}
-		return EventHandlerClient.models.get(loc);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static IModel getModelJSON(ResourceLocation loc) {
-		if (!EventHandlerClient.models.containsKey(loc)) {
-			IModel model = null;
-			try {
-				model = ModelLoaderRegistry.getModel(loc);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (model == null)
-				model = ModelLoaderRegistry.getMissingModel();
-			EventHandlerClient.models.put(loc, model);
-		}
-		return EventHandlerClient.models.get(loc);
 	}
 
 	public static int getFirstTrue(boolean... bs) {
@@ -1170,16 +1134,6 @@ public final class TomsModUtils extends TomsUtils {
 				main.addAll(check);
 			}
 			return ret;
-		}
-	}
-
-	public static <K, V> V getOrPut(Map<K, V> map, K key, Supplier<V> value){
-		if(map.containsKey(key)){
-			return map.get(key);
-		}else{
-			V v = value.get();
-			map.put(key, v);
-			return v;
 		}
 	}
 

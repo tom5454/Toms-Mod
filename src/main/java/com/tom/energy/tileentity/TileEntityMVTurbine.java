@@ -1,6 +1,6 @@
 package com.tom.energy.tileentity;
 
-import static com.tom.api.energy.EnergyType.MV;
+import static com.tom.lib.api.energy.EnergyType.MV;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyProvider;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.core.CoreInit;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyProvider;
 
 public class TileEntityMVTurbine extends TileEntityTomsMod implements ITileFluidHandler, IEnergyProvider {
 	private EnergyStorage energy = new EnergyStorage(20000, 100);

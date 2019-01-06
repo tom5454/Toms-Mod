@@ -12,4 +12,9 @@ public class ConveyorBeltOmniFast extends ConveyorBeltOmniBase {
 		return new TileEntityConveyorOmniFast();
 	}
 
+	@Override
+	public int getEPUse() {
+		return 2;
+	}
+
 }

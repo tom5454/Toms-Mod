@@ -1,0 +1,17 @@
+{
+  "in2": {
+    "item": "minecraft:ender_pearl",
+    "data": 0,
+    "count": 1
+  },
+  "in1": {
+    "item": "minecraft:redstone_block",
+    "data": 0,
+    "count": 1
+  },
+  "out": {
+    "item": "tomsmodcore:material",
+    "data": 75,
+    "count": 1
+  }
+}

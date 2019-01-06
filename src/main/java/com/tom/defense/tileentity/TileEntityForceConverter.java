@@ -1,6 +1,6 @@
 package com.tom.defense.tileentity;
 
-import static com.tom.api.energy.EnergyType.*;
+import static com.tom.lib.api.energy.EnergyType.*;
 
 import java.util.List;
 
@@ -16,10 +16,6 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyHandler;
-import com.tom.api.energy.IEnergyStorage;
 import com.tom.api.item.IPowerLinkCard;
 import com.tom.api.item.ISecurityStationLinkCard;
 import com.tom.api.item.ISwitch;
@@ -32,6 +28,10 @@ import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.ConfigurationForceConverterControl;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.block.ForceConverter;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyHandler;
+import com.tom.lib.api.energy.IEnergyStorage;
 import com.tom.util.TomsModUtils;
 
 public class TileEntityForceConverter extends TileEntityTomsMod implements IEnergyHandler, IConfigurable, ISecuredTileEntity {
@@ -171,7 +171,7 @@ public class TileEntityForceConverter extends TileEntityTomsMod implements IEner
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		this.rsMode = ForceDeviceControlType.get(message.getInteger("r"));
 	}
 

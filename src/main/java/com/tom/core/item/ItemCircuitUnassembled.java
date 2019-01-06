@@ -39,4 +39,9 @@ public class ItemCircuitUnassembled extends Item implements IModelRegisterRequir
 		String id = !stack.hasTagCompound() ? "invalid" : stack.getTagCompound().getString("id");
 		return ItemCircuit.serialize(id, "ua", serializeCount ? stack.getCount() : 1);
 	}
+	@Override
+	public String getCustomName(ItemStack stack) {
+		String id = !stack.hasTagCompound() ? "invalid" : stack.getTagCompound().getString("id");
+		return "circua_" + id;
+	}
 }

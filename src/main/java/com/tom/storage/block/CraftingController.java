@@ -19,11 +19,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.tom.api.block.BlockGridDevice;
+import com.tom.api.grid.StorageNetworkGrid;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.tileentity.TileEntityGridDeviceBase;
 import com.tom.core.CoreInit;
 import com.tom.storage.handler.ICraftable;
-import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.storage.tileentity.TileEntityCraftingController;
 import com.tom.util.TomsModUtils;
 

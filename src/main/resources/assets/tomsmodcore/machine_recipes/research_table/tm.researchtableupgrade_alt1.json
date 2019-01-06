@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:basicbronzemachines"
   ],
-  "level": "tomsMod.craftingLevel.basic",
+  "level": "basic_wooden",
   "recipe": {
     "result": {
       "item": "tomsmodcore:tm.researchtableupgrade",

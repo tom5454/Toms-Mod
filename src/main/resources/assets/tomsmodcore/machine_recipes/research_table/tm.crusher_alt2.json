@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:mvmachines"
   ],
-  "level": "tomsMod.craftingLevel.esoldering",
+  "level": "e_soldering",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:tm.crusher",
@@ -10,12 +10,16 @@
       "count": 1
     },
     "pattern": [
-      "STS",
-      "-MF",
+      "SCS",
+      "FMT",
       "SES"
     ],
     "type": "forge:ore_shaped",
     "key": {
+      "C": {
+        "ore": "componentCrusher",
+        "type": "forge:ore_dict"
+      },
       "S": {
         "ore": "plateTitanium",
         "type": "forge:ore_dict"
@@ -37,10 +41,6 @@
       "M": {
         "item": "tomsmodfactory:tm.crusher",
         "data": 2
-      },
-      "-": {
-        "ore": "cableElectrum",
-        "type": "forge:ore_dict"
       }
     }
   },

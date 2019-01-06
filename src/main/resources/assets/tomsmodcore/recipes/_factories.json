@@ -5,5 +5,8 @@
     "circuitpanel": "com.tom.core.TMResource$tomsmod_circuitpanel",
     "chipset": "com.tom.core.TMResource$tomsmod_chipset",
     "circuitcomp": "com.tom.core.TMResource$tomsmod_circuitcomp"
+  },
+  "conditions": {
+    "config": "com.tom.core.TMResource$tomsmod_config"
   }
 }

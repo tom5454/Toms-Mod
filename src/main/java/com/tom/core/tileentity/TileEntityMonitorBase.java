@@ -31,12 +31,12 @@ import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.client.EventHandlerClient;
 import com.tom.client.ICustomModelledTileEntity;
 import com.tom.core.CoreInit;
-import com.tom.handler.TMWorldHandler;
 import com.tom.lib.api.tileentity.ICustomPacket;
 import com.tom.lib.api.tileentity.ITMPeripheral.IComputer;
 import com.tom.lib.api.tileentity.ITMPeripheral.ITMLuaObject;
 import com.tom.lib.api.tileentity.ITMPeripheral.LuaException;
-import com.tom.util.IDList;
+import com.tom.lib.handler.WorldHandler;
+import com.tom.lib.utils.IDList;
 import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.BlockMonitorBase;
@@ -717,7 +717,7 @@ public class TileEntityMonitorBase extends TileEntityTomsMod implements ICustomM
 	}
 
 	public void sync() {
-		TMWorldHandler.markDirty(world, pos);
+		WorldHandler.markDirty(world, pos);
 	}
 	@Override
 	public void invalidate() {

@@ -9,9 +9,9 @@ import com.tom.api.tileentity.IMultiblockController;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockComponents.ComponentVariants;
+import com.tom.util.Checker.RunnableStorage;
 import com.tom.util.MultiblockBlockChecker;
 import com.tom.util.TomsModUtils;
-import com.tom.util.Checker.RunnableStorage;
 
 import com.tom.core.tileentity.TileEntityHidden.ILinkableCapabilities;
 

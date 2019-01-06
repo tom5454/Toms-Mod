@@ -26,13 +26,15 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyStorageTile;
 import com.tom.api.multipart.PartDuct;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.core.CoreInit;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyStorageTile;
 import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.tileentity.IOwnable;
 import com.tom.storage.multipart.PartStorageNetworkCable;
+import com.tom.storage.tileentity.TileEntityChannel;
 import com.tom.util.TomsModUtils;
 
 import mcmultipart.RayTraceHelper;
@@ -91,12 +93,21 @@ public class Multimeter extends Item {
 			}
 			if (te instanceof PartStorageNetworkCable) {
 				PartStorageNetworkCable c = (PartStorageNetworkCable) te;
-				chatText.add(new TextComponentString(c.getGrid().getData().toString()));
-				chatText.add(new TextComponentString(c.getGrid().getData().getPowerCache().toString()));
+				chatText.add(new TextComponentString(c.getGrid().getSData().toString()));
+				chatText.add(new TextComponentString(c.getGrid().getSData().getPowerCache().toString()));
 			}
 			if (CoreInit.isDebugging && te instanceof IGridDevice) {
 				IGridDevice<?> c = (IGridDevice<?>) te;
 				chatText.add(new TextComponentString("" + c.isMaster()));
+			}
+			if (CoreInit.isDebugging && te instanceof TileEntityChannel) {
+				TileEntityChannel c = (TileEntityChannel) te;
+				chatText.add(new TextComponentString(c.getGrid().getSData().toString()));
+				chatText.add(new TextComponentString(c.getGrid().getSData().getPowerCache().toString()));
+			}
+			if (te instanceof IOwnable) {
+				IOwnable c = (IOwnable) te;
+				chatText.add(new TextComponentTranslation("tomsMod.waila.playerName").appendText(" " + c.getOwnerName()));
 			}
 			if (CoreInit.isDebugging)
 				chatText.add(new TextComponentString("Invalid: " + te.isInvalid()));
@@ -110,8 +121,8 @@ public class Multimeter extends Item {
 						PartDuct<?> part = (PartDuct<?>) partP;
 						if (CoreInit.isDebugging && part instanceof PartStorageNetworkCable) {
 							PartStorageNetworkCable c = (PartStorageNetworkCable) part;
-							chatText.add(new TextComponentString(c.getGrid().getData().toString()));
-							chatText.add(new TextComponentString(c.getGrid().getData().getPowerCache().toString()));
+							chatText.add(new TextComponentString(c.getGrid().getSData().toString()));
+							chatText.add(new TextComponentString(c.getGrid().getSData().getPowerCache().toString()));
 						}
 						if (part instanceof IEnergyStorageTile) {
 							IEnergyStorageTile s = (IEnergyStorageTile) part;

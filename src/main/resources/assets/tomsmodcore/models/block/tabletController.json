@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all":"blocks/tm/TabContSideAct","particle": "blocks/tm/TabContSideAct"
+        "all":"tomsmodcore:blocks/TabContSideAct","particle": "tomsmodcore:blocks/TabContSideAct"
     }
 }

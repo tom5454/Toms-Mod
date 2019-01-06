@@ -12,4 +12,9 @@ public class ConveyorBeltSlow extends ConveyorBeltBase {
 		return new TileEntityConveyorSlow();
 	}
 
+	@Override
+	public int getEPUse() {
+		return 1;
+	}
+
 }

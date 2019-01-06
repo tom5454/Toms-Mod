@@ -15,22 +15,23 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-import com.tom.api.energy.IEnergyStorage;
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.IControllerTile;
+import com.tom.api.grid.StorageNetworkGrid.ICraftingController;
+import com.tom.api.grid.StorageNetworkGrid.IDevice;
+import com.tom.api.grid.StorageNetworkGrid.IGridEnergyStorage;
+import com.tom.api.grid.StorageNetworkGrid.IGridInputListener;
+import com.tom.api.grid.StorageNetworkGrid.IPowerDrain;
 import com.tom.api.inventory.IStorageInventory;
+import com.tom.lib.api.IValidationChecker;
+import com.tom.lib.api.energy.IEnergyStorage;
 import com.tom.lib.api.grid.IGridDevice;
-import com.tom.storage.handler.StorageNetworkGrid.IControllerTile;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingController;
-import com.tom.storage.handler.StorageNetworkGrid.IDevice;
-import com.tom.storage.handler.StorageNetworkGrid.IGridEnergyStorage;
-import com.tom.storage.handler.StorageNetworkGrid.IGridInputListener;
-import com.tom.storage.handler.StorageNetworkGrid.IPowerDrain;
-import com.tom.storage.handler.StorageNetworkGrid.PriorityComparator;
 import com.tom.util.Storage;
 import com.tom.util.TMLogger;
 import com.tom.util.TomsModUtils;
 
 public class StorageData implements IEnergyStorage {
-	protected List<IStorageInventory> inventories = new ArrayList<>();
+	public List<IStorageInventory> inventories = new ArrayList<>();
 	protected PowerCache powerCache;
 	protected List<AutoCraftingHandler.ICraftingHandler<?>> craftingHandlerList = new ArrayList<>();
 	// protected Map<Location, AutoCraftingHandler.ICraftingHandler<?>>
@@ -66,7 +67,7 @@ public class StorageData implements IEnergyStorage {
 		}
 	}
 
-	protected IStorageInventory storageInv = new IStorageInventory() {
+	public IStorageInventory storageInv = new IStorageInventory() {
 
 		@Override
 		public <T extends ICraftable> T pushStack(T stack) {
@@ -228,9 +229,20 @@ public class StorageData implements IEnergyStorage {
 		public long getStorageValue() {
 			return inventories.stream().mapToLong(IStorageInventory::getStorageValue).sum();
 		}
+		boolean valid = true;
+		@Override
+		public void saveAndInvalidate() {
+			save();
+			valid = false;
+		}
+
+		@Override
+		public boolean isValid() {
+			return valid;
+		}
 	};
 	private NetworkCache cache;
-	public List<IGridDevice<StorageNetworkGrid>> devices = new ArrayList<>();
+	public List<IGridDevice<?>> devices = new ArrayList<>();
 	public List<IPowerDrain> powerDrain = new ArrayList<>();
 	public List<IDevice> channelDevices = new ArrayList<>();
 	public List<IControllerTile> controllers = new ArrayList<>();
@@ -247,7 +259,7 @@ public class StorageData implements IEnergyStorage {
 	public void addInventory(IStorageInventory inventory) {
 		if (!inventories.contains(inventory)) {
 			inventories.add(inventory);
-			Collections.sort(inventories, new PriorityComparator());
+			Collections.sort(inventories, com.tom.api.grid.StorageNetworkGrid.PRIORITY_COMP);
 		}
 	}
 
@@ -378,7 +390,7 @@ public class StorageData implements IEnergyStorage {
 	public void removeInventory(IStorageInventory inventory) {
 		if (inventories.contains(inventory)) {
 			inventories.remove(inventory);
-			Collections.sort(inventories, new PriorityComparator());
+			Collections.sort(inventories, com.tom.api.grid.StorageNetworkGrid.PRIORITY_COMP);
 		}
 	}
 
@@ -387,7 +399,7 @@ public class StorageData implements IEnergyStorage {
 			craftingHandlerList.add(data);
 			// craftingHandlerMap.put(new Location(data.getPos2(),
 			// data.getDim(), data.getExtraData()), data);
-			Collections.sort(craftingHandlerList, new PriorityComparator());
+			Collections.sort(craftingHandlerList, com.tom.api.grid.StorageNetworkGrid.PRIORITY_COMP);
 		}
 	}
 
@@ -396,7 +408,7 @@ public class StorageData implements IEnergyStorage {
 			craftingHandlerList.remove(data);
 			// craftingHandlerMap.remove(new Location(data.getPos2(),
 			// data.getDim(), data.getExtraData()));
-			Collections.sort(craftingHandlerList, new PriorityComparator());
+			Collections.sort(craftingHandlerList, com.tom.api.grid.StorageNetworkGrid.PRIORITY_COMP);
 		}
 	}
 
@@ -641,21 +653,23 @@ public class StorageData implements IEnergyStorage {
 		}
 		return -1;
 	}
-
+	private int counter;
 	public void update() {
+		counter++;
 		boolean outOfPower = !networkState.isPowered();
 		List<IPowerDrain> invalid = new ArrayList<>();
 		boolean foundInvalid = false;
 		for (int i = 0;i < powerDrain.size();i++) {
-			if (!powerDrain.get(i).isValid()) {
-				invalid.add(powerDrain.get(i));
+			IPowerDrain dr = powerDrain.get(i);
+			if (!dr.isValid()) {
+				invalid.add(dr);
 				foundInvalid = true;
 				continue;
 			}
 			if (outOfPower) {
-				powerDrain.get(i).setActive(NetworkState.OFF);
+				dr.setActive(NetworkState.OFF);
 			} else {
-				double drain = powerDrain.get(i).getPowerDrained();
+				double drain = dr.getPowerDrained();
 				double e = this.extractEnergy(drain, false);
 				if (e == drain) {
 					// powerDrain.get(i).setActive(networkState);
@@ -668,6 +682,15 @@ public class StorageData implements IEnergyStorage {
 		if (foundInvalid)
 			powerDrain.removeAll(invalid);
 		powerCache.setActive(!outOfPower);
+		IValidationChecker.removeAllInvalid(inventories);
+		if(counter % 5 == 0){
+			IValidationChecker.removeAllInvalid(craftingControllerList);
+			IValidationChecker.removeAllInvalid(craftingHandlerList);
+			IValidationChecker.removeAllInvalid(devices);
+			IValidationChecker.removeAllInvalid(channelDevices);
+			IValidationChecker.removeAllInvalid(controllers);
+			IValidationChecker.removeAllInvalid(inputListeners);
+		}
 	}
 
 	public void invalidate(StorageNetworkGrid grid) {

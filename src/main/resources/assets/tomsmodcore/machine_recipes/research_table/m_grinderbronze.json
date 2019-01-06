@@ -1,0 +1,30 @@
+{
+  "researches": [
+    "tomsmodcore:basicbronzemachines"
+  ],
+  "level": "basic_wooden",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:material",
+      "data": 72,
+      "count": 1
+    },
+    "pattern": [
+      "npn",
+      "ppp",
+      "npn"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "p": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "n": {
+        "ore": "nuggetBronze",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 100
+}

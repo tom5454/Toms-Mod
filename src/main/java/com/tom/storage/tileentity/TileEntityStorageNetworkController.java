@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Stack;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -19,349 +20,28 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import com.tom.api.grid.GridEnergyStorage;
-import com.tom.api.network.INBTPacketReceiver;
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.IAdvRouterTile;
+import com.tom.api.grid.StorageNetworkGrid.IControllerTile;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.client.ICustomModelledTileEntity;
+import com.tom.lib.api.grid.IGrid;
 import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridUpdateListener;
+import com.tom.lib.api.grid.VirtualGridDevice;
 import com.tom.storage.block.BlockStorageNetworkController;
 import com.tom.storage.handler.NetworkState;
 import com.tom.storage.handler.StorageData;
-import com.tom.storage.handler.StorageNetworkGrid;
-import com.tom.storage.handler.StorageNetworkGrid.IAdvRouterTile;
-import com.tom.storage.handler.StorageNetworkGrid.IChannelLoadListener;
-import com.tom.storage.handler.StorageNetworkGrid.IChannelSource;
-import com.tom.storage.handler.StorageNetworkGrid.IController;
-import com.tom.storage.handler.StorageNetworkGrid.IControllerTile;
-import com.tom.storage.handler.StorageNetworkGrid.IRouter;
-import com.tom.storage.handler.StorageNetworkGrid.IRouterTile;
 import com.tom.util.TomsModUtils;
 
-public class TileEntityStorageNetworkController extends TileEntityTomsMod implements IControllerTile, ICustomModelledTileEntity, INBTPacketReceiver, ICustomMultimeterInformation {
+import com.tom.core.tileentity.IGridDeviceHostFacing;
+
+public class TileEntityStorageNetworkController extends TileEntityTomsMod implements IControllerTile, ICustomModelledTileEntity, ICustomMultimeterInformation, IGridDeviceHostFacing {
 	private GridEnergyStorage energy = new GridEnergyStorage(1000, 0);
-
-	public static class ChannelSource implements IController, IChannelLoadListener {
-		protected StorageNetworkGrid grid;
-		protected IGridDevice<StorageNetworkGrid> master;
-		protected static final String GRID_TAG_NAME = "grid";
-		private static final String MASTER_NBT_NAME = "isMaster";
-		private boolean firstStart = true;
-		private boolean secondTick = false;
-		private boolean isMaster = false;
-		private int suction = -1;
-		private int side;
-		private boolean updateGrid, updateGrid2;
-		private NBTTagCompound last;
-		private IChannelSource tile;
-		private boolean valid = true;
-
-		public ChannelSource(IChannelSource tile, int i) {
-			this.tile = tile;
-			grid = constructGrid();
-			side = i;
-		}
-
-		@Override
-		public boolean isMaster() {
-			return isMaster;
-		}
-
-		@Override
-		public void setMaster(IGridDevice<StorageNetworkGrid> master, int size) {
-			if (!valid)
-				return;
-			this.master = master;
-			// boolean wasMaster = isMaster;
-			isMaster = master == this;
-			grid.invalidate();
-			this.grid = master.getGrid();
-			/*if(isMaster) {
-				grid.reloadGrid(getWorld(), this);
-			}*/
-		}
-
-		@Override
-		public StorageNetworkGrid getGrid() {
-			return grid;
-		}
-
-		@Override
-		public IGridDevice<StorageNetworkGrid> getMaster() {
-			if (!valid)
-				return null;
-			grid.forceUpdateGrid(getWorld2(), this);
-			return master;
-		}
-
-		@Override
-		public void invalidateGrid() {
-			if (!valid)
-				return;
-			tile.updateData(false);
-			this.master = null;
-			this.isMaster = false;
-			last = grid.exportToNBT();
-			boolean wasDense = grid.isDense();
-			grid.invalidate();
-			this.grid = this.constructGrid();
-			if (wasDense)
-				tile.setData(new StorageData());
-		}
-
-		public StorageNetworkGrid constructGrid() {
-			StorageNetworkGrid grid = new StorageNetworkGrid();
-			grid.setData(tile.getData());
-			return grid;
-		}
-
-		@Override
-		public void setSuctionValue(int suction) {
-			this.suction = suction;
-		}
-
-		@Override
-		public int getSuctionValue() {
-			return this.suction;
-		}
-
-		@Override
-		public void updateState() {
-			if (!valid)
-				return;
-			updateGrid = true;
-		}
-
-		@Override
-		public void setGrid(StorageNetworkGrid newGrid) {
-			if (!valid)
-				return;
-			grid.invalidate();
-			this.grid = newGrid;
-		}
-
-		public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-			compound.setTag(GRID_TAG_NAME, grid.exportToNBT());
-			compound.setBoolean(MASTER_NBT_NAME, isMaster);
-			return compound;
-		}
-
-		public void readFromNBT(NBTTagCompound compound) {
-			grid.importFromNBT(compound.getCompoundTag(GRID_TAG_NAME));
-			this.isMaster = compound.getBoolean(MASTER_NBT_NAME);
-		}
-
-		@Override
-		public boolean isConnected(EnumFacing side) {
-			if (!valid)
-				return false;
-			return side != EnumFacing.UP && getIntFromSide(side) == this.side;
-		}
-
-		@Override
-		public boolean isValidConnection(EnumFacing side) {
-			if (!valid)
-				return false;
-			return side != EnumFacing.UP && getIntFromSide(side) == this.side;
-		}
-
-		public void update() {
-			if (tile.getWorld2().getTotalWorldTime() % 5 == 0) {
-				BlockPos pos = tile.getPos2().offset(getSideFromInt(side));
-				TileEntity t = tile.getWorld2().getTileEntity(pos);
-				boolean wasValid = valid;
-				valid = t == null || !(t instanceof IAdvRouterTile);
-				if (!wasValid && valid && !tile.getWorld2().isRemote) {
-					invalidateGrid();
-					getMaster();
-				}
-			}
-			if (!valid)
-				return;
-			if (!tile.getWorld2().isRemote) {
-				if (updateGrid) {
-					updateGrid();
-					updateGrid = false;
-				}
-				if (tile.getWorld2().getTotalWorldTime() % 50 == 0)
-					updateGrid = true;
-				if (firstStart) {
-					this.firstStart = false;
-					this.secondTick = true;
-					if (this.isMaster) {
-						grid.setMaster(this);
-						grid.forceUpdateGrid(tile.getWorld2(), this);
-					}
-					TileEntityTomsMod.markBlockForUpdate(tile.getWorld2(), tile.getPos2());
-				}
-				if (secondTick) {
-					this.secondTick = false;
-					if (master == null) {
-						grid.reloadGrid(tile.getWorld2(), this);
-					}
-					tile.markDirty2();
-					TileEntityTomsMod.markBlockForUpdate(tile.getWorld2(), tile.getPos2());
-				}
-				if (this.master == null && !secondTick) {
-					if (updateGrid2) {
-						this.constructGrid().forceUpdateGrid(tile.getWorld2(), this);
-						updateGrid2 = false;
-					} else {
-						updateGrid2 = true;
-					}
-				}
-				if (this.master != null && grid.getData() != tile.getData()) {
-					updateAll(0, grid);
-				}
-			}
-			if (isMaster) {
-				grid.updateGrid(tile.getWorld2(), this);
-			}
-		}
-
-		private void updateAll(int depth, StorageNetworkGrid grid) {
-			StorageData dataOld = grid.getData();
-			grid.setData(tile.getData());
-			for (int i = 0;i < dataOld.grids.size();i++) {
-				StorageNetworkGrid gridO = dataOld.grids.get(i);
-				dataOld.grids.get(i).setData(tile.getData());
-				if (gridO.getController() != null && gridO.getController().getController() != null && gridO.getController().getTile() != tile) {
-					((TileEntityStorageNetworkController) gridO.getController().getController()).data = tile.getData();
-					if (!tile.getData().controllers.contains((gridO.getController().getController())))
-						tile.getData().controllers.add((gridO.getController().getController()));
-				}
-			}
-			for (int i = 0;i < dataOld.controllers.size();i++) {
-				if (!tile.getData().controllers.contains(dataOld.controllers.get(i)))
-					tile.getData().controllers.add(dataOld.controllers.get(i));
-				((TileEntityStorageNetworkController) dataOld.controllers.get(i)).data = tile.getData();
-			}
-			grid.forceUpdateGrid(tile.getWorld2(), this);
-			grid.setData(tile.getData());
-			if (depth < 64 && grid.isDense()) {
-				for (int i = 0;i < grid.getDenseC().size();i++) {
-					IRouterTile e = grid.getDenseC().get(i);
-					if (e.getData() != tile.getData()) {
-						for (IRouter r : e.getRouters()) {
-							updateAll(depth + 1, r.getGrid());
-						}
-					}
-				}
-			}
-		}
-
-		@Override
-		public BlockPos getPos2() {
-			return tile.getPos2();
-		}
-
-		@Override
-		public World getWorld2() {
-			return tile.getWorld2();
-		}
-
-		public void neighborUpdateGrid() {
-			if (!valid)
-				return;
-			updateGrid = true;
-		}
-
-		private void updateGrid() {
-			if (!valid)
-				return;
-			if (master != null && master != this && master.isValid())
-				master.updateState();
-			else {
-				if (master == null) {
-					StorageNetworkGrid grid = this.constructGrid();
-					grid.setMaster(this);
-					grid.forceUpdateGrid(this.getWorld2(), this);
-				} else {
-					grid.forceUpdateGrid(this.getWorld2(), this);
-				}
-				if (this.master != null && grid.getData() != tile.getData()) {
-					StorageData dataOld = grid.getData();
-					grid.setData(tile.getData());
-					for (int i = 0;i < dataOld.grids.size();i++) {
-						StorageNetworkGrid gridO = dataOld.grids.get(i);
-						dataOld.grids.get(i).setData(tile.getData());
-						if (gridO.getController() != null && gridO.getController().getTile() != tile) {
-							((TileEntityStorageNetworkController) gridO.getController().getController()).data = tile.getData();
-							if (!tile.getData().controllers.contains((gridO.getController().getController())))
-								tile.getData().controllers.add((gridO.getController().getController()));
-						}
-					}
-					for (int i = 0;i < dataOld.controllers.size();i++) {
-						if (!tile.getData().controllers.contains(dataOld.controllers.get(i)))
-							tile.getData().controllers.add(dataOld.controllers.get(i));
-						((TileEntityStorageNetworkController) dataOld.controllers.get(i)).data = tile.getData();
-					}
-				}
-			}
-		}
-
-		@Override
-		public IChannelSource getTile() {
-			return tile;
-		}
-
-		@Override
-		public boolean isValid() {
-			return tile.isValid();
-		}
-
-		@Override
-		public NBTTagCompound getGridData() {
-			return last;
-		}
-
-		@Override
-		public double getPowerDrained() {
-			return 0;
-		}
-
-		@Override
-		public int getPriority() {
-			return 1000;
-		}
-
-		@Override
-		public void onGridReload() {
-
-		}
-
-		@Override
-		public void onGridPostReload() {
-
-		}
-
-		@Override
-		public void onPartsUpdate() {
-			tile.updateData(true);
-		}
-
-		@Override
-		public void setActive(NetworkState state) {
-
-		}
-
-		@Override
-		public IControllerTile getController() {
-			return (IControllerTile) tile;
-		}
-
-		protected int getIntFromSide(EnumFacing f) {
-			return TileEntityStorageNetworkController.getIntFromSide(f);
-		}
-
-		protected EnumFacing getSideFromInt(int f) {
-			return TileEntityStorageNetworkController.getSideFromInt(f);
-		}
-	}
-
 	private boolean lastActive, active;
 	public InventoryBasic inv = new InventoryBasic("", false, 3);
 	private StorageData data = new StorageData();
-	private ChannelSource[] controllerFaces;
 	private ControllerState state = ControllerState.OFF;
 	private int bootTimer = 0;
 	private String cmd = "", cmdOld = "", msg = "";
@@ -371,29 +51,117 @@ public class TileEntityStorageNetworkController extends TileEntityTomsMod implem
 	private boolean runCmd;
 	private int msgTimer;
 	private List<IAdvRouterTile> extenders = new ArrayList<>();
+	public class DenseChannelSource extends VirtualGridDevice<StorageNetworkGrid> implements IGridUpdateListener {
+		private final EnumFacing side;
+		public DenseChannelSource(EnumFacing side) {
+			this.side = side;
+			grid.getData().dataSupplier = TileEntityStorageNetworkController.this::getData;
+		}
+		@Override
+		public BlockPos getPos2() {
+			return pos;
+		}
 
-	public TileEntityStorageNetworkController() {
-		controllerFaces = new ChannelSource[5];
-		for (int i = 0;i < controllerFaces.length;i++) {
-			controllerFaces[i] = new ChannelSource(this, i);
+		@Override
+		public World getWorld2() {
+			return world;
+		}
+
+		@Override
+		public boolean isConnected(EnumFacing side) {
+			return this.side == side;
+		}
+
+		@Override
+		public boolean isValidConnection(EnumFacing side) {
+			return this.side == side;
+		}
+
+		@Override
+		public boolean isValid() {
+			return !isInvalid();
+		}
+
+		@Override
+		public StorageNetworkGrid constructGrid() {
+			return new StorageNetworkGrid(true);
+		}
+		@Override
+		public void onGridReload() {
+			grid.getData().dataSupplier = TileEntityStorageNetworkController.this::getData;
+		}
+		@Override
+		public void onGridPostReload() {
+		}
+	}
+	public class ChannelSource extends VirtualGridDevice<StorageNetworkGrid> implements IGridUpdateListener {
+		private final EnumFacing side;
+		public ChannelSource(EnumFacing side) {
+			this.side = side;
+			grid.getData().dataSupplier = TileEntityStorageNetworkController.this::getData;
+		}
+		@Override
+		public BlockPos getPos2() {
+			return pos;
+		}
+
+		@Override
+		public World getWorld2() {
+			return world;
+		}
+
+		@Override
+		public boolean isConnected(EnumFacing side) {
+			return this.side == side;
+		}
+
+		@Override
+		public boolean isValidConnection(EnumFacing side) {
+			return this.side == side;
+		}
+
+		@Override
+		public boolean isValid() {
+			return !isInvalid();
+		}
+
+		@Override
+		public StorageNetworkGrid constructGrid() {
+			return new StorageNetworkGrid();
+		}
+		@Override
+		public void onGridReload() {
+			grid.getData().dataSupplier = TileEntityStorageNetworkController.this::getData;
+		}
+		@Override
+		public void onGridPostReload() {
 		}
 	}
 
-	@Override
-	public IController getControllerOnSide(EnumFacing side) {
-		if (side != EnumFacing.UP)
-			return controllerFaces[getIntFromSide(side)];
-		else
-			return null;
+	private ChannelSource[] routerFaces;
+	private DenseChannelSource[] routerFacesD;
+
+	public TileEntityStorageNetworkController() {
+		routerFaces = new ChannelSource[5];
+		routerFacesD = new DenseChannelSource[5];
+		for (int i = 0;i < routerFaces.length;i++) {
+			routerFaces[i] = new ChannelSource(EnumFacing.getFront(i));
+			routerFacesD[i] = new DenseChannelSource(EnumFacing.getFront(i));
+		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		NBTTagList list = new NBTTagList();
-		for (int i = 0;i < controllerFaces.length;i++) {
+		for (int i = 0;i < routerFaces.length;i++) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("id", i);
-			controllerFaces[i].writeToNBT(tag);
+			NBTTagCompound tagn = new NBTTagCompound();
+			routerFaces[i].writeToNBT(tagn);
+			NBTTagCompound tagd = new NBTTagCompound();
+			routerFacesD[i].writeToNBT(tagd);
+			tag.setTag("n", tagn);
+			tag.setTag("d", tagd);
 			list.appendTag(tag);
 		}
 		compound.setTag("data", list);
@@ -420,7 +188,10 @@ public class TileEntityStorageNetworkController extends TileEntityTomsMod implem
 		NBTTagList list = compound.getTagList("data", 10);
 		for (int i = 0;i < list.tagCount();i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
-			controllerFaces[tag.getInteger("id")].readFromNBT(tag);
+			NBTTagCompound tagn = tag.getCompoundTag("n");
+			NBTTagCompound tagd = tag.getCompoundTag("d");
+			routerFaces[tag.getInteger("id")].readFromNBT(tagn);
+			routerFacesD[tag.getInteger("id")].readFromNBT(tagd);
 		}
 		state = ControllerState.VALUES[compound.getInteger("state")];
 		list = compound.getTagList("inventory", 10);
@@ -497,8 +268,9 @@ public class TileEntityStorageNetworkController extends TileEntityTomsMod implem
 					data = new StorageData();
 					data.addEnergyStorage(energy);
 					data.setActive(NetworkState.LOADING_CHANNELS);
-					for (int i = 0;i < controllerFaces.length;i++) {
-						controllerFaces[i].updateGrid();
+					for (int i = 0;i < routerFaces.length;i++) {
+						routerFaces[i].update();
+						routerFacesD[i].update();
 					}
 				}
 			} else if (stateOld.getState() < 2 && active) {
@@ -507,8 +279,9 @@ public class TileEntityStorageNetworkController extends TileEntityTomsMod implem
 				data.removeEnergyStorage(energy);
 				data = new StorageData();
 				data.addEnergyStorage(energy);
-				for (int i = 0;i < controllerFaces.length;i++) {
-					controllerFaces[i].updateGrid();
+				for (int i = 0;i < routerFaces.length;i++) {
+					routerFaces[i].update();
+					routerFacesD[i].update();
 				}
 				sendUpdate = true;
 			} else if (stateOld == ControllerState.BOOTING && active) {
@@ -546,14 +319,17 @@ public class TileEntityStorageNetworkController extends TileEntityTomsMod implem
 			cmdOld = cmd;
 			TomsModUtils.setBlockStateWithCondition(world, pos, currentState, BlockStorageNetworkController.STATE, state.getState());
 		}
-		for (int i = 0;i < controllerFaces.length;i++) {
-			controllerFaces[i].update();
+		for (int i = 0;i < routerFaces.length;i++) {
+			routerFaces[i].update();
+			routerFacesD[i].update();
 		}
 	}
 
 	public void neighborUpdateGrid(EnumFacing side) {
-		if (side != EnumFacing.UP)
-			controllerFaces[getIntFromSide(side)].neighborUpdateGrid();
+		if (side != EnumFacing.UP){
+			routerFaces[getIntFromSide(side)].neighborUpdateGrid(false);
+			routerFacesD[getIntFromSide(side)].neighborUpdateGrid(false);
+		}
 	}
 
 	private static int getIntFromSide(EnumFacing f) {
@@ -723,7 +499,7 @@ public class TileEntityStorageNetworkController extends TileEntityTomsMod implem
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		String cmdOld = cmd;
 		cmd = message.getString("c");
 		if (!cmdOld.equals(cmd))
@@ -794,5 +570,18 @@ public class TileEntityStorageNetworkController extends TileEntityTomsMod implem
 
 	@Override
 	public void setData(StorageData data) {
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public <G extends IGrid<?, G>> IGridDevice<G> getDevice(EnumFacing facing, Class<G> gridClass, Object... objects) {
+		if(facing == EnumFacing.UP)return null;
+		boolean dense = objects != null && objects.length > 0;
+		if(gridClass == StorageNetworkGrid.class && facing != null){
+			if(dense)
+				return (IGridDevice<G>) routerFacesD[getIntFromSide(facing)];
+			else
+				return (IGridDevice<G>) routerFaces[getIntFromSide(facing)];
+		}
+		return null;
 	}
 }

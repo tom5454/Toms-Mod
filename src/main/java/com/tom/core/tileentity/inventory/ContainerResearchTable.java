@@ -2,14 +2,9 @@ package com.tom.core.tileentity.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import com.tom.core.research.ResearchHandler;
-import com.tom.network.messages.MessageProgress;
 
 import com.tom.core.tileentity.TileEntityResearchTable;
 
@@ -43,6 +38,16 @@ public class ContainerResearchTable extends ContainerTomsMod {
 		this.addSlotToContainer(new Slot(te, 17, x, y - 38));
 		this.addSlotToContainer(new Slot(te, 18, x + 190, y + 32));
 		this.addPlayerSlots(inventory, 30, 137);
+
+		syncHandler.registerInventoryFieldShort(te, 0);
+		syncHandler.registerInventoryFieldInt(te, 2);
+		syncHandler.registerInventoryFieldInt(te, 3);
+		syncHandler.registerInventoryFieldInt(te, 4);
+		syncHandler.registerShort(1, () -> te.craftingError, i -> te.craftingError = i);
+		syncHandler.registerBoolean(2, () -> te.craftAll, b -> te.craftAll = b);
+		syncHandler.registerBoolean(3, () -> ResearchHandler.isCompleted(te.getResearchHandler(), te.currentResearch), b -> te.completed = b);
+		syncHandler.registerInt(1, () -> ResearchHandler.getId(te.currentResearch), id -> te.currentResearch = ResearchHandler.getResearchByID(id));
+		syncHandler.setReceiver(te);
 	}
 
 	/**
@@ -50,14 +55,6 @@ public class ContainerResearchTable extends ContainerTomsMod {
 	 * 7-15:Crafting in, 16:Crafting out, 17:Paper, 18:Crafting Extra
 	 */
 	private TileEntityResearchTable te;
-	private int lastTotalCraftingTime = -1;
-	private int lastInk = -1;
-	private int lastCraftingTime = -1;
-	private int lastResearchProgress = -1;
-	private int lastTotalResearchProgress = -1;
-	private int lastResearch = -2;
-	private int lastCraftingError = -1;
-	private int lastCraftAll = -1;
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
@@ -68,64 +65,6 @@ public class ContainerResearchTable extends ContainerTomsMod {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
-		int researchID = ResearchHandler.getId(te.currentResearch);
-		int craftingError = te.craftingError;
-		int craftAll = te.craftAll ? 1 : 0;
-		for (int i = 0;i < this.listeners.size();++i) {
-			IContainerListener icrafting = this.listeners.get(i);
-			MessageProgress msg = new MessageProgress(icrafting);
-
-			if (this.lastTotalCraftingTime != this.te.getField(2)) {
-				msg.add(2, this.te.getField(2));
-			}
-
-			if (this.lastInk != this.te.getField(0)) {
-				icrafting.sendWindowProperty(this, 0, this.te.getField(0));
-			}
-
-			if (this.lastCraftingTime != this.te.getField(1)) {
-				msg.add(1, this.te.getField(1));
-			}
-
-			if (this.lastResearchProgress != this.te.getField(3)) {
-				msg.add(3, this.te.getField(3));
-			}
-			if (this.lastTotalResearchProgress != this.te.getField(4)) {
-				msg.add(4, this.te.getField(4));
-			}
-
-			if (this.lastResearch != researchID) {
-				icrafting.sendWindowProperty(this, 5, researchID);
-				icrafting.sendWindowProperty(this, 51, ResearchHandler.isCompleted(te.getResearchHanler(), te.currentResearch) ? 1 : 0);
-			}
-			if (this.lastCraftingError != craftingError)
-				icrafting.sendWindowProperty(this, 6, craftingError);
-			if (this.lastCraftAll != craftAll)
-				icrafting.sendWindowProperty(this, 7, craftAll);
-			msg.send();
-		}
-		this.lastTotalCraftingTime = this.te.getField(2);
-		this.lastInk = this.te.getField(0);
-		this.lastCraftingTime = this.te.getField(1);
-		this.lastResearchProgress = this.te.getField(3);
-		this.lastTotalResearchProgress = this.te.getField(4);
-		this.lastResearch = researchID;
-		this.lastCraftingError = craftingError;
 		te.containerOpen();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int data) {
-		if (id == 5) {
-			this.te.currentResearch = ResearchHandler.getResearchByID(data);
-		} else if (id == 51) {
-			this.te.completed = data == 1;
-		} else if (id == 6) {
-			this.te.craftingError = data;
-		} else if (id == 7) {
-			this.te.craftAll = data == 1;
-		} else
-			this.te.setField(id, data);
 	}
 }

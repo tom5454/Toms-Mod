@@ -17,7 +17,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -31,7 +30,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
@@ -47,7 +45,6 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 import com.tom.api.Capabilities;
-import com.tom.api.IValidationChecker;
 import com.tom.api.tileentity.AccessType;
 import com.tom.api.tileentity.IAccessPoint;
 import com.tom.api.tileentity.IJammer;
@@ -56,12 +53,10 @@ import com.tom.api.tileentity.ISecurityStation;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
 import com.tom.defense.tileentity.TileEntityForceField;
+import com.tom.lib.api.IValidationChecker;
 import com.tom.lib.api.tileentity.IChunkLoader;
-import com.tom.lib.api.tileentity.ICustomPacket;
 import com.tom.lib.handler.IWorldHandler;
 import com.tom.lib.handler.WorldHandler;
-import com.tom.lib.network.messages.MessageTileBuf;
-import com.tom.network.NetworkHandler;
 import com.tom.util.TomsModUtils;
 
 import com.tom.core.block.BlockRubberWood;
@@ -82,7 +77,6 @@ public class TMWorldHandler implements IWorldHandler {
 	public World worldObj;
 	public Set<IAccessPoint> accessPoints = new HashSet<>();
 	public Set<IJammer> jammers = new HashSet<>();
-	public Set<ChunkPos> dirty = new HashSet<>();
 
 	// private static Map<Integer, List<Ticket>> chunkTickets = new HashMap<>();
 	public static TMWorldHandler getWorldHandlerForDim(int dim) {
@@ -413,18 +407,6 @@ public class TMWorldHandler implements IWorldHandler {
 		protectedAreas.clear();
 		protectedAreas.addAll(protectedAreasTickList);
 		protectedAreasTickList.clear();
-		if(!dirty.isEmpty()){
-			dirty.forEach(c -> {
-				List<EntityPlayerMP> l = EventHandler.watch.get(c);
-				if(l != null && !l.isEmpty())l.forEach(p -> sendTo(c, p));
-			});
-			dirty.clear();
-		}
-	}
-
-	private void sendTo(ChunkPos c, EntityPlayerMP p) {
-		Chunk chunk = worldObj.getChunkFromChunkCoords(c.x, c.z);
-		chunk.getTileEntityMap().values().stream().filter(t -> t instanceof ICustomPacket).map(t -> new MessageTileBuf(((ICustomPacket)t))).forEach(m -> NetworkHandler.sendTo(m, p));
 	}
 
 	public static boolean breakSpeed(BreakSpeed event) {
@@ -657,17 +639,6 @@ public class TMWorldHandler implements IWorldHandler {
 	}
 	public static void removeJammer(IJammer jammer) {
 		getWorldHandlerForDim(jammer.getWorld2().provider.getDimension()).jammers.remove(jammer);
-	}
-
-	public void markDirty(ChunkPos chunk) {
-		dirty.add(chunk);
-	}
-
-	public static void markDirty(World world, ChunkPos chunk) {
-		getWorldHandlerForDim(world.provider.getDimension()).markDirty(chunk);
-	}
-	public static void markDirty(World world, BlockPos pos) {
-		markDirty(world, new ChunkPos(pos));
 	}
 
 	@Override

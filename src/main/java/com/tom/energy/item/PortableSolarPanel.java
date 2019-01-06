@@ -19,8 +19,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.energy.IEnergyContainerItem;
 import com.tom.energy.EnergyInit;
+import com.tom.lib.api.energy.IEnergyContainerItem;
 import com.tom.util.TomsModUtils;
 
 public class PortableSolarPanel extends Item implements IEnergyContainerItem {

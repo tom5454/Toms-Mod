@@ -14,6 +14,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.grid.StorageNetworkGrid.ICraftingRecipeContainer;
+import com.tom.api.grid.StorageNetworkGrid.IGridInputListener;
 import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.network.INBTPacketReceiver;
@@ -24,10 +26,8 @@ import com.tom.recipes.handler.AdvancedCraftingHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler.ReturnData;
 import com.tom.storage.StorageInit;
 import com.tom.storage.handler.AutoCraftingHandler;
+import com.tom.storage.handler.AutoCraftingHandler.CraftingPatternProperties;
 import com.tom.storage.handler.ICraftable;
-import com.tom.storage.handler.StorageNetworkGrid.CraftingPatternProperties;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingRecipeContainer;
-import com.tom.storage.handler.StorageNetworkGrid.IGridInputListener;
 import com.tom.storage.item.ItemCard.CardType;
 import com.tom.util.TomsModUtils;
 
@@ -94,7 +94,7 @@ public class TileEntityPatternTerminal extends TileEntityBasicTerminal implement
 					ItemStack stack;
 					switch (craftingB) {
 					case CRAFT_ONLY:
-						grid.getData().queueCrafting(new StoredItemStack(new ItemStack(StorageInit.craftingPattern), 1), player, -1);
+						grid.getSData().queueCrafting(new StoredItemStack(new ItemStack(StorageInit.craftingPattern), 1), player, -1);
 						patternPulled = true;
 						break;
 					case NO_OP:
@@ -157,7 +157,7 @@ public class TileEntityPatternTerminal extends TileEntityBasicTerminal implement
 								EntityItem item = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 								world.spawnEntity(item);
 							}
-							grid.getData().queueCrafting(new StoredItemStack(new ItemStack(StorageInit.craftingPattern), 1), player, -1);
+							grid.getSData().queueCrafting(new StoredItemStack(new ItemStack(StorageInit.craftingPattern), 1), player, -1);
 							patternPulled = true;
 						}
 						break;
@@ -260,9 +260,9 @@ public class TileEntityPatternTerminal extends TileEntityBasicTerminal implement
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		if (message.hasKey("color", 3)) {
-			super.receiveNBTPacket(message);
+			super.receiveNBTPacket(pl, message);
 		} else if (message.getByte("cfg") == 1) {
 			int slot = message.getByte("slot");
 			byte amount = message.getByte("amount");
@@ -332,7 +332,7 @@ public class TileEntityPatternTerminal extends TileEntityBasicTerminal implement
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void sendUpdate(GuiTomsMod gui, int id, int extra) {
-		gui.sendButtonUpdate(id, pos, extra);
+		gui.sendButtonUpdateToTile(id, extra);
 	}
 
 	@Override

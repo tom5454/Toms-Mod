@@ -15,4 +15,9 @@ public class TileEntityConveyorFast extends TileEntityConveyorBase {
 		return TEXTURE;
 	}
 
+	@Override
+	public int getPowerUse() {
+		return 2;
+	}
+
 }

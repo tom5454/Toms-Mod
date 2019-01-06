@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:bronzeplatebender"
+  ],
+  "level": "basic_wooden",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.steam.platebendingmachine",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "PSP",
+      "-C-",
+      "BBB"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "item": "minecraft:brick_block",
+        "data": 0
+      },
+      "S": {
+        "ore": "blockBronze",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebronze",
+        "data": 0
+      },
+      "-": {
+        "ore": "pipeBronze",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 350
+}

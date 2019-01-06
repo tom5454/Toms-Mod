@@ -1,6 +1,6 @@
 package com.tom.storage.tileentity;
 
-import static com.tom.api.energy.EnergyType.HV;
+import static com.tom.lib.api.energy.EnergyType.HV;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,15 +10,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
+import com.tom.api.grid.StorageNetworkGrid.ICraftingPatternListener;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyReceiver;
 import com.tom.recipes.handler.AdvancedCraftingHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler.ReturnData;
 import com.tom.storage.handler.ICraftable;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingPatternListener;
 import com.tom.util.TomsModUtils;
 
 public class TileEntityAssembler extends TileEntityTomsMod implements IEnergyReceiver, ICraftingPatternListener {

@@ -1,10 +1,6 @@
 package com.tom.handler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -18,7 +14,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.ChunkPos;
 
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent.MissingMappings;
@@ -34,7 +29,6 @@ import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
@@ -62,11 +56,9 @@ import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageMarker;
 import com.tom.network.messages.MessageMarkerSync;
 import com.tom.util.TMLogger;
-import com.tom.util.TomsModUtils;
 
 public class EventHandler {
 	public static final EventHandler instance = new EventHandler();
-	public static Map<ChunkPos, List<EntityPlayerMP>> watch = new HashMap<>();
 	// public static Set<Block> woods = new HashSet<>();
 	public static Set<Item> disabledItems = new HashSet<>();
 
@@ -300,27 +292,12 @@ public class EventHandler {
 		});
 	}
 	private <T extends IForgeRegistryEntry<T>> void filterMappings(ImmutableList<Mapping<T>> in, Consumer<Mapping<T>> action){
-		in.stream().filter(e -> e.key.getResourceDomain().startsWith(Configs.ModidL) && e.key.getResourceDomain().contains("|")).forEach(action);
+		in.stream().filter(e -> e.key.getResourceDomain().startsWith(Configs.ModidL) && (e.key.getResourceDomain().contains("|") || e.key.getResourcePath().contains("blend"))).forEach(action);
 	}
 	private <T extends IForgeRegistryEntry<T>> void remap(IForgeRegistry<T> reg, Mapping<T> e){
-		ResourceLocation loc = new ResourceLocation(e.key.getResourceDomain().replace("|", ""), e.key.getResourcePath());
+		ResourceLocation loc = new ResourceLocation(e.key.getResourceDomain().replace("|", "").replace("blender", "bender").replace("blending", "bending"), e.key.getResourcePath());
 		T val = reg.getValue(loc);
 		if(val != null)e.remap(val);
 		else TMLogger.error("No registry entry found for " + loc.toString());
-	}
-	@SubscribeEvent
-	public void watch(ChunkWatchEvent.Watch evt){
-		TomsModUtils.getOrPut(watch, evt.getChunkInstance().getPos(), ArrayList::new).add(evt.getPlayer());
-		TMWorldHandler.markDirty(evt.getPlayer().world, evt.getChunkInstance().getPos());
-	}
-	@SubscribeEvent
-	public void unwatch(ChunkWatchEvent.UnWatch evt){
-		List<EntityPlayerMP> l = watch.get(evt.getChunkInstance().getPos());
-		if(l != null){
-			l.remove(evt.getPlayer());
-			if(l.isEmpty()){
-				watch.remove(evt.getChunkInstance().getPos());
-			}
-		}
 	}
 }

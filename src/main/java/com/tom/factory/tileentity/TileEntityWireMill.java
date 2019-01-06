@@ -7,8 +7,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.item.IExtruderModule;
+import com.tom.lib.api.energy.EnergyStorage;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 
@@ -19,7 +18,7 @@ public class TileEntityWireMill extends TileEntityMachineBase {
 
 	@Override
 	public int getSizeInventory() {
-		return 4;
+		return 3;
 	}
 
 	@Override
@@ -66,25 +65,15 @@ public class TileEntityWireMill extends TileEntityMachineBase {
 	@Override
 	public void updateProgress() {
 		int upgradeC = getSpeedUpgradeCount();
-		IExtruderModule m = getBlendingModule();
-		int speed = m != null ? m.getSpeed(inv.getStackInSlot(3), world, pos) + 1 : 1;
+		int speed = 3 - getType();
 		int p = upgradeC + (upgradeC / 2) + speed;
 		progress = Math.max(0, progress - p);
 		energy.extractEnergy(1 * p, false);
 	}
 
 	private int getBlendingLevel() {
-		int lvl = getBlendingModuleLevel();
+		int lvl = 3 - getType();
 		return lvl <= 0 ? 0 : (lvl == 1 ? 2 : (lvl == 2 ? 4 : 5));
-	}
-
-	private int getBlendingModuleLevel() {
-		IExtruderModule m = getBlendingModule();
-		return m != null ? m.getLevel(inv.getStackInSlot(3), world, pos) : 0;
-	}
-
-	private IExtruderModule getBlendingModule() {
-		return inv.getStackInSlot(3) != null && inv.getStackInSlot(3).getItem() instanceof IExtruderModule ? (IExtruderModule) inv.getStackInSlot(3).getItem() : null;
 	}
 
 	@Override

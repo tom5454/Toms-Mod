@@ -1,5 +1,29 @@
 Changelog:
 
+2.1.3_ALPHA for Minecraft 1.12.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported. This version may not be compatible with 1.10.2 or 1.11.2 worlds.
+
+    Rewritten Grid System
+    Rewritten Gui Sync System
+    Added Extracting Conveyor Belt
+    Added EnderLink Grid Power System
+    Added Advanced Water Collector
+    Conveyor Belts and Water Collectors Use EnderLink Power
+    Recipe Changes
+    Few bug fixes
+
+2.1.2_ALPHA for Minecraft 1.12.2
+
+WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported. This version may not be compatible with 1.10.2 or 1.11.2 worlds.
+
+    Wrench now can rotate blocks
+    Fixed machines despawning when picking them up with the Wrench.
+    Fixed machines losing data when rotated with TE Hammer
+    Fixed Crash on first startup.
+    Fixed Client Crash with Storage System Controller
+    Few other bug fixes
+
 2.1.1_ALPHA for Minecraft 1.12.2
 
 WARNING: This version of the mod is in ALPHA, it can contain a lot of bugs. If you find any bugs please report it on the Issues page, if it's not already reported. This version may not be compatible with 1.10.2 or 1.11.2 worlds.

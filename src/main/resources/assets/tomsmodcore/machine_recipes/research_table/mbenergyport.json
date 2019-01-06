@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:multiblockcomponents"
   ],
-  "level": "tomsMod.craftingLevel.electrical",
+  "level": "electrical",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:mbenergyport",

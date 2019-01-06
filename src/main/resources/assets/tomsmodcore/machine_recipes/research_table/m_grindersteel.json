@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:advsteamcrusher"
+  ],
+  "level": "bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:material",
+      "data": 73,
+      "count": 1
+    },
+    "pattern": [
+      "WSW",
+      "SBS",
+      "WSW"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "ore": "blockBronze",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "W": {
+        "ore": "nuggetSteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 200
+}

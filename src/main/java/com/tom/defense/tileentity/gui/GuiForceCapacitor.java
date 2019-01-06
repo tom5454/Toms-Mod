@@ -62,7 +62,7 @@ public class GuiForceCapacitor extends GuiTomsMod {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			this.sendButtonUpdate(0, te, te.rsMode.ordinal() + 1);
+			this.sendButtonUpdateToTile(0, te.rsMode.ordinal() + 1);
 		}
 	}
 

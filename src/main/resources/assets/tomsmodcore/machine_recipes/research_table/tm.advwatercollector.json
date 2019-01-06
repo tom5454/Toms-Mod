@@ -1,0 +1,42 @@
+{
+  "researches": [
+    "tomsmodcore:advwatercollector"
+  ],
+  "level": "bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.advwatercollector",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "SCS",
+      "WcW",
+      "SBS"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "B": {
+        "item": "minecraft:water_bucket",
+        "data": 0
+      },
+      "S": {
+        "ore": "plateSteel",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "crystalRedstone",
+        "type": "forge:ore_dict"
+      },
+      "c": {
+        "ore": "casingSteel",
+        "type": "forge:ore_dict"
+      },
+      "W": {
+        "item": "tomsmodfactory:tm.watercollector",
+        "data": 0
+      }
+    }
+  },
+  "crafting_time": 600
+}

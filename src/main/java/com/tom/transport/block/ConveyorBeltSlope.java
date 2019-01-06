@@ -2,9 +2,7 @@ package com.tom.transport.block;
 
 import java.util.List;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,11 +12,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.EnumFacing.Plane;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -29,23 +25,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.api.block.IModelRegisterRequired;
 import com.tom.core.CoreInit;
+import com.tom.transport.tileentity.TileEntityConveyorBase;
 import com.tom.transport.tileentity.TileEntityConveyorBeltSlope;
 import com.tom.util.TomsModUtils;
 
-public class ConveyorBeltSlope extends BlockContainerTomsMod implements IModelRegisterRequired {
+public class ConveyorBeltSlope extends ConveyorBeltBase implements IModelRegisterRequired {
 	public static final AxisAlignedBB AABB_BOTTOM = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
-	public static final PropertyDirection FACING = PropertyDirection.create("facing", Plane.HORIZONTAL);
 	public static final PropertyBool IS_DOWN_SLOPE = PropertyBool.create("down");
 
-	public ConveyorBeltSlope() {
-		super(Material.IRON);
-	}
-
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntityConveyorBase createNewTileEntity(World worldIn, int meta) {
 		return new TileEntityConveyorBeltSlope();
 	}
 
@@ -70,16 +61,6 @@ public class ConveyorBeltSlope extends BlockContainerTomsMod implements IModelRe
 		if (facing.getAxis() == Axis.Y)
 			facing = EnumFacing.NORTH;
 		return this.getDefaultState().withProperty(FACING, facing).withProperty(IS_DOWN_SLOPE, meta > 5);
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState s) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState s) {
-		return false;
 	}
 
 	@Override
@@ -146,5 +127,10 @@ public class ConveyorBeltSlope extends BlockContainerTomsMod implements IModelRe
 	@Override
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
 		return new ItemStack(this, 1, state.getValue(IS_DOWN_SLOPE) ? 1 : 0);
+	}
+
+	@Override
+	public int getEPUse() {
+		return 3;
 	}
 }

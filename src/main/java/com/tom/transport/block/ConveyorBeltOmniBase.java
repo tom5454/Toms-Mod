@@ -1,18 +1,26 @@
 package com.tom.transport.block;
 
+import java.util.List;
+import java.util.Random;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -21,11 +29,19 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import com.tom.api.block.BlockContainerTomsMod;
+import com.tom.api.block.IModelRegisterRequired;
+import com.tom.client.CustomModelLoader;
+import com.tom.core.CoreInit;
+import com.tom.transport.model.ConveyorModel;
+import com.tom.transport.tileentity.TileEntityConveyorBase;
 import com.tom.transport.tileentity.TileEntityConveyorOmniBase;
 import com.tom.util.TomsModUtils;
 
-public abstract class ConveyorBeltOmniBase extends BlockContainerTomsMod {
+public abstract class ConveyorBeltOmniBase extends BlockContainerTomsMod implements IModelRegisterRequired {
 	public static final PropertyDirection POSITION = PropertyDirection.create("pos");
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
@@ -54,7 +70,6 @@ public abstract class ConveyorBeltOmniBase extends BlockContainerTomsMod {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		// System.out.println(meta);
 		return this.getDefaultState().withProperty(POSITION, EnumFacing.getFront(meta % 6));
 	}
 
@@ -87,9 +102,9 @@ public abstract class ConveyorBeltOmniBase extends BlockContainerTomsMod {
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		Pair<Vec3d, Vec3d> vec = getRayTraceVectors(placer);
 		RayTraceResult r = collisionRayTrace(state, worldIn, pos, vec.getKey(), vec.getRight());
+		TileEntityConveyorOmniBase te = (TileEntityConveyorOmniBase) worldIn.getTileEntity(pos);
 		if (r != null && r.hitVec != null) {
 			EnumFacing facing = state.getValue(POSITION);
-			TileEntityConveyorOmniBase te = (TileEntityConveyorOmniBase) worldIn.getTileEntity(pos);
 			EnumFacing box = EnumFacing.DOWN;
 			if (facing.getAxis() == Axis.Y) {
 				box = TomsModUtils.getDirectionFacing(placer, facing.getAxis() != Axis.Y);
@@ -110,11 +125,8 @@ public abstract class ConveyorBeltOmniBase extends BlockContainerTomsMod {
 			}
 			te.facing = box;
 			te.markBlockForUpdate(pos);
-			// float hitX = (float)(r.hitVec.xCoord - pos.getX());
-			// float hitZ = (float)(r.hitVec.zCoord - pos.getZ());
 		} else {
 			EnumFacing facing = state.getValue(POSITION);
-			TileEntityConveyorOmniBase te = (TileEntityConveyorOmniBase) worldIn.getTileEntity(pos);
 			EnumFacing box = EnumFacing.DOWN;
 			if (facing.getAxis() == Axis.Y) {
 				box = TomsModUtils.getDirectionFacing(placer, facing.getAxis() != Axis.Y);
@@ -135,9 +147,9 @@ public abstract class ConveyorBeltOmniBase extends BlockContainerTomsMod {
 			}
 			te.facing = box;
 			te.markBlockForUpdate(pos);
-			// float hitX = (float)(r.hitVec.xCoord - pos.getX());
-			// float hitZ = (float)(r.hitVec.zCoord - pos.getZ());
 		}
+		te.playerName = placer.getName();
+		te.updatePlayerHandler();
 	}
 
 	public static Pair<Vec3d, Vec3d> getRayTraceVectors(EntityLivingBase player) {
@@ -157,4 +169,24 @@ public abstract class ConveyorBeltOmniBase extends BlockContainerTomsMod {
 		Vec3d end = start.addVector(f5 * d3, f4 * d3, f6 * d3);
 		return Pair.of(start, end);
 	}
+	@Override
+	public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+		TileEntity conv = worldIn.getTileEntity(pos);
+		if(conv instanceof TileEntityConveyorBase)((TileEntityConveyorBase)conv).randomTick();
+	}
+	@Override
+	public void registerModels() {
+		CustomModelLoader.addOverride(new ResourceLocation("tomsmodtransport", getUnlocalizedName().substring(5)), new ConveyorModel(getBaseModel()));
+		CoreInit.registerRender(Item.getItemFromBlock(this), 0, "tomsmodtransport:item." + getUnlocalizedName().substring(5));
+	}
+
+	protected String getBaseModel() {
+		return "tomsmodtransport:block/conveyor";
+	}
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		tooltip.add(I18n.format("tomsmod.tooltip.use_ep", getEPUse()));
+	}
+	public abstract int getEPUse();
 }

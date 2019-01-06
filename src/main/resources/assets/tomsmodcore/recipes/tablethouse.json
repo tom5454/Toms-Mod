@@ -10,6 +10,12 @@
     "IBI"
   ],
   "type": "forge:ore_shaped",
+  "conditions": [
+    {
+      "id": "adventureItems",
+      "type": "tomsmodcore:config"
+    }
+  ],
   "key": {
     "B": {
       "item": "minecraft:stone_button",

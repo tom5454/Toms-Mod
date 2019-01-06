@@ -31,6 +31,7 @@ public class ContainerDrive extends ContainerTomsMod {
 		this.addSlotToContainer(new SlotStorageCell(te, 8, 71, i));
 		this.addSlotToContainer(new SlotStorageCell(te, 9, 71 + 18, i));
 		this.addPlayerSlots(playerInv, 8, 117);
+		syncHandler.setReceiver(te);
 	}
 
 	@Override

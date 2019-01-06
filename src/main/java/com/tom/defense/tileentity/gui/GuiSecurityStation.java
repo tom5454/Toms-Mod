@@ -64,9 +64,9 @@ public class GuiSecurityStation extends GuiTomsMod {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		int id = button.id;
 		if (id == 8) {
-			this.sendButtonUpdate(id, te, te.rsMode.ordinal() + 1);
+			this.sendButtonUpdateToTile(id, te.rsMode.ordinal() + 1);
 		} else if (id < 8)
-			this.sendButtonUpdate(button.id, te);
+			this.sendButtonUpdateToTile(button.id, 0);
 	}
 
 	@Override

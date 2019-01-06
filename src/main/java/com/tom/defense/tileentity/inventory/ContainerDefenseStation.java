@@ -8,9 +8,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import com.tom.api.inventory.SlotPhantom;
 import com.tom.api.tileentity.IConfigurable.IConfigurationOption.SlotSecurityCard;
 import com.tom.defense.DefenseInit;
@@ -21,20 +18,12 @@ import com.tom.defense.tileentity.inventory.ContainerForceFieldProjector.SlotEff
 import com.tom.defense.tileentity.inventory.ContainerSecurityStation.SlotPowerLinkCard;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
-import com.tom.network.messages.MessageProgress;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerDefenseStation extends ContainerTomsMod {
 	private TileEntityDefenseStation te;
-	private int modeLast = -1;
-	private int powerLast = -1, lastRS = -1, powerMaxLast = -1;
 	private String lastName = "";
-	private boolean lastWhiteList = false;
-	private boolean lastMeta = false;
-	private boolean lastMod = false;
-	private boolean lastNBT = false;
-	private boolean lastPlayerKill = false;
 
 	public ContainerDefenseStation(InventoryPlayer playerInv, TileEntityDefenseStation te) {
 		addSlotToContainer(new SlotSecurityCard(te, 0, 227, 9));
@@ -58,6 +47,17 @@ public class ContainerDefenseStation extends ContainerTomsMod {
 		}
 		this.addPlayerSlots(playerInv, 8, 134);
 		this.te = te;
+		syncHandler.registerInventoryFieldInt(te, 0);
+		syncHandler.registerInventoryFieldInt(te, 1);
+		syncHandler.registerEnum(0, () -> te.rsMode , e -> te.rsMode = e, ForceDeviceControlType.VALUES);
+		syncHandler.registerEnum(1, () -> te.config, e -> te.config = e, DefenseStationConfig.VALUES);
+		syncHandler.registerBoolean(2, te::isWhiteList, te::setWhiteList);
+		syncHandler.registerBoolean(3, te::useMeta, te::setUseMeta);
+		syncHandler.registerBoolean(4, te::useMod, te::setUseMod);
+		syncHandler.registerBoolean(5, te::useNBT, te::setUseNBT);
+		syncHandler.registerBoolean(5, te::isPlayerKill, te::setPlayerKill);
+		syncHandler.registerString(2, () -> te.customName, e -> {});
+		syncHandler.setReceiver(te);
 	}
 
 	@Override
@@ -69,65 +69,11 @@ public class ContainerDefenseStation extends ContainerTomsMod {
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 		for (IContainerListener crafter : listeners) {
-			MessageProgress msg = new MessageProgress(crafter);
-			if (te.getField(0) != powerLast) {
-				msg.add(0, te.getField(0));
-			}
-			if (te.getField(1) != powerMaxLast) {
-				msg.add(7, te.getField(1));
-			}
-			if (te.rsMode.ordinal() != lastRS) {
-				crafter.sendWindowProperty(this, 1, te.rsMode.ordinal());
-			}
-			if (te.config.ordinal() != modeLast) {
-				crafter.sendWindowProperty(this, 2, te.config.ordinal());
-			}
 			if (!te.customName.equals(lastName)) {
 				NetworkHandler.sendTo(new MessageNBT(te.getCustomNameMessage()), (EntityPlayerMP) crafter);
 			}
-			boolean sendData = lastWhiteList != te.isWhiteList() || lastMeta != te.useMeta() || lastMod != te.useMod() || lastNBT != te.useNBT() || lastPlayerKill != te.isPlayerKill();
-			if (sendData) {
-				crafter.sendWindowProperty(this, 3, te.isWhiteList() ? 1 : 0);
-				crafter.sendWindowProperty(this, 4, te.useMeta() ? 1 : 0);
-				crafter.sendWindowProperty(this, 5, te.useMod() ? 1 : 0);
-				crafter.sendWindowProperty(this, 6, te.useNBT() ? 1 : 0);
-				crafter.sendWindowProperty(this, 8, te.isPlayerKill() ? 1 : 0);
-			}
-			msg.send();
 		}
-		powerLast = te.getField(0);
-		lastRS = te.rsMode.ordinal();
-		modeLast = te.config.ordinal();
 		lastName = te.customName;
-		lastWhiteList = te.isWhiteList();
-		lastMeta = te.useMeta();
-		lastMod = te.useMod();
-		lastNBT = te.useNBT();
-		lastPlayerKill = te.isPlayerKill();
-		powerMaxLast = te.getField(1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int value) {
-		if (id == 1) {
-			te.rsMode = ForceDeviceControlType.get(value);
-		} else if (id == 2) {
-			te.config = DefenseStationConfig.get(value);
-		} else if (id == 3) {
-			te.setWhiteList(value == 1);
-		} else if (id == 4) {
-			te.setUseMeta(value == 1);
-		} else if (id == 5) {
-			te.setUseMod(value == 1);
-		} else if (id == 6) {
-			te.setUseNBT(value == 1);
-		} else if (id == 7) {
-			te.setField(1, value);
-		} else if (id == 8) {
-			te.setPlayerKill(value == 1);
-		} else
-			te.setField(id, value);
 	}
 
 	public static class SlotUpgradeWidth extends Slot {

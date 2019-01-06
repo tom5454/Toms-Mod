@@ -8,13 +8,13 @@ import net.minecraft.util.math.BlockPos;
 
 import net.minecraftforge.items.IItemHandler;
 
+import com.tom.api.grid.StorageNetworkGrid.IChannelLoadListener;
 import com.tom.api.inventory.IStorageInventory;
 import com.tom.api.inventory.IStorageInventory.BasicFilter;
 import com.tom.api.inventory.IStorageInventory.BasicFilter.IFilteringInformation;
 import com.tom.api.inventory.IStorageInventory.BasicFilter.Mode;
 import com.tom.api.inventory.IStorageInventory.FilteredStorageInventory;
 import com.tom.api.multipart.IGuiMultipart;
-import com.tom.storage.handler.StorageNetworkGrid.IChannelLoadListener;
 import com.tom.storage.tileentity.gui.GuiStorageBus;
 import com.tom.storage.tileentity.inventory.ContainerStorageBus;
 import com.tom.util.TomsModUtils;
@@ -77,10 +77,10 @@ public class PartStorageBus extends PartChannelModule implements IGuiMultipart, 
 					}), f.getOpposite(), grid);
 				}
 				((FilteredStorageInventory) data).update(null, inventory, 0);
-				grid.getData().addInventory(data);
+				grid.getSData().addInventory(data);
 			} else {
 				if (data != null) {
-					grid.getData().removeInventory(data);
+					grid.getSData().removeInventory(data);
 					data = null;
 				}
 			}
@@ -161,7 +161,7 @@ public class PartStorageBus extends PartChannelModule implements IGuiMultipart, 
 	@Override
 	public void invalidateGrid() {
 		if (data != null)
-			grid.getData().removeInventory(data);
+			grid.getSData().removeInventory(data);
 		super.invalidateGrid();
 	}
 

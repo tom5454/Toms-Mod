@@ -18,8 +18,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.ISecuredTileEntity;
-import com.tom.lib.api.grid.IGrid;
-import com.tom.lib.api.grid.IGridDevice;
 import com.tom.util.TMLogger;
 
 public class Capabilities {
@@ -27,8 +25,6 @@ public class Capabilities {
 	public static Capability<ISecuredTileEntity> SECURED_TILE = null;
 	@CapabilityInject(IConfigurable.class)
 	public static Capability<IConfigurable> CONFIGURABLE = null;
-	@CapabilityInject(IGridDevice.class)
-	public static Capability<IGridDevice<?>> GRID_DEVICE = null;
 
 	@SuppressWarnings("rawtypes")
 	public static void init() {
@@ -71,32 +67,6 @@ public class Capabilities {
 				return new ConfigurableTile();
 			}
 		});
-		CapabilityManager.INSTANCE.register(IGridDevice.class, new IStorage<IGridDevice>() {
-
-			@Override
-			public NBTBase writeNBT(Capability<IGridDevice> capability, IGridDevice instance, EnumFacing side) {
-				NBTTagCompound nbt = new NBTTagCompound();
-				if (instance.isMaster())
-					nbt.setTag(IGridDevice.GRID_TAG_NAME, instance.getGrid().exportToNBT());
-				nbt.setBoolean(IGridDevice.MASTER_NBT_NAME, instance.isMaster());
-				return nbt;
-			}
-
-			@Override
-			public void readNBT(Capability<IGridDevice> capability, IGridDevice instance, EnumFacing side, NBTBase nbtIn) {
-				NBTTagCompound nbt = (NBTTagCompound) nbtIn;
-				boolean isMaster = nbt.getBoolean(IGridDevice.MASTER_NBT_NAME);
-				if (isMaster)
-					instance.getGrid().importFromNBT(nbt.getCompoundTag(IGridDevice.GRID_TAG_NAME));
-			}
-
-		}, new Callable<IGridDevice>() {
-
-			@Override
-			public IGridDevice call() throws Exception {
-				return new GridDeviceTile();
-			}
-		});
 	}
 
 	public static class SecuredTile implements ISecuredTileEntity {
@@ -110,7 +80,7 @@ public class Capabilities {
 	public static class ConfigurableTile implements IConfigurable {
 
 		@Override
-		public void receiveNBTPacket(NBTTagCompound message) {
+		public void receiveNBTPacket(EntityPlayer player, NBTTagCompound message) {
 
 		}
 
@@ -149,80 +119,6 @@ public class Capabilities {
 			return "DUMMY";
 		}
 
-	}
-
-	@SuppressWarnings("rawtypes")
-	public static class GridDeviceTile implements IGridDevice {
-
-		@Override
-		public boolean isMaster() {
-			return false;
-		}
-
-		@Override
-		public void setMaster(IGridDevice master, int size) {
-		}
-
-		@Override
-		public BlockPos getPos2() {
-			return BlockPos.ORIGIN;
-		}
-
-		@Override
-		public World getWorld2() {
-			return null;
-		}
-
-		@Override
-		public IGrid getGrid() {
-			return null;
-		}
-
-		@Override
-		public IGridDevice getMaster() {
-			return null;
-		}
-
-		@Override
-		public boolean isConnected(EnumFacing side) {
-			return false;
-		}
-
-		@Override
-		public boolean isValidConnection(EnumFacing side) {
-			return false;
-		}
-
-		@Override
-		public void invalidateGrid() {
-		}
-
-		@Override
-		public void setSuctionValue(int suction) {
-		}
-
-		@Override
-		public int getSuctionValue() {
-			return 0;
-		}
-
-		@Override
-		public void updateState() {
-		}
-
-		@Override
-		public void setGrid(IGrid newGrid) {
-		}
-
-		@Override
-		public boolean isValid() {
-			return false;
-		}
-
-		@Override
-		public NBTTagCompound getGridData() {
-			return null;
-		}
 	}
 
 	public static ISecuredTileEntity getSecuredTileEntityAt(World world, BlockPos pos) {

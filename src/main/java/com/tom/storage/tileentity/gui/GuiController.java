@@ -15,8 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.tom.api.gui.GuiTomsMod;
 import com.tom.client.EventHandlerClient;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageNBT;
 import com.tom.storage.tileentity.TileEntityStorageNetworkController;
 import com.tom.storage.tileentity.TileEntityStorageNetworkController.ControllerState;
 import com.tom.storage.tileentity.inventory.ContainerController;
@@ -65,7 +63,7 @@ public class GuiController extends GuiTomsMod {
 		tag.setString("c", text.getText());
 		tag.setBoolean("run", enter);
 		tag.setBoolean("a", te.isActiveByPlayer());
-		NetworkHandler.sendToServer(new MessageNBT(tag, te));
+		sendNBTToTile(tag);
 	}
 
 	@Override

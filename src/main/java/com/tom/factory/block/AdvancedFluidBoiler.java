@@ -69,7 +69,7 @@ public class AdvancedFluidBoiler extends BlockContainerTomsMod {
 
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (!TomsModUtils.interactWithFluidHandler(((ITileFluidHandler) worldIn.getTileEntity(pos)).getTankOnSide(side), playerIn, hand)) {
+		if (!worldIn.isRemote && !TomsModUtils.interactWithFluidHandler(((ITileFluidHandler) worldIn.getTileEntity(pos)).getTankOnSide(side), playerIn, hand)) {
 			playerIn.openGui(CoreInit.modInstance, GuiIDs.advFluidBoiler.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;

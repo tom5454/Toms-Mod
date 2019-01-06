@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -122,9 +123,9 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		int id = button.id;
 		if (id == 3)
-			sendButtonUpdate(3, te, te.craftAll ? -1 : isShiftKeyDown() ? 1 : 0);
+			sendButtonUpdateToTile(3, te.craftAll ? -1 : isShiftKeyDown() ? 1 : 0);
 		else if (id < 4) {
-			this.sendButtonUpdate(id, te);
+			this.sendButtonUpdateToTile(id, 0);
 		}
 	}
 
@@ -363,7 +364,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 					if (e instanceof ResearchEntry) {
 						res = ((ResearchEntry) e).button.research;
 					}
-					sendButtonUpdate(5, te, ResearchHandler.getId(res));
+					sendButtonUpdateToTile(5, ResearchHandler.getId(res));
 				}
 				this.mc.displayGuiScreen(this.parent);
 			} else if (button.id == 201) {
@@ -625,7 +626,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 							if (this.hovered && (!this.enabled)) {
 								hoverRender.add(() -> {
 									List<String> textLines = new ArrayList<>();
-									textLines.add(TextFormatting.RED + I18n.format("tomsmod.gui.missing") + ":");
+									textLines.add(TextFormatting.RED + I18n.format("tomsmod.gui.missingScans") + ":");
 									for (int k = 0;k < missing.size();k++) {
 										IScanningInformation info = missing.get(k);
 										String name = I18n.format(info.getUnlocalizedName());
@@ -852,7 +853,7 @@ public class GuiResearchTable extends GuiTomsMod implements INBTPacketReceiver {
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		tag = message;
 		this.mc.displayGuiScreen(new GuiResearchSelection(this));
 	}

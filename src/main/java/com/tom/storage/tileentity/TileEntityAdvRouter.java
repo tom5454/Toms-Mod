@@ -7,67 +7,120 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.IAdvRouterTile;
+import com.tom.api.grid.StorageNetworkGrid.IControllerTile;
 import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.lib.api.grid.IGrid;
+import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridUpdateListener;
+import com.tom.lib.api.grid.VirtualGridDevice;
 import com.tom.storage.block.AdvStorageSystemRouter;
 import com.tom.storage.handler.StorageData;
-import com.tom.storage.handler.StorageNetworkGrid.IAdvRouterTile;
-import com.tom.storage.handler.StorageNetworkGrid.IChannelSource;
-import com.tom.storage.handler.StorageNetworkGrid.IController;
-import com.tom.storage.handler.StorageNetworkGrid.IControllerTile;
 import com.tom.util.TomsModUtils;
 
-public class TileEntityAdvRouter extends TileEntityTomsMod implements IAdvRouterTile {
-	public static class ChannelSource extends com.tom.storage.tileentity.TileEntityStorageNetworkController.ChannelSource {
+import com.tom.core.tileentity.IGridDeviceHostFacing;
 
-		public ChannelSource(IChannelSource tile, int i) {
-			super(tile, i);
+public class TileEntityAdvRouter extends TileEntityTomsMod implements IAdvRouterTile, IGridDeviceHostFacing {
+	public class DenseChannelSource extends VirtualGridDevice<StorageNetworkGrid> implements IGridUpdateListener {
+		private final EnumFacing side;
+		public DenseChannelSource(EnumFacing side) {
+			this.side = side;
+			grid.getData().dataSupplier = TileEntityAdvRouter.this::getData;
+		}
+		@Override
+		public BlockPos getPos2() {
+			return pos;
 		}
 
 		@Override
-		public IControllerTile getController() {
-			return ((TileEntityAdvRouter) getTile()).getController();
+		public World getWorld2() {
+			return world;
 		}
 
 		@Override
-		protected int getIntFromSide(EnumFacing f) {
-			return f.ordinal();
+		public boolean isConnected(EnumFacing side) {
+			return this.side == side;
 		}
 
 		@Override
-		protected EnumFacing getSideFromInt(int f) {
-			return EnumFacing.VALUES[f];
+		public boolean isValidConnection(EnumFacing side) {
+			return this.side == side;
 		}
 
 		@Override
-		public void update() {
-			if (!getTile().getWorld2().isRemote)
-				if (getController() != null)
-					grid.setActive(true);
-				else
-					grid.setActive(false);
-			super.update();
+		public boolean isValid() {
+			return !isInvalid();
+		}
+
+		@Override
+		public StorageNetworkGrid constructGrid() {
+			return new StorageNetworkGrid(true);
+		}
+		@Override
+		public void onGridReload() {
+			grid.getData().dataSupplier = TileEntityAdvRouter.this::getData;
+		}
+		@Override
+		public void onGridPostReload() {
+		}
+	}
+	public class ChannelSource extends VirtualGridDevice<StorageNetworkGrid> implements IGridUpdateListener {
+		private final EnumFacing side;
+		public ChannelSource(EnumFacing side) {
+			this.side = side;
+			grid.getData().dataSupplier = TileEntityAdvRouter.this::getData;
+		}
+		@Override
+		public BlockPos getPos2() {
+			return pos;
+		}
+
+		@Override
+		public World getWorld2() {
+			return world;
+		}
+
+		@Override
+		public boolean isConnected(EnumFacing side) {
+			return this.side == side;
+		}
+
+		@Override
+		public boolean isValidConnection(EnumFacing side) {
+			return this.side == side;
+		}
+
+		@Override
+		public boolean isValid() {
+			return !isInvalid();
+		}
+
+		@Override
+		public StorageNetworkGrid constructGrid() {
+			return new StorageNetworkGrid();
+		}
+		@Override
+		public void onGridReload() {
+			grid.getData().dataSupplier = TileEntityAdvRouter.this::getData;
+		}
+		@Override
+		public void onGridPostReload() {
 		}
 	}
 
 	private ChannelSource[] routerFaces;
-	private StorageData data = new StorageData();
+	private DenseChannelSource[] routerFacesD;
 	private IControllerTile controller;
+	private StorageData data = new StorageData();
 
 	public TileEntityAdvRouter() {
 		routerFaces = new ChannelSource[6];
+		routerFacesD = new DenseChannelSource[6];
 		for (int i = 0;i < routerFaces.length;i++) {
-			routerFaces[i] = new ChannelSource(this, i);
+			routerFaces[i] = new ChannelSource(EnumFacing.getFront(i));
+			routerFacesD[i] = new DenseChannelSource(EnumFacing.getFront(i));
 		}
-	}
-
-	@Override
-	public void setData(StorageData data2) {
-		data = data2;
-	}
-
-	@Override
-	public IController getRouterOnSide(EnumFacing side) {
-		return routerFaces[side.ordinal()];
 	}
 
 	@Override
@@ -76,7 +129,12 @@ public class TileEntityAdvRouter extends TileEntityTomsMod implements IAdvRouter
 		for (int i = 0;i < routerFaces.length;i++) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("id", i);
-			routerFaces[i].writeToNBT(tag);
+			NBTTagCompound tagn = new NBTTagCompound();
+			routerFaces[i].writeToNBT(tagn);
+			NBTTagCompound tagd = new NBTTagCompound();
+			routerFacesD[i].writeToNBT(tagd);
+			tag.setTag("n", tagn);
+			tag.setTag("d", tagd);
 			list.appendTag(tag);
 		}
 		compound.setTag("data", list);
@@ -89,28 +147,37 @@ public class TileEntityAdvRouter extends TileEntityTomsMod implements IAdvRouter
 		NBTTagList list = compound.getTagList("data", 10);
 		for (int i = 0;i < list.tagCount();i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
-			routerFaces[tag.getInteger("id")].readFromNBT(tag);
+			NBTTagCompound tagn = tag.getCompoundTag("n");
+			NBTTagCompound tagd = tag.getCompoundTag("d");
+			routerFaces[tag.getInteger("id")].readFromNBT(tagn);
+			routerFacesD[tag.getInteger("id")].readFromNBT(tagd);
 		}
 	}
-
-	@Override
 	public StorageData getData() {
 		return controller != null ? controller.getData() : data;
 	}
 
 	@Override
 	public void updateEntity(IBlockState currentState) {
-		getData().update();
-		for (int i = 0;i < routerFaces.length;i++) {
-			routerFaces[i].update();
+		if(controller != null){
+			data = getData();
+			data.update();
+			for (int i = 0;i < routerFaces.length;i++) {
+				routerFaces[i].update();
+				routerFacesD[i].update();
+			}
+			if (!world.isRemote)
+				TomsModUtils.setBlockStateWithCondition(world, pos, currentState, AdvStorageSystemRouter.STATE, getData().networkState.fullyActive() && getData().showChannels() ? 2 : getData().networkState.isPowered() && getData().hasEnergy() ? 1 : 0);
+		}else{
+			if (!world.isRemote)
+				TomsModUtils.setBlockStateWithCondition(world, pos, currentState, AdvStorageSystemRouter.STATE, 0);
 		}
-		if (!world.isRemote)
-			TomsModUtils.setBlockStateWithCondition(world, pos, currentState, AdvStorageSystemRouter.STATE, getData().networkState.fullyActive() && getData().showChannels() ? 2 : getData().networkState.isPowered() && getData().hasEnergy() ? 1 : 0);
 	}
 
 	public void neighborUpdateGrid(EnumFacing side) {
 		for (int i = 0;i < routerFaces.length;i++) {
-			routerFaces[i].neighborUpdateGrid();
+			routerFaces[i].neighborUpdateGrid(false);
+			routerFacesD[i].neighborUpdateGrid(false);
 		}
 	}
 
@@ -125,23 +192,8 @@ public class TileEntityAdvRouter extends TileEntityTomsMod implements IAdvRouter
 	}
 
 	@Override
-	public boolean isValid() {
-		return !isInvalid();
-	}
-
-	@Override
-	public void markDirty2() {
-		markDirty();
-	}
-
-	@Override
-	public void updateData(boolean load) {
-
-	}
-
-	@Override
 	public BlockPos getSecurityStationPos() {
-		return controller != null ? controller.getSecurityStationPos() : data.getSecurityStationPos();
+		return controller != null ? controller.getSecurityStationPos() : null;
 	}
 
 	@Override
@@ -152,9 +204,25 @@ public class TileEntityAdvRouter extends TileEntityTomsMod implements IAdvRouter
 	@Override
 	public void setController(IControllerTile controller) {
 		this.controller = controller;
-		if (controller == null)
-			data = new StorageData();
 	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public <G extends IGrid<?, G>> IGridDevice<G> getDevice(EnumFacing facing, Class<G> gridClass, Object... objects) {
+		boolean dense = objects != null && objects.length > 0;
+		if(gridClass == StorageNetworkGrid.class && facing != null){
+			if(dense){
+				return (IGridDevice<G>) routerFacesD[facing.ordinal()];
+			}
+			return (IGridDevice<G>) routerFaces[facing.ordinal()];
+		}
+		return null;
+	}
+
+	@Override
+	public boolean isValid() {
+		return !isInvalid();
+	}
+
 	/*public static void main(String[] args) {
 		File in = new File(".", "advrouter/in");
 		File in2 = new File(".", "advrouter/in2");

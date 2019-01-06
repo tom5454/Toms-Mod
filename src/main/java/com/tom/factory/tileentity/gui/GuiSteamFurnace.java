@@ -18,14 +18,11 @@ public class GuiSteamFurnace extends GuiTomsMod {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float particalTick, int mouseX, int mouseY) {
 		super.drawGuiContainerBackgroundLayer(particalTick, mouseX, mouseY);
-		// float p1Per = (te.clientEnergy * 1F) / te.getMaxEnergyStored();
 		float p2Per = (TileEntitySteamFurnace.MAX_PROCESS_TIME - te.getField(0) * 1F) / TileEntitySteamFurnace.MAX_PROCESS_TIME;
-		// int p1 = MathHelper.floor_float(p1Per * 65);
 		double p2 = p2Per * 51;
-		// drawTexturedModalRect(guiLeft + 10, guiTop + 76 - p1, 176, 65 - p1,
-		// 12, p1);
 		if (te.getField(0) > 0)
 			drawTexturedModalRect(guiLeft + 65, guiTop + 35, 176, 65, p2, 16);
+		renderGearbox(guiLeft + 150, guiTop + 10, te.clientCanRun);
 	}
 
 	@Override

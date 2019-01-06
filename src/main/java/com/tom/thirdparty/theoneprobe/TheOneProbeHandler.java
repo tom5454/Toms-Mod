@@ -21,12 +21,14 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import com.google.common.base.Function;
 
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyStorageTile;
 import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.api.tileentity.TileEntityTomsModNoTicking;
 import com.tom.config.Config;
 import com.tom.energy.EnergyInit;
 import com.tom.lib.Configs;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyStorageTile;
+import com.tom.lib.api.tileentity.IOwnable;
 import com.tom.storage.tileentity.TMTank;
 import com.tom.thirdparty.waila.IIntegratedMultimeter;
 
@@ -173,9 +175,9 @@ public class TheOneProbeHandler implements Function<ITheOneProbe, Void>, IProbeI
 		//Block block = blockState.getBlock();
 		TileEntity tile = world.getTileEntity(data.getPos());
 		EnumFacing side = data.getSideHit();
-		if (tile instanceof TileEntityTomsMod) {
-			TileEntityTomsMod te = (TileEntityTomsMod) tile;
-			if (te.isTickSpeeded()) {
+		if (tile instanceof TileEntityTomsModNoTicking) {
+			TileEntityTomsModNoTicking te = (TileEntityTomsModNoTicking) tile;
+			if (te instanceof TileEntityTomsMod && ((TileEntityTomsMod) te).isTickSpeeded()) {
 				probeInfo.vertical().text(TextStyleClass.ERROR + "" + TextFormatting.OBFUSCATED + "!!!" + TextFormatting.RESET + " " + TextFormatting.RED + "" + TextFormatting.BOLD + translate("tomsMod.waila.speedingWarn") + " " + TextFormatting.OBFUSCATED + "!!!").vertical().text(TextStyleClass.ERROR + translate("tomsMod.waila.speedingDisabledInfo"));
 			}
 			if (te instanceof TMTank) {
@@ -212,6 +214,22 @@ public class TheOneProbeHandler implements Function<ITheOneProbe, Void>, IProbeI
 					}
 				}
 			}
+			if (te instanceof IOwnable) {
+				if(hasMultimeter(player, te)){
+					IOwnable c = (IOwnable) te;
+					probeInfo.horizontal().text(translate("tomsMod.waila.playerName")).text(" " + c.getOwnerName());
+				}
+			}
+			/*if (te instanceof ICustomMultimeterInformation) {
+				if(hasMultimeter(player, te)){
+					if(player.isSneaking()){
+						ICustomMultimeterInformation info = (ICustomMultimeterInformation) te;
+						List<ITextComponent> comp = info.getInformation(new ArrayList<>());
+					}else{
+						probeInfo.horizontal().text(translate("tomsMod.top.sneakToShowMultimeterInfo"));
+					}
+				}
+			}*/
 		}
 	}
 

@@ -19,12 +19,12 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.IFluidBlock;
 
-import com.tom.api.IValidationChecker;
 import com.tom.defense.ProjectorLensConfigEntry.CompiledProjectorLensConfigEntry.ProjectorLensUpgradeList;
 import com.tom.defense.item.ItemFieldUpgrade.UpgradeType;
 import com.tom.defense.item.ItemProjectorFieldType.FieldType;
 import com.tom.defense.tileentity.TileEntityForceField;
 import com.tom.handler.TMWorldHandler;
+import com.tom.lib.api.IValidationChecker;
 import com.tom.util.TomsModUtils;
 
 public class ProjectorLensConfigEntry {

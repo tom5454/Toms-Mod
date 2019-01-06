@@ -17,17 +17,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import com.tom.api.gui.GuiNumberValueBox;
-import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.gui.GuiNumberValueBox.GuiButtonNextNum;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.defense.ProjectorLensConfigEntry;
 import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationMain;
 import com.tom.defense.tileentity.inventory.ContainerProjectorLensConfigurationMain.ContainerProjectorLensConfig;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.util.TomsModUtils;
 
-public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INBTPacketReceiver {
+public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements IPacketReceiver {
 	private int selected = -1, showing = 0;
 	private List<ProjectorLensConfigEntry> entryList = new ArrayList<>();
 	private List<GuiButtonEntry> list = new ArrayList<>();
@@ -40,7 +41,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INB
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		NBTTagList list = message.getTagList("l", 10);
 		entryList.clear();
 		for (int i = 0;i < list.tagCount();i++) {
@@ -51,7 +52,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INB
 		int j = scaledresolution.getScaledHeight();
 		this.setWorldAndResolution(this.mc, i, j);
 		if (mc.player.openContainer instanceof INBTPacketReceiver) {
-			((INBTPacketReceiver) mc.player.openContainer).receiveNBTPacket(message);
+			((IPacketReceiver) mc.player.openContainer).receiveNBTPacket(pl, message);
 		}
 	}
 
@@ -97,7 +98,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INB
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id < 3)
-			this.sendButtonUpdate(button.id, selected);
+			this.sendButtonUpdateToContainer(button.id, selected);
 		else if (button instanceof GuiButtonScroll) {
 			GuiButtonScroll b = (GuiButtonScroll) button;
 			if (b.isDown)
@@ -217,7 +218,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INB
 		}
 	}
 
-	public static class GuiProjectorLensConfig extends GuiTomsMod implements INBTPacketReceiver {
+	public static class GuiProjectorLensConfig extends GuiTomsMod implements IPacketReceiver {
 		private GuiTextField fieldName;
 		private ProjectorLensConfigEntry entry;
 		private boolean textFieldFoucusedLast;
@@ -229,7 +230,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INB
 		}
 
 		@Override
-		public void receiveNBTPacket(NBTTagCompound message) {
+		public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 			entry = ProjectorLensConfigEntry.fromNBTClient(message);
 			fieldName.setText(entry.getName());
 			offsetX.num = entry.getOffsetX();
@@ -267,7 +268,7 @@ public class GuiProjectorLensConfigurationMain extends GuiTomsMod implements INB
 		protected void actionPerformed(GuiButton button) throws IOException {
 			if (button instanceof GuiButtonNextNum) {
 				GuiNumberValueBox b = ((GuiButtonNextNum) button).parent;
-				this.sendButtonUpdate(b.id, b.num);
+				this.sendButtonUpdateToContainer(b.id, b.num);
 			}
 		}
 

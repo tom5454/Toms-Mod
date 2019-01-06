@@ -44,7 +44,7 @@ public class GuiImportBus extends GuiMultipartBase {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			sendButtonUpdateP(0, te, (((PartImportBus) te).isWhiteList() ? 0 : 1));
+			sendButtonUpdateToTile(0, (((PartImportBus) te).isWhiteList() ? 0 : 1));
 		}
 	}
 

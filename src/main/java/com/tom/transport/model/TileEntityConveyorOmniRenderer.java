@@ -24,16 +24,16 @@ public class TileEntityConveyorOmniRenderer extends TileEntitySpecialRendererTom
 	public void renderTileEntityAt(TileEntityConveyorOmniBase te, double x, double y, double z, float partialTicks, int destroyStage, IBlockState state) {
 		if (RENDER_ITEM == null)
 			RENDER_ITEM = new RenderEntityItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem()) {
-				@Override
-				public boolean shouldBob() {
-					return false;
-				}
+			@Override
+			public boolean shouldBob() {
+				return false;
+			}
 
-				@Override
-				public boolean shouldSpreadItems() {
-					return false;
-				}
-			};
+			@Override
+			public boolean shouldSpreadItems() {
+				return false;
+			}
+		};
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -158,6 +158,7 @@ public class TileEntityConveyorOmniRenderer extends TileEntitySpecialRendererTom
 		GL11.glScalef(1.0F, -1F, -1F);
 		model.render(te.getItemPos(), 0.0625F);
 		GlStateManager.popMatrix();
+		renderExtra(te, partialTicks, destroyStage, state);
 		ItemStack stack = te.getStack();
 		if (!stack.isEmpty()) {
 			float itemRot = 0.5F;
@@ -227,5 +228,7 @@ public class TileEntityConveyorOmniRenderer extends TileEntitySpecialRendererTom
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 	}
+	public void renderExtra(TileEntityConveyorOmniBase te, float partialTicks, int destroyStage, IBlockState state){
 
+	}
 }

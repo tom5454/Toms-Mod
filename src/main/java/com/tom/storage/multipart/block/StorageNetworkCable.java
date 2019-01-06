@@ -1,7 +1,6 @@
 package com.tom.storage.multipart.block;
 
-import static com.tom.api.recipes.RecipeHelper.addRecipe;
-import static com.tom.api.recipes.RecipeHelper.addShapelessRecipe;
+import static com.tom.api.recipes.RecipeHelper.*;
 
 import java.awt.Color;
 import java.util.Collections;
@@ -320,7 +319,7 @@ public class StorageNetworkCable extends BlockDuctBase implements IModelRegister
 	}
 
 	public static enum CableType implements IStringSerializable {
-		NORMAL(2D / 16D), COVERED(3D / 16D), SMART(3D / 16D), DENSE(5D / 16D);
+		NORMAL(2D / 16D), COVERED(3D / 16D), SMART(3D / 16D), DENSE(6D / 16D);
 		public static final CableType[] VALUES = values();
 		private final double size;
 

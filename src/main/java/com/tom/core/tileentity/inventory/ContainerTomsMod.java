@@ -8,15 +8,23 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import com.tom.api.inventory.ISlotClickListener;
 import com.tom.api.inventory.ItemIgnoreList;
 import com.tom.api.inventory.SlotLocked;
 import com.tom.api.inventory.SlotPhantom;
+import com.tom.lib.network.GuiSyncHandler;
+import com.tom.lib.network.GuiSyncHandler.ISyncContainer;
 import com.tom.util.TomsModUtils;
 
-public abstract class ContainerTomsMod extends Container {
+public abstract class ContainerTomsMod extends Container implements ISyncContainer {
 	public static final int phantomSlotChange = 4;
-
+	public GuiSyncHandler syncHandler;
+	public ContainerTomsMod() {
+		syncHandler = new GuiSyncHandler(this);
+	}
 	protected void addPlayerSlots(InventoryPlayer playerInventory, int x, int y) {
 		for (int i = 0;i < 3;++i) {
 			for (int j = 0;j < 9;++j) {
@@ -96,5 +104,20 @@ public abstract class ContainerTomsMod extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
 		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public GuiSyncHandler getSyncHandler() {
+		return syncHandler;
+	}
+	@Override
+	public void detectAndSendChanges() {
+		super.detectAndSendChanges();
+		syncHandler.detectAndSendChanges(listeners);
+	}
+	@Override
+	@SideOnly(Side.CLIENT)
+	public final void updateProgressBar(int id, int data) {
+		syncHandler.updateProgressBar(id, data);
 	}
 }

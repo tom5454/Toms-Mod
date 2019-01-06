@@ -15,8 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
-import com.tom.api.map.RenderType;
 import com.tom.core.map.MapHandler;
+import com.tom.lib.api.map.RenderType;
 import com.tom.util.TomsModUtils;
 
 public class CommandWaypoint extends CommandBase {

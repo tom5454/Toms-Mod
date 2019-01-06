@@ -1,6 +1,6 @@
 package com.tom.factory.tileentity;
 
-import static com.tom.api.energy.EnergyType.*;
+import static com.tom.lib.api.energy.EnergyType.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +23,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 
 import com.tom.api.block.IItemTile;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.Config;
@@ -34,6 +31,9 @@ import com.tom.defense.ForceDeviceControlType;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockMachineBase;
 import com.tom.factory.block.SteamAlloySmelter;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyReceiver;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 import com.tom.util.TomsModUtils;
 
@@ -343,7 +343,7 @@ public abstract class TileEntityMachineBase extends TileEntityTomsMod implements
 	private int[][] SLOTS = new int[6][0];
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound tag) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound tag) {
 		outputSides = tag.getByte("s");
 		rs = ForceDeviceControlType.get(tag.getInteger("r"));
 		powersharing = tag.getBoolean("p");

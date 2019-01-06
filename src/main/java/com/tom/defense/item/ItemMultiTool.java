@@ -30,7 +30,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.IModelRegisterRequired;
-import com.tom.api.energy.ItemEnergyContainer;
 import com.tom.api.item.IConfigurator;
 import com.tom.api.item.ISwitch;
 import com.tom.api.item.IWrench;
@@ -42,8 +41,9 @@ import com.tom.defense.tileentity.TileEntityForceField;
 import com.tom.defense.tileentity.TileEntityForceFieldProjector;
 import com.tom.handler.ConfiguratorHandler;
 import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.util.TomsModUtils;
 import com.tom.handler.WrenchHandler;
+import com.tom.lib.api.energy.ItemEnergyContainer;
+import com.tom.util.TomsModUtils;
 
 public class ItemMultiTool extends ItemEnergyContainer implements IWrench, ISwitch, IConfigurator, IModelRegisterRequired {
 	private static final double TRANSPORTER_USAGE = 500;

@@ -11,12 +11,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 
+import com.tom.api.grid.StorageNetworkGrid;
 import com.tom.api.inventory.IStorageInventory.IUpdateable;
 import com.tom.lib.handler.FileManager;
 import com.tom.storage.handler.CacheRegistry;
 import com.tom.storage.handler.ICache;
 import com.tom.storage.handler.ICraftable;
-import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.util.TMLogger;
 import com.tom.util.TomsModUtils;
 
@@ -45,6 +45,7 @@ public class StorageCellInventory implements IStorageInventory, IUpdateable {
 	private boolean dirty = false;
 	private List<StorageCellInventory.StoredCraftable> data = new ArrayList<>();
 	private final StorageNetworkGrid grid;
+	private boolean valid = true;
 
 	public StorageCellInventory(ItemStack cellStack, int priority, int invSize, StorageNetworkGrid grid) {
 		this.cellStack = cellStack;
@@ -284,5 +285,16 @@ public class StorageCellInventory implements IStorageInventory, IUpdateable {
 	@Override
 	public long getStorageValue() {
 		return cellSize;
+	}
+
+	@Override
+	public void saveAndInvalidate() {
+		save();
+		valid = false;
+	}
+
+	@Override
+	public boolean isValid() {
+		return valid;
 	}
 }

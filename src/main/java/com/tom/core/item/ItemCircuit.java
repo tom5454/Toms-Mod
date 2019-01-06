@@ -159,4 +159,9 @@ public class ItemCircuit extends Item implements IModelRegisterRequired, ICustom
 		ret.put("count", count);
 		return ret;
 	}
+	@Override
+	public String getCustomName(ItemStack stack) {
+		String id = !stack.hasTagCompound() ? "invalid" : stack.getTagCompound().getString("id");
+		return "circuit_" + id;
+	}
 }

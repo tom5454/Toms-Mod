@@ -12,9 +12,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import com.tom.api.block.BlockMultiblockController;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
 import com.tom.factory.FactoryInit;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 import com.tom.util.TomsModUtils;

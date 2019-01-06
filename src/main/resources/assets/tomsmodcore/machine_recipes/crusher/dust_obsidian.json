@@ -4,9 +4,10 @@
     "data": 9,
     "count": 1
   },
+  "level": 0,
   "out": {
     "item": "tomsmodcore:dust",
     "data": 17,
-    "count": 1
+    "count": 2
   }
 }

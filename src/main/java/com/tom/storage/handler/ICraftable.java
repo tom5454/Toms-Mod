@@ -12,7 +12,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingReportScreen;
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.ICraftingReportScreen;
 
 public interface ICraftable {
 	public static class CraftableComparatorAmount implements IReversableCraftableComparator {

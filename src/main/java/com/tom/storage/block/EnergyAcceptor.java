@@ -26,10 +26,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.BlockGridDevice;
 import com.tom.api.block.IModelRegisterRequired;
-import com.tom.api.energy.EnergyType;
+import com.tom.api.grid.StorageNetworkGrid;
 import com.tom.api.tileentity.TileEntityGridDeviceBase;
 import com.tom.core.CoreInit;
-import com.tom.storage.handler.StorageNetworkGrid;
+import com.tom.lib.api.energy.EnergyType;
 import com.tom.storage.tileentity.TileEntityEnergyAcceptor;
 
 public class EnergyAcceptor extends BlockGridDevice implements IModelRegisterRequired {

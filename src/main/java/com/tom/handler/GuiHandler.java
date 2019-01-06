@@ -49,7 +49,7 @@ import com.tom.factory.tileentity.TileEntityLaserEngraver;
 import com.tom.factory.tileentity.TileEntityMixer;
 import com.tom.factory.tileentity.TileEntityMultiblockController;
 import com.tom.factory.tileentity.TileEntityPlasticProcessor;
-import com.tom.factory.tileentity.TileEntityPlateBlendingMachine;
+import com.tom.factory.tileentity.TileEntityPlateBendingMachine;
 import com.tom.factory.tileentity.TileEntityRefinery;
 import com.tom.factory.tileentity.TileEntityRubberBoiler;
 import com.tom.factory.tileentity.TileEntitySolderingStation;
@@ -58,7 +58,7 @@ import com.tom.factory.tileentity.TileEntitySteamCrusher;
 import com.tom.factory.tileentity.TileEntitySteamFurnace;
 import com.tom.factory.tileentity.TileEntitySteamFurnaceAdv;
 import com.tom.factory.tileentity.TileEntitySteamMixer;
-import com.tom.factory.tileentity.TileEntitySteamPlateBlender;
+import com.tom.factory.tileentity.TileEntitySteamPlateBendingMachine;
 import com.tom.factory.tileentity.TileEntitySteamRubberProcessor;
 import com.tom.factory.tileentity.TileEntitySteamSolderingStation;
 import com.tom.factory.tileentity.TileEntityUVLightbox;
@@ -83,7 +83,7 @@ import com.tom.factory.tileentity.gui.GuiLaserEngraver;
 import com.tom.factory.tileentity.gui.GuiMBFuelRod;
 import com.tom.factory.tileentity.gui.GuiMixer;
 import com.tom.factory.tileentity.gui.GuiPlasticProcessor;
-import com.tom.factory.tileentity.gui.GuiPlateBlendingMachine;
+import com.tom.factory.tileentity.gui.GuiPlateBendingMachine;
 import com.tom.factory.tileentity.gui.GuiRefinery;
 import com.tom.factory.tileentity.gui.GuiRubberBoiler;
 import com.tom.factory.tileentity.gui.GuiSolderingStation;
@@ -91,7 +91,7 @@ import com.tom.factory.tileentity.gui.GuiSteamAlloySmelter;
 import com.tom.factory.tileentity.gui.GuiSteamCrusher;
 import com.tom.factory.tileentity.gui.GuiSteamFurnace;
 import com.tom.factory.tileentity.gui.GuiSteamMixer;
-import com.tom.factory.tileentity.gui.GuiSteamPlateBlender;
+import com.tom.factory.tileentity.gui.GuiSteamPlateBender;
 import com.tom.factory.tileentity.gui.GuiSteamRubberProcessor;
 import com.tom.factory.tileentity.gui.GuiSteamSolderingStation;
 import com.tom.factory.tileentity.gui.GuiUVLightbox;
@@ -116,7 +116,7 @@ import com.tom.factory.tileentity.inventory.ContainerLaserEngraver;
 import com.tom.factory.tileentity.inventory.ContainerMBFuelRod;
 import com.tom.factory.tileentity.inventory.ContainerMixer;
 import com.tom.factory.tileentity.inventory.ContainerPlasticProcessor;
-import com.tom.factory.tileentity.inventory.ContainerPlateBlendingMachine;
+import com.tom.factory.tileentity.inventory.ContainerPlateBendingMachine;
 import com.tom.factory.tileentity.inventory.ContainerRefinery;
 import com.tom.factory.tileentity.inventory.ContainerRubberBoiler;
 import com.tom.factory.tileentity.inventory.ContainerSolderingStation;
@@ -124,7 +124,7 @@ import com.tom.factory.tileentity.inventory.ContainerSteamAlloySmelter;
 import com.tom.factory.tileentity.inventory.ContainerSteamCrusher;
 import com.tom.factory.tileentity.inventory.ContainerSteamFurnace;
 import com.tom.factory.tileentity.inventory.ContainerSteamMixer;
-import com.tom.factory.tileentity.inventory.ContainerSteamPlateBlender;
+import com.tom.factory.tileentity.inventory.ContainerSteamPlateBender;
 import com.tom.factory.tileentity.inventory.ContainerSteamRubberProcessor;
 import com.tom.factory.tileentity.inventory.ContainerSteamSolderingStation;
 import com.tom.factory.tileentity.inventory.ContainerUVLightbox;
@@ -185,13 +185,13 @@ public class GuiHandler implements IGuiHandler {
 		configurator, securityStation, multitoolWriter, projectorLensConfigMain, projectorLensConfig,
 		forceFieldProjector, defenseStation, basicTerminalBlock, drive, multipartMid, multipartUp,
 		multipartDown, multipartNorth, multipartSouth, multipartEast, multipartWest, blockInterface,
-		patternTerminal, crusher, plateBlendingMachine, wireMill, coilerPlant, basicBoiler, advBoiler,
-		steamCrusher, steamFurnace, steamPlateBlender, steamFurnaceAdv, electricFurnace, alloySmelter,
+		patternTerminal, crusher, plateBendingMachine, wireMill, coilerPlant, basicBoiler, advBoiler,
+		steamCrusher, steamFurnace, steamPlateBender, steamFurnaceAdv, electricFurnace, alloySmelter,
 		steamAlloySmelter, electricFurnaceAdv, blockCraftingTerminal, patternOptions, steamSolderingStation,
 		cokeOven, blastFurnace, solderingStation, fluidTransposer, industrialBlastFurnace, refinery, charger,
 		geoBoiler, fluidBoiler, advFluidBoiler, uvLightbox, plasticProcessor, steamMixer, mixer, laserEngraver,
 		mbfuelrod, storageNetworkController, configuratorChoose, rubberBoiler, patternOptionsPart, rubberProcessor,
-		craftingProgress, eRubberProcessor, research,
+		craftingProgress, eRubberProcessor, research, steamCrusherAdv,
 
 		;
 		private static final GuiIDs[] VALUES = values();
@@ -262,8 +262,8 @@ public class GuiHandler implements IGuiHandler {
 			return new ContainerPatternTerminal(player.inventory, (TileEntityPatternTerminal) world.getTileEntity(new BlockPos(x, y, z)));
 		case crusher:
 			return new ContainerCrusher(player.inventory, (TileEntityCrusher) world.getTileEntity(new BlockPos(x, y, z)));
-		case plateBlendingMachine:
-			return new ContainerPlateBlendingMachine(player.inventory, (TileEntityPlateBlendingMachine) world.getTileEntity(new BlockPos(x, y, z)));
+		case plateBendingMachine:
+			return new ContainerPlateBendingMachine(player.inventory, (TileEntityPlateBendingMachine) world.getTileEntity(new BlockPos(x, y, z)));
 		case wireMill:
 			return new ContainerWireMill(player.inventory, (TileEntityWireMill) world.getTileEntity(new BlockPos(x, y, z)));
 		case coilerPlant:
@@ -286,8 +286,8 @@ public class GuiHandler implements IGuiHandler {
 			return new ContainerSteamFurnace(player.inventory, (TileEntitySteamFurnace) world.getTileEntity(new BlockPos(x, y, z)));
 		case steamFurnaceAdv:
 			return new ContainerAdvSteamFurnace(player.inventory, (TileEntitySteamFurnaceAdv) world.getTileEntity(new BlockPos(x, y, z)));
-		case steamPlateBlender:
-			return new ContainerSteamPlateBlender(player.inventory, (TileEntitySteamPlateBlender) world.getTileEntity(new BlockPos(x, y, z)));
+		case steamPlateBender:
+			return new ContainerSteamPlateBender(player.inventory, (TileEntitySteamPlateBendingMachine) world.getTileEntity(new BlockPos(x, y, z)));
 		case blockCraftingTerminal:
 			return new ContainerCraftingTerminal(player.inventory, (TileEntityCraftingTerminal) world.getTileEntity(new BlockPos(x, y, z)));
 		case patternOptions:
@@ -412,8 +412,8 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiPatternTerminal(player.inventory, (TileEntityPatternTerminal) world.getTileEntity(new BlockPos(x, y, z)));
 		case crusher:
 			return new GuiCrusher(player.inventory, (TileEntityCrusher) world.getTileEntity(new BlockPos(x, y, z)));
-		case plateBlendingMachine:
-			return new GuiPlateBlendingMachine(player.inventory, (TileEntityPlateBlendingMachine) world.getTileEntity(new BlockPos(x, y, z)));
+		case plateBendingMachine:
+			return new GuiPlateBendingMachine(player.inventory, (TileEntityPlateBendingMachine) world.getTileEntity(new BlockPos(x, y, z)));
 		case wireMill:
 			return new GuiWireMill(player.inventory, (TileEntityWireMill) world.getTileEntity(new BlockPos(x, y, z)));
 		case coilerPlant:
@@ -436,8 +436,8 @@ public class GuiHandler implements IGuiHandler {
 			return new GuiSteamFurnace(player.inventory, (TileEntitySteamFurnace) world.getTileEntity(new BlockPos(x, y, z)));
 		case steamFurnaceAdv:
 			return new GuiAdvSteamFurnace(player.inventory, (TileEntitySteamFurnaceAdv) world.getTileEntity(new BlockPos(x, y, z)));
-		case steamPlateBlender:
-			return new GuiSteamPlateBlender(player.inventory, (TileEntitySteamPlateBlender) world.getTileEntity(new BlockPos(x, y, z)));
+		case steamPlateBender:
+			return new GuiSteamPlateBender(player.inventory, (TileEntitySteamPlateBendingMachine) world.getTileEntity(new BlockPos(x, y, z)));
 		case blockCraftingTerminal:
 			return new GuiCraftingTerminal(player.inventory, (TileEntityCraftingTerminal) world.getTileEntity(new BlockPos(x, y, z)));
 		case patternOptions:

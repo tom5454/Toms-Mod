@@ -14,12 +14,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import com.tom.api.tileentity.IConfigurable;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.core.CoreInit;
 import com.tom.handler.ConfiguratorHandler;
 import com.tom.handler.ConfiguratorHandler.ConfigurableDevice;
 import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.network.messages.MessageNBT;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 import com.tom.util.TomsModUtils;
 
 public class ContainerConfigurator extends ContainerTomsMod {
@@ -56,7 +55,7 @@ public class ContainerConfigurator extends ContainerTomsMod {
 		if (te == null)
 			return;
 		te.getOption().addSlotsToList(te, slotList, 60, 62);// 100-te.getOption().getWidth(),
-															// 70-te.getOption().getHeight();
+		// 70-te.getOption().getHeight();
 		slotList.stream().map(SlotData::new).forEach(v -> {
 			slotData.add(v);
 			super.addSlotToContainer(v.s);
@@ -102,7 +101,7 @@ public class ContainerConfigurator extends ContainerTomsMod {
 		}
 	}
 
-	public static class ContainerConfiguratorChoose extends ContainerTomsMod implements IGuiTile {
+	public static class ContainerConfiguratorChoose extends ContainerTomsMod implements IPacketReceiver {
 		private List<ConfigurableDevice> d;
 		private boolean sent;
 		private BlockPos pos;
@@ -126,7 +125,7 @@ public class ContainerConfigurator extends ContainerTomsMod {
 				sent = true;
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setTag("l", l);
-				MessageNBT.sendToAll(tag, listeners);
+				syncHandler.sendNBTToGui(tag);
 			}
 		}
 

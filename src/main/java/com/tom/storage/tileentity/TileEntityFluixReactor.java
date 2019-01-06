@@ -28,10 +28,10 @@ import com.tom.core.TMResource;
 import com.tom.core.TMResource.SlabState;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.BlockComponents.ComponentVariants;
+import com.tom.factory.block.BlockRefinery;
+import com.tom.util.Checker.RunnableStorage;
 import com.tom.util.MultiblockBlockChecker;
 import com.tom.util.TomsModUtils;
-import com.tom.util.Checker.RunnableStorage;
-import com.tom.factory.block.BlockRefinery;
 
 import com.tom.core.tileentity.TileEntityHidden.ILinkableCapabilities;
 

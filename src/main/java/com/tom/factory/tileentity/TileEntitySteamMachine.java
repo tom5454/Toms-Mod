@@ -205,4 +205,7 @@ public abstract class TileEntitySteamMachine extends TileEntityTomsMod implement
 	public boolean canRun(){
 		return tank.getFluidAmount() > 1200;
 	}
+	public void setClCanRun(boolean clientCanRun) {
+		this.clientCanRun = clientCanRun;
+	}
 }

@@ -1,48 +1,40 @@
 {
   "researches": [
-    "tomsmodcore:mvmachines"
+    "tomsmodcore:basiclvmachines"
   ],
-  "level": "tomsMod.craftingLevel.esoldering",
+  "level": "bronze",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:tm.crusher",
-      "data": 1,
+      "data": 2,
       "count": 1
     },
     "pattern": [
-      "STS",
-      "FM-",
+      "SHS",
+      "ECE",
       "SES"
     ],
     "type": "forge:ore_shaped",
     "key": {
       "S": {
-        "ore": "plateTitanium",
+        "ore": "plateSteel",
         "type": "forge:ore_dict"
       },
-      "T": {
-        "item": "tomsmodenergy:transformerlmv",
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
         "data": 0
       },
       "E": {
         "ctype": "a",
         "count": 1,
-        "id": "normalecirc",
+        "id": "basicecirc",
         "type": "tomsmodcore:circuit"
       },
-      "F": {
-        "item": "tomsmodcore:machineframetitanium",
-        "data": 0
-      },
-      "M": {
-        "item": "tomsmodfactory:tm.crusher",
-        "data": 2
-      },
-      "-": {
-        "ore": "cableElectrum",
+      "H": {
+        "ore": "grinderDiamond",
         "type": "forge:ore_dict"
       }
     }
   },
-  "crafting_time": 1500
+  "crafting_time": 1000
 }

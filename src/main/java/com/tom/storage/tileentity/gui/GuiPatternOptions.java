@@ -25,7 +25,6 @@ import net.minecraft.world.World;
 import com.tom.api.gui.GuiNumberValueBox;
 import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.inventory.SlotPhantom;
-import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.tileentity.IPatternTerminal;
 import com.tom.client.GuiButtonTransparent;
 import com.tom.lib.Keys;
@@ -34,7 +33,7 @@ import com.tom.storage.tileentity.gui.GuiPatternTerminal.GuiButtonUseContainerIt
 import com.tom.storage.tileentity.inventory.ContainerPatternOptions;
 import com.tom.util.TomsModUtils;
 
-public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver {
+public class GuiPatternOptions extends GuiTomsMod {
 	private ItemStack backButton;
 	private GuiButtonTransparent buttonBack;
 	private IPatternTerminal te;
@@ -53,12 +52,14 @@ public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver 
 		super(new ContainerPatternOptions(playerInv, te), "patternOptionsGui");
 		backButton = te.getButtonStack();
 		this.te = te;
+		syncHandler.registerListener(0, this::receiveNBTPacket);
 	}
 
 	public GuiPatternOptions(EntityPlayer player, World world, BlockPos createBlockPos, int z) {
 		super(new ContainerPatternOptions(player, world, createBlockPos, z), "patternOptionsGui");
 		this.te = ((ContainerPatternOptions) inventorySlots).te;
 		backButton = te.getButtonStack();
+		syncHandler.registerListener(0, this::receiveNBTPacket);
 	}
 
 	@Override
@@ -371,7 +372,6 @@ public class GuiPatternOptions extends GuiTomsMod implements INBTPacketReceiver 
 		}
 	}
 
-	@Override
 	public void receiveNBTPacket(NBTTagCompound message) {
 		if (message.getBoolean("isp")) {
 			NBTTagList list = message.getTagList("l", 10);

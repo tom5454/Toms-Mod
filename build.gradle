@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "2.1.1_ALPHA_MC-1.12.2_build-1"
+version = "2.1.3_ALPHA_MC-1.12.2_build-0"
 group = "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TomsMod"
 
@@ -21,7 +21,7 @@ compileJava {
 }
 repositories {
     maven { url "http://dvs1.progwml6.com/files/maven" }
-    maven { url "http://tehnut.info/maven" }
+    maven { url "https://tehnut.info/maven" }
     maven { url "http://maven.amadornes.com/" }
     maven { // TOP
         name 'tterrag maven'

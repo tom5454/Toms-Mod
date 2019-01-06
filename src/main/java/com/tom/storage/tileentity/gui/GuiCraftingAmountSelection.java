@@ -18,10 +18,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
+import com.tom.api.grid.StorageNetworkGrid.IStorageTerminalGui;
 import com.tom.api.gui.GuiTomsMod;
 import com.tom.client.GuiButtonTransparent;
 import com.tom.lib.utils.RenderUtil;
-import com.tom.storage.handler.StorageNetworkGrid.IStorageTerminalGui;
 import com.tom.util.TMLogger;
 import com.tom.util.TomsModUtils;
 

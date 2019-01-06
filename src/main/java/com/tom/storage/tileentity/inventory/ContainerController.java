@@ -14,6 +14,7 @@ public class ContainerController extends ContainerTomsMod {
 	public ContainerController(InventoryPlayer playerInv, TileEntityStorageNetworkController te) {
 		this.te = te;
 		addPlayerSlots(playerInv, 8, 94);
+		syncHandler.setReceiver(te);
 	}
 
 	@Override

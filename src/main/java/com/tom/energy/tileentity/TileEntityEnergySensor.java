@@ -8,11 +8,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyHandler;
-import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.IPeripheralProxyControllable;
 import com.tom.api.tileentity.TileEntityTomsMod;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyHandler;
+import com.tom.lib.api.energy.IEnergyReceiver;
 import com.tom.util.TomsModUtils;
 
 import dan200.computercraft.api.lua.ILuaContext;

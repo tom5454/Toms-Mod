@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:soldering"
+  ],
+  "level": "soldering",
+  "recipe": {
+    "result": {
+      "item": "tomsmodcore:material",
+      "data": 71,
+      "count": 2
+    },
+    "pattern": [
+      "GGG",
+      "GMG",
+      "---"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "G": {
+        "ore": "paneGlass",
+        "type": "forge:ore_dict"
+      },
+      "M": {
+        "ore": "meshCopper",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "cableCopper",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 80
+}

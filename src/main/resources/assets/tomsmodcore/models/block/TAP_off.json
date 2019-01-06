@@ -13,8 +13,8 @@
     },
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "textures": {
-        "particle": "blocks/tm/TAPOff",
-        "0": "blocks/tm/TAPOff"
+        "particle": "tomsmodcore:blocks/TAPOff",
+        "0": "tomsmodcore:blocks/TAPOff"
     },
     "elements": [
         {

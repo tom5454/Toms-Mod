@@ -19,16 +19,16 @@ import com.tom.transport.TransportInit;
 
 public class ResearchLoader {
 	public static Research power, hammer, mortar, bronzeAge, conveyorBelts, fluidDucts, basicBoiler,
-	basicBronzeMachines, bronzeAlloySmelter, bronzePlateBlender, refinedBricks, cokeOven, blastFurnace,
-	improvedBlastFurnace, advancedTank, steelBoiler, steelFurnace, rubberProcessing, soldering, basicTurbine,
-	multimeter, lvCable, batteryBox, basicLvMachines, wireProcessing, speedUpgrade, lvPlateBlender,
+	basicBronzeMachines, bronzeAlloySmelter, bronzePlateBendingMachine, refinedBricks, cokeOven, blastFurnace,
+	improvedBlastFurnace, advancedTank, steelBoiler, steelFurnace, steelCrusher, rubberProcessing, soldering,
+	basicTurbine, multimeter, lvCable, batteryBox, basicLvMachines, wireProcessing, speedUpgrade, lvPlateBendingMachine,
 	lvAlloySmelter, waterCollector, pump, fluidTransposer, eSolderingStation, solarPanel,
 	industrialBlastFurnace, mvTransformer, mvCable, mvCircuit, mvMachines, refinery, multiblockComponents,
 	plasticProcessing, electrolyzer, centrifuge, advancedMultiblockParts, hvTransformer, advancedCircuit,
-	hvCable, hvMachines, eliteTank, ultimateTank, limitableChest, advancedExtruder, mvTurbine, charger,
+	hvCable, hvMachines, eliteTank, ultimateTank, limitableChest, mvTurbine, charger,
 	configurator, geoThermalBoiler, geoThermalGenerator, liquidFueledBoiler, liquidFueledSteelBoiler,
 	liquidFueledGenerator, uvLightbox, steamMixer, mixer, laserEngraver, basicChipset, advChipset,
-	advancedExtruder2, machineUpgrades, powerConverterModules, electricalRubberProcessing;
+	machineUpgrades, powerConverterModules, electricalRubberProcessing, enderLinkPower, advWaterCollector;
 
 	public static void init() {
 		CoreInit.log.info("Loading Researches...");
@@ -39,15 +39,17 @@ public class ResearchLoader {
 		basicBoiler = new Research("basicBoiler", new ItemStack(FactoryInit.basicBoiler)).setResearchTime(300).addParent(bronzeAge).addRequiredItem(new ItemStack(Items.CLAY_BALL, 2)).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.PLATE, 4)).addRequiredItem(new ItemStack(Blocks.BRICK_BLOCK, 2)).addRequiredScan(Blocks.FURNACE, -1, "tile.furnace.name").addRequiredScan(Blocks.LIT_FURNACE, -1, "tile.lit_furnace.name");
 		basicBronzeMachines = new Research("basicBronzeMachines", new ItemStack(FactoryInit.steamFurnace)).setResearchTime(300).addParent(basicBoiler).addRequiredItem(new ItemStack(Blocks.FURNACE)).addRequiredItem(new ItemStack(Items.CLAY_BALL, 2)).addRequiredItem(new ItemStack(Blocks.BRICK_BLOCK, 2));
 		bronzeAlloySmelter = new Research("bronzeAlloySmelter", new ItemStack(FactoryInit.steamAlloySmelter)).setResearchTime(350).addParent(basicBronzeMachines).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.DUST)).addRequiredItem(TMResource.COPPER.getStackNormal(Type.INGOT)).addRequiredItem(new ItemStack(Blocks.FURNACE));
-		bronzePlateBlender = new Research("bronzePlateBlender", new ItemStack(FactoryInit.steamPlateBlender)).setResearchTime(350).addParent(basicBronzeMachines).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.PLATE, 2)).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.INGOT, 3));
-		refinedBricks = new Research("refinedBricks", CraftingMaterial.REFINED_BRICK.getStackNormal()).setComplexity(ResearchComplexity.BRONZE).setResearchTime(400).addParent(bronzeAlloySmelter).addParent(bronzePlateBlender).addRequiredItem(new ItemStack(Items.CLAY_BALL, 10)).addRequiredItem(new ItemStack(Items.BRICK, 2)).addRequiredItem(new ItemStack(Items.NETHERBRICK)).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.PLATE));
+		bronzePlateBendingMachine = new Research("bronzePlateBender", new ItemStack(FactoryInit.steamPlateBendeingMachine)).setResearchTime(350).addParent(basicBronzeMachines).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.PLATE, 2)).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.INGOT, 3));
+		refinedBricks = new Research("refinedBricks", CraftingMaterial.REFINED_BRICK.getStackNormal()).setComplexity(ResearchComplexity.BRONZE).setResearchTime(400).addParent(bronzeAlloySmelter).addParent(bronzePlateBendingMachine).addRequiredItem(new ItemStack(Items.CLAY_BALL, 10)).addRequiredItem(new ItemStack(Items.BRICK, 2)).addRequiredItem(new ItemStack(Items.NETHERBRICK)).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.PLATE));
 		cokeOven = new Research("cokeOven", new ItemStack(FactoryInit.cokeOven)).setComplexity(ResearchComplexity.BRONZE).addParent(refinedBricks).addRequiredItem(new ItemStack(Blocks.COAL_BLOCK)).addRequiredItem(new ItemStack(Blocks.SAND, 16)).addRequiredItem(new ItemStack(Items.BRICK, 2)).setResearchTime(500).addRequiredScan(Blocks.SAND, 0, "tile.sand.name").addRequiredItem(CraftingMaterial.REFINED_BRICK.getStackNormal());
 		blastFurnace = new Research("blastFurnace", new ItemStack(FactoryInit.blastFurnace)).setComplexity(ResearchComplexity.BRONZE).addParent(cokeOven).addRequiredItem(new ItemStack(Items.MAGMA_CREAM)).setResearchTime(550).addRequiredItem(new ItemStack(Blocks.SOUL_SAND, 4)).addRequiredScan(Blocks.SOUL_SAND, 0, "tile.soul_sand.name").addRequiredItem(new ItemStack(Items.NETHERBRICK)).addRequiredScan(Blocks.NETHER_BRICK, -1, "tile.nether_brick.name").addRequiredItem(CraftingMaterial.REFINED_BRICK.getStackNormal());
 		steelBoiler = new Research("advBoiler", new ItemStack(FactoryInit.advBoiler)).setComplexity(ResearchComplexity.BRONZE).addRequiredItem(TMResource.STEEL.getStackNormal(Type.INGOT, 4)).addRequiredItem(new ItemStack(Blocks.FURNACE)).setResearchTime(600).addParent(blastFurnace);
 		steelFurnace = new Research("advSteamFurnace", new ItemStack(FactoryInit.advSteamFurnace)).setComplexity(ResearchComplexity.BRONZE).addParent(steelBoiler).addRequiredItem(new ItemStack(FactoryInit.steamFurnace)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 4)).setResearchTime(700);
+		steelCrusher = new Research("advSteamCrusher", new ItemStack(FactoryInit.advSteamCrusher)).setComplexity(ResearchComplexity.BRONZE).addParent(steelBoiler).addRequiredItem(new ItemStack(FactoryInit.steamCrusher)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 4)).setResearchTime(700);
 		rubberProcessing = new Research("rubberProcessing", CraftingMaterial.BOTTLE_OF_RESIN.getStackNormal()).setComplexity(ResearchComplexity.BRONZE).addParent(steelBoiler).addRequiredItem(new ItemStack(FactoryInit.steamFurnace)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 4)).addRequiredItem(CraftingMaterial.BOTTLE_OF_RESIN.getStackNormal(2)).setResearchTime(600).addRequiredScan("logRubber").addRequiredScan("leavesRubber").addRequiredScan("saplingRubber");
 		steamMixer = new Research("steamMixer", new ItemStack(FactoryInit.steamMixer)).setResearchTime(800).addParent(basicBronzeMachines).setComplexity(ResearchComplexity.BRONZE).addRequiredItem(new ItemStack(CoreInit.MachineFrameBronze)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 4)).addRequiredItem(TMResource.SULFUR.getStackNormal(Type.DUST)).addRequiredItem(new ItemStack(Blocks.BRICK_BLOCK));
-		power = new Research("power", CraftingMaterial.ACID_PAPER.getStackNormal()).addParent(blastFurnace).setResearchTime(100).addRequiredItem(TMResource.COPPER.getStackNormal(Type.PLATE, 2)).addRequiredItem(TMResource.ZINC.getStackNormal(Type.PLATE, 2)).addRequiredItem(CraftingMaterial.ACID_PAPER.getStackNormal(4));
+		enderLinkPower = new Research("enderLinkPower", CraftingMaterial.REDSTONE_CRYSTAL.getStackNormal()).setResearchTime(400).addParent(bronzeAlloySmelter).setComplexity(ResearchComplexity.BRONZE).addRequiredItem(CraftingMaterial.REDSTONE_CRYSTAL.getStackNormal()).addRequiredItem(TMResource.COPPER.getStackNormal(Type.CABLE)).addRequiredItem(new ItemStack(Blocks.FURNACE)).addRequiredScan(Blocks.REDSTONE_ORE, -1, "tile.redstone_ore.name");
+		power = new Research("power", CraftingMaterial.ACID_PAPER.getStackNormal()).addParent(blastFurnace).addParent(enderLinkPower).setResearchTime(100).addRequiredItem(TMResource.COPPER.getStackNormal(Type.PLATE, 2)).addRequiredItem(TMResource.ZINC.getStackNormal(Type.PLATE, 2)).addRequiredItem(CraftingMaterial.ACID_PAPER.getStackNormal(4));
 		soldering = new Research("soldering", new ItemStack(FactoryInit.steamSolderingStation)).setComplexity(ResearchComplexity.BRONZE).setResearchTime(650).addParent(rubberProcessing).addParent(steamMixer).addRequiredItem(CraftingMaterial.SOLDERING_ALLOY.getStackNormal(3)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 2)).addParent(power);
 		basicTurbine = new Research("basicTurbine", new ItemStack(EnergyInit.steamTurbine)).setComplexity(ResearchComplexity.BRONZE).addParent(soldering).addParent(steelBoiler).setResearchTime(700).addRequiredItem(TMResource.COPPER.getStackNormal(Type.CABLE, 16)).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.getStackNormal(2)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 5));
 		multimeter = new Research("multimeter", new ItemStack(EnergyInit.multimeter)).setComplexity(ResearchComplexity.BRONZE).addParent(basicTurbine).setResearchTime(700).addRequiredItem(new ItemStack(Items.COMPASS)).addRequiredItem(new ItemStack(Items.REDSTONE, 10)).addRequiredItem(TMResource.COPPER.getStackNormal(Type.CABLE));
@@ -55,9 +57,9 @@ public class ResearchLoader {
 		batteryBox = new Research("batteryBox", new ItemStack(EnergyInit.batteryBox)).setComplexity(ResearchComplexity.BRONZE).addParent(lvCable).setResearchTime(800).addRequiredItem(new ItemStack(Items.REDSTONE, 5)).addRequiredItem(TMResource.LEAD.getStackNormal(Type.INGOT)).addRequiredItem(TMResource.COPPER.getStackNormal(Type.INGOT, 3));
 		basicLvMachines = new Research("basicLvMachines", new ItemStack(FactoryInit.crusher)).setComplexity(ResearchComplexity.BRONZE).addParent(lvCable).setResearchTime(900).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addRequiredItem(new ItemStack(Items.FLINT, 3)).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.getStackNormal(3)).addRequiredItem(new ItemStack(Items.REDSTONE, 6));
 		wireProcessing = new Research("wireProcessingLv", new ItemStack(FactoryInit.wireMill)).setComplexity(ResearchComplexity.BRONZE).addParent(basicLvMachines).setResearchTime(1000).addRequiredItem(TMResource.COPPER.getStackNormal(Type.CABLE, 20)).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.get());
-		lvPlateBlender = new Research("lvPlateBlender", new ItemStack(FactoryInit.plateBlendingMachine)).setComplexity(ResearchComplexity.BRONZE).setResearchTime(1000).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.get()).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addParent(basicLvMachines).addRequiredItem(new ItemStack(Items.DIAMOND));
+		lvPlateBendingMachine = new Research("lvPlateBender", new ItemStack(FactoryInit.plateBendingMachine)).setComplexity(ResearchComplexity.BRONZE).setResearchTime(1000).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.get()).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addParent(basicLvMachines).addRequiredItem(new ItemStack(Items.DIAMOND));
 		lvAlloySmelter = new Research("lvAlloySmelter", new ItemStack(FactoryInit.alloySmelter)).setComplexity(ResearchComplexity.BRONZE).setResearchTime(1000).addParent(basicLvMachines).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.get()).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addRequiredItem(TMResource.ELECTRUM.getStackNormal(Type.INGOT, 3));
-		waterCollector = new Research("waterCollector", new ItemStack(FactoryInit.waterCollector)).setResearchTime(700).addParent(basicBronzeMachines).addRequiredItem(new ItemStack(Items.WATER_BUCKET)).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.INGOT));
+		waterCollector = new Research("waterCollector", new ItemStack(FactoryInit.waterCollector)).setResearchTime(700).addParent(enderLinkPower).addRequiredItem(new ItemStack(Items.WATER_BUCKET)).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.INGOT));
 		eSolderingStation = new Research("eSolderingStation", new ItemStack(FactoryInit.solderingStation)).setComplexity(ResearchComplexity.BRONZE).setResearchTime(1100).addParent(lvAlloySmelter).addRequiredItem(CraftingMaterial.SOLDERING_ALLOY.getStackNormal(4)).addRequiredItem(CraftingMaterial.CUPRONICKEL_HEATING_COIL.getStackNormal()).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.get()).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic));
 		industrialBlastFurnace = new Research("industrialBlastFurnace", new ItemStack(FactoryInit.industrialBlastFurnace)).setComplexity(ResearchComplexity.BRONZE).setResearchTime(1200).addParent(eSolderingStation).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addRequiredItem(CraftingMaterial.CUPRONICKEL_HEATING_COIL.getStackNormal(4)).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.getStackNormal(2)).addRequiredItem(new ItemStack(CoreInit.MachineFrameSteel));
 		pump = new Research("pump", new ItemStack(FactoryInit.pump)).setResearchTime(1000).addParent(basicLvMachines).setComplexity(ResearchComplexity.BRONZE).addRequiredItem(CraftingMaterial.PUMP.getStackNormal(2)).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.get()).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic));
@@ -81,7 +83,6 @@ public class ResearchLoader {
 		eliteTank = new Research("eliteTank", new ItemStack(StorageInit.tankElite)).setComplexity(ResearchComplexity.ELECTRICAL).setResearchTime(1500).addParent(advancedTank).addParent(mvMachines).addRequiredItem(TMResource.TITANIUM.getStackNormal(Type.PLATE, 5)).addRequiredItem(new ItemStack(CoreInit.hardenedGlass, 5)).addRequiredItem(new ItemStack(StorageInit.tankAdv)).addRequiredItem(new ItemStack(Blocks.GLASS, 5));
 		ultimateTank = new Research("ultimateTank", new ItemStack(StorageInit.tankUltimate)).setComplexity(ResearchComplexity.ELECTRICAL).setResearchTime(3000).addParent(eliteTank).addParent(hvMachines).addRequiredItem(TMResource.ENDERIUM.getStackNormal(Type.PLATE, 20)).addRequiredItem(new ItemStack(CoreInit.hardenedGlass, 10)).addRequiredItem(new ItemStack(Blocks.GLASS, 5)).addRequiredItem(new ItemStack(StorageInit.tankElite));
 		limitableChest = new Research("configurableChest", new ItemStack(StorageInit.limitableChest)).setResearchTime(500).addParent(bronzeAge).addRequiredItem(new ItemStack(Blocks.CHEST, 2)).addRequiredItem(new ItemStack(Blocks.TRAPDOOR)).addRequiredItem(new ItemStack(Blocks.LEVER)).addRequiredItem(TMResource.BRONZE.getStackNormal(Type.PLATE));
-		advancedExtruder = new Research("advExtruder", new ItemStack(FactoryInit.extruderModule, 1, 1)).setComplexity(ResearchComplexity.ELECTRICAL).setResearchTime(2000).addParent(mvMachines).addRequiredItem(TMResource.WOLFRAM.getStackNormal(Type.PLATE, 5)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 10)).addRequiredItem(new ItemStack(Items.DIAMOND)).addRequiredItem(CraftingMaterial.UPGRADE_FRAME.getStackNormal());
 		mvTurbine = new Research("mvTurbine", new ItemStack(EnergyInit.steamTurbineMK2)).setComplexity(ResearchComplexity.ELECTRICAL).setResearchTime(1600).addParent(mvCircuit).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 4)).addRequiredItem(AdvancedCraftingRecipes.NORMAL_CIRCUIT.get()).addRequiredItem(new ItemStack(CoreInit.MachineFrameSteel)).addRequiredItem(new ItemStack(Items.REDSTONE, 16));
 		charger = new Research("charger", new ItemStack(EnergyInit.charger)).setComplexity(ResearchComplexity.BRONZE).setResearchTime(1500).addParent(basicLvMachines).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.get()).addRequiredItem(new ItemStack(EnergyInit.battery, 2)).addRequiredItem(TMResource.COPPER.getStackNormal(Type.CABLE, 5));
 		configurator = new Research("configurator", new ItemStack(CoreInit.configurator)).setComplexity(ResearchComplexity.BRONZE).setResearchTime(1600).addParent(charger).addParent(lvAlloySmelter).addParent(eSolderingStation).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.getStackNormal(2)).addRequiredItem(CraftingMaterial.DISPLAY.getStackNormal()).addRequiredItem(TMResource.IRON.getStackNormal(Type.PLATE, 2)).addRequiredItem(new ItemStack(Items.REDSTONE, 6));
@@ -95,13 +96,13 @@ public class ResearchLoader {
 		laserEngraver = new Research("laserEngraver", new ItemStack(FactoryInit.laserEngraver)).addParent(uvLightbox).setResearchTime(2000).setComplexity(ResearchComplexity.ELECTRICAL).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic)).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.getStackNormal(2)).addRequiredItem(new ItemStack(Blocks.REDSTONE_BLOCK, 3)).addRequiredItem(TMResource.RED_DIAMOND.getStackNormal(Type.GEM, 2));
 		basicChipset = new Research("basicChipset", AdvancedCraftingRecipes.BASIC_CHIPSET.getStackNormal(1)).addParent(laserEngraver).setResearchTime(2200).setComplexity(ResearchComplexity.ELECTRICAL).addRequiredItem(new ItemStack(Blocks.REDSTONE_BLOCK, 3)).addRequiredItem(CraftingMaterial.SILICON_PLATE.getStackNormal(10)).addRequiredItem(new ItemStack(Items.GOLD_NUGGET, 2));
 		advChipset = new Research("advChipset", AdvancedCraftingRecipes.ADVANCED_CHIPSET.getStackNormal(1)).addParent(basicChipset).addParent(mvCircuit).setComplexity(ResearchComplexity.ELECTRICAL).setResearchTime(3000).addRequiredItem(new ItemStack(Blocks.REDSTONE_BLOCK, 2)).addRequiredItem(TMResource.GOLD.getStackNormal(Type.DUST, 3)).addRequiredItem(CraftingMaterial.SILICON_PLATE.getStackNormal(12)).addRequiredItem(new ItemStack(Items.GOLD_NUGGET, 2));
-		advancedExtruder2 = new Research("advExtruder2", new ItemStack(FactoryInit.extruderModule, 1, 2)).setComplexity(ResearchComplexity.ELECTRICAL).setResearchTime(3000).addParent(advancedExtruder).addParent(multiblockComponents).addRequiredItem(TMResource.WOLFRAM.getStackNormal(Type.PLATE, 4)).addRequiredItem(AdvancedCraftingRecipes.NORMAL_CIRCUIT.getStackNormal(2)).addRequiredItem(new ItemStack(CoreInit.MachineFrameTitanium)).addRequiredItem(new ItemStack(Items.REDSTONE, 16));
 		machineUpgrades = new Research("machineUpgrades", CraftingMaterial.UPGRADE_FRAME.getStackNormal()).setComplexity(ResearchComplexity.ELECTRICAL).setResearchTime(1200).addParent(basicLvMachines).addRequiredItem(new ItemStack(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, 3)).addRequiredItem(TMResource.BLUE_METAL.getStackNormal(Type.INGOT, 3)).addRequiredItem(TMResource.IRON.getStackNormal(Type.PLATE, 8)).addRequiredItem(TMResource.ELECTRUM.getStackNormal(Type.CABLE, 2));
 		powerConverterModules = new Research("powerConverterModules", new ItemStack(FactoryInit.rfModule)).setComplexity(ResearchComplexity.ELECTRICAL).setResearchTime(1600).addParent(machineUpgrades).addRequiredItem(new ItemStack(Blocks.REDSTONE_BLOCK, 4)).addRequiredItem(CraftingMaterial.UPGRADE_FRAME.getStackNormal(3)).addRequiredItem(TMResource.BLUE_METAL.getStackNormal(Type.INGOT, 3)).addRequiredItem(TMResource.ELECTRUM.getStackNormal(Type.CABLE, 2));
 		speedUpgrade = new Research("speedUpgrade", new ItemStack(FactoryInit.speedUpgrade)).setComplexity(ResearchComplexity.ELECTRICAL).addParent(basicLvMachines).addParent(machineUpgrades).setResearchTime(2000).addRequiredItem(new ItemStack(Blocks.REDSTONE_BLOCK, 16)).addRequiredItem(new ItemStack(Blocks.REDSTONE_ORE)).addRequiredItem(TMResource.BLUE_METAL.getStackNormal(Type.INGOT, 3)).addRequiredItem(CraftingMaterial.UPGRADE_FRAME.getStackNormal(2)).setComplexity(ResearchComplexity.ADVANCED);
 		electricalRubberProcessing = new Research("eRubberProcessing", new ItemStack(FactoryInit.electricalRubberProcessor)).addParent(basicLvMachines).setComplexity(ResearchComplexity.ELECTRICAL).setResearchTime(1600).addRequiredItem(CraftingMaterial.RUBBER.getStackNormal(10)).addRequiredItem(AdvancedCraftingRecipes.BASIC_CIRCUIT.get()).addRequiredItem(new ItemStack(CoreInit.MachineFrameBasic));
 		improvedBlastFurnace = new Research("advBlastFurnace", new ItemStack(FactoryInit.advBlastFurnace)).addParent(blastFurnace).setResearchTime(700).setComplexity(ResearchComplexity.BRONZE).addRequiredItem(new ItemStack(Items.NETHERBRICK, 4)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE)).addRequiredItem(CraftingMaterial.REFINED_BRICK.getStackNormal(2));
-		conveyorBelts = new Research("conveyorBelts", new ItemStack(TransportInit.conveyorBeltFast)).addParent(bronzeAge).setResearchTime(800).addRequiredItem(TMResource.COPPER.getStackNormal(Type.PLATE, 5)).addRequiredItem(TMResource.TIN.getStackNormal(Type.PLATE, 5));
+		conveyorBelts = new Research("conveyorBelts", new ItemStack(TransportInit.conveyorBeltFast)).addParent(enderLinkPower).setResearchTime(800).addRequiredItem(TMResource.COPPER.getStackNormal(Type.PLATE, 5)).addRequiredItem(TMResource.TIN.getStackNormal(Type.PLATE, 5));
+		advWaterCollector = new Research("advWaterCollector", new ItemStack(FactoryInit.advWaterCollector)).addParent(waterCollector).addParent(blastFurnace).setResearchTime(800).setComplexity(ResearchComplexity.BRONZE).addRequiredItem(new ItemStack(FactoryInit.waterCollector)).addRequiredItem(new ItemStack(Items.WATER_BUCKET)).addRequiredItem(TMResource.STEEL.getStackNormal(Type.PLATE, 4)).addRequiredItem(CraftingMaterial.REDSTONE_CRYSTAL.getStackNormal());
 		registerResearch(power);
 		registerResearch(hammer);
 		registerResearch(mortar);
@@ -110,12 +111,14 @@ public class ResearchLoader {
 		registerResearch(basicBoiler);
 		registerResearch(basicBronzeMachines);
 		registerResearch(bronzeAlloySmelter);
-		registerResearch(bronzePlateBlender);
+		registerResearch(enderLinkPower);
+		registerResearch(bronzePlateBendingMachine);
 		registerResearch(refinedBricks);
 		registerResearch(cokeOven);
 		registerResearch(blastFurnace);
 		registerResearch(steelBoiler);
 		registerResearch(steelFurnace);
+		registerResearch(steelCrusher);
 		registerResearch(rubberProcessing);
 		registerResearch(basicTurbine);
 		registerResearch(soldering);
@@ -125,7 +128,7 @@ public class ResearchLoader {
 		registerResearch(basicLvMachines);
 		registerResearch(wireProcessing);
 		registerResearch(speedUpgrade);
-		registerResearch(lvPlateBlender);
+		registerResearch(lvPlateBendingMachine);
 		registerResearch(lvAlloySmelter);
 		registerResearch(waterCollector);
 		registerResearch(eSolderingStation);
@@ -150,7 +153,6 @@ public class ResearchLoader {
 		registerResearch(eliteTank);
 		registerResearch(ultimateTank);
 		registerResearch(limitableChest);
-		registerResearch(advancedExtruder);
 		registerResearch(mvTurbine);
 		registerResearch(charger);
 		registerResearch(configurator);
@@ -165,13 +167,13 @@ public class ResearchLoader {
 		registerResearch(laserEngraver);
 		registerResearch(basicChipset);
 		registerResearch(advChipset);
-		registerResearch(advancedExtruder2);
 		registerResearch(machineUpgrades);
 		registerResearch(powerConverterModules);
 		registerResearch(electricalRubberProcessing);
 		registerResearch(improvedBlastFurnace);
 		registerResearch(conveyorBelts);
 		registerResearch(advancedCircuit);
+		registerResearch(advWaterCollector);
 	}
 
 	private static void registerResearch(Research research) {

@@ -2,8 +2,10 @@ package com.tom.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,9 +16,12 @@ import net.minecraft.util.math.BlockPos;
 
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import com.tom.api.block.IGridPowerGenerator;
+import com.tom.api.grid.StorageNetworkGrid.ControllMode;
 import com.tom.api.item.IWirelessDevice;
 import com.tom.api.tileentity.IAccessPoint;
 import com.tom.core.research.ResearchHandler;
+import com.tom.lib.api.IValidationChecker;
 import com.tom.lib.api.tileentity.ITMPeripheral.IComputer;
 import com.tom.lib.handler.IPlayerHandler;
 import com.tom.lib.handler.PlayerHandler;
@@ -24,7 +29,6 @@ import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNetworkConnection;
 import com.tom.network.messages.MessageProfiler;
 import com.tom.storage.handler.ICraftable;
-import com.tom.storage.handler.StorageNetworkGrid.ControllMode;
 import com.tom.util.TomsModUtils;
 
 import com.tom.core.item.TabletHandler;
@@ -45,6 +49,10 @@ public class TMPlayerHandler implements IPlayerHandler {
 	public TabletHandler tabletHandler;
 	public List<IComputer> EnderMemoryIComputerAccess = new ArrayList<>();
 	public Map<Integer, Object> EnderMemoryPrivate = new HashMap<>();
+	public Set<IGridPowerGenerator> gridPowerGenerators = new HashSet<>();
+	public long gridPower, gridPowerMax;
+	public boolean underpowered;
+	private boolean underpower;
 	public static void register(){
 		PlayerHandler.registerHandler(ID, TMPlayerHandler::new);
 	}
@@ -146,7 +154,26 @@ public class TMPlayerHandler implements IPlayerHandler {
 			profiled = false;
 		}
 	}
+	public boolean checkAndUseGridPower(int power){
+		if(gridPower > gridPowerMax){
+			underpower = true;
+			return false;
+		}
+		gridPower += power;
+		return true;
+	}
 
+	@Override
+	public void updateOffPre() {
+		if(FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0).getTotalWorldTime() % 5 == 0){
+			gridPowerMax = IValidationChecker.removeAllInvalidCollectValid(gridPowerGenerators, Collectors.summingLong(IGridPowerGenerator::getMaxPowerGen));
+		}
+	}
+	@Override
+	public void updateOffPost() {
+		underpowered = underpower;
+		underpower = false;
+	}
 	@Override
 	public void updatePost(EntityPlayerMP player) {
 		if (profiling) {
@@ -231,6 +258,7 @@ public class TMPlayerHandler implements IPlayerHandler {
 	}
 
 	public static TMPlayerHandler getPlayerHandlerForName(String name){
+		if(name == null)return null;
 		PlayerHandler pl = PlayerHandler.getPlayerHandlerForName(name);
 		return pl == null ? null : (TMPlayerHandler) pl.getHandler(ID);
 	}

@@ -10,7 +10,7 @@
   "researches": [
     "tomsmodcore:mvcircuit"
   ],
-  "level": "tomsMod.craftingLevel.bronze",
+  "level": "bronze",
   "recipe": {
     "result": {
       "nbt": {

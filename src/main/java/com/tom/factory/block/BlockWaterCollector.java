@@ -1,6 +1,11 @@
 package com.tom.factory.block;
 
+import java.util.List;
+
 import net.minecraft.block.material.Material;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.World;
@@ -26,5 +31,9 @@ public class BlockWaterCollector extends BlockContainerTomsMod {
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer() {
 		return BlockRenderLayer.CUTOUT;
+	}
+	@Override
+	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
+		tooltip.add(I18n.format("tomsmod.tooltip.use_ep", 1));
 	}
 }

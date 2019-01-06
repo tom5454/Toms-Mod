@@ -8,8 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import net.minecraftforge.common.config.Configuration;
 
-import com.tom.api.map.Marker;
-import com.tom.api.map.RenderType;
+import com.tom.lib.api.map.Marker;
+import com.tom.lib.api.map.RenderType;
 import com.tom.network.messages.MessageMarkerSync;
 import com.tom.util.TMLogger;
 

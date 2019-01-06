@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:elitetank"
   ],
-  "level": "tomsMod.craftingLevel.mv",
+  "level": "mv",
   "recipe": {
     "result": {
       "item": "tomsmodstorage:tm.tank.elite",

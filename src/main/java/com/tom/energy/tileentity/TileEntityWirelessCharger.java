@@ -1,6 +1,6 @@
 package com.tom.energy.tileentity;
 
-import static com.tom.api.energy.EnergyType.*;
+import static com.tom.lib.api.energy.EnergyType.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +20,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 
 import com.tom.api.block.IItemTile;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyContainerItem;
-import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.ILinkable;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.lib.Configs;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyContainerItem;
+import com.tom.lib.api.energy.IEnergyReceiver;
 import com.tom.util.Coords;
 import com.tom.util.ExtraBlockHitInfo;
 import com.tom.util.TomsModUtils;

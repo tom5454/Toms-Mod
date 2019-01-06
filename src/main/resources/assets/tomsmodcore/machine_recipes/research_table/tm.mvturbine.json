@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:mvturbine"
   ],
-  "level": "tomsMod.craftingLevel.esoldering",
+  "level": "e_soldering",
   "recipe": {
     "result": {
       "item": "tomsmodenergy:tm.mvturbine",

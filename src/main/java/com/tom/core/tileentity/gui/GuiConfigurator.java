@@ -22,6 +22,7 @@ import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.handler.ConfiguratorHandler.ConfigurableDevice;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.network.messages.MessageNBT.MessageNBTRequest;
@@ -33,11 +34,6 @@ public class GuiConfigurator extends GuiTomsMod implements INBTPacketReceiver {
 	private IConfigurable te;
 	private int invX, invY;
 
-	/*public GuiConfigurator(InventoryPlayer playerInv, IConfigurable configurable) {
-		super(new ContainerConfigurator(playerInv, configurable), "configurator");
-		te = configurable;
-		NetworkHandler.sendToServer(new MessageNBTRequest(te.getPos2()));
-	}*/
 	public GuiConfigurator(EntityPlayer player, World world, BlockPos pos, int s) {
 		super(new ContainerConfigurator(player, world, pos, s), "configurator");
 		te = ((ContainerConfigurator) inventorySlots).te;
@@ -46,7 +42,7 @@ public class GuiConfigurator extends GuiTomsMod implements INBTPacketReceiver {
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		te.getOption().readFromNBTPacket(message);
 	}
 
@@ -165,7 +161,7 @@ public class GuiConfigurator extends GuiTomsMod implements INBTPacketReceiver {
 		return new Rectangle(guiLeft + xSize / 2 - w / 2, y, w, h);
 	}
 
-	public static class GuiConfiguratorChoose extends GuiTomsMod implements INBTPacketReceiver {
+	public static class GuiConfiguratorChoose extends GuiTomsMod implements IPacketReceiver {
 		private List<ConfigurableDevice> d = new ArrayList<>();
 
 		public GuiConfiguratorChoose(World world, BlockPos pos, EntityPlayer player) {
@@ -173,7 +169,7 @@ public class GuiConfigurator extends GuiTomsMod implements INBTPacketReceiver {
 		}
 
 		@Override
-		public void receiveNBTPacket(NBTTagCompound message) {
+		public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 			NBTTagList l = message.getTagList("l", 10);
 			d.clear();
 			for (int i = 0;i < l.tagCount();i++) {
@@ -199,7 +195,7 @@ public class GuiConfigurator extends GuiTomsMod implements INBTPacketReceiver {
 		protected void actionPerformed(GuiButton button) throws IOException {
 			if (button instanceof GuiButtonConfigurableSelect) {
 				EnumFacing f = ((GuiButtonConfigurableSelect) button).d.getSide();
-				sendButtonUpdate(f == null ? -1 : f.ordinal());
+				sendButtonUpdateToContainer(f == null ? -1 : f.ordinal(), 0);
 			}
 		}
 

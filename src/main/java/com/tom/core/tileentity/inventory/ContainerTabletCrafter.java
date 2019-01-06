@@ -27,6 +27,7 @@ public class ContainerTabletCrafter extends ContainerTomsMod {
 		this.addSlotToContainer(new Slot(te, 11, x + 57, y - 12));
 
 		this.addPlayerSlots(inventory, 8, 84);
+		syncHandler.setReceiver(te);
 	}
 
 	@Override

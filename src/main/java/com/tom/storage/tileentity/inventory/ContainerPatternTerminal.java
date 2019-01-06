@@ -1,7 +1,6 @@
 package com.tom.storage.tileentity.inventory;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -14,7 +13,6 @@ import com.tom.storage.item.ItemCard.CardType;
 import com.tom.storage.tileentity.inventory.ContainerBlockInterface.SlotPattern;
 
 public class ContainerPatternTerminal extends ContainerTerminalBase implements IJEIAutoFillTerminal {
-	private int crafting = -1, useContainerItems = -1;
 
 	public ContainerPatternTerminal(InventoryPlayer playerInv, IPatternTerminal te) {
 		super(te, playerInv.player);
@@ -29,6 +27,8 @@ public class ContainerPatternTerminal extends ContainerTerminalBase implements I
 		addSlotToContainer(new SlotPhantom(te.getResultInv(), 2, 125, 155, 64));
 		addSlotToContainerS(new SlotCraftingCard(te.getUpgradeInv(), 0, 201, 6));
 		this.addPlayerSlots(playerInv, 8, 174);
+		syncHandler.registerShort(10, te::getCraftingBehaviour, te::setCraftingBehaviour);
+		syncHandler.registerBoolean(11, () -> te.getProperties().useContainerItems, b -> te.getProperties().useContainerItems = b);
 	}
 
 	public static class SlotCraftingCard extends Slot {
@@ -45,33 +45,6 @@ public class ContainerPatternTerminal extends ContainerTerminalBase implements I
 		@Override
 		public int getSlotStackLimit() {
 			return 1;
-		}
-	}
-
-	@Override
-	public void afterSending() {
-		crafting = ((IPatternTerminal) te).getCraftingBehaviour();
-		useContainerItems = ((IPatternTerminal) te).getProperties().useContainerItems ? 1 : 0;
-	}
-
-	@Override
-	public void sendToCrafter(IContainerListener crafter) {
-		int v = ((IPatternTerminal) te).getCraftingBehaviour();
-		if (crafting != v) {
-			crafter.sendWindowProperty(this, 10, v);
-		}
-		v = ((IPatternTerminal) te).getProperties().useContainerItems ? 1 : 0;
-		if (useContainerItems != v) {
-			crafter.sendWindowProperty(this, 11, v);
-		}
-	}
-
-	@Override
-	public void onProgressBarUpdate(int id, int data) {
-		if (id == 10) {
-			((IPatternTerminal) te).setCraftingBehaviour(data);
-		} else if (id == 11) {
-			((IPatternTerminal) te).getProperties().useContainerItems = data == 1;
 		}
 	}
 

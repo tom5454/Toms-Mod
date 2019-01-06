@@ -6,10 +6,9 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-import com.tom.api.energy.IEnergyStorage;
 import com.tom.api.grid.GridEnergyStorage;
-import com.tom.storage.handler.StorageNetworkGrid.IGridEnergyStorage;
-import com.tom.storage.handler.StorageNetworkGrid.PriorityComparator;
+import com.tom.api.grid.StorageNetworkGrid.IGridEnergyStorage;
+import com.tom.lib.api.energy.IEnergyStorage;
 
 public class PowerCache implements IEnergyStorage {
 	public static class WrappedPowerCache extends PowerCache {
@@ -36,14 +35,14 @@ public class PowerCache implements IEnergyStorage {
 	public void addEnergyStorage(IGridEnergyStorage storage) {
 		if (!energyStorages.contains(storage)) {
 			energyStorages.add(storage);
-			Collections.sort(energyStorages, new PriorityComparator());
+			Collections.sort(energyStorages, com.tom.api.grid.StorageNetworkGrid.PRIORITY_COMP);
 		}
 	}
 
 	public void removeEnergyStorage(IGridEnergyStorage storage) {
 		if (energyStorages.contains(storage)) {
 			energyStorages.remove(storage);
-			Collections.sort(energyStorages, new PriorityComparator());
+			Collections.sort(energyStorages, com.tom.api.grid.StorageNetworkGrid.PRIORITY_COMP);
 		}
 	}
 
@@ -124,7 +123,7 @@ public class PowerCache implements IEnergyStorage {
 
 	@Override
 	public String toString() {
-		return getEnergyStored() + "U: " + energyStorages.toString();
+		return getEnergyStored() + "U: " + energyStorages.toString() + " " + super.toString();
 	}
 
 	public void setActive(boolean active) {

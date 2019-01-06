@@ -42,7 +42,7 @@ public class TileEntitySteamCrusher extends TileEntitySteamMachine {
 
 	@Override
 	public void checkItems() {
-		ItemStackChecker s = MachineCraftingHandler.getCrusherOutput(inv.getStackInSlot(0));
+		ItemStackChecker s = MachineCraftingHandler.getCrusherOutput(inv.getStackInSlot(0), 0);
 		checkItems(s, 1, MAX_PROCESS_TIME, 0, -1);
 	}
 

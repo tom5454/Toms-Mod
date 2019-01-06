@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "blocks/tm/enderSensor_blank","particle": "blocks/tm/enderSensor_blank"
+        "all": "tomsmodcore:blocks/enderSensor_blank"
     }
 }

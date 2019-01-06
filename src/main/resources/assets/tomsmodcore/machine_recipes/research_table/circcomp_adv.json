@@ -1,0 +1,52 @@
+{
+  "researches": [
+    "tomsmodcore:advcircuit"
+  ],
+  "level": "e_soldering",
+  "recipe": {
+    "result": {
+      "nbt": {
+        "id": "adv"
+      },
+      "item": "tomsmodcore:tm.circuitcomponent",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "CNC",
+      "SRS",
+      "GEG"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "R": {
+        "ore": "plateRedAlloy",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "coilElectrum",
+        "type": "forge:ore_dict"
+      },
+      "S": {
+        "ctype": "chipset",
+        "meta": 0,
+        "type": "tomsmodcore:chipset"
+      },
+      "E": {
+        "ore": "coilEnderium",
+        "type": "forge:ore_dict"
+      },
+      "G": {
+        "ore": "nuggetGreenium",
+        "type": "forge:ore_dict"
+      },
+      "N": {
+        "ctype": "a",
+        "count": 1,
+        "id": "normalecirc",
+        "type": "tomsmodcore:circuit"
+      }
+    }
+  },
+  "crafting_time": 1600
+}

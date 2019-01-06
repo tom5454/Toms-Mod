@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:mortar"
   ],
-  "level": "tomsMod.craftingLevel.basic",
+  "level": "basic_wooden",
   "recipe": {
     "result": {
       "item": "tomsmodcore:tm.mortarandpestle",

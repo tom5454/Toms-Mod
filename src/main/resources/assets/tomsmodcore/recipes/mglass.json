@@ -9,6 +9,12 @@
     "I "
   ],
   "type": "forge:ore_shaped",
+  "conditions": [
+    {
+      "id": "research",
+      "type": "tomsmodcore:config"
+    }
+  ],
   "key": {
     "G": {
       "ore": "paneGlassColorless",

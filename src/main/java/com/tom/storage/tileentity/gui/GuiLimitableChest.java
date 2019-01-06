@@ -58,7 +58,7 @@ public class GuiLimitableChest extends GuiTomsMod {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
 			if (this.selecting) {
-				this.sendButtonUpdate(0, te, 0);
+				this.sendButtonUpdateToTile(0, 0);
 				this.selected = 0;
 			}
 			this.selecting = !this.selecting;
@@ -91,7 +91,7 @@ public class GuiLimitableChest extends GuiTomsMod {
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		if (this.selecting) {
 			if (!this.buttonLock.mousePressed(mc, mouseX, mouseY)) {
-				this.sendButtonUpdate(0, te, selected);
+				this.sendButtonUpdateToTile(0, selected);
 				this.selecting = false;
 				this.selected = 0;
 				return;

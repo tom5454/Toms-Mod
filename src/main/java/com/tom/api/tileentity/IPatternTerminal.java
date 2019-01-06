@@ -8,9 +8,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.gui.GuiTomsMod;
+import com.tom.storage.handler.AutoCraftingHandler.CraftingPatternProperties;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.ITerminal;
-import com.tom.storage.handler.StorageNetworkGrid.CraftingPatternProperties;
 
 public interface IPatternTerminal extends ITerminal {
 	IInventory getRecipeInv();

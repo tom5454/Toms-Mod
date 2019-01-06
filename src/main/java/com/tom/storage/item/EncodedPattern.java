@@ -19,10 +19,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.IModelRegisterRequired;
+import com.tom.api.grid.StorageNetworkGrid.ICraftingRecipeContainer;
 import com.tom.core.CoreInit;
 import com.tom.storage.handler.AutoCraftingHandler;
 import com.tom.storage.handler.ICraftable;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingRecipeContainer;
 
 public class EncodedPattern extends Item implements ICraftingRecipeContainer, IModelRegisterRequired {
 	public EncodedPattern() {

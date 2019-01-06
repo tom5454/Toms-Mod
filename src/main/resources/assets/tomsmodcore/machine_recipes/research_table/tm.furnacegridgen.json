@@ -1,0 +1,46 @@
+{
+  "researches": [
+    "tomsmodcore:enderlinkpower"
+  ],
+  "level": "bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodenergy:tm.furnacegridgen",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "-C-",
+      "PTP",
+      "RFR"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateBronze",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "ore": "dustRedstone",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "ore": "crystalRedstone",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "ore": "casingTin",
+        "type": "forge:ore_dict"
+      },
+      "F": {
+        "item": "minecraft:furnace",
+        "data": 0
+      },
+      "-": {
+        "ore": "cableCopper",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 400
+}

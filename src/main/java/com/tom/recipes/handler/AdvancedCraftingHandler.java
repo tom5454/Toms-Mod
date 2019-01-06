@@ -293,8 +293,12 @@ public class AdvancedCraftingHandler {
 			this.lvl = lvl;
 		}
 
-		public String getName() {
+		public String getUnlocName() {
 			return unloc_name;
+		}
+
+		public String getName() {
+			return name;
 		}
 
 		public boolean isAdvanced() {

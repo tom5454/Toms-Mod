@@ -4,27 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import com.tom.api.network.INBTPacketReceiver;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.core.CoreInit;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.ProjectorLensConfigEntry;
 import com.tom.defense.item.ItemProjectorFieldType.FieldType;
 import com.tom.handler.GuiHandler.GuiIDs;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageNBT;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
-public class ContainerProjectorLensConfigurationMain extends ContainerTomsMod implements IGuiTile, INBTPacketReceiver {
+public class ContainerProjectorLensConfigurationMain extends ContainerTomsMod implements IPacketReceiver {
 	public ItemStack lensStack;
 	public List<ProjectorLensConfigEntry> entryList = new ArrayList<>();
 	private boolean sendUpdate;
@@ -41,7 +36,7 @@ public class ContainerProjectorLensConfigurationMain extends ContainerTomsMod im
 		{
 			NBTTagCompound nbttagcompound = list.getCompoundTagAt(k);
 			int j = nbttagcompound.getByte("Slot") & 255;
-		
+
 			if (j >= 0 && j < stack.length)
 			{
 				stack[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
@@ -106,9 +101,7 @@ public class ContainerProjectorLensConfigurationMain extends ContainerTomsMod im
 			}
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setTag("l", list);
-			for (IContainerListener crafter : listeners) {
-				NetworkHandler.sendTo(new MessageNBT(tag), (EntityPlayerMP) crafter);
-			}
+			syncHandler.sendNBTToGui(tag);
 			this.sendUpdate = false;
 		}
 	}
@@ -168,7 +161,7 @@ public class ContainerProjectorLensConfigurationMain extends ContainerTomsMod im
 		{
 			NBTTagCompound nbttagcompound = list.getCompoundTagAt(k);
 			int j = nbttagcompound.getByte("Slot") & 255;
-		
+
 			if (j >= 0 && j < stack.length)
 			{
 				stack[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
@@ -200,7 +193,7 @@ public class ContainerProjectorLensConfigurationMain extends ContainerTomsMod im
 		DefenseInit.multiTool.setLensStack(playerIn.getHeldItemMainhand(), lensStack);
 	}
 
-	public static class ContainerProjectorLensConfig extends ContainerTomsMod implements IGuiTile, INBTPacketReceiver {
+	public static class ContainerProjectorLensConfig extends ContainerTomsMod implements IPacketReceiver {
 		public ProjectorLensConfigEntry entry;
 		private EntityPlayer player;
 		private final int id;
@@ -336,22 +329,20 @@ public class ContainerProjectorLensConfigurationMain extends ContainerTomsMod im
 			if (sendUpdate) {
 				NBTTagCompound tag = new NBTTagCompound();
 				entry.writeToClientNBTPacket(tag);
-				for (IContainerListener crafter : listeners) {
-					NetworkHandler.sendTo(new MessageNBT(tag), (EntityPlayerMP) crafter);
-				}
+				syncHandler.sendNBTToGui(tag);
 				this.sendUpdate = false;
 			}
 		}
 
 		@Override
-		public void receiveNBTPacket(NBTTagCompound message) {
+		public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 			String s = message.getString("s");
 			entry.setName(s);
 		}
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		NBTTagList list = message.getTagList("l", 10);
 		entryList.clear();
 		for (int i = 0;i < list.tagCount();i++) {

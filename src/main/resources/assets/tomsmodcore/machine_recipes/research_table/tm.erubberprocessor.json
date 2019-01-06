@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:erubberprocessing"
   ],
-  "level": "tomsMod.craftingLevel.electrical",
+  "level": "electrical",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:tm.erubberprocessor",

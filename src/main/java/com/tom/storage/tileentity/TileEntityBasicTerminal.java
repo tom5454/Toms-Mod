@@ -17,7 +17,6 @@ import com.google.common.base.Function;
 
 import com.tom.api.inventory.IStorageInventory;
 import com.tom.api.tileentity.IConfigurable;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.config.ConfigurationTerminal;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
@@ -29,7 +28,7 @@ import com.tom.storage.handler.StorageData;
 import com.tom.storage.multipart.block.StorageNetworkCable.CableColor;
 import com.tom.storage.tileentity.gui.GuiTerminalBase;
 
-public class TileEntityBasicTerminal extends TileEntityChannel implements ITerminal, IConfigurable, IGuiTile {
+public class TileEntityBasicTerminal extends TileEntityChannel implements ITerminal, IConfigurable {
 	public int terminalMode = 0;
 	private byte powered;
 	private TerminalColor color = new TerminalColor(CableColor.FLUIX);
@@ -275,7 +274,7 @@ public class TileEntityBasicTerminal extends TileEntityChannel implements ITermi
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer player, NBTTagCompound message) {
 		color = new TerminalColor(message.getInteger("color"), /*message.getInteger("colorAlt")*/0);
 		markBlockForUpdate(pos);
 	}
@@ -312,13 +311,13 @@ public class TileEntityBasicTerminal extends TileEntityChannel implements ITermi
 
 	@Override
 	public BlockPos getSecurityStationPos() {
-		return grid.getData().getSecurityStationPos();
+		return grid.getSData().getSecurityStationPos();
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void sendUpdate(int id, int extra, GuiTerminalBase gui) {
-		gui.sendButtonUpdateT(id, this, extra, getPos2());
+		gui.sendButtonUpdateToTile(id, extra);
 	}
 
 	@Override
@@ -328,7 +327,7 @@ public class TileEntityBasicTerminal extends TileEntityChannel implements ITermi
 
 	@Override
 	public StorageData getData() {
-		return grid.getData();
+		return grid.getSData();
 	}
 
 	@Override

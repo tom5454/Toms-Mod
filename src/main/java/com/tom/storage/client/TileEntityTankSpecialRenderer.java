@@ -22,6 +22,7 @@ public class TileEntityTankSpecialRenderer extends TileEntitySpecialRendererToms
 	public void renderTileEntityAt(TMTank te, double x, double y, double z, float partialTicks, int destroyStage, IBlockState state) {
 		drawing = true;
 		if (te.getStack() != null && te.getStack().amount > 0) {
+			boolean isGas = te.getStack().getFluid().isGaseous(te.getStack());
 			ResourceLocation fluidStill = te.getStack().getFluid().getStill(te.getStack());
 			TextureMap textureMapBlocks = Minecraft.getMinecraft().getTextureMapBlocks();
 			TextureAtlasSprite s = null;
@@ -32,15 +33,10 @@ public class TileEntityTankSpecialRenderer extends TileEntitySpecialRendererToms
 				s = textureMapBlocks.getMissingSprite();
 			}
 			int fluidColor = te.getStack().getFluid().getColor(te.getStack());
+			float red = (fluidColor >> 16 & 0xFF) / 255.0F;
+			float green = (fluidColor >> 8 & 0xFF) / 255.0F;
+			float blue = (fluidColor & 0xFF) / 255.0F;
 			bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			{
-				int color = fluidColor;
-				float red = (color >> 16 & 0xFF) / 255.0F;
-				float green = (color >> 8 & 0xFF) / 255.0F;
-				float blue = (color & 0xFF) / 255.0F;
-
-				GlStateManager.color(red, green, blue, 1.0F);
-			}
 			// bindTexture(new
 			// ResourceLocation(fluidTexture.getResourceDomain(),
 			// "textures/"+fluidTexture.getResourcePath()+".png"));
@@ -53,7 +49,15 @@ public class TileEntityTankSpecialRenderer extends TileEntitySpecialRendererToms
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder vertexbuffer = tessellator.getBuffer();
 			// x+0.5-part.getSize() x+0.5+part.getSize()
-			double yPos = y + yPer;
+			double yPos;
+
+			if(isGas){
+				yPos = y + .99;
+				GlStateManager.color(red, green, blue, per);
+			}else{
+				yPos = y + yPer;
+				GlStateManager.color(red, green, blue, 1.0F);
+			}
 			{
 				vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
 				vertexbuffer.pos(x, yPos, z + 1).tex(s.getMaxU(), s.getMinV()).endVertex();

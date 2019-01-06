@@ -1,0 +1,34 @@
+{
+  "researches": [
+    "tomsmodcore:conveyorbelts"
+  ],
+  "level": "basic_wooden",
+  "recipe": {
+    "result": {
+      "item": "tomsmodtransport:tm.conveyorbeltextract",
+      "data": 0,
+      "count": 2
+    },
+    "pattern": [
+      "  P",
+      " PM",
+      "CCC"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateIron",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodtransport:tm.conveyorbeltomnifast",
+        "data": 0
+      },
+      "M": {
+        "ore": "casingTin",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 100
+}

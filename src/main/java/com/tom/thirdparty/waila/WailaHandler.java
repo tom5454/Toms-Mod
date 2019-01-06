@@ -3,10 +3,10 @@ package com.tom.thirdparty.waila;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
-import com.tom.api.energy.IEnergyStorageTile;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.Config;
 import com.tom.energy.EnergyInit;
+import com.tom.lib.api.energy.IEnergyStorageTile;
 import com.tom.storage.tileentity.TMTank;
 import com.tom.util.TMLogger;
 

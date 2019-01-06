@@ -97,4 +97,9 @@ public class ItemCircuitComponent extends Item implements IModelRegisterRequired
 		if(serializeCount)ret.put("count", stack.getCount());
 		return ret;
 	}
+	@Override
+	public String getCustomName(ItemStack stack) {
+		String id = !stack.hasTagCompound() ? "invalid" : stack.getTagCompound().getString("id");
+		return "circcomp_" + id;
+	}
 }

@@ -1,10 +1,10 @@
 package com.tom.storage.tileentity;
 
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.IDevice;
+import com.tom.api.grid.StorageNetworkGrid.IPowerDrain;
 import com.tom.api.tileentity.TileEntityGridDeviceBase;
 import com.tom.storage.handler.NetworkState;
-import com.tom.storage.handler.StorageNetworkGrid;
-import com.tom.storage.handler.StorageNetworkGrid.IDevice;
-import com.tom.storage.handler.StorageNetworkGrid.IPowerDrain;
 
 public abstract class TileEntityChannel extends TileEntityGridDeviceBase<StorageNetworkGrid> implements IPowerDrain, IDevice {
 	private NetworkState active = NetworkState.OFF;

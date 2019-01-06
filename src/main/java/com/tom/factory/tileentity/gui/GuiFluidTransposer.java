@@ -113,7 +113,7 @@ public class GuiFluidTransposer extends GuiTomsMod {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			sendButtonUpdate(0, te, te.getMode() ? 0 : 1);
+			sendButtonUpdateToTile(0, te.getMode() ? 0 : 1);
 		}
 	}
 }

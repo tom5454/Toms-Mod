@@ -11,15 +11,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.item.IScroller;
-import com.tom.api.item.IScroller.ScrollDirection;
 import com.tom.client.EventHandlerClient;
 import com.tom.core.CoreInit;
 import com.tom.core.Keybindings;
@@ -27,7 +24,6 @@ import com.tom.lib.Keys;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageKey;
 import com.tom.network.messages.MessageProfiler;
-import com.tom.network.messages.MessageScroll;
 
 import com.tom.core.tileentity.TileEntityTabletController;
 
@@ -173,22 +169,6 @@ public class KeyInputHandler {
 		}
 	}
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void handleMouseInputEvent(MouseEvent event) {
-		if (Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().player.isSneaking()) {
-			if (event.getDwheel() != 0) {
-				int w = event.getDwheel();
-				ItemStack stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
-				if (stack.getItem() instanceof IScroller) {
-					if (((IScroller) stack.getItem()).canScroll(stack)) {
-						event.setCanceled(true);
-						NetworkHandler.sendToServer(new MessageScroll(w > 0 ? ScrollDirection.UP : ScrollDirection.DOWN));
-					}
-				}
-			}
-		}
-	}
 	public void interact(KeyBinding key, Keybindings k){
 		if(key == null)return;
 		if(key.isKeyDown()){

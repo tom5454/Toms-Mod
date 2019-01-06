@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:mvcable"
   ],
-  "level": "tomsMod.craftingLevel.electrical",
+  "level": "electrical",
   "recipe": {
     "result": {
       "item": "tomsmodenergy:mvcable",

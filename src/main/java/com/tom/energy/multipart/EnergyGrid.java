@@ -6,12 +6,12 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyStorageHandlerCapability;
-import com.tom.api.grid.GridBase;
 import com.tom.api.multipart.MultipartTomsMod;
 import com.tom.config.Config;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyStorageHandlerCapability;
+import com.tom.lib.api.grid.GridBase;
 import com.tom.lib.api.grid.IGridDevice;
 import com.tom.lib.api.grid.IGridUpdateListener;
 

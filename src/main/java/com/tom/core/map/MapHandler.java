@@ -11,10 +11,10 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.tom.api.map.IMapAPI;
-import com.tom.api.map.Marker;
-import com.tom.api.map.RenderType;
 import com.tom.core.CoreInit;
+import com.tom.lib.api.map.IMapAPI;
+import com.tom.lib.api.map.Marker;
+import com.tom.lib.api.map.RenderType;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageMarker;
 import com.tom.util.TMLogger;

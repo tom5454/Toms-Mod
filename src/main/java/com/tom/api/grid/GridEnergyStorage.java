@@ -1,7 +1,7 @@
 package com.tom.api.grid;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.storage.handler.StorageNetworkGrid.IGridEnergyStorage;
+import com.tom.api.grid.StorageNetworkGrid.IGridEnergyStorage;
+import com.tom.lib.api.energy.EnergyStorage;
 
 public class GridEnergyStorage extends EnergyStorage implements IGridEnergyStorage {
 	private final int priority;

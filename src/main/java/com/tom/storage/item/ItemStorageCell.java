@@ -17,11 +17,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.IModelRegisterRequired;
+import com.tom.api.grid.StorageNetworkGrid;
 import com.tom.api.inventory.IStorageInventory;
 import com.tom.api.inventory.StorageCellInventory;
 import com.tom.api.item.IStorageCell;
 import com.tom.core.CoreInit;
-import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.util.TomsModUtils;
 
 public class ItemStorageCell extends Item implements IStorageCell, IModelRegisterRequired {

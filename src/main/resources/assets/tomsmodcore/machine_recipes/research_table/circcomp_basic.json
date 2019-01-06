@@ -1,0 +1,45 @@
+{
+  "researches": [
+    "tomsmodcore:soldering"
+  ],
+  "level": "bronze",
+  "recipe": {
+    "result": {
+      "nbt": {
+        "id": "basic"
+      },
+      "item": "tomsmodcore:tm.circuitcomponent",
+      "data": 0,
+      "count": 1
+    },
+    "pattern": [
+      "TRT",
+      "-P-",
+      "RBR"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "plateIron",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "ore": "plateRedAlloy",
+        "type": "forge:ore_dict"
+      },
+      "B": {
+        "ore": "itemRubber",
+        "type": "forge:ore_dict"
+      },
+      "T": {
+        "ore": "tubeElectron",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "cableCopper",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 600
+}

@@ -8,6 +8,7 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -22,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import com.tom.lib.api.tileentity.IOwnable;
 import com.tom.util.TomsModUtils;
 
 public abstract class BlockContainerTomsMod extends BlockContainer implements ICustomItemBlock {
@@ -159,5 +161,11 @@ public abstract class BlockContainerTomsMod extends BlockContainer implements IC
 			}
 		}
 		return false;
+	}
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		IOwnable te = (IOwnable) worldIn.getTileEntity(pos);
+		te.setOwner(placer.getName());
+		te.updatePlayerHandler();
 	}
 }

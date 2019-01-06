@@ -1,10 +1,11 @@
 package com.tom.storage.tileentity.gui;
 
-import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 
 import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.multipart.IGuiMultipart;
+
+import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.container.IPartInfo;
@@ -14,7 +15,7 @@ import mcmultipart.api.slot.IPartSlot;
 public class GuiMultipartBase extends GuiTomsMod {
 	protected IGuiMultipart te;
 
-	public GuiMultipartBase(Container inv, String guiTexture, IGuiMultipart te) {
+	public GuiMultipartBase(ContainerTomsMod inv, String guiTexture, IGuiMultipart te) {
 		super(inv, guiTexture);
 		this.te = te;
 	}

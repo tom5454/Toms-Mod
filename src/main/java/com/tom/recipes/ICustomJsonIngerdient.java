@@ -5,5 +5,6 @@ import java.util.Map;
 import net.minecraft.item.ItemStack;
 
 public interface ICustomJsonIngerdient {
-	Map<String, Object> serialize(ItemStack stack, boolean serializeCount);
+	default Map<String, Object> serialize(ItemStack stack, boolean serializeCount){return null;}
+	default String getCustomName(ItemStack stack){return null;}
 }

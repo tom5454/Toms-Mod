@@ -5,9 +5,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import com.tom.api.map.Marker;
-import com.tom.api.map.RenderType;
 import com.tom.core.map.MapHandler;
+import com.tom.lib.api.map.Marker;
+import com.tom.lib.api.map.RenderType;
 import com.tom.lib.network.MessageBase;
 import com.tom.network.NetworkHandler;
 import com.tom.util.TomsModUtils;

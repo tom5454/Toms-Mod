@@ -30,13 +30,13 @@ import com.tom.factory.tileentity.gui.GuiIndustrialBlastFurnace;
 import com.tom.factory.tileentity.gui.GuiLaserEngraver;
 import com.tom.factory.tileentity.gui.GuiMixer;
 import com.tom.factory.tileentity.gui.GuiPlasticProcessor;
-import com.tom.factory.tileentity.gui.GuiPlateBlendingMachine;
+import com.tom.factory.tileentity.gui.GuiPlateBendingMachine;
 import com.tom.factory.tileentity.gui.GuiSolderingStation;
 import com.tom.factory.tileentity.gui.GuiSteamAlloySmelter;
 import com.tom.factory.tileentity.gui.GuiSteamCrusher;
 import com.tom.factory.tileentity.gui.GuiSteamFurnace;
 import com.tom.factory.tileentity.gui.GuiSteamMixer;
-import com.tom.factory.tileentity.gui.GuiSteamPlateBlender;
+import com.tom.factory.tileentity.gui.GuiSteamPlateBender;
 import com.tom.factory.tileentity.gui.GuiSteamRubberProcessor;
 import com.tom.factory.tileentity.gui.GuiSteamSolderingStation;
 import com.tom.factory.tileentity.gui.GuiUVLightbox;
@@ -49,12 +49,12 @@ import com.tom.factory.tileentity.inventory.ContainerBasicBoiler;
 import com.tom.factory.tileentity.inventory.ContainerCoiler;
 import com.tom.factory.tileentity.inventory.ContainerCrusher;
 import com.tom.factory.tileentity.inventory.ContainerElectricFurnace;
-import com.tom.factory.tileentity.inventory.ContainerPlateBlendingMachine;
+import com.tom.factory.tileentity.inventory.ContainerPlateBendingMachine;
 import com.tom.factory.tileentity.inventory.ContainerSolderingStation;
 import com.tom.factory.tileentity.inventory.ContainerSteamAlloySmelter;
 import com.tom.factory.tileentity.inventory.ContainerSteamCrusher;
 import com.tom.factory.tileentity.inventory.ContainerSteamFurnace;
-import com.tom.factory.tileentity.inventory.ContainerSteamPlateBlender;
+import com.tom.factory.tileentity.inventory.ContainerSteamPlateBender;
 import com.tom.factory.tileentity.inventory.ContainerSteamSolderingStation;
 import com.tom.factory.tileentity.inventory.ContainerWireMill;
 import com.tom.storage.StorageInit;
@@ -140,22 +140,34 @@ public class JEIHandler implements IModPlugin {
 		tankOverlay = jeiHelper.getGuiHelper().drawableBuilder(backgroundTexture, 238, 196, 18, 60)
 				.addPadding(-1, -1, -1, -1)
 				.build();
+		IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
+
 		if(Config.enableResearchSystem){
-			registry.addRecipes(CustomCraftingRecipeCategory.get(), JEIConstants.CUSTOM_CRAFTING_ID);
-			registry.addRecipeClickArea(GuiResearchTable.class, 167, 71, 23, 15, JEIConstants.CUSTOM_CRAFTING_ID);
+			registry.addRecipes(CustomCraftingRecipeCategory.get(), JEIConstants.CUSTOM_CRAFTING);
 			registry.addRecipes(ResearchCategory.get(), JEIConstants.RESEARCH);
+
+			registry.addRecipeClickArea(GuiResearchTable.class, 167, 71, 23, 15, JEIConstants.CUSTOM_CRAFTING);
+			registry.addRecipeClickArea(GuiSteamSolderingStation.class, 65, 34, 52, 17, JEIConstants.CUSTOM_CRAFTING);
+			registry.addRecipeClickArea(GuiSolderingStation.class, 79, 46, 52, 17, JEIConstants.CUSTOM_CRAFTING);
+
+			recipeTransferRegistry.addRecipeTransferHandler(ContainerResearchTable.class, JEIConstants.CUSTOM_CRAFTING, 7, 9, 19, 36);
+			recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamSolderingStation.class, JEIConstants.CUSTOM_CRAFTING, 0, 9, 12, 36);
+			recipeTransferRegistry.addRecipeTransferHandler(ContainerSolderingStation.class, JEIConstants.CUSTOM_CRAFTING, 0, 9, 13, 36);
+
+			registry.addRecipeCatalyst(new ItemStack(CoreInit.researchTable), JEIConstants.CUSTOM_CRAFTING);
+			registry.addRecipeCatalyst(new ItemStack(StorageInit.assembler), VanillaRecipeCategoryUid.CRAFTING, JEIConstants.CUSTOM_CRAFTING);
+			registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamSolderingStation), JEIConstants.CUSTOM_CRAFTING);
+			registry.addRecipeCatalyst(new ItemStack(FactoryInit.solderingStation), JEIConstants.CUSTOM_CRAFTING);
+			registry.addRecipeCatalyst(new ItemStack(CoreInit.researchTable), JEIConstants.RESEARCH);
+			registry.addRecipeCatalyst(new ItemStack(CoreInit.blueprint), JEIConstants.RESEARCH);
 		}
 		researchRenderer.renderer = registry.getIngredientRegistry().getIngredientRenderer(VanillaTypes.ITEM);
-		registry.addRecipes(CrusherRecipeCategory.get(), JEIConstants.CRUSHER_ID);
-		registry.addRecipeClickArea(GuiCrusher.class, 65, 34, 52, 17, JEIConstants.CRUSHER_ID);
-		IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerCrusher.class, JEIConstants.CRUSHER_ID, 0, 1, 3, 36);
-		registry.addRecipes(WireMillRecipeCategory.get(), JEIConstants.WIREMILL_ID);
-		registry.addRecipeClickArea(GuiWireMill.class, 75, 35, 28, 17, JEIConstants.WIREMILL_ID);
-		registry.addRecipes(PlateBlenderRecipeCategory.get(), JEIConstants.PLATE_BLENDER_ID);
-		registry.addRecipeClickArea(GuiPlateBlendingMachine.class, 65, 34, 52, 17, JEIConstants.PLATE_BLENDER_ID);
-		registry.addRecipes(AlloySmelterRecipeCategory.get(), JEIConstants.ALLOY_SMELTER_ID);
-		registry.addRecipes(BlastFurnaceRecipeCategory.get(), JEIConstants.BLAST_FURNACE_ID);
+
+		registry.addRecipes(CrusherRecipeCategory.get(), JEIConstants.CRUSHER);
+		registry.addRecipes(WireMillRecipeCategory.get(), JEIConstants.WIREMILL);
+		registry.addRecipes(PlateBlenderRecipeCategory.get(), JEIConstants.PLATE_BENDER);
+		registry.addRecipes(AlloySmelterRecipeCategory.get(), JEIConstants.ALLOY_SMELTER);
+		registry.addRecipes(BlastFurnaceRecipeCategory.get(), JEIConstants.BLAST_FURNACE);
 		registry.addRecipes(CoilerRecipeCategory.get(), JEIConstants.COILER);
 		registry.addRecipes(MixerRecipeCategory.get(mixerRecipeCategory), JEIConstants.MIXER);
 		registry.addRecipes(PlasticRecipeCategory.get(), JEIConstants.PLASTIC);
@@ -164,86 +176,84 @@ public class JEIHandler implements IModPlugin {
 		registry.addRecipes(UVBoxCategory.get(), JEIConstants.UV_BOX);
 		registry.addRecipes(LaserEngraverCategory.get(), JEIConstants.LASER_ENGRAVER);
 		registry.addRecipes(InWorldCraftingCategory.get(), JEIConstants.IN_WORLD);
-		registry.addRecipes(CokeOvenCategory.get(), JEIConstants.COKE_OVEN_ID);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerWireMill.class, JEIConstants.WIREMILL_ID, 0, 1, 4, 36);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerPlateBlendingMachine.class, JEIConstants.PLATE_BLENDER_ID, 0, 1, 4, 36);
-		registry.addRecipeClickArea(GuiSteamCrusher.class, 65, 34, 52, 17, JEIConstants.CRUSHER_ID);
+		registry.addRecipes(CokeOvenCategory.get(), JEIConstants.COKE_OVEN);
+		registry.addRecipes(ScientistRecipeCategory.get(), JEIConstants.SCIENTIST);
+
+		registry.addRecipeClickArea(GuiSteamCrusher.class, 65, 34, 52, 17, JEIConstants.CRUSHER);
+		registry.addRecipeClickArea(GuiCrusher.class, 65, 34, 52, 17, JEIConstants.CRUSHER);
+		registry.addRecipeClickArea(GuiWireMill.class, 75, 35, 28, 17, JEIConstants.WIREMILL);
+		registry.addRecipeClickArea(GuiPlateBendingMachine.class, 65, 34, 52, 17, JEIConstants.PLATE_BENDER);
+		registry.addRecipeClickArea(GuiSteamFurnace.class, 65, 34, 52, 17, VanillaRecipeCategoryUid.SMELTING);
+		registry.addRecipeClickArea(GuiAdvSteamFurnace.class, 65, 34, 52, 17, VanillaRecipeCategoryUid.SMELTING);
+		registry.addRecipeClickArea(GuiElectricFurnace.class, 65, 34, 52, 17, VanillaRecipeCategoryUid.SMELTING);
+		registry.addRecipeClickArea(GuiAdvElectricFurnace.class, 65, 34, 52, 17, VanillaRecipeCategoryUid.SMELTING);
+		registry.addRecipeClickArea(GuiSteamPlateBender.class, 65, 34, 52, 17, JEIConstants.PLATE_BENDER);
+		registry.addRecipeClickArea(GuiBasicBoiler.class, 43, 46, 15, 15, VanillaRecipeCategoryUid.FUEL);
+		registry.addRecipeClickArea(GuiAdvBoiler.class, 43, 46, 15, 15, VanillaRecipeCategoryUid.FUEL);
+		registry.addRecipeClickArea(GuiAlloySmelter.class, 65, 34, 52, 17, JEIConstants.ALLOY_SMELTER);
+		registry.addRecipeClickArea(GuiSteamAlloySmelter.class, 65, 34, 52, 17, JEIConstants.ALLOY_SMELTER);
+		CraftingTerminalTransferHandler.registerClickAreas(registry);
+		registry.addRecipeClickArea(GuiBlastFurnace.class, 65, 34, 52, 17, JEIConstants.BLAST_FURNACE);
+		registry.addRecipeClickArea(GuiIndustrialBlastFurnace.class, 60, 45, 52, 17, JEIConstants.BLAST_FURNACE);
+		registry.addRecipeClickArea(GuiCoiler.class, 65, 34, 52, 17, JEIConstants.COILER);
+		registry.addRecipeClickArea(GuiSteamMixer.class, 65, 15, 52, 17, JEIConstants.MIXER);
+		registry.addRecipeClickArea(GuiMixer.class, 65, 15, 52, 17, JEIConstants.MIXER);
+		registry.addRecipeClickArea(GuiPlasticProcessor.class, 118, 19, 31, 17, JEIConstants.PLASTIC);
+		registry.addRecipeClickArea(GuiSteamRubberProcessor.class, 65, 34, 52, 17, JEIConstants.RUBBER_PROCESSOR);
+		registry.addRecipeClickArea(GuiUVLightbox.class, 118, 19, 31, 17, JEIConstants.UV_BOX);
+		registry.addRecipeClickArea(GuiLaserEngraver.class, 118, 19, 31, 17, JEIConstants.LASER_ENGRAVER);
+		registry.addRecipeClickArea(GuiCokeOven.class, 118, 19, 31, 17, JEIConstants.COKE_OVEN);
+
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerCrusher.class, JEIConstants.CRUSHER, 0, 1, 3, 36);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerWireMill.class, JEIConstants.WIREMILL, 0, 1, 4, 36);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerPlateBendingMachine.class, JEIConstants.PLATE_BENDER, 0, 1, 4, 36);
 		PatternTerminalJEITransferHandler.loadPetternTerminalTransferHandler(recipeTransferRegistry);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamCrusher.class, JEIConstants.CRUSHER_ID, 0, 1, 3, 36);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamCrusher.class, JEIConstants.CRUSHER, 0, 1, 3, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamFurnace.class, VanillaRecipeCategoryUid.SMELTING, 0, 1, 2, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerAdvSteamFurnace.class, VanillaRecipeCategoryUid.SMELTING, 0, 1, 2, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerBasicBoiler.class, VanillaRecipeCategoryUid.FUEL, 0, 1, 1, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerAdvBoiler.class, VanillaRecipeCategoryUid.FUEL, 0, 1, 1, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerElectricFurnace.class, VanillaRecipeCategoryUid.SMELTING, 0, 1, 3, 36);
 		recipeTransferRegistry.addRecipeTransferHandler(ContainerAdvElectricFurnace.class, VanillaRecipeCategoryUid.SMELTING, 0, 1, 3, 36);
-		registry.addRecipeClickArea(GuiSteamFurnace.class, 65, 34, 52, 17, VanillaRecipeCategoryUid.SMELTING);
-		registry.addRecipeClickArea(GuiAdvSteamFurnace.class, 65, 34, 52, 17, VanillaRecipeCategoryUid.SMELTING);
-		registry.addRecipeClickArea(GuiElectricFurnace.class, 65, 34, 52, 17, VanillaRecipeCategoryUid.SMELTING);
-		registry.addRecipeClickArea(GuiAdvElectricFurnace.class, 65, 34, 52, 17, VanillaRecipeCategoryUid.SMELTING);
-		registry.addRecipeClickArea(GuiSteamPlateBlender.class, 65, 34, 52, 17, JEIConstants.PLATE_BLENDER_ID);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamPlateBlender.class, JEIConstants.PLATE_BLENDER_ID, 0, 1, 2, 36);
-		registry.addRecipeClickArea(GuiBasicBoiler.class, 43, 46, 15, 15, VanillaRecipeCategoryUid.FUEL);
-		registry.addRecipeClickArea(GuiAdvBoiler.class, 43, 46, 15, 15, VanillaRecipeCategoryUid.FUEL);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamPlateBender.class, JEIConstants.PLATE_BENDER, 0, 1, 2, 36);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerAlloySmelter.class, JEIConstants.ALLOY_SMELTER, 0, 2, 4, 36);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamAlloySmelter.class, JEIConstants.ALLOY_SMELTER, 0, 2, 3, 36);
+		CraftingTerminalTransferHandler.registerTransferHandlers(recipeTransferRegistry);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerCoiler.class, JEIConstants.COILER, 0, 2, 4, 36);
+
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.advElectricFurnace), VanillaRecipeCategoryUid.SMELTING);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.electricFurnace), VanillaRecipeCategoryUid.SMELTING);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamFurnace), VanillaRecipeCategoryUid.SMELTING);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.advSteamFurnace), VanillaRecipeCategoryUid.SMELTING);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.crusher), JEIConstants.CRUSHER_ID);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamCrusher), JEIConstants.CRUSHER_ID);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.plateBlendingMachine), JEIConstants.PLATE_BLENDER_ID);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamPlateBlender), JEIConstants.PLATE_BLENDER_ID);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.wireMill), JEIConstants.WIREMILL_ID);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerAlloySmelter.class, JEIConstants.ALLOY_SMELTER_ID, 0, 2, 4, 36);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamAlloySmelter.class, JEIConstants.ALLOY_SMELTER_ID, 0, 2, 3, 36);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.alloySmelter), JEIConstants.ALLOY_SMELTER_ID);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamAlloySmelter), JEIConstants.ALLOY_SMELTER_ID);
-		registry.addRecipeClickArea(GuiAlloySmelter.class, 65, 34, 52, 17, JEIConstants.ALLOY_SMELTER_ID);
-		registry.addRecipeClickArea(GuiSteamAlloySmelter.class, 65, 34, 52, 17, JEIConstants.ALLOY_SMELTER_ID);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.crusher), JEIConstants.CRUSHER);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamCrusher), JEIConstants.CRUSHER);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.advSteamCrusher), JEIConstants.CRUSHER);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.plateBendingMachine), JEIConstants.PLATE_BENDER);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamPlateBendeingMachine), JEIConstants.PLATE_BENDER);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.wireMill), JEIConstants.WIREMILL);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.alloySmelter), JEIConstants.ALLOY_SMELTER);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamAlloySmelter), JEIConstants.ALLOY_SMELTER);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.basicBoiler), VanillaRecipeCategoryUid.FUEL);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.advBoiler), VanillaRecipeCategoryUid.FUEL);
 		registry.addRecipeCatalyst(new ItemStack(EnergyInit.Generator), VanillaRecipeCategoryUid.FUEL);
-		CraftingTerminalTransferHandler.registerClickAreas(registry);
-		CraftingTerminalTransferHandler.registerTransferHandlers(recipeTransferRegistry);
 		registry.addRecipeCatalyst(new ItemStack(StorageInit.craftingTerminal), VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeCatalyst(new ItemStack(StorageInit.partCraftingTerminal), VanillaRecipeCategoryUid.CRAFTING);
-		if(Config.enableResearchSystem){
-			recipeTransferRegistry.addRecipeTransferHandler(ContainerResearchTable.class, JEIConstants.CUSTOM_CRAFTING_ID, 7, 9, 19, 36);
-			registry.addRecipeCatalyst(new ItemStack(CoreInit.researchTable), JEIConstants.CUSTOM_CRAFTING_ID);
-			registry.addRecipeCatalyst(new ItemStack(StorageInit.assembler), VanillaRecipeCategoryUid.CRAFTING, JEIConstants.CUSTOM_CRAFTING_ID);
-			recipeTransferRegistry.addRecipeTransferHandler(ContainerSteamSolderingStation.class, JEIConstants.CUSTOM_CRAFTING_ID, 0, 9, 12, 36);
-			registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamSolderingStation), JEIConstants.CUSTOM_CRAFTING_ID);
-			registry.addRecipeClickArea(GuiSteamSolderingStation.class, 65, 34, 52, 17, JEIConstants.CUSTOM_CRAFTING_ID);
-			recipeTransferRegistry.addRecipeTransferHandler(ContainerSolderingStation.class, JEIConstants.CUSTOM_CRAFTING_ID, 0, 9, 13, 36);
-			registry.addRecipeCatalyst(new ItemStack(FactoryInit.solderingStation), JEIConstants.CUSTOM_CRAFTING_ID);
-			registry.addRecipeClickArea(GuiSolderingStation.class, 79, 46, 52, 17, JEIConstants.CUSTOM_CRAFTING_ID);
-			registry.addRecipeCatalyst(new ItemStack(CoreInit.researchTable), JEIConstants.RESEARCH);
-			registry.addRecipeCatalyst(new ItemStack(CoreInit.blueprint), JEIConstants.RESEARCH);
-		}
-		registry.addRecipeClickArea(GuiBlastFurnace.class, 65, 34, 52, 17, JEIConstants.BLAST_FURNACE_ID);
-		registry.addRecipeClickArea(GuiIndustrialBlastFurnace.class, 60, 45, 52, 17, JEIConstants.BLAST_FURNACE_ID);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.blastFurnace), JEIConstants.BLAST_FURNACE_ID);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.industrialBlastFurnace), JEIConstants.BLAST_FURNACE_ID);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.blastFurnace), JEIConstants.BLAST_FURNACE);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.industrialBlastFurnace), JEIConstants.BLAST_FURNACE);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.coilerPlant), JEIConstants.COILER);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerCoiler.class, JEIConstants.COILER, 0, 2, 4, 36);
-		registry.addRecipeClickArea(GuiCoiler.class, 65, 34, 52, 17, JEIConstants.COILER);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.steamMixer), JEIConstants.MIXER);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.mixer), JEIConstants.MIXER);
-		registry.addRecipeClickArea(GuiSteamMixer.class, 65, 15, 52, 17, JEIConstants.MIXER);
-		registry.addRecipeClickArea(GuiMixer.class, 65, 15, 52, 17, JEIConstants.MIXER);
 		registry.addRecipeCatalyst(new ItemStack(FactoryInit.plasticProcessor), JEIConstants.PLASTIC);
-		registry.addRecipeClickArea(GuiPlasticProcessor.class, 118, 19, 31, 17, JEIConstants.PLASTIC);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.rubberProcessor), JEIConstants.RUBBER_PROCESSOR);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.rubberBoiler), JEIConstants.RUBBER_BOILER);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.uvLightbox), JEIConstants.UV_BOX);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.laserEngraver), JEIConstants.LASER_ENGRAVER);
+		registry.addRecipeCatalyst(new ItemStack(FactoryInit.cokeOven), JEIConstants.COKE_OVEN);
+
 		registry.addAdvancedGuiHandlers(new ConfiguratorGuiHandler());
 		registry.addAdvancedGuiHandlers(new GuiTankHandler());
 		registry.addAdvancedGuiHandlers(new GuiTerminalHandler());
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.rubberProcessor), JEIConstants.RUBBER_PROCESSOR);
-		registry.addRecipeClickArea(GuiSteamRubberProcessor.class, 65, 34, 52, 17, JEIConstants.RUBBER_PROCESSOR);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.rubberBoiler), JEIConstants.RUBBER_BOILER);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.uvLightbox), JEIConstants.UV_BOX);
-		registry.addRecipeClickArea(GuiUVLightbox.class, 118, 19, 31, 17, JEIConstants.UV_BOX);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.laserEngraver), JEIConstants.LASER_ENGRAVER);
-		registry.addRecipeClickArea(GuiLaserEngraver.class, 118, 19, 31, 17, JEIConstants.LASER_ENGRAVER);
-		registry.addRecipeCatalyst(new ItemStack(FactoryInit.cokeOven), JEIConstants.COKE_OVEN_ID);
-		registry.addRecipeClickArea(GuiCokeOven.class, 118, 19, 31, 17, JEIConstants.COKE_OVEN_ID);
+
 		long tM = System.currentTimeMillis() - time;
 		TMLogger.info("JEI Handler: Load Complete in " + tM + " miliseconds.");
 	}
@@ -278,7 +288,7 @@ public class JEIHandler implements IModPlugin {
 				new PlateBlenderRecipeCategory(), new AlloySmelterRecipeCategory(), new BlastFurnaceRecipeCategory(),
 				new CoilerRecipeCategory(), mixerRecipeCategory = new MixerRecipeCategory(), new PlasticRecipeCategory(),
 				new RubberBoilerRecipeCategory(), new RubberProcessorRecipeCategory(), new LaserEngraverCategory(),
-				new UVBoxCategory(), new InWorldCraftingCategory(), new CokeOvenCategory(),
+				new UVBoxCategory(), new InWorldCraftingCategory(), new CokeOvenCategory(), new ScientistRecipeCategory(),
 
 		});
 	}

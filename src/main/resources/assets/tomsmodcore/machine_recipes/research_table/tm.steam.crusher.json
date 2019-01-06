@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:basicbronzemachines"
   ],
-  "level": "tomsMod.craftingLevel.basic",
+  "level": "basic_wooden",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:tm.steam.crusher",
@@ -10,7 +10,7 @@
       "count": 1
     },
     "pattern": [
-      "DFD",
+      "FDF",
       "-C-",
       "P-P"
     ],
@@ -25,7 +25,7 @@
         "data": 0
       },
       "D": {
-        "ore": "gemDiamond",
+        "ore": "grinderBronze",
         "type": "forge:ore_dict"
       },
       "F": {

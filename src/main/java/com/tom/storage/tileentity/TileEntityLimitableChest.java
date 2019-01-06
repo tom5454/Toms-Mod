@@ -19,10 +19,10 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 
-import com.tom.api.tileentity.IGuiTile;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 import com.tom.storage.tileentity.inventory.ContainerLimitableChest;
 
-public class TileEntityLimitableChest extends TileEntityLockableLoot implements ITickable, ISidedInventory, IGuiTile {
+public class TileEntityLimitableChest extends TileEntityLockableLoot implements ITickable, ISidedInventory, IPacketReceiver {
 	private NonNullList<ItemStack> chestContents = NonNullList.<ItemStack>withSize(27, ItemStack.EMPTY);
 	/** Determines if the check for adjacent chests has taken place. */
 	public boolean adjacentChestChecked;

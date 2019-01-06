@@ -14,11 +14,11 @@ import com.tom.api.tileentity.IReceivable;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.handler.TMPlayerHandler;
 import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
+import com.tom.lib.utils.IDList;
 import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageTabGuiAction;
 import com.tom.util.BigEntry;
 import com.tom.util.EmptyBigEntry;
-import com.tom.util.IDList;
 
 import com.tom.core.item.TabletHandler;
 

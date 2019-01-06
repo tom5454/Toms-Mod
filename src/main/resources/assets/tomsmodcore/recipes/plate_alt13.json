@@ -1,7 +1,7 @@
 {
   "result": {
     "item": "tomsmodcore:plate",
-    "data": 11,
+    "data": 9,
     "count": 1
   },
   "pattern": [
@@ -16,7 +16,7 @@
       "type": "forge:ore_dict"
     },
     "I": {
-      "ore": "ingotIron",
+      "ore": "ingotBlueMetal",
       "type": "forge:ore_dict"
     }
   }

@@ -11,16 +11,17 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.grid.GridEnergyStorage;
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.IChannelLoadListener;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
 import com.tom.api.tileentity.TileEntityGridDeviceBase;
 import com.tom.config.Config;
+import com.tom.core.CoreInit;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyReceiver;
 import com.tom.storage.block.EnergyAcceptor;
-import com.tom.storage.handler.StorageNetworkGrid;
-import com.tom.storage.handler.StorageNetworkGrid.IChannelLoadListener;
 
 public class TileEntityEnergyAcceptor extends TileEntityGridDeviceBase<StorageNetworkGrid> implements IEnergyReceiver, ICustomMultimeterInformation, IChannelLoadListener {
 	private GridEnergyStorage energy = new GridEnergyStorage(100, 0);
@@ -77,10 +78,10 @@ public class TileEntityEnergyAcceptor extends TileEntityGridDeviceBase<StorageNe
 	public void updateEntity(IBlockState currentState) {
 		if (!world.isRemote) {
 			EnergyType type = currentState.getValue(EnergyAcceptor.ENERGY_TYPE);
-			grid.getData().addEnergyStorage(energy);
-			double rec = type.convertFrom(EnergyType.HV, grid.getData().receiveEnergy(EnergyType.HV.convertFrom(type, inEnergy.extractEnergy(10000, true)) * Config.storageSystemUsage, true) / Config.storageSystemUsage);
+			grid.getSData().addEnergyStorage(energy);
+			double rec = type.convertFrom(EnergyType.HV, grid.getSData().receiveEnergy(EnergyType.HV.convertFrom(type, inEnergy.extractEnergy(10000, true)) * Config.storageSystemUsage, true) / Config.storageSystemUsage);
 			if (rec > 0) {
-				grid.getData().receiveEnergy(EnergyType.HV.convertFrom(type, inEnergy.extractEnergy(rec, false)) * Config.storageSystemUsage, false);
+				grid.getSData().receiveEnergy(EnergyType.HV.convertFrom(type, inEnergy.extractEnergy(rec, false)) * Config.storageSystemUsage, false);
 			}
 		}
 	}
@@ -88,7 +89,11 @@ public class TileEntityEnergyAcceptor extends TileEntityGridDeviceBase<StorageNe
 	@Override
 	public List<ITextComponent> getInformation(List<ITextComponent> list) {
 		// if(!worldObj.isRemote)grid.getData().receiveEnergy(1, false);
-		list.add(new TextComponentTranslation("tomsMod.chat.energyStored", new TextComponentString("Unit").setStyle(new Style().setColor(TextFormatting.DARK_PURPLE)), grid.getData().getEnergyStored(), grid.getData().getMaxEnergyStored()));
+		list.add(new TextComponentTranslation("tomsMod.chat.energyStored", new TextComponentString("Unit").setStyle(new Style().setColor(TextFormatting.DARK_PURPLE)), grid.getSData().getEnergyStored(), grid.getSData().getMaxEnergyStored()));
+		if(CoreInit.isDebugging){
+			list.add(new TextComponentString(getGrid().getSData().toString()));
+			list.add(new TextComponentString(getGrid().getSData().getPowerCache().toString()));
+		}
 		return list;
 	}
 
@@ -104,10 +109,15 @@ public class TileEntityEnergyAcceptor extends TileEntityGridDeviceBase<StorageNe
 
 	@Override
 	public void onPartsUpdate() {
-		grid.getData().addEnergyStorage(energy);
+		grid.getSData().addEnergyStorage(energy);
 	}
 
 	public EnergyType getType() {
 		return world.getBlockState(pos).getValue(EnergyAcceptor.ENERGY_TYPE);
+	}
+	@Override
+	public void invalidateGrid() {
+		grid.getSData().removeEnergyStorage(energy);
+		super.invalidateGrid();
 	}
 }

@@ -14,13 +14,13 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
+import com.tom.api.grid.StorageNetworkGrid.ICraftingController;
+import com.tom.api.grid.StorageNetworkGrid.IDevice;
+import com.tom.api.grid.StorageNetworkGrid.IPowerDrain;
 import com.tom.storage.block.CraftingController;
 import com.tom.storage.handler.AutoCraftingHandler;
 import com.tom.storage.handler.CacheRegistry;
 import com.tom.storage.handler.ICraftable;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingController;
-import com.tom.storage.handler.StorageNetworkGrid.IDevice;
-import com.tom.storage.handler.StorageNetworkGrid.IPowerDrain;
 import com.tom.util.TomsModUtils;
 
 public class TileEntityCraftingController extends TileEntityChannel implements ICraftingController, IPowerDrain, IDevice {
@@ -150,7 +150,7 @@ public class TileEntityCraftingController extends TileEntityChannel implements I
 		// MachineCraftingHandler.addCrusherRecipe(new ItemStack(Items.COAL),
 		// TMResource.COAL.getStackNormal(Type.DUST));
 		List<ITextComponent> list = new ArrayList<>();
-		int id = grid.getData().getCpuID(this);
+		int id = grid.getSData().getCpuID(this);
 		ITextComponent idF = new TextComponentTranslation("tomsMod.storage.cpuId", id);
 		if (crafting != null) {
 			int secTime = MathHelper.ceil(totalTime / 20D);
@@ -216,7 +216,7 @@ public class TileEntityCraftingController extends TileEntityChannel implements I
 
 	public ITextComponent[] cancelCrafting() {
 		List<ITextComponent> list = new ArrayList<>();
-		int id = grid.getData().getCpuID(this);
+		int id = grid.getSData().getCpuID(this);
 		ITextComponent idF = new TextComponentTranslation("tomsMod.storage.cpuId", id);
 		if (crafting != null) {
 			int secTime = MathHelper.ceil(totalTime / 20D);
@@ -242,7 +242,7 @@ public class TileEntityCraftingController extends TileEntityChannel implements I
 
 	@Override
 	public void onGridReload() {
-		grid.getData().addCraftingController(this);
+		grid.getSData().addCraftingController(this);
 	}
 
 	@Override
@@ -255,7 +255,7 @@ public class TileEntityCraftingController extends TileEntityChannel implements I
 		if (!world.isRemote) {
 			if (cancelTimer > 0)
 				cancelTimer--;
-			grid.getData().addCraftingController(this);
+			grid.getSData().addCraftingController(this);
 			if (isActive().fullyActive())
 				handleCrafting();
 			TomsModUtils.setBlockStateWithCondition(world, pos, state, CraftingController.STATE, isActive().fullyActive() ? hasJob() ? 2 : 1 : 0);

@@ -1,6 +1,6 @@
 package com.tom.energy.tileentity;
 
-import com.tom.api.energy.EnergyType;
+import com.tom.lib.api.energy.EnergyType;
 
 public class TileEntityHVBattery extends TileEntityEnergyStorage {
 

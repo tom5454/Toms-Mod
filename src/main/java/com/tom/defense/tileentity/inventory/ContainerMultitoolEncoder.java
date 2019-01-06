@@ -8,16 +8,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.tom.api.item.IIdentityCard;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.core.CoreInit;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.tileentity.inventory.ContainerSecurityStation.SlotIndentityCard;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 import com.tom.util.TomsModUtils;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
-public class ContainerMultitoolEncoder extends ContainerTomsMod implements IGuiTile {
+public class ContainerMultitoolEncoder extends ContainerTomsMod implements IPacketReceiver {
 	public ItemStack writerStack;
 	public IInventory inventory;
 	public EntityPlayer player;

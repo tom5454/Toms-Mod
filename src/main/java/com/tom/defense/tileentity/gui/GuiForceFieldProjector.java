@@ -7,8 +7,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import com.tom.api.gui.GuiNumberValueBox;
-import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.gui.GuiNumberValueBox.GuiButtonNextNum;
+import com.tom.api.gui.GuiTomsMod;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.tileentity.TileEntityForceFieldProjector;
 import com.tom.defense.tileentity.inventory.ContainerForceFieldProjector;
@@ -58,10 +58,10 @@ public class GuiForceFieldProjector extends GuiTomsMod {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			this.sendButtonUpdate(0, te, te.rsMode.ordinal() + 1);
+			this.sendButtonUpdateToTile(0, te.rsMode.ordinal() + 1);
 		} else if (button instanceof GuiButtonNextNum) {
 			GuiNumberValueBox b = ((GuiButtonNextNum) button).parent;
-			this.sendButtonUpdate(b.id, te, b.num);
+			this.sendButtonUpdateToTile(b.id, b.num);
 		}
 	}
 

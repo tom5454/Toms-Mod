@@ -48,7 +48,7 @@ public class BlastFurnaceRecipeCategory implements IRecipeCategory<BlastFurnaceR
 
 	@Override
 	public String getUid() {
-		return JEIConstants.BLAST_FURNACE_ID;
+		return JEIConstants.BLAST_FURNACE;
 	}
 
 	@Override

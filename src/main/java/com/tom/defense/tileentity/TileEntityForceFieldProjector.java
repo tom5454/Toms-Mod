@@ -23,14 +23,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 
 import com.tom.api.block.IItemTile;
-import com.tom.api.energy.EnergyStorage;
 import com.tom.api.item.IPowerLinkCard;
 import com.tom.api.item.ISecurityStationLinkCard;
 import com.tom.api.item.ISwitch;
 import com.tom.api.tileentity.AccessType;
 import com.tom.api.tileentity.IForceDevice;
 import com.tom.api.tileentity.IForcePowerStation;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.ISecurityStation;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.core.CoreInit;
@@ -40,9 +38,10 @@ import com.tom.defense.ProjectorLensConfigEntry;
 import com.tom.defense.ProjectorLensConfigEntry.CompiledProjectorConfig;
 import com.tom.defense.block.FieldProjector;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.lib.api.energy.EnergyStorage;
 import com.tom.util.TomsModUtils;
 
-public class TileEntityForceFieldProjector extends TileEntityTomsMod implements IForceDevice, ISidedInventory, IGuiTile, IItemTile {
+public class TileEntityForceFieldProjector extends TileEntityTomsMod implements IForceDevice, ISidedInventory, IItemTile {
 	public ForceDeviceControlType rsMode = ForceDeviceControlType.LOW_REDSTONE;
 	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
 	private EnergyStorage energy = new EnergyStorage(1000000, 100000);

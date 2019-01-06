@@ -21,10 +21,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.ItemEnergyContainer;
 import com.tom.api.item.IConfigurator;
 import com.tom.handler.ConfiguratorHandler;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.ItemEnergyContainer;
 import com.tom.util.TomsModUtils;
 
 import com.tom.energy.tileentity.TileEntityBatteryBox;

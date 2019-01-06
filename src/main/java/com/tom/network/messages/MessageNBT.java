@@ -20,7 +20,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import com.tom.api.Capabilities;
 import com.tom.api.multipart.IGuiMultipart;
 import com.tom.api.network.INBTPacketReceiver;
-import com.tom.api.network.INBTPacketReceiver.IANBTPacketReceiver;
 import com.tom.api.network.INBTPacketSender;
 import com.tom.api.tileentity.IConfigurable;
 import com.tom.lib.network.MessageBase;
@@ -127,35 +126,26 @@ public class MessageNBT extends MessageBase<MessageNBT> {
 				Optional<IPartInfo> part = container.get(SlotRegistry.INSTANCE.getSlotFromID(partPos));
 				if (!part.isPresent())
 					return;
-				if (part.get().getTile() instanceof IANBTPacketReceiver) {
-					((IANBTPacketReceiver) part.get().getTile()).receiveNBTPacket(tag, mc.player);
-				} else if (part.get().getTile() instanceof INBTPacketReceiver) {
-					((INBTPacketReceiver) part.get().getTile()).receiveNBTPacket(tag);
+				if (part.get().getTile() instanceof INBTPacketReceiver) {
+					((INBTPacketReceiver) part.get().getTile()).receiveNBTPacket(mc.player, tag);
 				}
 			} else if (isConfiguration) {
 				TileEntity tile = mc.world.getTileEntity(pos);
 				IConfigurable c = tile.getCapability(Capabilities.CONFIGURABLE, partPos == -1 ? null : EnumFacing.VALUES[partPos]);
 				if (c != null) {
-					if (c instanceof IANBTPacketReceiver) {
-						((IANBTPacketReceiver) c).receiveNBTPacket(tag, mc.player);
-					} else {
-						((INBTPacketReceiver) c).receiveNBTPacket(tag);
-					}
+					((INBTPacketReceiver) c).receiveNBTPacket(mc.player, tag);
 				}
 			} else {
 				TileEntity tile = mc.world.getTileEntity(pos);
-				if (tile instanceof IANBTPacketReceiver) {
-					((IANBTPacketReceiver) tile).receiveNBTPacket(tag, mc.player);
-					tile.markDirty();
-				} else if (tile instanceof INBTPacketReceiver) {
-					((INBTPacketReceiver) tile).receiveNBTPacket(tag);
+				if (tile instanceof INBTPacketReceiver) {
+					((INBTPacketReceiver) tile).receiveNBTPacket(mc.player, tag);
 					tile.markDirty();
 				}
 			}
 
 		}else{
 			if (mc.currentScreen instanceof INBTPacketReceiver) {
-				((INBTPacketReceiver) mc.currentScreen).receiveNBTPacket(tag);
+				((INBTPacketReceiver) mc.currentScreen).receiveNBTPacket(mc.player, tag);
 			}
 		}
 	}
@@ -173,36 +163,25 @@ public class MessageNBT extends MessageBase<MessageNBT> {
 						Optional<IPartInfo> part = container.get(SlotRegistry.INSTANCE.getSlotFromID(message.partPos));
 						if (!part.isPresent())
 							return;
-						if (part.get().getTile() instanceof IANBTPacketReceiver) {
-							((IANBTPacketReceiver) part.get().getTile()).receiveNBTPacket(message.tag, player);
-						} else if (part.get().getTile() instanceof INBTPacketReceiver) {
-							((INBTPacketReceiver) part.get().getTile()).receiveNBTPacket(message.tag);
+						if (part.get().getTile() instanceof INBTPacketReceiver) {
+							((INBTPacketReceiver) part.get().getTile()).receiveNBTPacket(player, message.tag);
 						}
 					} else if (message.isConfiguration) {
 						TileEntity tile = player.world.getTileEntity(message.pos);
 						IConfigurable c = tile.getCapability(Capabilities.CONFIGURABLE, message.partPos == -1 ? null : EnumFacing.VALUES[message.partPos]);
 						if (c != null) {
-							if (c instanceof IANBTPacketReceiver) {
-								((IANBTPacketReceiver) c).receiveNBTPacket(message.tag, player);
-							} else {
-								((INBTPacketReceiver) c).receiveNBTPacket(message.tag);
-							}
+							((INBTPacketReceiver) c).receiveNBTPacket(player, message.tag);
 						}
 					} else {
 						TileEntity tile = player.world.getTileEntity(message.pos);
-						if (tile instanceof IANBTPacketReceiver) {
-							((IANBTPacketReceiver) tile).receiveNBTPacket(message.tag, player);
-							tile.markDirty();
-						} else if (tile instanceof INBTPacketReceiver) {
-							((INBTPacketReceiver) tile).receiveNBTPacket(message.tag);
+						if (tile instanceof INBTPacketReceiver) {
+							((INBTPacketReceiver) tile).receiveNBTPacket(player, message.tag);
 							tile.markDirty();
 						}
 					}
 				} else {
-					if (player.openContainer instanceof IANBTPacketReceiver) {
-						((IANBTPacketReceiver) player.openContainer).receiveNBTPacket(message.tag, player);
-					} else if (player.openContainer instanceof INBTPacketReceiver) {
-						((INBTPacketReceiver) player.openContainer).receiveNBTPacket(message.tag);
+					if (player.openContainer instanceof INBTPacketReceiver) {
+						((INBTPacketReceiver) player.openContainer).receiveNBTPacket(player, message.tag);
 					}
 				}
 			}

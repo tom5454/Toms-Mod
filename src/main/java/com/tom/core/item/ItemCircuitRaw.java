@@ -47,6 +47,11 @@ public class ItemCircuitRaw extends Item implements IModelRegisterRequired, ICus
 		return ItemCircuit.serialize(id, "raw", serializeCount ? stack.getCount() : 1);
 	}
 	@Override
+	public String getCustomName(ItemStack stack) {
+		String id = !stack.hasTagCompound() ? "invalid" : stack.getTagCompound().getString("id");
+		return "circraw_" + id;
+	}
+	@Override
 	public boolean onEntityItemUpdate(EntityItem entityItem) {
 		ItemStack s = updateEntityItem(entityItem.world, new BlockPos(entityItem), entityItem, entityItem.getItem());
 		if (s == null || s.isEmpty()) {

@@ -14,24 +14,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.api.grid.IDenseGridDevice;
-import com.tom.api.multipart.IDuctModule;
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.Channel;
+import com.tom.api.grid.StorageNetworkGrid.IChannelUpdateListener;
 import com.tom.api.multipart.PartDuct;
 import com.tom.api.tileentity.ISecuredTileEntity;
 import com.tom.client.EventHandlerClient;
+import com.tom.lib.api.CapabilityGridDeviceHost;
+import com.tom.lib.api.grid.IGrid;
 import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridDeviceHost;
 import com.tom.lib.handler.WorldHandler;
-import com.tom.storage.handler.StorageNetworkGrid;
-import com.tom.storage.handler.StorageNetworkGrid.Channel;
-import com.tom.storage.handler.StorageNetworkGrid.IAdvRouterTile;
-import com.tom.storage.handler.StorageNetworkGrid.IChannelUpdateListener;
-import com.tom.storage.handler.StorageNetworkGrid.IControllerTile;
-import com.tom.storage.handler.StorageNetworkGrid.IRouterTile;
 import com.tom.storage.multipart.block.StorageNetworkCable;
 import com.tom.storage.multipart.block.StorageNetworkCable.CableColor;
 import com.tom.storage.multipart.block.StorageNetworkCable.CableType;
 
-public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implements IChannelUpdateListener, ISecuredTileEntity, IDenseGridDevice {
+public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implements IChannelUpdateListener, ISecuredTileEntity, IGridDeviceHost {
 	public StorageNetworkCable.CableType type = StorageNetworkCable.CableType.NORMAL;
 	public CableColor color = CableColor.FLUIX;
 	private Channel[] channel;
@@ -63,33 +61,44 @@ public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implem
 		this.color = c;
 		size = type != null ? type.getSize() : 0.1;
 		updateBox();
+		if(world != null)invalidateGrid();
+		else grid = constructGrid();
 	}
 
 	@Override
 	public boolean isValidConnection(EnumFacing side, TileEntity tile) {// ((IControllerTile)
 		// te).getControllerOnSide(d.getOpposite())
-		if (type != StorageNetworkCable.CableType.DENSE && tile instanceof IGridDevice && !(tile instanceof IDuctModule<?>) && ((IGridDevice<?>) tile).getGrid().getClass() == this.grid.getClass())
-			return true;
-		if (tile instanceof IControllerTile)
-			return ((IControllerTile) tile).getControllerOnSide(side.getOpposite()) != null;
-		if (tile instanceof IRouterTile || tile instanceof IAdvRouterTile)
-			return true;
+		boolean dense = type == CableType.DENSE;
+		if(dense){
+			if(CapabilityGridDeviceHost.getDevice(tile, side.getOpposite(), StorageNetworkGrid.class, StorageNetworkGrid.DUMMY) != null)return true;
+		}else{
+			if(CapabilityGridDeviceHost.getDevice(tile, side.getOpposite(), StorageNetworkGrid.class) != null)return true;
+		}
 		return false;
 	}
 
 	@Override
 	public int isValidConnectionA(EnumFacing side, TileEntity tile) {
-		if (type != StorageNetworkCable.CableType.DENSE && tile instanceof IGridDevice && !(tile instanceof IDuctModule<?>) && ((IGridDevice<?>) tile).getGrid().getClass() == this.grid.getClass()) {
-			/*if(type == StorageNetworkGrid.CableType.DENSE)
-				setChannel(side, ((IGridDevice<StorageNetworkGrid>)tile).getGrid().channel);*/
-			return 2;
+		boolean dense = type == CableType.DENSE;
+		if(dense){
+			IGridDevice<StorageNetworkGrid> dev = CapabilityGridDeviceHost.getDevice(tile, side.getOpposite(), StorageNetworkGrid.class, StorageNetworkGrid.DUMMY);
+			if (dev != null) {
+				/*if(type == StorageNetworkGrid.CableType.DENSE)
+					setChannel(side, ((IGridDevice<StorageNetworkGrid>)tile).getGrid().channel);*/
+				return 1;
+			}
+			setChannel(side.getOpposite(), internal);
+			return 0;
+		}else{
+			IGridDevice<StorageNetworkGrid> dev = CapabilityGridDeviceHost.getDevice(tile, side.getOpposite(), StorageNetworkGrid.class);
+			if (dev != null) {
+				/*if(type == StorageNetworkGrid.CableType.DENSE)
+					setChannel(side, ((IGridDevice<StorageNetworkGrid>)tile).getGrid().channel);*/
+				return 2;
+			}
+			setChannel(side.getOpposite(), internal);
+			return 0;
 		}
-		setChannel(side.getOpposite(), internal);
-		if (tile instanceof IControllerTile)
-			return ((IControllerTile) tile).getControllerOnSide(side.getOpposite()) != null ? type == StorageNetworkCable.CableType.DENSE ? 1 : 2 : 0;
-		if (tile instanceof IRouterTile || tile instanceof IAdvRouterTile)
-			return type == StorageNetworkCable.CableType.DENSE ? 1 : 2;
-		return 0;
 	}
 
 	/*@Override
@@ -102,7 +111,7 @@ public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implem
 		}
 	}*/
 	private byte getChannel() {
-		if (grid.getData().networkState.showChannels()) {
+		if (grid.getSData().networkState.showChannels()) {
 			if (grid.channel.channel == 0) {
 				if (ch >= 0)
 					return ch;
@@ -119,7 +128,7 @@ public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implem
 
 	@Override
 	public StorageNetworkGrid constructGrid() {
-		return new StorageNetworkGrid();
+		return new StorageNetworkGrid(type == CableType.DENSE);
 	}
 
 	@Override
@@ -142,6 +151,8 @@ public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implem
 		color = CableColor.VALUES[nbt.getByte("cableColor")];
 		size = type != null ? type.getSize() : 0.1;
 		updateBox();
+		if(world != null)invalidateGrid();
+		else grid = constructGrid();
 	}
 
 	@Override
@@ -291,7 +302,7 @@ public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implem
 
 	private byte[] getChannelBytes() {
 		byte[] bytes = new byte[EnumFacing.VALUES.length];
-		boolean hasEnergy = grid.getData().isFullyActive();
+		boolean hasEnergy = grid.getSData().isFullyActive();
 		for (int i = 0;i < EnumFacing.VALUES.length;i++)
 			bytes[i] = hasEnergy ? getChannel(EnumFacing.VALUES[i]).getValue() : 0;
 			return bytes;
@@ -319,7 +330,7 @@ public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implem
 
 	@Override
 	public BlockPos getSecurityStationPos() {
-		return getGrid().getData().getSecurityStationPos();
+		return getGrid().getSData().getSecurityStationPos();
 	}
 
 	@Override
@@ -329,8 +340,14 @@ public class PartStorageNetworkCable extends PartDuct<StorageNetworkGrid> implem
 		WorldHandler.queueTask(world.provider.getDimension(), this::channelUpdate);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public boolean isDenseGridDevice() {
-		return type == CableType.DENSE;
+	public <G extends IGrid<?, G>> IGridDevice<G> getDevice(Class<G> gridClass, Object... objects) {
+		if(gridClass == StorageNetworkGrid.class){
+			boolean dense = objects != null && objects.length > 0;
+			boolean tdense = type == CableType.DENSE;
+			if(dense == tdense)return (IGridDevice<G>) this;
+		}
+		return null;
 	}
 }

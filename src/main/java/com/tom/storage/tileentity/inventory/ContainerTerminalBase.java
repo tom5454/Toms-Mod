@@ -9,7 +9,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.IContainerListener;
@@ -27,19 +26,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
+import com.tom.api.grid.StorageNetworkGrid.ControllMode;
+import com.tom.api.grid.StorageNetworkGrid.SearchType;
 import com.tom.api.inventory.StoredItemStack;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.handler.TMPlayerHandler;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 import com.tom.lib.utils.RenderUtil;
-import com.tom.network.NetworkHandler;
-import com.tom.network.messages.MessageNBT;
 import com.tom.storage.handler.AutoCraftingHandler;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.ITerminal;
 import com.tom.storage.handler.InventoryCache;
 import com.tom.storage.handler.StorageData;
-import com.tom.storage.handler.StorageNetworkGrid.ControllMode;
 import com.tom.storage.tileentity.TileEntityBasicTerminal;
+import com.tom.storage.tileentity.TileEntityBasicTerminal.TerminalState;
 import com.tom.storage.tileentity.gui.GuiTerminalBase;
 import com.tom.util.TomsModUtils;
 
@@ -47,7 +46,7 @@ import com.tom.core.tileentity.inventory.ContainerConfigurator.SlotData;
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 /** Gui: GuiTerminalBase */
-public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile, Function<AutoCraftingHandler.CraftingCalculationResult, Void> {
+public class ContainerTerminalBase extends ContainerTomsMod implements IPacketReceiver, Function<AutoCraftingHandler.CraftingCalculationResult, Void> {
 	public List<StoredItemStack> itemList = Lists.<StoredItemStack>newArrayList();
 	public List<StoredItemStack> itemListClient = Lists.<StoredItemStack>newArrayList();
 	public List<StoredItemStack> itemListClientSorted = Lists.<StoredItemStack>newArrayList();
@@ -59,7 +58,6 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 	public boolean isCraftingReport = false;
 	public AutoCraftingHandler.CalculatedCrafting currentReport;
 	private boolean dataSent = false, calculated = false, wideTerm, tallTerm;
-	private TileEntityBasicTerminal.TerminalState lastPower;
 	protected ITerminal te;
 	public int terminalType, lines;
 	private int sortingData, searchType, controllMode;
@@ -67,6 +65,9 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 	public ContainerTerminalBase(ITerminal terminal, EntityPlayer player) {
 		te = terminal;
 		this.player = player;
+		syncHandler.registerShort(0, te::getTerminalMode, i -> terminalType = i);
+		syncHandler.registerEnum(1, te::getTerminalState, te::setClientState, TerminalState.VALUES);
+		syncHandler.setReceiver(terminal);
 	}
 
 	public final void addStorageSlots(int lines, int x, int y) {
@@ -190,7 +191,7 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 		if (id == 0) {
 			playerH.setItemSorting(extra);
 		} else if (id == 1) {
-			playerH.setSearchBoxType(extra % 4);
+			playerH.setSearchBoxType(extra % SearchType.VALUES.length);
 		} else if (id == 2) {
 			int controllMode = extra % 0x10;
 			playerH.wideTerminal = TomsModUtils.getBit(extra, 4);
@@ -245,7 +246,6 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 				if (storedSOld == null || (!(storedS.equals(storedSOld) && storedS.getQuantity() == storedSOld.getQuantity()))) {
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setInteger("slot", i);
-					// tag.setBoolean("n", false);
 					if (storedS != null)
 						storedS.writeToNBT(tag);
 					list.appendTag(tag);
@@ -258,7 +258,6 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 				if (stackOld == null || (!stackOld.isEqual(stack))) {
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setInteger("slot", i);
-					// tag.setBoolean("n", false);
 					if (stack != null)
 						stack.writeToNBT(tag);
 					tag.setByte("c", (byte) 1);
@@ -266,12 +265,6 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 					sendUpdate = true;
 				}
 			}
-			/*for(int i = itemList.size();i<itemListOld.size();i++){
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("slot", i);
-			tag.setBoolean("n", true);
-			list.appendTag(tag);
-			}*/
 			NBTTagCompound mainTag = new NBTTagCompound();
 			mainTag.setTag("l", list);
 			mainTag.setInteger("s", itemList.size());
@@ -293,26 +286,14 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 			termMode = TomsModUtils.setBit(termMode, 4, playerH.wideTerminal);
 			termMode = TomsModUtils.setBit(termMode, 5, playerH.tallTerminal);
 			mainTag.setByte("cm", (byte) termMode);
-			// mainTag.setInteger("c", te.getTerminalMode());
 			mainTag.setBoolean("r", false);
-			TileEntityBasicTerminal.TerminalState terminalState = te.getTerminalState();
+			if (sendUpdate)syncHandler.sendNBTToGui(mainTag);
 			for (IContainerListener crafter : listeners) {
-				if (sendUpdate)
-					NetworkHandler.sendTo(new MessageNBT(mainTag), (EntityPlayerMP) crafter);
-				if (terminalType != te.getTerminalMode()) {
-					crafter.sendWindowProperty(this, 0, te.getTerminalMode());
-				}
-				if (lastPower != terminalState) {
-					crafter.sendWindowProperty(this, 1, terminalState.ordinal());
-				}
 				sendToCrafter(crafter);
 			}
-			terminalType = te.getTerminalMode();
-			lastPower = terminalState;
 			afterSending();
 		} else {
 			if (!dataSent) {
-				// currentReport.writeToClientNBTPacket(tag);
 				if (calculated) {
 					if (currentReport != null) {
 						AutoCraftingHandler.CompiledCalculatedCrafting c = te.getData().compileCalculatedCrafting(currentReport);
@@ -323,22 +304,16 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 						termMode = TomsModUtils.setBit(termMode, 4, playerH.wideTerminal);
 						termMode = TomsModUtils.setBit(termMode, 5, playerH.tallTerminal);
 						mainTag.setByte("cm", (byte) termMode);
-						for (IContainerListener crafter : listeners) {
-							c.sendTo((EntityPlayerMP) crafter, mainTag);
-						}
+						c.sendTo(syncHandler, mainTag);
 					} else {
 						NBTTagCompound mainTag = new NBTTagCompound();
 						mainTag.setBoolean("ERROR", true);
-						for (IContainerListener crafter : listeners) {
-							NetworkHandler.sendTo(new MessageNBT(mainTag), (EntityPlayerMP) crafter);
-						}
+						syncHandler.sendNBTToGui(mainTag);
 					}
 				} else {
 					NBTTagCompound mainTag = new NBTTagCompound();
 					mainTag.setBoolean("r", true);
-					for (IContainerListener crafter : listeners) {
-						NetworkHandler.sendTo(new MessageNBT(mainTag), (EntityPlayerMP) crafter);
-					}
+					syncHandler.sendNBTToGui(mainTag);
 				}
 				dataSent = true;
 			} else {
@@ -352,9 +327,7 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 					termMode = TomsModUtils.setBit(termMode, 4, playerH.wideTerminal);
 					termMode = TomsModUtils.setBit(termMode, 5, playerH.tallTerminal);
 					mainTag.setByte("cm", (byte) termMode);
-					for (IContainerListener crafter : listeners) {
-						NetworkHandler.sendTo(new MessageNBT(mainTag), (EntityPlayerMP) crafter);
-					}
+					syncHandler.sendNBTToGui(mainTag);
 				}
 			}
 		}
@@ -664,20 +637,6 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	/**
-	 * Use {@link #sendToCrafter(IContainerListener)}, {@link #afterSending()}
-	 */
-	public final void updateProgressBar(int id, int data) {
-		if (id == 0) {
-			terminalType = data;
-		} else if (id == 1) {
-			te.setClientState(TileEntityBasicTerminal.TerminalState.VALUES[data]);
-		} else
-			onProgressBarUpdate(id, data);
-	}
-
-	@Override
 	protected final void addPlayerSlots(InventoryPlayer playerInventory, int x, int y) {
 		this.playerSlotsStart = inventorySlots.size() - 1;
 		super.addPlayerSlots(playerInventory, x, y);
@@ -698,9 +657,6 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 	}
 
 	public void afterSending() {
-	}
-
-	public void onProgressBarUpdate(int id, int data) {
 	}
 
 	public void onButtonPressed(int id, EntityPlayer player, int extra) {
@@ -725,5 +681,9 @@ public class ContainerTerminalBase extends ContainerTomsMod implements IGuiTile,
 			dataSent = false;
 		}
 		return null;
+	}
+	@Override
+	public void receiveNBTPacket(EntityPlayer from, NBTTagCompound message) {
+		te.receiveNBTPacket(from, message);
 	}
 }

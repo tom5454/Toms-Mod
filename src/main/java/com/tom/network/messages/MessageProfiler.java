@@ -128,7 +128,7 @@ public class MessageProfiler extends MessageBase<MessageProfiler> {
 		EventHandlerClient.getInstance().tps = message.dimTps;
 		EventHandlerClient.getInstance().meanTime = message.meanTickTime;
 		EventHandlerClient.getInstance().meanTPS = message.meanTPS;
-		if (message.profilingData.size() > 1) {
+		if (message.profilingData.size() > 1 && !player.isSneaking()) {
 			EventHandlerClient.getInstance().list = message.profilingData;
 			EventHandlerClient.getInstance().lastUpdate = player.world.getTotalWorldTime();
 		}

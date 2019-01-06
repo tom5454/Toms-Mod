@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:mvmachines"
   ],
-  "level": "tomsMod.craftingLevel.esoldering",
+  "level": "e_soldering",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:tm.wiremill",

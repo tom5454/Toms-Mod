@@ -323,4 +323,8 @@ public abstract class PartModule<G extends IGrid<?, G>> extends MultipartTomsMod
 		this.world = this.getWorld2();
 		this.pos = this.getPos2();
 	}
+	@Override
+	public boolean canHaveDefaultGridHandler() {
+		return false;
+	}
 }

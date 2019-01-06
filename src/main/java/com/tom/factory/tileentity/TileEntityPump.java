@@ -26,8 +26,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
-import com.tom.api.energy.EnergyStorage;
 import com.tom.api.tileentity.ICustomMultimeterInformation;
+import com.tom.lib.api.energy.EnergyStorage;
 import com.tom.util.TomsModUtils;
 
 public class TileEntityPump extends TileEntityMachineBase implements ITileFluidHandler, ICustomMultimeterInformation {

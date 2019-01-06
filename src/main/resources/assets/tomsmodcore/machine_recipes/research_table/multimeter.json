@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:multimeter"
   ],
-  "level": "tomsMod.craftingLevel.soldering",
+  "level": "soldering",
   "recipe": {
     "result": {
       "item": "tomsmodenergy:multimeter",

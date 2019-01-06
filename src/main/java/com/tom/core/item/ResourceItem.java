@@ -147,5 +147,10 @@ public class ResourceItem extends Item {
 			if(serializeCount)ret.put("count", stack.getCount());
 			return ret;
 		}
+
+		@Override
+		public String getCustomName(ItemStack stack) {
+			return "m_" + CraftingMaterial.get(stack.getMetadata()).getName();
+		}
 	}
 }

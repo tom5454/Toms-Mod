@@ -1,12 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-        "up": "blocks/tm/tabletCrafter_top",
+        "up": "tomsmodcore:blocks/tabletCrafter_top",
         "down": "blocks/iron_block",
-        "north": "blocks/tm/tabletCrafter_side",
-         "east": "blocks/tm/tabletCrafter_side",
-        "south": "blocks/tm/tabletCrafter_side",
-         "west": "blocks/tm/tabletCrafter_side",
-        "particle": "blocks/tm/tabletCrafter_top"
+        "north": "tomsmodcore:blocks/tabletCrafter_side",
+         "east": "tomsmodcore:blocks/tabletCrafter_side",
+        "south": "tomsmodcore:blocks/tabletCrafter_side",
+         "west": "tomsmodcore:blocks/tabletCrafter_side",
+        "particle": "tomsmodcore:blocks/tabletCrafter_top"
     }
 }

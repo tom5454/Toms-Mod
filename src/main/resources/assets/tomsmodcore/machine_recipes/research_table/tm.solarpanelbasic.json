@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:solarpanel"
   ],
-  "level": "tomsMod.craftingLevel.electrical",
+  "level": "electrical",
   "recipe": {
     "result": {
       "item": "tomsmodenergy:tm.solarpanelbasic",

@@ -7,12 +7,12 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ITickable;
 
+import com.tom.api.grid.StorageNetworkGrid.IControllerTile;
 import com.tom.api.item.IControllerBoard;
 import com.tom.api.item.IFan;
 import com.tom.api.item.IHeatSink;
 import com.tom.api.item.IMemoryItem;
 import com.tom.api.item.IProcessor;
-import com.tom.storage.handler.StorageNetworkGrid.IControllerTile;
 
 @SuppressWarnings("unused")
 public interface StorageSystemProperties extends ITickable {

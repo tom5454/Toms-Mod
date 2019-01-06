@@ -7,10 +7,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.tom.core.tileentity.gui.GuiConfigurator.GuiButtonConfig;
-
 import com.tom.api.gui.GuiTomsMod;
 import com.tom.lib.utils.RenderUtil;
+
+import com.tom.core.tileentity.gui.GuiConfigurator.GuiButtonConfig;
 
 @SideOnly(Side.CLIENT)
 public class GuiButtonPowerSharing extends GuiButtonConfig {

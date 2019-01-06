@@ -20,14 +20,14 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.grid.StorageNetworkGrid;
+import com.tom.api.grid.StorageNetworkGrid.ICraftingReportScreen;
 import com.tom.lib.utils.RenderUtil;
 import com.tom.storage.handler.AutoCraftingHandler;
 import com.tom.storage.handler.ICache;
 import com.tom.storage.handler.ICraftable;
 import com.tom.storage.handler.InventoryCache;
 import com.tom.storage.handler.NetworkCache;
-import com.tom.storage.handler.StorageNetworkGrid;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingReportScreen;
 import com.tom.util.TomsModUtils;
 
 import io.netty.buffer.ByteBuf;

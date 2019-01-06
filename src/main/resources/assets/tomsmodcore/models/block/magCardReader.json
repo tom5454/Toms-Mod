@@ -13,8 +13,8 @@
     },
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "textures": {
-        "0": "blocks/tm/Gray",
-        "particle":"blocks/tm/Gray"
+        "0": "tomsmodcore:blocks/Gray",
+        "particle":"tomsmodcore:blocks/Gray"
     },
     "elements": [
         {

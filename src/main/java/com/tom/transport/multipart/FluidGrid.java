@@ -10,9 +10,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import com.tom.api.grid.GridBase;
 import com.tom.api.multipart.MultipartTomsMod;
 import com.tom.lib.Configs;
+import com.tom.lib.api.grid.GridBase;
 import com.tom.lib.api.grid.IGridDevice;
 import com.tom.lib.api.grid.IGridUpdateListener;
 import com.tom.util.TomsModUtils;

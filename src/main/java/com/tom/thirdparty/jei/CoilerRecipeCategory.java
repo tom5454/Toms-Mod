@@ -2,7 +2,6 @@ package com.tom.thirdparty.jei;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -86,11 +85,6 @@ public class CoilerRecipeCategory implements IRecipeCategory<CoilerRecipeJEI> {
 	}
 
 	@Override
-	public IDrawable getIcon() {
-		return null;
-	}
-
-	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, CoilerRecipeJEI recipe, IIngredients ingredients) {
 		int x = 5;
 		int y = 20;
@@ -100,11 +94,6 @@ public class CoilerRecipeCategory implements IRecipeCategory<CoilerRecipeJEI> {
 		recipeLayout.getItemStacks().set(0, recipe.input1);
 		recipeLayout.getItemStacks().set(1, recipe.input2);
 		recipeLayout.getItemStacks().set(2, recipe.output);
-	}
-
-	@Override
-	public List<String> getTooltipStrings(int mouseX, int mouseY) {
-		return Collections.emptyList();
 	}
 
 	@Override

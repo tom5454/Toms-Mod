@@ -10,7 +10,7 @@
   "researches": [
     "tomsmodcore:soldering"
   ],
-  "level": "tomsMod.craftingLevel.mv",
+  "level": "mv",
   "recipe": {
     "result": {
       "nbt": {

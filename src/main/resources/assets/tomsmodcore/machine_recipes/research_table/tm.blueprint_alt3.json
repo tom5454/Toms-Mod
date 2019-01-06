@@ -10,7 +10,7 @@
   "researches": [
     "tomsmodcore:advcircuit"
   ],
-  "level": "tomsMod.craftingLevel.electrical",
+  "level": "electrical",
   "recipe": {
     "result": {
       "nbt": {

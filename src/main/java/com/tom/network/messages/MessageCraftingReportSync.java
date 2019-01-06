@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import com.tom.api.network.INBTPacketReceiver;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 import com.tom.lib.network.MessageBase;
 
 import io.netty.buffer.ByteBuf;
@@ -104,8 +104,8 @@ public class MessageCraftingReportSync extends MessageBase<MessageCraftingReport
 
 	private void handleClient(NBTTagCompound tag) {
 		Minecraft mc = Minecraft.getMinecraft();
-		if (mc.currentScreen instanceof INBTPacketReceiver) {
-			((INBTPacketReceiver) mc.currentScreen).receiveNBTPacket(tag);
+		if (mc.currentScreen instanceof IPacketReceiver) {
+			((IPacketReceiver) mc.currentScreen).receiveNBTPacket(mc.player, tag);
 		}
 	}
 

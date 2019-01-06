@@ -13,6 +13,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.grid.StorageNetworkGrid.ICraftingRecipeContainer;
+import com.tom.api.grid.StorageNetworkGrid.IGridInputListener;
 import com.tom.api.gui.GuiTomsMod;
 import com.tom.api.inventory.StoredItemStack;
 import com.tom.api.multipart.IGuiMultipart;
@@ -26,10 +28,8 @@ import com.tom.recipes.handler.AdvancedCraftingHandler;
 import com.tom.recipes.handler.AdvancedCraftingHandler.ReturnData;
 import com.tom.storage.StorageInit;
 import com.tom.storage.handler.AutoCraftingHandler;
+import com.tom.storage.handler.AutoCraftingHandler.CraftingPatternProperties;
 import com.tom.storage.handler.ICraftable;
-import com.tom.storage.handler.StorageNetworkGrid.CraftingPatternProperties;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingRecipeContainer;
-import com.tom.storage.handler.StorageNetworkGrid.IGridInputListener;
 import com.tom.storage.item.ItemCard.CardType;
 import com.tom.storage.tileentity.TileEntityPatternTerminal.AutoCraftingBehaviour;
 import com.tom.storage.tileentity.gui.GuiPatternTerminal;
@@ -109,7 +109,7 @@ public class PartPatternTerminal extends PartTerminal implements IPatternTermina
 					ItemStack stack;
 					switch (craftingB) {
 					case CRAFT_ONLY:
-						grid.getData().queueCrafting(new StoredItemStack(new ItemStack(StorageInit.craftingPattern), 1), player, -1);
+						grid.getSData().queueCrafting(new StoredItemStack(new ItemStack(StorageInit.craftingPattern), 1), player, -1);
 						patternPulled = true;
 						break;
 					case NO_OP:
@@ -172,7 +172,7 @@ public class PartPatternTerminal extends PartTerminal implements IPatternTermina
 								EntityItem item = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
 								world.spawnEntity(item);
 							}
-							grid.getData().queueCrafting(new StoredItemStack(new ItemStack(StorageInit.craftingPattern), 1), player, -1);
+							grid.getSData().queueCrafting(new StoredItemStack(new ItemStack(StorageInit.craftingPattern), 1), player, -1);
 							patternPulled = true;
 						}
 						break;
@@ -268,18 +268,18 @@ public class PartPatternTerminal extends PartTerminal implements IPatternTermina
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		if (message.hasKey("color", 3)) {
-			super.receiveNBTPacket(message);
+			super.receiveNBTPacket(pl, message);
 		} else if (message.getByte("cfg") == 1) {
 			int slot = message.getByte("slot");
 			byte amount = message.getByte("amount");
 			if (slot >= recipeInv.getSizeInventory()) {
-				if (resultInv.getStackInSlot(slot - recipeInv.getSizeInventory()) != null) {
+				if (!resultInv.getStackInSlot(slot - recipeInv.getSizeInventory()).isEmpty()) {
 					resultInv.getStackInSlot(slot - recipeInv.getSizeInventory()).setCount(amount);
 				}
 			} else {
-				if (recipeInv.getStackInSlot(slot) != null) {
+				if (!recipeInv.getStackInSlot(slot).isEmpty()) {
 					recipeInv.getStackInSlot(slot).setCount(amount);
 				}
 			}
@@ -340,7 +340,7 @@ public class PartPatternTerminal extends PartTerminal implements IPatternTermina
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void sendUpdate(GuiTomsMod gui, int id, int extra) {
-		gui.sendButtonUpdateP(id, this, extra);
+		gui.sendButtonUpdateToTile(id, extra);
 	}
 
 	@Override

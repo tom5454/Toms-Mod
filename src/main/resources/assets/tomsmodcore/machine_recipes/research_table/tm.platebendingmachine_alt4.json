@@ -1,0 +1,40 @@
+{
+  "researches": [
+    "tomsmodcore:lvplatebender"
+  ],
+  "level": "bronze",
+  "recipe": {
+    "result": {
+      "item": "tomsmodfactory:tm.platebendingmachine",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "PEP",
+      "ICI",
+      "IEI"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "blockPiston",
+        "type": "forge:ore_dict"
+      },
+      "C": {
+        "item": "tomsmodcore:machineframebasic",
+        "data": 0
+      },
+      "E": {
+        "ctype": "a",
+        "count": 1,
+        "id": "basicecirc",
+        "type": "tomsmodcore:circuit"
+      },
+      "I": {
+        "ore": "plateESteel",
+        "type": "forge:ore_dict"
+      }
+    }
+  },
+  "crafting_time": 1000
+}

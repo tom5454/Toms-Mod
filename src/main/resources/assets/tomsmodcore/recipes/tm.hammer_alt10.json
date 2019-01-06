@@ -1,7 +1,7 @@
 {
   "result": {
     "item": "tomsmodcore:tm.hammer",
-    "data": 6,
+    "data": 5,
     "count": 1
   },
   "pattern": [
@@ -12,7 +12,7 @@
   "type": "forge:ore_shaped",
   "key": {
     "P": {
-      "ore": "plateAdvA1",
+      "ore": "platePlatinum",
       "type": "forge:ore_dict"
     },
     "S": {
@@ -20,7 +20,7 @@
       "data": 0
     },
     "H": {
-      "ore": "itemHammer_lvl4",
+      "ore": "itemHammer_lvl2",
       "type": "forge:ore_dict"
     }
   }

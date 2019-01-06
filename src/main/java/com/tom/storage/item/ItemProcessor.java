@@ -17,9 +17,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.block.IModelRegisterRequired;
-import com.tom.api.energy.EnergyStorage;
 import com.tom.api.item.IProcessor;
 import com.tom.core.CoreInit;
+import com.tom.lib.api.energy.EnergyStorage;
 import com.tom.util.TomsModUtils;
 
 public class ItemProcessor extends Item implements IModelRegisterRequired, IProcessor {

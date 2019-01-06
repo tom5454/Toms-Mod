@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:configurablechest"
   ],
-  "level": "tomsMod.craftingLevel.basic",
+  "level": "basic_wooden",
   "recipe": {
     "result": {
       "item": "tomsmodtransport:tm.opencrate",

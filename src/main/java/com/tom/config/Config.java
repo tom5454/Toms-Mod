@@ -3,6 +3,7 @@ package com.tom.config;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +17,10 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
-import com.tom.api.energy.EnergyType;
+import com.tom.api.recipes.RecipeHelper.Condition;
 import com.tom.core.CoreInit;
 import com.tom.handler.FuelHandler;
+import com.tom.lib.api.energy.EnergyType;
 import com.tom.thirdparty.waila.WailaHandler;
 import com.tom.util.TMLogger;
 import com.tom.worldgen.WorldGen.OreGenEntry;
@@ -57,6 +59,7 @@ public class Config {
 	public static int[] lvPower, mvPower, hvPower, NOT_OVERWORLD_DEF = new int[]{-1, 1};
 	public static int[] max_speed_upgrades = new int[3];
 	public static boolean enableHammerOreMining, researchTableRequiresOpenUI;
+	public static List<String> enabledBools = new ArrayList<>();
 
 	public static void init(File configFile) {
 		CoreInit.log.info("Init Configuration");
@@ -116,6 +119,7 @@ public class Config {
 		Property property = configCore.get(Configuration.CATEGORY_GENERAL, "Enable Adventure Items", true);
 		enableAdventureItems = property.getBoolean(true);
 		property.setRequiresMcRestart(true);
+		registerBool("adventureItems", enableAdventureItems);
 
 		if (!enableAdventureItems) {
 			logWarn("[Item Registry] Adventure Items are disabled.");
@@ -175,6 +179,7 @@ public class Config {
 		property = configCore.get(CATEGORY_RECIPES, "Unbreakable Elytra Recipe", true);
 		property.setComment("Add Unbreakable Elytra Crafting recipe");
 		addUnbreakableElytraRecipe = property.getBoolean(true);
+		registerBool("unbreakableElytra", addUnbreakableElytraRecipe);
 
 		property = configCore.get(Configuration.CATEGORY_GENERAL, "Enable Tick Speeding", true);
 		property.setComment("Allow external devices to speed up the machines ticks");
@@ -192,6 +197,7 @@ public class Config {
 		property = configCore.get(Configuration.CATEGORY_GENERAL, "Enable Research System", true);
 		property.setComment("Enable Research System and Custom Crafting. Can cause recipe conflict if disabled. (Default: true)");
 		enableResearchSystem = property.getBoolean(true);
+		registerBool("research", enableResearchSystem);
 
 		property = configCore.get(Configuration.CATEGORY_GENERAL, "Log Ore Dictionary Names", false);
 		logOredictNames = property.getBoolean(false);
@@ -502,4 +508,11 @@ public class Config {
 			warnMessages.add(s);
 		}
 	};
+	public static void registerBool(String string, boolean val){
+		if(val)enabledBools.add(string);
+	}
+	public static Condition requireConfig(String... strings){
+		if(strings.length == 1)return new Condition("tomsmodcore:config", "id", strings[0]);
+		return new Condition(Arrays.stream(strings).map(s -> new Condition("tomsmodcore:config", "id", s)).toArray(Condition[]::new));
+	}
 }

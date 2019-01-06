@@ -1,6 +1,6 @@
 package com.tom.energy.multipart;
 
-import static com.tom.api.energy.EnergyType.HV;
+import static com.tom.lib.api.energy.EnergyType.HV;
 
 public class PartHVCable extends PartCable {
 

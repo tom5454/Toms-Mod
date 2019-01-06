@@ -2,12 +2,8 @@ package com.tom.factory.tileentity.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.math.MathHelper;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.inventory.SlotOutput;
 import com.tom.factory.tileentity.TileEntitySteamSolderingStation;
@@ -16,9 +12,6 @@ import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerSteamSolderingStation extends ContainerTomsMod {
 	private TileEntitySteamSolderingStation te;
-	private int lastProgress = -1;
-	private int lastSolderingAlloy = -1;
-	private int craftingErrorLast = -1;
 	public static final int MAX_PROGRESS = 500;
 
 	public ContainerSteamSolderingStation(InventoryPlayer playerInv, TileEntitySteamSolderingStation te) {
@@ -32,42 +25,15 @@ public class ContainerSteamSolderingStation extends ContainerTomsMod {
 		this.addSlotToContainer(new Slot(te, 10, 154, 6));
 		this.addSlotToContainer(new Slot(te, 11, 74, 7));
 		addPlayerSlots(playerInv, 8, 84);
+		syncHandler.registerShort(0, () -> te.getField(1) > 0 ? MathHelper.floor((1 - (((float) te.getField(0)) / te.getField(1))) * MAX_PROGRESS) : 0, i -> te.setField(0, i));
+		syncHandler.registerInventoryFieldShort(te, 2);
+		syncHandler.registerShort(1, () -> te.craftingError, i -> te.craftingError = i);
+		syncHandler.registerBoolean(3, te::canRun, te::setClCanRun);
+		syncHandler.setReceiver(te);
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
 		return te.isUsableByPlayer(playerIn);
-	}
-
-	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		int progress = te.getField(1) > 0 ? MathHelper.floor((1 - (((float) te.getField(0)) / te.getField(1))) * MAX_PROGRESS) : 0;
-		for (IContainerListener crafter : listeners) {
-			if (progress != lastProgress) {
-				crafter.sendWindowProperty(this, 0, progress);
-			}
-			if (te.getField(2) != lastSolderingAlloy) {
-				crafter.sendWindowProperty(this, 1, te.getField(2));
-			}
-			if (te.craftingError != craftingErrorLast) {
-				crafter.sendWindowProperty(this, 2, te.craftingError);
-			}
-		}
-		lastProgress = progress;
-		lastSolderingAlloy = te.getField(2);
-		craftingErrorLast = te.craftingError;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int data) {
-		if (id == 0) {
-			te.setField(0, data);
-		} else if (id == 1) {
-			te.setField(2, data);
-		} else if (id == 2) {
-			te.craftingError = data;
-		}
 	}
 }

@@ -50,7 +50,7 @@ public class MachineCraftingHandler {
 	public static final String ROOT_ALLOY_SMELTER = ROOT + "alloy_smelter";
 	public static final String ROOT_CRUSHER = ROOT + "crusher";
 	public static final String ROOT_BLAST_FURNACE = ROOT + "blast_furnace";
-	public static final String ROOT_PLATE_BLENDER = ROOT + "plate_blending_machine";
+	public static final String ROOT_PLATE_BENDER = ROOT + "plate_bending_machine";
 	public static final String ROOT_COKE_OVEN = ROOT + "coke_oven";
 	public static final String ROOT_WIRE_MILL = ROOT + "wire_mill";
 	public static void loadRecipes() {
@@ -87,22 +87,23 @@ public class MachineCraftingHandler {
 			genAlloySmelterRecipe(new ItemStack(CoreInit.hardenedGlass, 2), TMResource.ENDERIUM.getStackNormal(Type.DUST), new ItemStack(CoreInit.hardenedGlass, 2, 1));
 			genAlloySmelterRecipe(TMResource.STEEL.getStackNormal(Type.INGOT, 4), CraftingMaterial.RAW_ELECTRICAL_STEEL_DUST.getStackNormal(), CraftingMaterial.ELECTRICAL_STEEL_INGOT.getStackNormal(4));
 			genAlloySmelterRecipe(TMResource.COPPER.getStackNormal(Type.INGOT, 3), TMResource.ZINC.getStackNormal(Type.INGOT), TMResource.BRASS.getStackNormal(Type.INGOT, 4));
+			genAlloySmelterRecipe(new ItemStack(Blocks.REDSTONE_BLOCK), new ItemStack(Items.ENDER_PEARL), CraftingMaterial.REDSTONE_CRYSTAL.getStackNormal());
 			genChipset(1, new ItemStack(Items.REDSTONE), 0, "basicchip", 200, 0);
 			genChipset(2, TMResource.GOLD.getStackNormal(Type.DUST), 2, "advchip", 500, 1);
-			genCrusherRecipe(new ItemStack(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 5));
-			genCrusherRecipe(new ItemStack(Blocks.COBBLESTONE), new ItemStack(Blocks.SAND, 1));
-			genCrusherRecipe(new ItemStack(Blocks.GRAVEL), new ItemStack(Items.FLINT, 1));
-			genCrusherRecipe(new ItemStack(Blocks.STONE), new ItemStack(Blocks.GRAVEL, 1));
-			genCrusherRecipe(new ItemStack(Items.REEDS), new ItemStack(Items.SUGAR, 2));
-			genCrusherRecipe(new ItemStack(Blocks.NETHERRACK), CraftingMaterial.NETHERRACK_DUST.getStackNormal());
-			genCrusherRecipe(new ItemStack(Blocks.GLASS), CraftingMaterial.GLASS_DUST.getStackNormal());
-			genCrusherRecipe(TMResource.WOLFRAM.getStackNormal(Type.CRUSHED_ORE), CraftingMaterial.TUNGSTATE_DUST.getStackNormal());
-			genCrusherRecipe(new ItemStack(DefenseInit.oreMonazit, 1, 0), new ItemStack(DefenseInit.crushedMonazit, 2, 0));
-			genCrusherRecipe(new ItemStack(DefenseInit.oreMonazit, 1, 1), new ItemStack(DefenseInit.crushedMonazit, 2, 1));
-			genCrusherRecipe(TMResource.ALUMINUM.getStackNormal(Type.CRUSHED_ORE), CraftingMaterial.BAUXITE_DUST.getStackNormal());
-			genCrusherRecipe(CraftingMaterial.IMPURE_FLUIX.getStackNormal(), CraftingMaterial.IMPURE_FLUIX_DUST.getStackNormal());
-			genCrusherRecipe(CraftingMaterial.CRUSHED_OBSIDIAN.getStackNormal(), TMResource.OBSIDIAN.getStackNormal(Type.DUST));
-			genCrusherRecipe(new ItemStack(Blocks.OBSIDIAN), CraftingMaterial.CRUSHED_OBSIDIAN.getStackNormal());
+			genCrusherRecipe(new ItemStack(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 5), 0);
+			genCrusherRecipe(new ItemStack(Blocks.COBBLESTONE), new ItemStack(Blocks.SAND, 1), 0);
+			genCrusherRecipe(new ItemStack(Blocks.GRAVEL), new ItemStack(Items.FLINT, 1), 0);
+			genCrusherRecipe(new ItemStack(Blocks.STONE), new ItemStack(Blocks.GRAVEL, 1), 0);
+			genCrusherRecipe(new ItemStack(Items.REEDS), new ItemStack(Items.SUGAR, 2), 0);
+			genCrusherRecipe(new ItemStack(Blocks.NETHERRACK), CraftingMaterial.NETHERRACK_DUST.getStackNormal(), 0);
+			genCrusherRecipe(new ItemStack(Blocks.GLASS), CraftingMaterial.GLASS_DUST.getStackNormal(), 0);
+			genCrusherRecipe(TMResource.WOLFRAM.getStackNormal(Type.CRUSHED_ORE), CraftingMaterial.TUNGSTATE_DUST.getStackNormal(), 1);
+			genCrusherRecipe(new ItemStack(DefenseInit.oreMonazit, 1, 0), new ItemStack(DefenseInit.crushedMonazit, 2, 0), 1);
+			genCrusherRecipe(new ItemStack(DefenseInit.oreMonazit, 1, 1), new ItemStack(DefenseInit.crushedMonazit, 2, 1), 1);
+			genCrusherRecipe(TMResource.ALUMINUM.getStackNormal(Type.CRUSHED_ORE), CraftingMaterial.BAUXITE_DUST.getStackNormal(), 0);
+			genCrusherRecipe(CraftingMaterial.IMPURE_FLUIX.getStackNormal(), CraftingMaterial.IMPURE_FLUIX_DUST.getStackNormal(), 1);
+			genCrusherRecipe(CraftingMaterial.CRUSHED_OBSIDIAN.getStackNormal(), TMResource.OBSIDIAN.getStackNormal(Type.DUST, 2), 0);
+			genCrusherRecipe(new ItemStack(Blocks.OBSIDIAN), CraftingMaterial.CRUSHED_OBSIDIAN.getStackNormal(2), 1);
 			genBlastFurnaceRecipe(new ItemStack(Items.IRON_INGOT), ItemStack.EMPTY, TMResource.STEEL.getStackNormal(Type.INGOT), 2000, 0);
 			genBlastFurnaceRecipe(TMResource.IRON.getBlockStackNormal(1), ItemStack.EMPTY, TMResource.STEEL.getBlockStackNormal(1), 16000, 0);
 			genBlastFurnaceRecipe(CraftingMaterial.TUNGSTATE_DUST.getStackNormal(), ItemStack.EMPTY, CraftingMaterial.HOT_WOLFRAM_INGOT.getStackNormal(), 6400, 0);
@@ -122,9 +123,12 @@ public class MachineCraftingHandler {
 			genCokeOvenRecipe(new ItemStack(Items.COAL), new ItemStack(FactoryInit.coalCoke), 500, 1800);
 			genCokeOvenRecipe(new ItemStack(Blocks.COAL_BLOCK), new ItemStack(FactoryInit.blockCoalCoke), 5000, 15500);
 			genCokeOvenRecipe(new ItemStack(Blocks.LOG), new ItemStack(Items.COAL, 1, 1), 250, 1600);
-			genPlateBlenderRecipe(CraftingMaterial.SILICON.getStackNormal(), CraftingMaterial.SILICON_PLATE.getStackNormal(), 1);
-			genPlateBlenderRecipe(TMResource.TIN.getStackNormal(Type.PLATE), CraftingMaterial.TIN_CAN.getStackNormal(), 1);
-			genPlateBlenderRecipe(CraftingMaterial.ELECTRICAL_STEEL_INGOT.getStackNormal(), CraftingMaterial.ELECTRICAL_STEEL_PLATE.getStackNormal(), 1);
+			genPlateBenderRecipe(CraftingMaterial.SILICON.getStackNormal(), CraftingMaterial.SILICON_PLATE.getStackNormal(), 1);
+			genPlateBenderRecipe(TMResource.TIN.getStackNormal(Type.PLATE), CraftingMaterial.TIN_CAN.getStackNormal(), 1);
+			genPlateBenderRecipe(CraftingMaterial.ELECTRICAL_STEEL_INGOT.getStackNormal(), CraftingMaterial.ELECTRICAL_STEEL_PLATE.getStackNormal(), 1);
+			genPlateBenderRecipe(CraftingMaterial.TIN_CAN.getStackNormal(), CraftingMaterial.TIN_CASING.getStackNormal(), 1);
+			genPlateBenderRecipe(TMResource.STEEL.getStackNormal(Type.PLATE), CraftingMaterial.STEEL_CASING.getStackNormal(), 2);
+			genPlateBenderRecipe(TMResource.TITANIUM.getStackNormal(Type.PLATE), CraftingMaterial.TITANIUM_CASING.getStackNormal(), 3);
 			genWireMillRecipe(CraftingMaterial.CUPRONICKEL_INGOT.getStackNormal(4), CraftingMaterial.CUPRONICKEL_HEATING_COIL.getStackNormal(), 1);
 			genWireMillRecipe(TMResource.STEEL.getStackNormal(Type.PLATE, 3), new ItemStack(CoreInit.steelFence, 2), 2);
 			genWireMillRecipe(new ItemStack(Blocks.OBSIDIAN), CraftingMaterial.OBSIDIAN_ROD.getStackNormal(2), 5);
@@ -145,18 +149,18 @@ public class MachineCraftingHandler {
 			RecipeHelper.writeRecipe(map, out.getUnlocalizedName().substring(5), ROOT_WIRE_MILL, "");
 		});
 	}
-	public static void genPlateBlenderRecipeCh(ItemStack in, ItemStack out, int tier) {
+	public static void genPlateBenderRecipeCh(ItemStack in, ItemStack out, int tier) {
 		if(RecipeHelper.genJson()){
-			genPlateBlenderRecipe(in, out, tier);
+			genPlateBenderRecipe(in, out, tier);
 		}
 	}
-	private static void genPlateBlenderRecipe(ItemStack in1, ItemStack out, int tier) {
+	private static void genPlateBenderRecipe(ItemStack in1, ItemStack out, int tier) {
 		CoreInit.initRunnables.add(() -> {
 			Map<String, Object> map = new HashMap<>();
 			map.put("in", new ItemStackWCount(in1));
 			map.put("out", new ItemStackWCount(out));
 			map.put("tier", tier);
-			RecipeHelper.writeRecipe(map, out.getUnlocalizedName().substring(5), ROOT_PLATE_BLENDER, "");
+			RecipeHelper.writeRecipe(map, out.getUnlocalizedName().substring(5), ROOT_PLATE_BENDER, "");
 		});
 	}
 	private static void genCokeOvenRecipe(ItemStack in1, ItemStack out, int creosote, int time) {
@@ -180,16 +184,17 @@ public class MachineCraftingHandler {
 			RecipeHelper.writeRecipe(map, out.getUnlocalizedName().substring(5), ROOT_BLAST_FURNACE, "");
 		});
 	}
-	public static void genCrusherRecipeCh(ItemStack in, ItemStack out) {
+	public static void genCrusherRecipeCh(ItemStack in, ItemStack out, int level) {
 		if(RecipeHelper.genJson()){
-			genCrusherRecipe(in, out);
+			genCrusherRecipe(in, out, level);
 		}
 	}
-	private static void genCrusherRecipe(ItemStack in1, ItemStack out) {
+	private static void genCrusherRecipe(ItemStack in1, ItemStack out, int level) {
 		CoreInit.initRunnables.add(() -> {
 			Map<String, Object> map = new HashMap<>();
 			map.put("in", new ItemStackWCount(in1));
 			map.put("out", new ItemStackWCount(out));
+			map.put("level", level);
 			RecipeHelper.writeRecipe(map, out.getUnlocalizedName().substring(5), ROOT_CRUSHER, "");
 		});
 	}
@@ -238,7 +243,7 @@ public class MachineCraftingHandler {
 		crusherRecipes.clear();
 		blastFurnaceRecipes.clear();
 		cokeOvenRecipes.clear();
-		plateBlenderRecipes.clear();
+		plateBenderRecipes.clear();
 		wireMillRecipes.clear();
 		JsonContext ctx = new JsonContext("tomsmodcore");
 		TomsModUtils.walkResources(ROOT_UV, TomsModUtils.gson, ctx, (o, s) -> parseRecipeJsonUV(o, ctx, s));
@@ -247,7 +252,7 @@ public class MachineCraftingHandler {
 		TomsModUtils.walkResources(ROOT_CRUSHER, TomsModUtils.gson, ctx, (o, s) -> parseRecipeJsonCrusher(o, ctx, s));
 		TomsModUtils.walkResources(ROOT_BLAST_FURNACE, TomsModUtils.gson, ctx, (o, s) -> parseRecipeJsonBlastFurnace(o, ctx, s));
 		TomsModUtils.walkResources(ROOT_COKE_OVEN, TomsModUtils.gson, ctx, (o, s) -> parseRecipeJsonCokeOven(o, ctx, s));
-		TomsModUtils.walkResources(ROOT_PLATE_BLENDER, TomsModUtils.gson, ctx, (o, s) -> parseRecipeJsonPlateBlender(o, ctx, s));
+		TomsModUtils.walkResources(ROOT_PLATE_BENDER, TomsModUtils.gson, ctx, (o, s) -> parseRecipeJsonPlateBender(o, ctx, s));
 		TomsModUtils.walkResources(ROOT_WIRE_MILL, TomsModUtils.gson, ctx, (o, s) -> parseRecipeJsonWireMill(o, ctx, s));
 	}
 
@@ -266,7 +271,7 @@ public class MachineCraftingHandler {
 		}
 	}
 
-	private static void parseRecipeJsonPlateBlender(JsonObject obj, JsonContext ctx, String rid) {
+	private static void parseRecipeJsonPlateBender(JsonObject obj, JsonContext ctx, String rid) {
 		if(obj.size() == 0)return;
 		boolean c = true;
 		if(obj.has("condition")){
@@ -277,7 +282,7 @@ public class MachineCraftingHandler {
 			ItemStack in = CraftingHelper.getItemStack(obj.get("in").getAsJsonObject(), ctx);
 			ItemStack out = CraftingHelper.getItemStack(obj.get("out").getAsJsonObject(), ctx);
 			int tier = obj.get("tier").getAsInt();
-			addPlateBlenderRecipe(in, out, tier, rid);
+			addPlateBenderRecipe(in, out, tier, rid);
 		}
 	}
 
@@ -323,7 +328,8 @@ public class MachineCraftingHandler {
 		if(c){
 			ItemStack in = CraftingHelper.getItemStack(obj.get("in").getAsJsonObject(), ctx);
 			ItemStack out = CraftingHelper.getItemStack(obj.get("out").getAsJsonObject(), ctx);
-			addCrusherRecipeInt(in, out, rid);
+			int level = obj.get("level").getAsInt();
+			addCrusherRecipeInt(in, out, rid, level);
 		}
 	}
 	private static void parseRecipeJsonUV(JsonObject obj, JsonContext ctx, String rid){
@@ -374,7 +380,7 @@ public class MachineCraftingHandler {
 
 	private static final ItemStack COIL_EMPTY = new ItemStack(CoreInit.emptyWireCoil);
 	private static final Map<ItemStackChecker, ItemStackChecker> crusherRecipes = new HashMap<>();
-	private static final Map<ItemStackChecker, ItemStackChecker> plateBlenderRecipes = new HashMap<>();
+	private static final Map<ItemStackChecker, ItemStackChecker> plateBenderRecipes = new HashMap<>();
 	private static final Map<ItemStackChecker, ItemStackChecker> wireMillRecipes = new HashMap<>();
 	private static final Map<ItemStackChecker, ItemStackChecker> coilerPlantRecipes = new HashMap<>();
 	private static final Map<ItemStackChecker, ItemStackChecker> alloySmelterRecipes = new HashMap<>();
@@ -387,7 +393,7 @@ public class MachineCraftingHandler {
 	private static final Map<ItemStackChecker, ItemStackChecker> centrifugeRecipes = new HashMap<>();
 	private static final Map<IBlockState, Entry<Integer, List<ItemStackWRng>>> hammerRecipes = new HashMap<>();
 
-	private static void addCrusherRecipeInt(ItemStack input, ItemStack output, String loc) {
+	private static void addCrusherRecipeInt(ItemStack input, ItemStack output, String loc, int level) {
 		ItemStackChecker c = new ItemStackChecker(input);
 		boolean found = false;
 		for (Entry<ItemStackChecker, ItemStackChecker> recipe : crusherRecipes.entrySet()) {
@@ -395,18 +401,18 @@ public class MachineCraftingHandler {
 				found = true;
 		}
 		if (!found)
-			crusherRecipes.put(new ItemStackChecker(input).setName(loc), new ItemStackChecker(output).setExtra(input.getCount()));
+			crusherRecipes.put(new ItemStackChecker(input).setName(loc), new ItemStackChecker(output).setExtra(input.getCount()).setExtra2(level));
 	}
 
-	private static void addPlateBlenderRecipe(ItemStack input, ItemStack output, int tier, String loc) {
+	private static void addPlateBenderRecipe(ItemStack input, ItemStack output, int tier, String loc) {
 		ItemStackChecker c = new ItemStackChecker(input);
 		boolean found = false;
-		for (Entry<ItemStackChecker, ItemStackChecker> recipe : plateBlenderRecipes.entrySet()) {
+		for (Entry<ItemStackChecker, ItemStackChecker> recipe : plateBenderRecipes.entrySet()) {
 			if (recipe.getKey().equals(c))
 				found = true;
 		}
 		if (!found)
-			plateBlenderRecipes.put(new ItemStackChecker(input).setName(loc), new ItemStackChecker(output).setExtra(input.getCount()).setExtra2(tier));
+			plateBenderRecipes.put(new ItemStackChecker(input).setName(loc), new ItemStackChecker(output).setExtra(input.getCount()).setExtra2(tier));
 	}
 
 	private static void addWireMillRecipe(ItemStack input, ItemStack output, int tier, String loc) {
@@ -431,22 +437,24 @@ public class MachineCraftingHandler {
 			coilerPlantRecipes.put(new ItemStackChecker(input), new ItemStackChecker(output).setExtra(input.getCount()).setExtra2(output.getCount()));
 	}
 
-	public static ItemStackChecker getCrusherOutput(ItemStack stack) {
+	public static ItemStackChecker getCrusherOutput(ItemStack stack, int level) {
 		if (stack.isEmpty())
 			return null;
 		ItemStackChecker c = new ItemStackChecker(stack);
 		for (Entry<ItemStackChecker, ItemStackChecker> recipe : crusherRecipes.entrySet()) {
 			if (recipe.getKey().equals(c))
-				return recipe.getValue();
+				if(recipe.getValue().extra2 <= level)
+					return recipe.getValue();
+				else return null;
 		}
 		return null;
 	}
 
-	public static ItemStackChecker getPlateBlenderOutput(ItemStack stack, int lvl) {
+	public static ItemStackChecker getPlateBenderOutput(ItemStack stack, int lvl) {
 		if (stack.isEmpty())
 			return null;
 		ItemStackChecker c = new ItemStackChecker(stack);
-		for (Entry<ItemStackChecker, ItemStackChecker> recipe : plateBlenderRecipes.entrySet()) {
+		for (Entry<ItemStackChecker, ItemStackChecker> recipe : plateBenderRecipes.entrySet()) {
 			if (recipe.getKey().equals(c)) {
 				if (lvl != -1 && recipe.getValue().extra2 > lvl)
 					return null;
@@ -669,14 +677,14 @@ public class MachineCraftingHandler {
 	public static List<RecipeData> getCrusherRecipes() {
 		List<RecipeData> ret = new ArrayList<>();
 		for (Entry<ItemStackChecker, ItemStackChecker> recipe : crusherRecipes.entrySet()) {
-			ret.add(new RecipeData(recipe.getKey().stack, recipe.getValue().stack).setId(recipe.getKey().name));
+			ret.add(new RecipeData(recipe.getValue().extra2, recipe.getKey().stack, recipe.getValue().stack).setId(recipe.getKey().name));
 		}
 		return ret;
 	}
 
-	public static List<RecipeData> getPlateBlenderRecipes() {
+	public static List<RecipeData> getPlateBenderRecipes() {
 		List<RecipeData> ret = new ArrayList<>();
-		for (Entry<ItemStackChecker, ItemStackChecker> recipe : plateBlenderRecipes.entrySet()) {
+		for (Entry<ItemStackChecker, ItemStackChecker> recipe : plateBenderRecipes.entrySet()) {
 			ret.add(new RecipeData(recipe.getValue().extra2, recipe.getKey().stack, recipe.getValue().stack).setId(recipe.getKey().name));
 		}
 		return ret;

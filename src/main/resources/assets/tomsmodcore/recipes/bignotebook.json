@@ -18,5 +18,11 @@
       "data": 0
     }
   ],
-  "type": "forge:ore_shapeless"
+  "type": "forge:ore_shapeless",
+  "conditions": [
+    {
+      "id": "research",
+      "type": "tomsmodcore:config"
+    }
+  ]
 }

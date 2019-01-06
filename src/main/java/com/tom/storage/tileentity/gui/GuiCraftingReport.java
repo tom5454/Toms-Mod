@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -24,18 +25,20 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.tom.api.grid.StorageNetworkGrid.ICraftingReportScreen;
+import com.tom.api.grid.StorageNetworkGrid.IStorageTerminalGui;
 import com.tom.api.gui.GuiTomsMod;
-import com.tom.api.network.INBTPacketReceiver;
+import com.tom.lib.network.GuiSyncHandler;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
+import com.tom.lib.network.GuiSyncHandler.ISyncContainer;
 import com.tom.lib.utils.RenderUtil;
 import com.tom.network.messages.MessageCraftingReportSync.MessageType;
 import com.tom.storage.handler.AutoCraftingHandler;
-import com.tom.storage.handler.StorageNetworkGrid.ICraftingReportScreen;
-import com.tom.storage.handler.StorageNetworkGrid.IStorageTerminalGui;
 import com.tom.storage.tileentity.gui.GuiTerminalBase.GuiButtonTermMode;
 import com.tom.util.TomsModUtils;
 
 @SideOnly(Side.CLIENT)
-public class GuiCraftingReport extends GuiScreen implements INBTPacketReceiver, ICraftingReportScreen {
+public class GuiCraftingReport extends GuiScreen implements IPacketReceiver, ICraftingReportScreen, ISyncContainer {
 	private AutoCraftingHandler.CalculatedClientCrafting crafting;
 	private int xSize = 238;
 	private int ySize = 206;
@@ -65,14 +68,17 @@ public class GuiCraftingReport extends GuiScreen implements INBTPacketReceiver, 
 	private int recipeListSize, cols, rows;
 	private boolean skip;
 	private GuiButtonTermMode buttonModeTall, buttonModeWide;
+	private GuiSyncHandler syncHandler;
 
 	public GuiCraftingReport(IStorageTerminalGui parent, boolean skip) {
 		this.parent = parent;
 		this.skip = skip;
+		this.syncHandler = new GuiSyncHandler(null);
+		syncHandler.setReceiverGui(this);
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		if (message.getBoolean("ERROR")) {
 			close(false);
 		} else {
@@ -468,5 +474,10 @@ public class GuiCraftingReport extends GuiScreen implements INBTPacketReceiver, 
 		if (keyCode == 1 || this.mc.gameSettings.keyBindInventory.isActiveAndMatches(keyCode)) {
 			mc.displayGuiScreen((GuiScreen) parent);
 		}
+	}
+
+	@Override
+	public GuiSyncHandler getSyncHandler() {
+		return syncHandler;
 	}
 }

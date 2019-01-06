@@ -25,6 +25,7 @@ public class ContainerMBFuelRod extends ContainerTomsMod {
 			}
 		}
 		addPlayerSlots(inventory, 8, 94);
+		syncHandler.setReceiver(tileEntity);
 	}
 
 	@Override

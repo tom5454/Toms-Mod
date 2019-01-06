@@ -12,4 +12,9 @@ public class ConveyorBeltFast extends ConveyorBeltBase {
 		return new TileEntityConveyorFast();
 	}
 
+	@Override
+	public int getEPUse() {
+		return 2;
+	}
+
 }

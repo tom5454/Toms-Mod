@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 import com.tom.api.block.BlockContainerTomsMod;
 import com.tom.core.CoreInit;
-import com.tom.factory.tileentity.TileEntitySteamPlateBlender;
+import com.tom.factory.tileentity.TileEntitySteamPlateBendingMachine;
 import com.tom.handler.GuiHandler.GuiIDs;
 import com.tom.util.TomsModUtils;
 
@@ -30,7 +30,7 @@ public class SteamPlateBlender extends BlockContainerTomsMod {
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntitySteamPlateBlender();
+		return new TileEntitySteamPlateBendingMachine();
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class SteamPlateBlender extends BlockContainerTomsMod {
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote)
-			playerIn.openGui(CoreInit.modInstance, GuiIDs.steamPlateBlender.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(CoreInit.modInstance, GuiIDs.steamPlateBender.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 }

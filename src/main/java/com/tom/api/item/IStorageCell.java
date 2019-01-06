@@ -4,8 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import com.tom.api.grid.StorageNetworkGrid;
 import com.tom.api.inventory.IStorageInventory;
-import com.tom.storage.handler.StorageNetworkGrid;
 import com.tom.storage.item.ItemStorageCell;
 
 public interface IStorageCell {

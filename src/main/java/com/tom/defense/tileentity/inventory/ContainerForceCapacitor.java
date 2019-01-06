@@ -2,26 +2,18 @@ package com.tom.defense.tileentity.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.tom.api.tileentity.IConfigurable.IConfigurationOption.SlotSecurityCard;
 import com.tom.defense.DefenseInit;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.tileentity.TileEntityForceCapacitor;
-import com.tom.network.messages.MessageProgress;
 
 import com.tom.core.tileentity.inventory.ContainerTomsMod;
 
 public class ContainerForceCapacitor extends ContainerTomsMod {
-	private int rangeLast = -1;
-	private int linkedLast = -1;
-	private int powerLast = -1, lastRS = -1;
 	private TileEntityForceCapacitor te;
 
 	public ContainerForceCapacitor(InventoryPlayer inv, TileEntityForceCapacitor te) {
@@ -29,46 +21,16 @@ public class ContainerForceCapacitor extends ContainerTomsMod {
 		this.addSlotToContainer(new SlotSecurityCard(te, 0, 152, 46));
 		this.addPlayerSlots(inv, 8, 94);
 		this.te = te;
+		syncHandler.registerInventoryFieldShort(te, 0);
+		syncHandler.registerInventoryFieldShort(te, 1);
+		syncHandler.registerInventoryFieldInt(te, 2);
+		syncHandler.registerEnum(2, () -> te.rsMode , e -> te.rsMode = e, ForceDeviceControlType.VALUES);
+		syncHandler.setReceiver(te);
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return true;
-	}
-
-	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		for (IContainerListener crafter : listeners) {
-			MessageProgress msg = new MessageProgress(crafter);
-			if (te.getField(0) != linkedLast) {
-				crafter.sendWindowProperty(this, 0, te.getField(0));
-			}
-			if (te.getField(1) != rangeLast) {
-				crafter.sendWindowProperty(this, 1, te.getField(1));
-			}
-			if (te.getField(2) != powerLast) {
-				// crafter.sendProgressBarUpdate(this, 2, te.getField(2));
-				msg.add(2, te.getField(2));
-			}
-			if (te.rsMode.ordinal() != lastRS) {
-				crafter.sendWindowProperty(this, 3, te.rsMode.ordinal());
-			}
-			msg.send();
-		}
-		lastRS = te.rsMode.ordinal();
-		powerLast = te.getField(2);
-		rangeLast = te.getField(1);
-		linkedLast = te.getField(0);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(int id, int value) {
-		if (id == 3) {
-			te.rsMode = ForceDeviceControlType.get(value);
-		} else
-			te.setField(id, value);
+		return te.isUsableByPlayer(playerIn);
 	}
 
 	public static class SlotRangeUpgrade extends Slot {

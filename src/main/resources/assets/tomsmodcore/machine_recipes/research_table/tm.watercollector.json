@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:watercollector"
   ],
-  "level": "tomsMod.craftingLevel.basic",
+  "level": "basic_wooden",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:tm.watercollector",
@@ -10,8 +10,8 @@
       "count": 1
     },
     "pattern": [
-      "BIB",
-      "IWI",
+      "BWB",
+      "ICI",
       "BRB"
     ],
     "type": "forge:ore_shaped",
@@ -23,6 +23,10 @@
       "R": {
         "item": "minecraft:redstone",
         "data": 0
+      },
+      "C": {
+        "ore": "casingTin",
+        "type": "forge:ore_dict"
       },
       "W": {
         "item": "minecraft:water_bucket",

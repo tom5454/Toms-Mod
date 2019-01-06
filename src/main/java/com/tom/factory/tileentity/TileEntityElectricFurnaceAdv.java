@@ -1,6 +1,6 @@
 package com.tom.factory.tileentity;
 
-import static com.tom.api.energy.EnergyType.HV;
+import static com.tom.lib.api.energy.EnergyType.HV;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.factory.FactoryInit;
 import com.tom.factory.block.ElectricFurnace;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyReceiver;
 import com.tom.recipes.handler.MachineCraftingHandler;
 import com.tom.util.TomsModUtils;
 

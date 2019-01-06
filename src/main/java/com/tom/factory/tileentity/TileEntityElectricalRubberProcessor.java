@@ -12,9 +12,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import com.tom.api.ITileFluidHandler;
-import com.tom.api.energy.EnergyStorage;
 import com.tom.core.CoreInit;
 import com.tom.core.TMResource.CraftingMaterial;
+import com.tom.lib.api.energy.EnergyStorage;
 import com.tom.recipes.OreDict;
 import com.tom.recipes.handler.MachineCraftingHandler.ItemStackChecker;
 import com.tom.util.FluidSupplier;

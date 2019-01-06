@@ -87,4 +87,8 @@ public class ItemChipset extends Item implements IModelRegisterRequired, ICustom
 		ChipsetType t = chipsetTypes.get(stack.getMetadata());
 		return t == null ? "invalid" : t.name;
 	}
+	@Override
+	public String getCustomName(ItemStack stack) {
+		return "chip_" + getType(stack);
+	}
 }

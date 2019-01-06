@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +16,8 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -26,20 +29,25 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import com.tom.api.Capabilities;
 import com.tom.api.ITileFluidHandler;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.EnergyType.EnergyHandlerNormal;
-import com.tom.api.energy.EnergyType.EnergyHandlerProvider;
-import com.tom.api.energy.EnergyType.EnergyHandlerReceiver;
-import com.tom.api.energy.IEnergyHandler;
-import com.tom.api.energy.IEnergyProvider;
-import com.tom.api.energy.IEnergyReceiver;
-import com.tom.api.energy.IEnergyStorageTile;
-import com.tom.api.energy.IRFMachine;
+import com.tom.lib.api.CapabilityGridDeviceHost;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.EnergyType.EnergyHandlerNormal;
+import com.tom.lib.api.energy.EnergyType.EnergyHandlerProvider;
+import com.tom.lib.api.energy.EnergyType.EnergyHandlerReceiver;
+import com.tom.lib.api.energy.IEnergyHandler;
+import com.tom.lib.api.energy.IEnergyProvider;
+import com.tom.lib.api.energy.IEnergyReceiver;
+import com.tom.lib.api.energy.IEnergyStorageTile;
+import com.tom.lib.api.energy.IRFMachine;
 import com.tom.lib.api.grid.IGridDevice;
+import com.tom.lib.api.grid.IGridDeviceHost;
 import com.tom.lib.api.tileentity.ITMPeripheral;
 import com.tom.lib.api.tileentity.ITMPeripheral.ISidedTMPeripheral;
+import com.tom.lib.network.GuiSyncHandler.IPacketReceiver;
 
-public class TileEntityTomsModNoTicking extends TileEntity {
+import com.tom.core.tileentity.IGridDeviceHostFacing;
+
+public class TileEntityTomsModNoTicking extends TileEntity implements IPacketReceiver {
 	@SuppressWarnings("rawtypes")
 	protected Map<Capability, Map<EnumFacing, Supplier<Object>>> capabilityMap = new HashMap<>();
 	protected boolean /*added = false, */ initLater = false;
@@ -137,15 +145,33 @@ public class TileEntityTomsModNoTicking extends TileEntity {
 		if (this instanceof IRFMachine) {
 			capabilityMap.putAll(((IRFMachine) this).initCapabilities());
 		}
-		if (this instanceof IGridDevice) {
+		if (this instanceof IGridDeviceHostFacing && canHaveDefaultGridHandler()) {
 			Map<EnumFacing, Supplier<Object>> map = new HashMap<>();
-			IGridDevice<?> d = (IGridDevice<?>) this;
+			IGridDeviceHostFacing h = (IGridDeviceHostFacing) this;
 			for (EnumFacing f : EnumFacing.VALUES) {
-				if (d.isValidConnection(f))
-					map.put(f, () -> d);
+				IGridDeviceHostFacing.Wrapper w = new IGridDeviceHostFacing.Wrapper(h, f);
+				map.put(f, () -> w);
 			}
-			map.put(null, () -> d);
-			capabilityMap.put(Capabilities.GRID_DEVICE, map);
+			IGridDeviceHostFacing.Wrapper w = new IGridDeviceHostFacing.Wrapper(h, null);
+			map.put(null, () -> w);
+			capabilityMap.put(CapabilityGridDeviceHost.GRID_DEVICE_HOST, map);
+		}else if (this instanceof IGridDeviceHost && canHaveDefaultGridHandler()) {
+			Map<EnumFacing, Supplier<Object>> map = new HashMap<>();
+			IGridDeviceHost h = (IGridDeviceHost) this;
+			for (EnumFacing f : EnumFacing.VALUES) {
+				map.put(f, () -> h);
+			}
+			map.put(null, () -> h);
+			capabilityMap.put(CapabilityGridDeviceHost.GRID_DEVICE_HOST, map);
+		}else if (this instanceof IGridDevice && canHaveDefaultGridHandler()) {
+			Map<EnumFacing, Supplier<Object>> map = new HashMap<>();
+			for (EnumFacing f : EnumFacing.VALUES) {
+				CapabilityGridDeviceHost.Wrapper wr = new CapabilityGridDeviceHost.Wrapper((IGridDevice<?>) this, f);
+				map.put(f, () -> wr);
+			}
+			CapabilityGridDeviceHost.Wrapper wr = new CapabilityGridDeviceHost.Wrapper((IGridDevice<?>) this, null);
+			map.put(null, () -> wr);
+			capabilityMap.put(CapabilityGridDeviceHost.GRID_DEVICE_HOST, map);
 		}
 		if(this instanceof ITMPeripheral){
 			ITMPeripheral.Handler.initCapabilities(capabilityMap, (ITMPeripheral) this);
@@ -214,6 +240,9 @@ public class TileEntityTomsModNoTicking extends TileEntity {
 	public boolean canHaveEnergyHandler(EnumFacing f) {
 		return true;
 	}
+	public boolean canHaveDefaultGridHandler() {
+		return true;
+	}
 
 	protected void initializeCapabilitiesI() {
 	}
@@ -268,5 +297,19 @@ public class TileEntityTomsModNoTicking extends TileEntity {
 
 	public boolean hasCapabilityI(Capability<?> capability, EnumFacing facing) {
 		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public void receiveNBTPacket(EntityPlayer from, NBTTagCompound message) {
+		System.err.println(getClass() + ".receiveNBTPacket()");
+	}
+
+	@Override
+	public void buttonPressed(EntityPlayer player, int id, int extra) {
+		System.err.println(getClass() + ".buttonPressed()");
+	}
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TextComponentString(getClass().getSimpleName());
 	}
 }

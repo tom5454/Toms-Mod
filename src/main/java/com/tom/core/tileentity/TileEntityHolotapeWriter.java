@@ -1,6 +1,6 @@
 package com.tom.core.tileentity;
 
-import static com.tom.api.energy.EnergyType.LV;
+import static com.tom.lib.api.energy.EnergyType.LV;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +12,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
-import com.tom.api.energy.IEnergyReceiver;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.Config;
 import com.tom.core.CoreInit;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
+import com.tom.lib.api.energy.IEnergyReceiver;
 import com.tom.lib.api.tileentity.ITMPeripheral.ITMCompatPeripheral;
 import com.tom.util.TomsModUtils;
 

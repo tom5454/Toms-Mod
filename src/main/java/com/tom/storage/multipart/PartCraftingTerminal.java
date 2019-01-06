@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 
-import com.tom.api.network.INBTPacketReceiver.IANBTPacketReceiver;
 import com.tom.storage.StorageInit;
 import com.tom.storage.handler.ICraftingTerminal;
 import com.tom.storage.tileentity.gui.GuiCraftingTerminal;
@@ -20,7 +19,7 @@ import com.tom.storage.tileentity.inventory.ContainerCraftingTerminal;
 import com.tom.storage.tileentity.inventory.ContainerCraftingTerminal.SlotTerminalCrafting;
 import com.tom.util.TomsModUtils;
 
-public class PartCraftingTerminal extends PartTerminal implements ICraftingTerminal, IANBTPacketReceiver {
+public class PartCraftingTerminal extends PartTerminal implements ICraftingTerminal {
 	public InventoryCraftResult craftResult = new InventoryCraftResult();
 	public InventoryBasic craftingInv = new InventoryBasic("", false, 9);
 
@@ -80,9 +79,9 @@ public class PartCraftingTerminal extends PartTerminal implements ICraftingTermi
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message, EntityPlayer player) {
+	public void receiveNBTPacket(EntityPlayer player, NBTTagCompound message) {
 		if (message.hasKey("color")) {
-			super.receiveNBTPacket(message);
+			super.receiveNBTPacket(player, message);
 		} else {
 			ItemStack[][] stacks = new ItemStack[9][];
 			NBTTagList list = message.getTagList("i", 10);

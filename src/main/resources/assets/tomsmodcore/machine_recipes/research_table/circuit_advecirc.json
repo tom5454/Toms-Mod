@@ -1,0 +1,51 @@
+{
+  "researches": [
+    "tomsmodcore:advcircuit"
+  ],
+  "level": "e_soldering",
+  "recipe": {
+    "result": {
+      "nbt": {
+        "id": "advecirc"
+      },
+      "item": "tomsmodcore:tm.circuit",
+      "data": 2,
+      "count": 1
+    },
+    "pattern": [
+      "PCP",
+      "-_-",
+      "RER"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "P": {
+        "ore": "sheetPlastic",
+        "type": "forge:ore_dict"
+      },
+      "R": {
+        "item": "minecraft:redstone",
+        "data": 0
+      },
+      "C": {
+        "id": "adv",
+        "type": "tomsmodcore:circuitcomp"
+      },
+      "E": {
+        "ore": "cableEnderium",
+        "type": "forge:ore_dict"
+      },
+      "-": {
+        "ore": "cableElectrum",
+        "type": "forge:ore_dict"
+      },
+      "_": {
+        "ctype": "ua",
+        "count": 1,
+        "id": "advecirc",
+        "type": "tomsmodcore:circuit"
+      }
+    }
+  },
+  "crafting_time": 1800
+}

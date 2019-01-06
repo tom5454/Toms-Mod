@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
 import com.tom.api.gui.GuiTomsMod;
-import com.tom.api.network.INBTPacketReceiver;
 import com.tom.client.GuiButtonRedstoneMode;
 import com.tom.defense.tileentity.TileEntityDefenseStation;
 import com.tom.defense.tileentity.TileEntityDefenseStation.DefenseStationConfig;
@@ -21,7 +20,7 @@ import com.tom.network.NetworkHandler;
 import com.tom.network.messages.MessageNBT;
 import com.tom.util.TomsModUtils;
 
-public class GuiDefenseStation extends GuiTomsMod implements INBTPacketReceiver {
+public class GuiDefenseStation extends GuiTomsMod {
 	private GuiButtonDefenseStationSelection buttonSelection;
 	private TileEntityDefenseStation te;
 	private GuiButton whiteListButton;
@@ -36,11 +35,7 @@ public class GuiDefenseStation extends GuiTomsMod implements INBTPacketReceiver 
 	public GuiDefenseStation(InventoryPlayer inv, TileEntityDefenseStation te) {
 		super(new ContainerDefenseStation(inv, te), "guiDefenseStation");
 		this.te = te;
-	}
-
-	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
-		fieldName.setText(message.getString("n"));
+		syncHandler.<String>registerListener(2, e -> fieldName.setText(e));
 	}
 
 	@Override
@@ -90,11 +85,11 @@ public class GuiDefenseStation extends GuiTomsMod implements INBTPacketReceiver 
 	protected void actionPerformed(GuiButton button) throws IOException {
 		int id = button.id;
 		if ((id >= 0 && id < 4) || id == 6) {
-			this.sendButtonUpdate(id, te);
+			this.sendButtonUpdateToTile(id, 0);
 		} else if (id == 4) {
-			this.sendButtonUpdate(id, te, te.config.ordinal() + 1);
+			this.sendButtonUpdateToTile(id, te.config.ordinal() + 1);
 		} else if (id == 5) {
-			this.sendButtonUpdate(id, te, te.rsMode.ordinal() + 1);
+			this.sendButtonUpdateToTile(id, te.rsMode.ordinal() + 1);
 		}
 	}
 

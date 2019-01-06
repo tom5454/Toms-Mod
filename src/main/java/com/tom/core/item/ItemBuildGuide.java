@@ -27,8 +27,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import com.google.common.base.Joiner;
 
 import com.tom.api.block.BlockMultiblockController;
-import com.tom.api.item.IScroller;
 import com.tom.api.tileentity.IMultiblockController;
+import com.tom.lib.api.item.IScroller;
 import com.tom.util.BlockData;
 import com.tom.util.Counter;
 import com.tom.util.CountingList;

@@ -2,7 +2,7 @@
   "researches": [
     "tomsmodcore:laserengraver"
   ],
-  "level": "tomsMod.craftingLevel.electrical",
+  "level": "electrical",
   "recipe": {
     "result": {
       "item": "tomsmodfactory:tm.laserengraver",

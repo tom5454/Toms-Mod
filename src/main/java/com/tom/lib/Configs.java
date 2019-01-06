@@ -12,7 +12,7 @@ public final class Configs {
 	public static final String ModidL = "tomsmod";
 	public static final String Modid = "TomsMod";
 	public static final String ModName = "Tom's Tech Mod";
-	public static final String version = "2.1.2";
+	public static final String version = "2.1.3";
 	public static final String CLIENT_PROXY_CLASS = "com.tom.proxy.ClientProxy";
 	public static final String SERVER_PROXY_CLASS = "com.tom.proxy.ServerProxy";
 	public static final int InjectorMaxEnergy = 4000000;
@@ -50,7 +50,7 @@ public final class Configs {
 	public static final String fakePlayerName = "[TomsMod]";
 	public static final int fluidDuctMaxInsert = 1000;
 	public static final int fluidDuctMaxExtract = 500;
-	public static final int LibVersion = 0;
+	public static final int LibVersion = 1;
 	public static final String mainDependencies = "required-after:tomslib@[1." + LibVersion + ".0,1." + (LibVersion + 1) + ".0);";
 	public static final String updateJson = "https://raw.githubusercontent.com/tom5454/Toms-Mod/master/version-check.json";
 	public static final ResourceLocation controllerScreenModel = new ResourceLocation(MODEL_LOCATION + "controllerScreen.png");

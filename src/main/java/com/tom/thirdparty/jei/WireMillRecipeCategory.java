@@ -46,7 +46,7 @@ public class WireMillRecipeCategory implements IRecipeCategory<WireMillRecipeJEI
 
 	@Override
 	public String getUid() {
-		return JEIConstants.WIREMILL_ID;
+		return JEIConstants.WIREMILL;
 	}
 
 	@Override

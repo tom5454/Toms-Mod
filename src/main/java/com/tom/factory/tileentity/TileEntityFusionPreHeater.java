@@ -21,11 +21,11 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 import com.tom.api.ITileFluidHandler.Helper;
 import com.tom.api.block.BlockMultiblockController;
-import com.tom.api.energy.EnergyStorage;
-import com.tom.api.energy.EnergyType;
 import com.tom.api.item.IFuelRod;
 import com.tom.core.CoreInit;
 import com.tom.factory.FactoryInit;
+import com.tom.lib.api.energy.EnergyStorage;
+import com.tom.lib.api.energy.EnergyType;
 import com.tom.util.TomsModUtils;
 
 public class TileEntityFusionPreHeater extends TileEntityMultiblockController {

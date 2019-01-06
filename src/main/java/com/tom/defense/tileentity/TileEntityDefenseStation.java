@@ -31,15 +31,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 
 import com.tom.api.block.IItemTile;
-import com.tom.api.energy.IEnergyStorage;
 import com.tom.api.item.IPowerLinkCard;
 import com.tom.api.item.ISecurityStationLinkCard;
 import com.tom.api.item.ISwitch;
-import com.tom.api.network.INBTPacketReceiver;
 import com.tom.api.tileentity.AccessType;
 import com.tom.api.tileentity.IForceDevice;
 import com.tom.api.tileentity.IForcePowerStation;
-import com.tom.api.tileentity.IGuiTile;
 import com.tom.api.tileentity.ISecurityStation;
 import com.tom.api.tileentity.TileEntityTomsMod;
 import com.tom.config.Config;
@@ -49,9 +46,10 @@ import com.tom.defense.DefenseInit;
 import com.tom.defense.ForceDeviceControlType;
 import com.tom.defense.block.ForceCapacitor;
 import com.tom.handler.GuiHandler.GuiIDs;
+import com.tom.lib.api.energy.IEnergyStorage;
 import com.tom.util.TomsModUtils;
 
-public class TileEntityDefenseStation extends TileEntityTomsMod implements IForceDevice, ISidedInventory, IGuiTile, INBTPacketReceiver, IItemTile {
+public class TileEntityDefenseStation extends TileEntityTomsMod implements IForceDevice, ISidedInventory, IItemTile {
 	public ForceDeviceControlType rsMode = ForceDeviceControlType.LOW_REDSTONE;
 	private InventoryBasic inv = new InventoryBasic("", false, getSizeInventory());
 	// private EnergyStorage energy = new EnergyStorage(10000000,100000,200000);
@@ -556,7 +554,7 @@ public class TileEntityDefenseStation extends TileEntityTomsMod implements IForc
 	}
 
 	@Override
-	public void receiveNBTPacket(NBTTagCompound message) {
+	public void receiveNBTPacket(EntityPlayer pl, NBTTagCompound message) {
 		this.customName = message.getString("n");
 	}
 

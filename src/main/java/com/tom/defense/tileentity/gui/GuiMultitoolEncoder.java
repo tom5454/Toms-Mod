@@ -44,7 +44,7 @@ public class GuiMultitoolEncoder extends GuiTomsMod {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id < 2)
-			this.sendButtonUpdate(button.id);
+			this.sendButtonUpdateToContainer(button.id, 0);
 	}
 
 	@Override
